@@ -46,6 +46,8 @@ python manage.py start
 
 The V6 Phase 2 model checkpoint is available on Hugging Face: [YueHuLab/AntibodyDesignBFN](https://huggingface.co/YueHuLab/AntibodyDesignBFN/)
 
+The V6 training dataset (2,032 proteins, LMDB format) is available on Hugging Face: [liubuing/bfn-confidence-general-proteins](https://huggingface.co/datasets/liubuing/bfn-confidence-general-proteins)
+
 ## Cascade Filter
 
 Three-stage filtering for design result ranking:
