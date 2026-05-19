@@ -1,0 +1,113 @@
+alphafold:
+  af2:
+    executable: colabfold_batch
+    venv: C:\biological\AntibodyDesignBFN-main\venv
+  defaults:
+    num_models: 1
+    num_recycle: 1
+    stop_at_score: 85
+    use_amber: false
+    use_dropout: false
+    model_type: auto               # auto / alphafold2_ptm / alphafold2_multimer_v3
+    rank: auto                     # auto / plddt / ptm / iptm / multimer
+    calc_extra_ptm: false          # compute pTM for all models
+  output_dir: alphafold_results
+batch:
+  max_workers: 2
+  output_dir: batch_results
+  save_individual: true
+  save_summary: true
+  summary_format: csv
+  timeout_per_job: 300
+bfn_defaults:
+  antibody:
+    cdrs:
+    - H_CDR1
+    - H_CDR2
+    - H_CDR3
+    - L_CDR1
+    - L_CDR2
+    - L_CDR3
+    eval_mode: true
+    heavy_chain: H
+    light_chain: L
+    num_samples: 3
+    stochastic: false
+  protein:
+    eval_mode: true
+    num_samples: 3
+    region: A:10-25
+    stochastic: false
+esmif_defaults:
+  chain: A
+  num_samples: 3
+  temperature: 0.1
+models:
+  bfn:
+    checkpoint: ./logs/bfn_confidence_combined_v6_phase2_2026_05_18__14_05_03/checkpoints/best.pt
+    config: configs/demo_design.yml
+
+  esmif:
+    model_name: esm_if1_gvp4_t16_142M_UR50
+  proteinmpnn:
+    ca_weights_dir: ProteinMPNN/ca_model_weights
+    model_name: v_48_020
+    soluble_weights_dir: ProteinMPNN/soluble_model_weights
+    weights_dir: ProteinMPNN/vanilla_model_weights
+
+confidence:
+  plddt_high: 0.80
+  plddt_medium: 0.60
+  iptm_high: 0.70
+  iptm_medium: 0.40
+  pae_low: 4.0
+  pae_medium: 8.0
+mpnn_defaults:
+  ca_only: false
+  chains: A
+  num_samples: 3
+  omit_aas: ''
+  seed: 42
+  temperature: '0.1'
+  use_soluble: false
+server:
+  auto_open: true
+  host: 127.0.0.1
+  port: 7860
+  reload: false
+  share: false
+
+# ── Workflow Pipeline Configuration ──
+workflow:
+  cascade:
+    thresholds:
+      plddt_min: 0.6
+      iptm_min: 0.4
+      ppl_max: 100.0
+      entropy_max: 2.5
+    weights:
+      iptm: 0.35
+      plddt: 0.25
+      ppl_inv: 0.15
+      entropy_inv: 0.10
+      recovery: 0.15
+  af2_validation:
+    enabled: false
+    max_sequences: 5
+    num_recycle: 1
+
+target_design:
+  contact:
+    interface_cutoff: 8.0
+    strict_contact_cutoff: 5.0
+  defaults:
+    constraint_mode: true
+    design_tool: BFN (抗体CDR设计)
+    top_n_epitopes: 20
+  design:
+    default_constraint_cutoff: 10.0
+  epitope:
+    hydrophilicity_weight: 0.35
+    min_rel_sasa: 0.15
+    protrusion_weight: 0.25
+    sasa_weight: 0.4

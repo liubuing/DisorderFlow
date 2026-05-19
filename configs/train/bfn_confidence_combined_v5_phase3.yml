@@ -1,0 +1,70 @@
+# BFN Confidence Head Training v5 Phase 3 — ipTM pair-aware architecture upgrade
+# Finetunes from V5 Phase 2 best checkpoint with upgraded ipTM head.
+#
+# Key change from Phase 2:
+#   - ipTM head upgraded from global mean-pool (Linear(256→256)→Linear(256→1))
+#     to pair-aware architecture (Linear(512→256)→Linear(256→1))
+#   - Uses pair_combined features (mean-pooled over all pairs) concatenated
+#     with global residue features, giving the ipTM head access to pairwise
+#     relationship information that discriminates well-designed from poor designs
+#   - Old ipTM head weights are skipped during checkpoint load; new head
+#     initializes randomly
+#
+# Usage:
+#   python train.py configs/train/bfn_confidence_combined_v5_phase3.yml --finetune ./logs/bfn_confidence_combined_v5_2026_05_17__02_39_22/checkpoints/best.pt --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 1.0
+    iptm: 2.5
+    pae: 0.3
+    train_recycles: 3
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 1.0]
+
+train:
+  loss_weights:
+    plddt: 1.0
+    iptm: 2.5
+    pae: 0.3
+  freeze_backbone: true
+  unfreeze_encoder_layers: 2
+  max_iters: 20000
+  val_freq: 100
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 400
+  seed: 2026
+  max_grad_norm: 1.0
+  optimizer:
+    type: adam
+    lr: 5.e-5
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 40
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v5/confidence_train.lmdb
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v5/confidence_val.lmdb

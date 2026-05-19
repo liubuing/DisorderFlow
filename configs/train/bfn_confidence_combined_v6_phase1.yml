@@ -1,0 +1,64 @@
+# BFN Confidence Head Training V6 Phase 1 — Expanded Brain Disease Dataset
+# Finetunes from V5 Phase 5 best checkpoint with context-only ipTM head.
+# V6 adds 1,123 brain/neurological disease proteins (883 after dedup).
+#
+# Dataset: 1,625 train / 407 val (V5: 919/230, +77%)
+#
+# Usage:
+#   python train.py configs/train/bfn_confidence_combined_v6_phase1.yml --finetune ./logs/bfn_confidence_combined_v5_phase5_2026_05_17__21_14_11/checkpoints/best.pt --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 1.0
+    iptm: 2.5
+    pae: 0.3
+    train_recycles: 3
+    mask_aug_prob: 0.6
+    mask_aug_ratio: [0.3, 1.0]
+
+train:
+  loss_weights:
+    plddt: 1.0
+    iptm: 2.5
+    pae: 0.3
+  freeze_backbone: true
+  unfreeze_encoder_layers: 2
+  max_iters: 30000
+  val_freq: 100
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 400
+  seed: 2026
+  max_grad_norm: 1.0
+  optimizer:
+    type: adam
+    lr: 5.e-5
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 40
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v6/confidence_train.lmdb
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v6/confidence_val.lmdb

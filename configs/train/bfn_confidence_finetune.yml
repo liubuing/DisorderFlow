@@ -1,0 +1,59 @@
+# BFN Confidence Head Fine-Tuning on General Proteins
+# Freezes BFN backbone, trains only pLDDT/ipTM/PAE heads + feedback embeddings
+# Uses AF2 ColabFold predictions as pseudo-ground-truth for confidence scores
+#
+# Usage:
+#   python prepare_confidence_dataset.py --pdb_dir ./data/general_proteins --output ./data/confidence_dataset
+#   python train.py configs/train/bfn_confidence_finetune.yml --finetune <PATH_TO_BEST.PT> --device cuda
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 1.0
+    iptm: 1.0
+    pae: 0.3
+
+train:
+  loss_weights:
+    plddt: 1.0
+    iptm: 1.0
+    pae: 0.3
+  freeze_backbone: true
+  max_iters: 10000
+  val_freq: 100
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2026
+  max_grad_norm: 1.0
+  optimizer:
+    type: adam
+    lr: 1.e-4
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_dataset/confidence_train.lmdb
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_dataset/confidence_val.lmdb

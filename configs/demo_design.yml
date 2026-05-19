@@ -1,0 +1,14 @@
+model:
+  checkpoint: C:\Users\34342\.cache\huggingface\hub\models--YueHuLab--AntibodyDesignBFN\snapshots\04960a0b676db375ac738f8bf5f303465af40061\best.pt
+
+sampling:
+  seed: 2026
+  deterministic: true
+  num_steps: 20
+  cdrs:
+    - H_CDR1
+    - H_CDR2
+    - H_CDR3
+    - L_CDR1
+    - L_CDR2
+    - L_CDR3

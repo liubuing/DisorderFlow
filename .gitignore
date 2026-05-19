@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+
+# Server runtime
+.server.pid
+server.log
+
+# Large model/data files
+logs/
+checkpoints/
+data/
+alphafold_results/
+batch_results/
+proteinmpnn_output/
+design_8proteins_results/
+
+# Environment
+venv/
+.env
+
+# Temp files
+*.tmp
+*_test.pdb
+*_temp.pdb
+_debug_test.pdb
+_full.pdb
+_test.pdb
+
+# Validation outputs
+confidence_eval_results.json
+validation_results.json
+validation_v2_results.json
+integration_bfn.json
+integration_bfn_result.json
+tau_protein_test_results.json
+
+# Training outputs
+training_output_*.txt
+
+# OS files
+.DS_Store
+Thumbs.db
