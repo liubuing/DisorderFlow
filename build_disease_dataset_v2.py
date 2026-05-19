@@ -32,16 +32,10 @@ sys.path.insert(0, str(PROJECT_DIR))
 from antibodydesignbfn.datasets.protein import preprocess_protein_structure
 from antibodydesignbfn.utils.train import recursive_to
 from antibodydesignbfn.utils.transforms import get_transform
+from build_utils import AA3_TO_1, AA_LETTERS, compute_ptm_from_pae, resilient_get, load_pdb_sequence, save_lmdb
 
 AFDB_BASE = 'https://alphafold.ebi.ac.uk/files'
 UNIPROT_API = 'https://rest.uniprot.org/uniprotkb/search'
-
-AA3_TO_1 = {
-    'ALA':'A','CYS':'C','ASP':'D','GLU':'E','PHE':'F','GLY':'G','HIS':'H',
-    'ILE':'I','LYS':'K','LEU':'L','MET':'M','ASN':'N','PRO':'P','GLN':'Q',
-    'ARG':'R','SER':'S','THR':'T','VAL':'V','TRP':'W','TYR':'Y',
-}
-AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 
 
 # ── Expanded disease queries ──
@@ -78,27 +72,6 @@ KEYWORD_QUERIES = [
 
 ALL_QUERIES = DISEASE_QUERIES_EXPANDED + NEW_DISEASE_QUERIES + KEYWORD_QUERIES
 
-
-def resilient_get(url, timeout=60, max_retries=3):
-    from urllib3.util.retry import Retry
-    from requests.adapters import HTTPAdapter
-    session = requests.Session()
-    retry = Retry(total=max_retries, backoff_factor=2,
-                  status_forcelist=[500, 502, 503, 504])
-    adapter = HTTPAdapter(max_retries=retry)
-    session.mount('https://', adapter)
-    return session.get(url, timeout=timeout)
-
-
-def compute_ptm_from_pae(pae_matrix):
-    pae = np.array(pae_matrix, dtype=np.float64)
-    L = pae.shape[0]
-    d0 = max(1.24 * (L - 15) ** (1/3) - 1.8, 0.5)
-    ptm_scores = []
-    for i in range(L):
-        f_ij = 1.0 / (1.0 + (pae[i, :] / d0) ** 2)
-        ptm_scores.append(np.mean(f_ij))
-    return float(max(ptm_scores))
 
 
 def fetch_uniprot_accessions(query, max_per_query=200):
@@ -167,18 +140,6 @@ def extract_plddt_from_mmcif(cif_text):
                 seq.append(AA3_TO_1[res.get_resname()])
     return plddt, ''.join(seq)
 
-
-def load_pdb_sequence(pdb_path):
-    from Bio.PDB import PDBParser
-    parser = PDBParser(QUIET=True)
-    structure = parser.get_structure('pdb', str(pdb_path))
-    chains = {}
-    for chain in structure[0]:
-        seq = ''.join(AA3_TO_1.get(res.get_resname(), '') for res in chain
-                      if res.get_resname() in AA3_TO_1)
-        if seq:
-            chains[chain.id] = seq
-    return chains
 
 
 def preprocess_pdb_for_bfn(pdb_path):

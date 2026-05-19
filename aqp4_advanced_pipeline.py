@@ -1,11 +1,18 @@
 #!/usr/bin/env python
-"""AQP4 Advanced Design Pipeline:
-  1. Docking refinement via local sampling + shape & electrostatic complementarity
-  2. Interface chemistry analysis (hydrophobicity, charge, H-bond)
+"""AQP4 Advanced Antibody Design Pipeline.
+
+Four-direction analysis:
+  1. Rigid-body docking refinement (shape + electrostatic complementarity)
+  2. Interface chemistry (hydrophobicity, charge, H-bond)
   3. Statistical potential binding free energy (DFIRE-like)
   4. Interface-guided CDR optimization
+
+Usage:
+  python aqp4_advanced_pipeline.py --pdb complex.pdb --designs designs.fasta
+  python aqp4_advanced_pipeline.py --results_dir ./results --output_dir ./out
+  python aqp4_advanced_pipeline.py --pdb complex.pdb --skip-docking
 """
-import sys, os, io, json, math
+import sys, os, io, json, math, argparse
 from pathlib import Path
 from collections import defaultdict
 import numpy as np
@@ -13,12 +20,11 @@ from scipy.spatial import KDTree
 from scipy.spatial.transform import Rotation
 from scipy.ndimage import gaussian_filter
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-PROJECT_DIR = Path(r'C:\biological\AntibodyDesignBFN-main\AntibodyDesignBFN-main')
-RESULTS_DIR = Path(r'C:\biological\protein\aqp4\results')
-OUT_DIR = PROJECT_DIR / 'alphafold_results' / 'aqp4_advanced'
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+PROJECT_DIR = Path(__file__).parent
+DEFAULT_RESULTS_DIR = Path(r'C:\biological\protein\aqp4\results')
 
 TARGET_SEQ = "RRFKEAFSKAAQQTKGSYMEVEDNRSQVETDDLILKPGVVHVIDVDRGEEKKGKDQSGEVLSSV"
 
@@ -44,6 +50,36 @@ RES_3TO1 = {
 DFIRE_RC = 15.0
 DFIRE_BIN = 0.5
 DFIRE_NBINS = int(DFIRE_RC / DFIRE_BIN)
+
+
+# ============================================================
+# CLI
+# ============================================================
+def parse_args():
+    p = argparse.ArgumentParser(
+        description='AQP4 Advanced Antibody Design Pipeline',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Examples:
+  python aqp4_advanced_pipeline.py --pdb complex.pdb
+  python aqp4_advanced_pipeline.py --results_dir ./results --output_dir ./out
+  python aqp4_advanced_pipeline.py --pdb complex.pdb --skip-docking --skip-energy
+        ''')
+    p.add_argument('--pdb', help='Path to input PDB complex (receptor=chain A, ligand=chain B)')
+    p.add_argument('--designs', help='Path to FASTA file with nanobody designs')
+    p.add_argument('--results_dir', default=str(DEFAULT_RESULTS_DIR),
+                   help='Directory with AF2 multimer results JSON and designs FASTA')
+    p.add_argument('--output_dir', help='Output directory (default: ./aqp4_advanced_results)')
+    p.add_argument('--rec_chain', default='A', help='Receptor chain ID (default: A)')
+    p.add_argument('--lig_chain', default='B', help='Ligand chain ID (default: B)')
+    p.add_argument('--skip-docking', action='store_true', help='Skip docking refinement')
+    p.add_argument('--skip-chemistry', action='store_true', help='Skip interface chemistry')
+    p.add_argument('--skip-energy', action='store_true', help='Skip binding energy calculation')
+    p.add_argument('--skip-optimization', action='store_true', help='Skip CDR optimization')
+    p.add_argument('--n-rotations', type=int, default=16, help='Docking rotation samples')
+    p.add_argument('--n-translations', type=int, default=8, help='Docking translation samples per rotation')
+    p.add_argument('--contact-cutoff', type=float, default=5.0, help='Interface contact cutoff (A)')
+    return p.parse_args()
 
 
 # ============================================================
@@ -93,6 +129,26 @@ def get_surface_atoms(atoms, probe_radius=1.4):
         if len(neighbors) < 25:
             surface_mask[i] = True
     return [atoms[i] for i in range(len(atoms)) if surface_mask[i]]
+
+
+def load_fasta_sequences(fasta_path):
+    """Load sequences from a FASTA file."""
+    seqs = []
+    if not os.path.exists(fasta_path):
+        return seqs
+    with open(fasta_path) as f:
+        current_seq = ''
+        for line in f:
+            line = line.strip()
+            if line.startswith('>'):
+                if current_seq:
+                    seqs.append(current_seq)
+                current_seq = ''
+            elif line:
+                current_seq += line
+        if current_seq:
+            seqs.append(current_seq)
+    return seqs
 
 
 # ============================================================
@@ -191,6 +247,7 @@ def local_docking(pdb_path, rec_chain='A', lig_chain='B',
     results = []
     total = len(rotations) * len(distances) * len(directions)
     count = 0
+    print(f"  Evaluating {total} poses...")
 
     for rot in rotations:
         for d in distances:
@@ -298,18 +355,13 @@ def build_dfire_potential():
             c1, c2 = CHARGE[aa1], CHARGE[aa2]
             for k in range(DFIRE_NBINS):
                 r = (k + 0.5) * DFIRE_BIN
-                # Hydrophobic attraction (max at 4-6A)
                 hp = -0.3 * max(h1, 0) * max(h2, 0) * math.exp(-((r - 5.0) ** 2) / 4.0)
-                # Electrostatic (Coulomb-like, screened)
                 elec = -2.0 * c1 * c2 * math.exp(-r / 6.0) / max(r, 2.0)
-                # van der Waals (Lennard-Jones-like: attraction at medium, repulsion at short)
                 sigma = 3.5
                 lj = 4.0 * ((sigma / max(r, 1.5)) ** 12 - (sigma / max(r, 1.5)) ** 6)
-                # H-bond bonus at 2.5-3.5A
                 hb = -2.0 if (HBOND.get(aa1,0) and HBOND.get(aa2,0) and 2.5 < r < 3.5) else 0.0
                 potential[i, j, k] = hp + elec + lj + hb
 
-    # Reference state correction: subtract bin-average across all pairs
     for k in range(DFIRE_NBINS):
         potential[:, :, k] -= potential[:, :, k].mean()
 
@@ -323,7 +375,6 @@ def compute_binding_energy(atoms_rec, atoms_lig):
 
     potential, aa_to_idx = build_dfire_potential()
 
-    # Use residue centroids (standard for statistical potentials)
     rec_centroids = get_residue_centroids(atoms_rec, 'A')
     lig_centroids = get_residue_centroids(atoms_lig, 'B')
 
@@ -371,7 +422,7 @@ def compute_binding_energy(atoms_rec, atoms_lig):
                 components['hbond'] += e
 
     avg_energy = total_energy / max(n_pairs, 1)
-    dG_estimate = total_energy * 0.15  # empirical scale factor
+    dG_estimate = total_energy * 0.15
 
     print(f"  Residue pairs evaluated: {n_pairs}")
     print(f"  Total binding score: {total_energy:.1f}")
@@ -392,7 +443,7 @@ def compute_binding_energy(atoms_rec, atoms_lig):
 
 
 # ============================================================
-# CDR optimization via interface constraints
+# Direction 4: CDR optimization via interface constraints
 # ============================================================
 def optimize_cdr_for_interface(interface, nanobody_seq):
     rec_props = interface['receptor']
@@ -406,13 +457,9 @@ def optimize_cdr_for_interface(interface, nanobody_seq):
             continue
         scores = {}
         for mut_aa in HYDROPATHY:
-            # Hydrophobic complementarity: receptor and ligand should match
             hydro_score = -abs(HYDROPATHY[mut_aa] - target_hydro) / 4.5
-            # Charge: opposite charges attract (target_charge is on receptor)
             charge_score = CHARGE[mut_aa] * (-target_charge) * 0.5
-            # Conservation penalty: avoid unnecessary mutations
             conservation = 2.0 if mut_aa == aa else 0.0
-            # Sequence diversity bonus for charged/polar residues
             diversity = 0.3 if abs(CHARGE[mut_aa]) > 0 or HBOND[mut_aa] != 0 else 0.0
             scores[mut_aa] = hydro_score + charge_score + conservation + diversity
         optimized.append(max(scores, key=scores.get))
@@ -426,108 +473,64 @@ def optimize_cdr_for_interface(interface, nanobody_seq):
 # ============================================================
 # Main pipeline
 # ============================================================
-def main():
+def run_pipeline(pdb_path, designs=None, output_dir=None,
+                 rec_chain='A', lig_chain='B',
+                 skip_docking=False, skip_chemistry=False,
+                 skip_energy=False, skip_optimization=False,
+                 n_rotations=16, n_translations=8, contact_cutoff=5.0):
+    """Run the full AQP4 advanced design pipeline."""
+    output_dir = Path(output_dir) if output_dir else PROJECT_DIR / 'alphafold_results' / 'aqp4_advanced'
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     print("=" * 70)
     print("  AQP4 Advanced Design Pipeline")
-    print("  (1) Docking  (2) Interface Chemistry  (3) Binding Energy")
-    print("  (4) CDR Optimization")
+    print(f"  PDB: {pdb_path}")
+    print(f"  Output: {output_dir}")
+    steps = []
+    if not skip_docking: steps.append("1: Docking")
+    if not skip_chemistry: steps.append("2: Interface Chemistry")
+    if not skip_energy: steps.append("3: Binding Energy")
+    if not skip_optimization: steps.append("4: CDR Optimization")
+    print(f"  Steps: {', '.join(steps) if steps else '(none selected)'}")
     print("=" * 70)
 
-    # Find best AF2 multimer result
-    results_json = RESULTS_DIR / 'AF2_multimer_v2_results.json'
-    if not results_json.exists():
-        print("[ERROR] No AF2 multimer results found.")
-        return
-
-    with open(results_json) as f:
-        prev_results = json.load(f)
-    success = [r for r in prev_results['results'] if r.get('success') and r.get('pdb_path')]
-    if not success:
-        print("[ERROR] No successful AF2 multimer predictions.")
-        return
-
-    success.sort(key=lambda r: r.get('iptm') or -1, reverse=True)
-    best = success[0]
-    best_pdb = Path(best['pdb_path'])
-
-    if not best_pdb.exists():
-        print(f"[ERROR] PDB not found: {best_pdb}")
-        return
-
-    print(f"\n  Source: {best_pdb.name}")
-    print(f"  ipTM={best.get('iptm'):.3f}  pTM={best.get('ptm'):.3f}  pLDDT={best.get('plddt'):.1f}")
-
-    # Load designs
-    designs = []
-    fasta_path = RESULTS_DIR / '3GD8_constrained_nanobody_designs.fasta'
-    if fasta_path.exists():
-        with open(fasta_path) as f:
-            current_seq = ''
-            for line in f:
-                line = line.strip()
-                if line.startswith('>'):
-                    if current_seq:
-                        designs.append(current_seq)
-                    current_seq = ''
-                elif line:
-                    current_seq += line
-            if current_seq:
-                designs.append(current_seq)
-    print(f"  Designs: {len(designs)}")
+    if not os.path.exists(pdb_path):
+        print(f"[ERROR] PDB not found: {pdb_path}")
+        return None
 
     # Parse complex
-    all_atoms = parse_pdb_atoms(str(best_pdb))
-    atoms_rec = [a for a in all_atoms if a['res'][2] == 'A']
-    atoms_lig = [a for a in all_atoms if a['res'][2] == 'B']
-    print(f"  Chain A (AQP4): {len(atoms_rec)} atoms")
-    print(f"  Chain B (nano): {len(atoms_lig)} atoms")
+    all_atoms = parse_pdb_atoms(str(pdb_path))
+    atoms_rec = [a for a in all_atoms if a['res'][2] == rec_chain]
+    atoms_lig = [a for a in all_atoms if a['res'][2] == lig_chain]
+    print(f"\n  Chain {rec_chain} (receptor): {len(atoms_rec)} atoms, {len(set(a['res'] for a in atoms_rec))} residues")
+    print(f"  Chain {lig_chain} (ligand):   {len(atoms_lig)} atoms, {len(set(a['res'] for a in atoms_lig))} residues")
 
     if not atoms_rec or not atoms_lig:
-        print("[ERROR] Missing chains in PDB.")
-        return
+        print("[ERROR] Missing receptor or ligand chains in PDB.")
+        return None
+
+    output = {'pdb_path': str(pdb_path)}
 
     # Direction 1: Docking refinement
-    rec_centroids = get_residue_centroids(atoms_rec)
-    epitope_centroid = np.array(list(rec_centroids.values())).mean(axis=0)
-    docking_results, _, _ = local_docking(
-        str(best_pdb), rec_chain='A', lig_chain='B',
-        epitope_centroid=epitope_centroid,
-        n_rotations=16, translations_per_rot=8)
-
-    # Direction 2: Interface chemistry
-    interface = analyze_interface_chemistry(atoms_rec, atoms_lig)
-
-    # Direction 3: Binding energy
-    energy = compute_binding_energy(atoms_rec, atoms_lig)
-
-    # CDR optimization
-    print("\n" + "=" * 60)
-    print("  Direction 4: Interface-Guided CDR Optimization")
-    print("=" * 60)
-    print(f"\n  Target interface: hydro={interface['receptor']['hydro_mean']:.2f}, charge={interface['receptor']['net_charge']:.1f}")
-
-    optimized_designs = []
-    for i, seq in enumerate(designs):
-        opt_seq, mutations = optimize_cdr_for_interface(interface, seq)
-        optimized_designs.append({
-            'idx': i, 'original': seq, 'optimized': opt_seq,
-            'n_mutations': len(mutations), 'mutations': mutations,
-        })
-        print(f"  [{i}] {len(mutations)} mutations: {seq[:20]}... -> {opt_seq[:20]}...")
-
-    # Save
-    output = {
-        'source_pdb': str(best_pdb),
-        'source_iptm': best.get('iptm'),
-        'source_ptm': best.get('ptm'),
-        'source_plddt': best.get('plddt'),
-        'docking': {
+    if not skip_docking:
+        rec_centroids = get_residue_centroids(atoms_rec)
+        epitope_centroid = np.array(list(rec_centroids.values())).mean(axis=0)
+        docking_results, _, _ = local_docking(
+            str(pdb_path), rec_chain=rec_chain, lig_chain=lig_chain,
+            epitope_centroid=epitope_centroid,
+            n_rotations=n_rotations, translations_per_rot=n_translations)
+        output['docking'] = {
             'top_score': float(docking_results[0]['score']) if docking_results else None,
             'n_poses': len(docking_results),
             'top_10_scores': [float(r['score']) for r in docking_results[:10]],
-        },
-        'interface_chemistry': {
+        }
+
+    # Direction 2: Interface chemistry
+    if not skip_chemistry:
+        interface = analyze_interface_chemistry(atoms_rec, atoms_lig, contact_cutoff)
+        output['interface_chemistry'] = {
             'receptor': interface['receptor'],
+            'ligand': interface['ligand'],
             'complementarity': {
                 'hydrophobic_match': interface['hydro_complement'],
                 'charge_complement': interface['charge_complement'],
@@ -537,25 +540,130 @@ def main():
                 'receptor_n': interface['interface_rec_n'],
                 'ligand_n': interface['interface_lig_n'],
             },
-        },
-        'binding_energy': energy,
-        'optimized_designs': optimized_designs,
-    }
+        }
+    else:
+        interface = None
 
-    out_path = OUT_DIR / 'advanced_pipeline_results.json'
-    with open(out_path, 'w', encoding='utf-8') as f:
+    # Direction 3: Binding energy
+    if not skip_energy:
+        energy = compute_binding_energy(atoms_rec, atoms_lig)
+        output['binding_energy'] = energy
+
+    # Direction 4: CDR optimization
+    if not skip_optimization and interface is not None and designs:
+        print("\n" + "=" * 60)
+        print("  Direction 4: Interface-Guided CDR Optimization")
+        print("=" * 60)
+        print(f"\n  Target interface: hydro={interface['receptor']['hydro_mean']:.2f}, charge={interface['receptor']['net_charge']:.1f}")
+
+        optimized_designs = []
+        for i, seq in enumerate(designs):
+            opt_seq, mutations = optimize_cdr_for_interface(interface, seq)
+            optimized_designs.append({
+                'idx': i, 'original': seq, 'optimized': opt_seq,
+                'n_mutations': len(mutations), 'mutations': mutations,
+            })
+            print(f"  [{i}] {len(mutations)} mutations: {seq[:20]}... -> {opt_seq[:20]}...")
+        output['optimized_designs'] = optimized_designs
+
+        # Save optimized FASTA
+        fasta_out = output_dir / 'optimized_designs.fasta'
+        with open(fasta_out, 'w') as f:
+            for d in optimized_designs:
+                f.write(f">design_{d['idx']}_mut{d['n_mutations']}\n{d['optimized']}\n")
+        print(f"\n  Saved optimized designs: {fasta_out}")
+
+    # Save results
+    results_path = output_dir / 'advanced_pipeline_results.json'
+    with open(results_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False, default=str)
-    print(f"\n  [OK] Saved: {out_path}")
+    print(f"\n  [OK] Results saved: {results_path}")
 
     # Summary
     print("\n" + "=" * 70)
     print("  PIPELINE COMPLETE")
     print("=" * 70)
-    if docking_results:
-        print(f"  Best docking score: {docking_results[0]['score']:.1f}")
-    print(f"  H-bond density: {interface['hbond_density']:.3f}")
-    print(f"  dG_bind estimate: {energy['dG_estimate']:.1f} kcal/mol")
-    print(f"  Optimized: {len(optimized_designs)} designs")
+    if output.get('docking'):
+        print(f"  Best docking score: {output['docking']['top_score']:.1f}")
+    if output.get('interface_chemistry'):
+        ic = output['interface_chemistry']
+        print(f"  H-bond density: {ic['complementarity']['hbond_density']:.3f}")
+        print(f"  Charge complement: {ic['complementarity']['charge_complement']:.2f}")
+    if output.get('binding_energy'):
+        be = output['binding_energy']
+        print(f"  dG_bind estimate: {be['dG_estimate']:.1f} kcal/mol ({be['quality']})")
+    if output.get('optimized_designs'):
+        print(f"  Optimized: {len(output['optimized_designs'])} designs")
+
+    return output
+
+
+def main():
+    args = parse_args()
+
+    # Resolve PDB path
+    pdb_path = None
+    designs = None
+
+    if args.pdb:
+        pdb_path = args.pdb
+    else:
+        # Search in results_dir
+        results_dir = Path(args.results_dir)
+        results_json = results_dir / 'AF2_multimer_v2_results.json'
+        if results_json.exists():
+            with open(results_json) as f:
+                prev_results = json.load(f)
+            success = [r for r in prev_results.get('results', []) if r.get('success') and r.get('pdb_path')]
+            if success:
+                success.sort(key=lambda r: r.get('iptm') or -1, reverse=True)
+                best = success[0]
+                pdb_path = best['pdb_path']
+                print(f"  Found best PDB: {pdb_path}")
+                print(f"  ipTM={best.get('iptm'):.3f}  pTM={best.get('ptm'):.3f}")
+                if 'plddt' in best:
+                    print(f"  pLDDT={best['plddt']:.1f}")
+            else:
+                print("[ERROR] No successful AF2 multimer predictions in results.")
+                return
+        else:
+            print(f"[ERROR] No --pdb specified and no results JSON found at {results_json}")
+            return
+
+    if not pdb_path or not os.path.exists(pdb_path):
+        print(f"[ERROR] PDB not found: {pdb_path}")
+        return
+
+    # Load designs
+    if args.designs:
+        designs = load_fasta_sequences(args.designs)
+    else:
+        results_dir = Path(args.results_dir)
+        for fasta_name in ['3GD8_constrained_nanobody_designs.fasta', 'nanobody_designs.fasta', 'designs.fasta']:
+            fasta_path = results_dir / fasta_name
+            if fasta_path.exists():
+                designs = load_fasta_sequences(str(fasta_path))
+                if designs:
+                    print(f"  Loaded {len(designs)} designs from {fasta_path}")
+                    break
+        if not designs:
+            print("  No designs FASTA found, skipping CDR optimization.")
+            args.skip_optimization = True
+
+    run_pipeline(
+        pdb_path=pdb_path,
+        designs=designs,
+        output_dir=args.output_dir,
+        rec_chain=args.rec_chain,
+        lig_chain=args.lig_chain,
+        skip_docking=args.skip_docking,
+        skip_chemistry=args.skip_chemistry,
+        skip_energy=args.skip_energy,
+        skip_optimization=args.skip_optimization,
+        n_rotations=args.n_rotations,
+        n_translations=args.n_translations,
+        contact_cutoff=args.contact_cutoff,
+    )
 
 
 if __name__ == '__main__':

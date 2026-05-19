@@ -25,13 +25,7 @@ sys.path.insert(0, str(PROJECT_DIR))
 from antibodydesignbfn.datasets.protein import preprocess_protein_structure
 from antibodydesignbfn.utils.train import recursive_to
 from antibodydesignbfn.utils.transforms import get_transform
-
-AA3_TO_1 = {
-    'ALA':'A','CYS':'C','ASP':'D','GLU':'E','PHE':'F','GLY':'G','HIS':'H',
-    'ILE':'I','LYS':'K','LEU':'L','MET':'M','ASN':'N','PRO':'P','GLN':'Q',
-    'ARG':'R','SER':'S','THR':'T','VAL':'V','TRP':'W','TYR':'Y',
-}
-AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
+from build_utils import AA3_TO_1, AA_LETTERS, compute_ptm_from_pae, load_pdb_sequence, save_lmdb, split_and_save_entries
 
 UNIPROT_API = 'https://rest.uniprot.org/uniprotkb/search'
 AFDB_BASE = 'https://alphafold.ebi.ac.uk/files'
@@ -126,19 +120,6 @@ def get_pdb_resolution(pdb_id):
     return None, 0, 0
 
 
-def load_pdb_sequence(pdb_path):
-    from Bio.PDB import PDBParser
-    parser = PDBParser(QUIET=True)
-    structure = parser.get_structure('pdb', str(pdb_path))
-    chains = {}
-    for chain in structure[0]:
-        seq = ''.join(AA3_TO_1.get(res.get_resname(), '') for res in chain
-                      if res.get_resname() in AA3_TO_1)
-        if seq:
-            chains[chain.id] = seq
-    return chains
-
-
 def preprocess_pdb_for_bfn(pdb_path):
     chains = load_pdb_sequence(pdb_path)
     if not chains:
@@ -177,18 +158,6 @@ def extract_plddt_from_mmcif(cif_text):
                 plddt.append(res['CA'].get_bfactor() / 100.0)
     return plddt
 
-
-def compute_ptm_from_pae(pae_matrix):
-    pae = np.array(pae_matrix, dtype=np.float64)
-    L = pae.shape[0]
-    if L < 2:
-        return 0.5
-    d0 = max(1.24 * (L - 15) ** (1/3) - 1.8, 0.5)
-    ptm_scores = []
-    for i in range(L):
-        f_ij = 1.0 / (1.0 + (pae[i, :] / d0) ** 2)
-        ptm_scores.append(np.mean(f_ij))
-    return float(max(ptm_scores))
 
 
 def main():
@@ -379,36 +348,7 @@ def main():
         print('No entries!')
         sys.exit(1)
 
-    # Split
-    np.random.seed(2026)
-    indices = np.random.permutation(len(results))
-    split_idx = int(len(results) * 0.8)
-    train_entries = [results[i] for i in indices[:split_idx]]
-    val_entries = [results[i] for i in indices[split_idx:]]
-
-    import lmdb
-    for name, ents in [('confidence_train.lmdb', train_entries), ('confidence_val.lmdb', val_entries)]:
-        db_path = str(output_dir / name)
-        if os.path.exists(db_path):
-            shutil.rmtree(db_path)
-        sample = pickle.dumps(ents[0]) if ents else b'x'
-        est_size = max(len(sample) * max(len(ents), 1) * 2 + 1024 * 1024, 10 * 1024 * 1024)
-        env = lmdb.open(db_path, map_size=est_size)
-        with env.begin(write=True) as txn:
-            for j, entry in enumerate(ents):
-                txn.put(f'{j:08d}'.encode(), pickle.dumps(entry))
-            txn.put(b'__len__', pickle.dumps(len(ents)))
-        env.close()
-        print(f'Saved {len(ents)} entries to {name}')
-
-    summary = {
-        'n_train': len(train_entries),
-        'n_val': len(val_entries),
-        'source': 'RCSB PDB + EBI AlphaFold DB v6 (via UniProt xrefs)',
-        'created': time.strftime('%Y-%m-%d %H:%M:%S'),
-    }
-    with open(output_dir / 'dataset_summary.json', 'w') as f:
-        json.dump(summary, f, indent=2)
+    split_and_save_entries(results, output_dir, train_split=0.8, seed=2026)
 
     print(f'\nDone!')
 
