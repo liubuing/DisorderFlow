@@ -1587,7 +1587,7 @@ def create_ui():
                     result_out = gr.Textbox(label="", lines=18, interactive=False,
                                             elem_classes="result-box", placeholder="结果将在此显示...")
                     result_df = gr.DataFrame(label="设计结果排名", interactive=False,
-                                             max_rows=10, wrap=True)
+                                             wrap=True)
 
                 # FASTA action bar (hidden until design completes)
                 with gr.Group(visible=False) as fasta_action_bar:
@@ -1666,7 +1666,7 @@ def create_ui():
                             batch_result = gr.Textbox(label="", lines=22, interactive=False,
                                                       elem_classes="result-box", placeholder="结果将在此显示...")
                         batch_json = gr.File(label="汇总 JSON", visible=False)
-                        batch_df = gr.DataFrame(label="📊 综合结果排名", interactive=False, max_rows=15)
+                        batch_df = gr.DataFrame(label="📊 综合结果排名", interactive=False)
 
                 batch_btn.click(
                     run_batch,
@@ -1952,7 +1952,7 @@ def create_ui():
                             t5_fasta_download = gr.File(label="💾 FASTA 下载", file_types=[".fasta"])
                             t5_send_af2_btn = gr.Button("🔮 发送到 AF2 Multimer 预测", variant="secondary")
                             t5_send_design_btn = gr.Button("📤 发送序列到单步设计", variant="secondary")
-                    t5_result_df = gr.DataFrame(label="📊 设计结果排名", interactive=False, max_rows=10)
+                    t5_result_df = gr.DataFrame(label="📊 设计结果排名", interactive=False)
 
                 # ── Tab 5 internal callbacks ──
 
@@ -2309,7 +2309,7 @@ def create_ui():
                     with gr.Column(scale=2):
                         conf_report = gr.Textbox(label="评估报告", lines=14, interactive=False,
                                                  elem_classes="result-box")
-                        conf_residue_df = gr.DataFrame(label="逐残基 pLDDT", interactive=False, max_rows=30)
+                        conf_residue_df = gr.DataFrame(label="逐残基 pLDDT", interactive=False)
 
                 def on_conf_pdb_upload(pdb_file):
                     if pdb_file is None:
@@ -2345,7 +2345,7 @@ def create_ui():
                     with gr.Column(scale=2):
                         pipe_report = gr.Textbox(label="流水线报告", lines=18, interactive=False,
                                                 elem_classes="result-box")
-                        pipe_df = gr.DataFrame(label="最终排名结果", interactive=False, max_rows=10)
+                        pipe_df = gr.DataFrame(label="最终排名结果", interactive=False)
                         pipe_fasta = gr.File(label="FASTA 下载", file_types=[".fasta"])
 
                 def on_pipe_pdb_upload(pdb_file):
