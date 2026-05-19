@@ -42,6 +42,12 @@ tau_protein_test_results.json
 # Training outputs
 training_output_*.txt
 
+# Reports and docs (keep local only)
+workflow_*_report.*
+ProteinStudio_Project_Guide.docx
+convert_md_to_docx.py
+val_phase6_dummy.pdb
+
 # OS files
 .DS_Store
 Thumbs.db
