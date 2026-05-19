@@ -799,6 +799,6 @@ pLDDT 或 ipTM 输出接近 0 可能是：
 ---
 
 > **文档版本**：v1.0
-> **作者**：YueHu Lab
+> **作者**：liubuing
 > **项目地址**：[github.com/liubuing/ProteinStudio](https://github.com/liubuing/ProteinStudio)
 > **模型下载**：[huggingface.co/YueHuLab/AntibodyDesignBFN](https://huggingface.co/YueHuLab/AntibodyDesignBFN/)

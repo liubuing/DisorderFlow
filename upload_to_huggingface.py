@@ -95,7 +95,7 @@ Used for fine-tuning BFN confidence heads:
 ```bibtex
 @article{{antibodydesignbfn,
   title={{AntibodyDesignBFN: Antibody Sequence Design with Bayesian Flow Networks}},
-  author={{YueHu Lab}},
+  author={{ProteinStudio}},
   year={{2025}},
 }}
 ```
