@@ -291,14 +291,17 @@ def analyze_interface_chemistry(atoms_rec, atoms_lig, contact_cutoff=5.0):
         if dist < contact_cutoff:
             interface_lig.add(a['res'])
 
+    # Filter out non-amino-acid residues (solvent, ligands, etc.)
+    interface_rec = {r for r in interface_rec if r[0] in RES_3TO1}
+    interface_lig = {r for r in interface_lig if r[0] in RES_3TO1}
+
     def get_interface_seq(residues):
         seen = set()
         seq = ''
         for res in sorted(residues, key=lambda r: r[1]):
             if res not in seen:
                 seen.add(res)
-                aa = RES_3TO1.get(res[0], 'X')
-                seq += aa
+                seq += RES_3TO1[res[0]]
         return seq
 
     rec_iface_seq = get_interface_seq(interface_rec)
@@ -375,8 +378,8 @@ def compute_binding_energy(atoms_rec, atoms_lig):
 
     potential, aa_to_idx = build_dfire_potential()
 
-    rec_centroids = get_residue_centroids(atoms_rec, 'A')
-    lig_centroids = get_residue_centroids(atoms_lig, 'B')
+    rec_centroids = get_residue_centroids(atoms_rec)
+    lig_centroids = get_residue_centroids(atoms_lig)
 
     rec_reslist = sorted(rec_centroids.items(), key=lambda x: x[0][1])
     lig_reslist = sorted(lig_centroids.items(), key=lambda x: x[0][1])
