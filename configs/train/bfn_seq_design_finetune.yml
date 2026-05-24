@@ -46,9 +46,9 @@ train:
 dataset:
   train:
     type: sabdab
-    summary_path: /Users/huyue/diffabBFN2026/diffab-main_cursor_back/data/sabdab_summary_all-3angstrom.tsv
-    chothia_dir: /Users/huyue/diffabBFN2026/diffab-main_cursor_back/data/all_structures/chothia
-    processed_dir: /Users/huyue/diffabBFN2026/diffab-main_cursor_back/data/processed3angstrom
+    summary_path: ./data/sabdab_summary_all-3angstrom.tsv
+    chothia_dir: ./data/all_structures/chothia
+    processed_dir: ./data/processed3angstrom
     split: train
     transform:
     - type: mask_single_cdr
@@ -56,9 +56,9 @@ dataset:
     - type: patch_around_anchor
   val:
     type: sabdab
-    summary_path: /Users/huyue/diffabBFN2026/diffab-main_cursor_back/data/sabdab_summary_all-3angstrom.tsv
-    chothia_dir: /Users/huyue/diffabBFN2026/diffab-main_cursor_back/data/all_structures/chothia
-    processed_dir: /Users/huyue/diffabBFN2026/diffab-main_cursor_back/data/processed3angstrom
+    summary_path: ./data/sabdab_summary_all-3angstrom.tsv
+    chothia_dir: ./data/all_structures/chothia
+    processed_dir: ./data/processed3angstrom
     split: train
     split: val
     transform:

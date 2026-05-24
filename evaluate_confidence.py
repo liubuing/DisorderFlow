@@ -25,10 +25,13 @@ def parse_args():
                    help='Path to validation LMDB (default: data/confidence_dataset/confidence_val.lmdb)')
     p.add_argument('--device', default='cpu', help='Device (cpu/cuda)')
     p.add_argument('--num_recycles', type=int, default=1, help='BFN recycle rounds (default 1)')
+    p.add_argument('--max_residues', type=int, default=0, help='Skip entries > N residues (0=no limit)')
+    p.add_argument('--idp_only', action='store_true', help='Evaluate only IDP entries')
+    p.add_argument('--folded_only', action='store_true', help='Evaluate only folded (non-IDP) entries')
     return p.parse_args()
 
 
-def load_lmdb_entries(db_path):
+def load_lmdb_entries(db_path, max_residues=0):
     entries = []
     if os.path.isdir(db_path) and not os.path.exists(os.path.join(db_path, 'data.mdb')):
         meta_path = os.path.join(db_path, 'meta.json')
@@ -39,15 +42,20 @@ def load_lmdb_entries(db_path):
         else:
             n_entries = len([f for f in os.listdir(db_path) if f.endswith('.pkl')])
         for i in range(n_entries):
-            with open(os.path.join(db_path, f'{i:08d}.pkl'), 'rb') as f:
-                entries.append(pickle.load(f))
+            entry = pickle.load(open(os.path.join(db_path, f'{i:08d}.pkl'), 'rb'))
+            if max_residues > 0 and len(entry.get('sequence', '')) > max_residues:
+                continue
+            entries.append(entry)
     else:
         import lmdb
         env = lmdb.open(db_path, readonly=True, lock=False)
         with env.begin() as txn:
             n_entries = pickle.loads(txn.get(b'__len__'))
             for i in range(n_entries):
-                entries.append(pickle.loads(txn.get(f'{i:08d}'.encode())))
+                entry = pickle.loads(txn.get(f'{i:08d}'.encode()))
+                if max_residues > 0 and len(entry.get('sequence', '')) > max_residues:
+                    continue
+                entries.append(entry)
         env.close()
     return entries
 
@@ -118,6 +126,7 @@ def evaluate(model, entries, device, num_recycles=1):
         af2_plddt = entry['af2_plddt']
         af2_iptm = entry['af2_iptm']
         af2_pae = entry.get('af2_pae_matrix', None)
+        is_idp = entry.get('is_idp', False)
 
         # Collate to batch of 1
         try:
@@ -185,6 +194,7 @@ def evaluate(model, entries, device, num_recycles=1):
         res = {
             'pdb_id': pdb_id,
             'length': n_native,
+            'is_idp': bool(is_idp),
             'plddt_pearson_r': plddt_metrics['pearson_r'],
             'plddt_spearman_rho': plddt_metrics['spearman_rho'],
             'plddt_mae': plddt_metrics['mae'],
@@ -228,8 +238,20 @@ def main():
         sys.exit(1)
 
     # Load data
-    entries = load_lmdb_entries(db_path)
-    print(f'Loaded {len(entries)} validation entries\n')
+    entries = load_lmdb_entries(db_path, max_residues=args.max_residues)
+    n_idp_all = sum(1 for e in entries if e.get('is_idp', False))
+    print(f'Loaded {len(entries)} validation entries ({n_idp_all} IDP, {len(entries) - n_idp_all} folded)')
+    if args.max_residues > 0:
+        print(f'  (max_residues={args.max_residues} filter applied)')
+
+    # Filter by IDP status
+    if args.idp_only:
+        entries = [e for e in entries if e.get('is_idp', False)]
+        print(f'  --idp_only: {len(entries)} entries')
+    elif args.folded_only:
+        entries = [e for e in entries if not e.get('is_idp', False)]
+        print(f'  --folded_only: {len(entries)} entries')
+    print()
 
     # Load model
     print('Loading model...')
@@ -281,11 +303,28 @@ def main():
         print(f'    Mean Spearman ρ = {mean_rho:.4f}')
         print(f'    Mean MAE        = {mean_mae:.4f}')
 
+    # ---- IDP vs Folded Split ----
+    idp_pp = [r for r in per_protein if r.get('is_idp')]
+    folded_pp = [r for r in per_protein if not r.get('is_idp')]
+    for label, subset in [('IDP', idp_pp), ('Folded', folded_pp)]:
+        valid = [r for r in subset if r['plddt_pearson_r'] is not None]
+        if not valid:
+            continue
+        mr = np.mean([r['plddt_pearson_r'] for r in valid])
+        mrho = np.mean([r['plddt_spearman_rho'] for r in valid])
+        mmae = np.mean([r['plddt_mae'] for r in valid])
+        miptm = np.mean([r['iptm_abs_error'] for r in valid])
+        print(f'\n  [{label}] n={len(subset)}:')
+        print(f'    pLDDT: r={mr:.4f}  ρ={mrho:.4f}  MAE={mmae:.4f}')
+        print(f'    ipTM:  abs_err={miptm:.4f}')
+
     # ---- Save Results ----
     out = {
         'checkpoint': args.checkpoint,
         'db_path': db_path,
         'n_proteins': len(per_protein),
+        'n_idp': len(idp_pp),
+        'n_folded': len(folded_pp),
         'global': {
             'plddt_pearson_r': float(pr) if all_pred_plddt else None,
             'plddt_spearman_rho': float(sr) if all_pred_plddt else None,

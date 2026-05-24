@@ -81,13 +81,28 @@ if __name__ == '__main__':
             num_workers=args.num_workers
         )
     else:
-        train_loader = DataLoader(
-            train_dataset, 
-            batch_size=config.train.batch_size, 
-            collate_fn=PaddingCollate(), 
-            shuffle=True,
-            num_workers=args.num_workers
-        )
+        # Use WeightedRandomSampler if dataset provides sample weights (e.g., IDP oversampling)
+        sample_weights = getattr(train_dataset, '_sample_weights', None)
+        if sample_weights is not None:
+            from torch.utils.data import WeightedRandomSampler
+            sampler = WeightedRandomSampler(
+                sample_weights, num_samples=len(sample_weights), replacement=True
+            )
+            train_loader = DataLoader(
+                train_dataset,
+                batch_size=config.train.batch_size,
+                collate_fn=PaddingCollate(),
+                sampler=sampler,
+                num_workers=args.num_workers
+            )
+        else:
+            train_loader = DataLoader(
+                train_dataset,
+                batch_size=config.train.batch_size,
+                collate_fn=PaddingCollate(),
+                shuffle=True,
+                num_workers=args.num_workers
+            )
         
     train_iterator = inf_iterator(train_loader)
     val_loader = DataLoader(val_dataset, batch_size=config.train.batch_size, collate_fn=PaddingCollate(), shuffle=False, num_workers=args.num_workers)
@@ -208,9 +223,16 @@ if __name__ == '__main__':
                 loss_dict = model(batch)
                 avg_t = loss_dict.pop('avg_t', 0.0)
                 loss = sum_weighted_losses(loss_dict, config.train.loss_weights)
+                # IDP-aware loss weighting: multiply loss for IDP entries
+                # to force model to pay attention to disordered regions
+                idp_mult = config.train.get('idp_loss_multiplier', 1.0)
+                if idp_mult != 1.0:
+                    batch_is_idp = batch.get('is_idp', None)
+                    if batch_is_idp is not None and batch_is_idp.any():
+                        loss = loss * idp_mult
                 loss_dict['overall'] = loss
                 loss_dict['avg_t'] = avg_t # Put it back for logging
-            
+
             # NaN Check and Skip
             if not torch.isfinite(loss):
                 logger.warning(f'NaN or Inf detected in loss at iter {it}, micro-batch {i}. Skipping micro-batch.')
@@ -280,6 +302,10 @@ if __name__ == '__main__':
     # Validate
     def validate(it):
         loss_tape = ValidationLossTape()
+        loss_tape_idp = ValidationLossTape()
+        loss_tape_folded = ValidationLossTape()
+        n_idp = 0
+        n_folded = 0
         with torch.no_grad():
             model.eval()
             for i, batch in enumerate(tqdm(val_loader, desc='Validate', dynamic_ncols=True)):
@@ -294,12 +320,24 @@ if __name__ == '__main__':
                     avg_t = loss_dict.pop('avg_t', 0.0)
                     loss = sum_weighted_losses(loss_dict, config.train.loss_weights)
                     loss_dict['overall'] = loss
-                    # We don't necessarily need to log t in val, but let's keep it consistent
                     loss_dict['avg_t'] = avg_t
 
                 loss_tape.update(loss_dict, 1)
+                # Split tracking: IDP vs folded
+                batch_is_idp = batch.get('is_idp', None)
+                is_idp = batch_is_idp is not None and batch_is_idp.any().item()
+                if is_idp:
+                    loss_tape_idp.update(loss_dict, 1)
+                    n_idp += 1
+                else:
+                    loss_tape_folded.update(loss_dict, 1)
+                    n_folded += 1
 
         avg_loss = loss_tape.log(it, logger, writer, 'val')
+        if n_idp > 0:
+            loss_tape_idp.log(it, logger, writer, 'val/idp')
+        if n_folded > 0:
+            loss_tape_folded.log(it, logger, writer, 'val/folded')
         # Don't step scheduler during warmup — warmup manually controls LR.
         # Stepping during warmup can cause the scheduler to decay its internal LR,
         # leading to a sudden drop when warmup ends and the scheduler takes over.
@@ -312,6 +350,17 @@ if __name__ == '__main__':
 
     try:
         for it in range(it_first, config.train.max_iters + 1):
+            # Length curriculum: progressively increase max_residues during training
+            length_curriculum = config.train.get('length_curriculum', None)
+            if length_curriculum is not None:
+                stages = length_curriculum.get('stages', [])
+                for stage_iter, stage_max_len in stages:
+                    if it == stage_iter:
+                        logger.info(f'[LengthCurriculum] iter {it}: max_residues -> {stage_max_len}')
+                        if hasattr(train_dataset, 'set_max_residues'):
+                            train_dataset.set_max_residues(stage_max_len)
+                        if hasattr(val_dataset, 'set_max_residues'):
+                            val_dataset.set_max_residues(stage_max_len)
             train(it)
             if it % config.train.val_freq == 0:
                 avg_val_loss = validate(it)

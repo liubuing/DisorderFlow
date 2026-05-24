@@ -155,14 +155,180 @@ def merge_v6(brain_dir=None):
     merge_and_split(entry_groups, PROJECT_DIR / 'data/confidence_merged_v6')
 
 
+def merge_v7(liver_dir=None):
+    """v6 + Liver Disease -> v7"""
+    print("=== Merge V7: v6 + Liver Disease ===")
+    entry_groups = {}
+    for name, path in [
+        ('v6_train', PROJECT_DIR / 'data/confidence_merged_v6/confidence_train.lmdb'),
+        ('v6_val', PROJECT_DIR / 'data/confidence_merged_v6/confidence_val.lmdb'),
+    ]:
+        if path.exists():
+            entry_groups[name] = load_lmdb(path)
+    # Liver disease LMDB is inside the output directory
+    liver_base = Path(liver_dir) if liver_dir else PROJECT_DIR / 'data/confidence_dataset_liver_disease'
+    liver_lmdb = liver_base / 'liver_disease.lmdb'
+    if liver_lmdb.exists():
+        entry_groups['liver_disease'] = load_lmdb(liver_lmdb)
+    elif liver_base.exists():
+        # Fallback: try loading the base directory (legacy format)
+        entry_groups['liver_disease'] = load_lmdb(liver_base)
+    merge_and_split(entry_groups, PROJECT_DIR / 'data/confidence_merged_v7')
+
+
+def merge_v8(brain_dir=None, v8_expansion_dir=None, liver_dir=None, iptm_threshold=0.6):
+    """V8: quality-filtered V6 brain + V8 brain expansion + quality liver subset -> V8
+
+    Strategy (depth > breadth):
+      - V6 brain disease: keep only ipTM > 0.6 entries (removes ~50% low-quality)
+      - V8 brain expansion: new brain disease categories, already ipTM > 0.6
+      - V7 liver disease: keep only top 150 by ipTM (quality over quantity)
+      - V6 general (V5 base): keep only ipTM > 0.6
+    """
+    print("=== Merge V8: Quality-filtered brain-focused dataset ===")
+    entry_groups = {}
+
+    # V6 brain disease with quality filter
+    brain_path = Path(brain_dir) if brain_dir else PROJECT_DIR / 'data/confidence_dataset_brain_disease'
+    brain_lmdb = brain_path / 'brain_disease.lmdb'
+    if brain_lmdb.exists():
+        all_brain = load_lmdb(brain_lmdb)
+        brain_quality = []
+        brain_low = 0
+        for e in all_brain:
+            iptm = e.get('af2_iptm', 0)
+            if hasattr(iptm, 'item'):
+                iptm = iptm.item()
+            if iptm >= iptm_threshold:
+                brain_quality.append(e)
+            else:
+                brain_low += 1
+        entry_groups['v6_brain_quality'] = brain_quality
+        print(f'  V6 brain: {len(all_brain)} total, {len(brain_quality)} pass ipTM>{iptm_threshold} ({brain_low} filtered)')
+    elif brain_path.exists():
+        all_brain = load_lmdb(brain_path)
+        brain_quality = []
+        brain_low = 0
+        for e in all_brain:
+            iptm = e.get('af2_iptm', 0)
+            if hasattr(iptm, 'item'):
+                iptm = iptm.item()
+            if iptm >= iptm_threshold:
+                brain_quality.append(e)
+            else:
+                brain_low += 1
+        entry_groups['v6_brain_quality'] = brain_quality
+        print(f'  V6 brain: {len(all_brain)} total, {len(brain_quality)} pass ipTM>{iptm_threshold} ({brain_low} filtered)')
+
+    # V8 brain expansion (already quality-filtered during build)
+    v8_path = Path(v8_expansion_dir) if v8_expansion_dir else PROJECT_DIR / 'data/confidence_v8_brain_expansion'
+    v8_lmdb = v8_path / 'v8_brain_expansion.lmdb'
+    if v8_lmdb.exists():
+        entry_groups['v8_brain_expansion'] = load_lmdb(v8_lmdb)
+        print(f'  V8 brain expansion: {len(entry_groups["v8_brain_expansion"])} entries')
+    elif v8_path.exists():
+        entry_groups['v8_brain_expansion'] = load_lmdb(v8_path)
+
+    # V6 general proteins (from v5 merged) with quality filter
+    v6_train = PROJECT_DIR / 'data/confidence_merged_v6/confidence_train.lmdb'
+    v6_val = PROJECT_DIR / 'data/confidence_merged_v6/confidence_val.lmdb'
+    general_entries = []
+    for path in [v6_train, v6_val]:
+        if path.exists():
+            entries = load_lmdb(path)
+            quality = []
+            for e in entries:
+                iptm = e.get('af2_iptm', 0)
+                if hasattr(iptm, 'item'):
+                    iptm = iptm.item()
+                if iptm >= iptm_threshold:
+                    quality.append(e)
+            general_entries.extend(quality)
+    if general_entries:
+        entry_groups['v6_general_quality'] = general_entries
+        print(f'  V6 general (quality-filtered): {len(general_entries)} entries')
+
+    # V7 liver disease: top 200 by ipTM only
+    liver_base = Path(liver_dir) if liver_dir else PROJECT_DIR / 'data/confidence_dataset_liver_disease'
+    liver_lmdb = liver_base / 'liver_disease.lmdb'
+    if liver_lmdb.exists():
+        all_liver = load_lmdb(liver_lmdb)
+        liver_sorted = sorted(all_liver, key=lambda e: (
+            e.get('af2_iptm').item() if hasattr(e.get('af2_iptm', 0), 'item') else e.get('af2_iptm', 0)
+        ), reverse=True)
+        top_liver = liver_sorted[:200]
+        entry_groups['liver_top200'] = top_liver
+        print(f'  Liver disease: {len(all_liver)} total, keeping top 200 by ipTM')
+    elif liver_base.exists():
+        all_liver = load_lmdb(liver_base)
+        liver_sorted = sorted(all_liver, key=lambda e: (
+            e.get('af2_iptm').item() if hasattr(e.get('af2_iptm', 0), 'item') else e.get('af2_iptm', 0)
+        ), reverse=True)
+        top_liver = liver_sorted[:200]
+        entry_groups['liver_top200'] = top_liver
+        print(f'  Liver disease: {len(all_liver)} total, keeping top 200 by ipTM')
+
+    output_dir = PROJECT_DIR / 'data/confidence_merged_v8'
+    return merge_and_split(entry_groups, output_dir, label='is_idp')
+
+
+def merge_v9(idp_dir=None):
+    """V8 + IDP v3 -> V9 (IDP-aware, no ipTM filter on IDPs)
+
+    V8 already has ipTM>0.6 quality filter on folded proteins.
+    IDP v3 entries are added AS-IS — they naturally have low ipTM
+    and would be incorrectly filtered out by the ipTM threshold.
+    """
+    print("=== Merge V9: V8 + IDP v3 (IDP-preserving) ===")
+    entry_groups = {}
+
+    # Load V8 (already quality-filtered)
+    for name, path in [
+        ('v8_train', PROJECT_DIR / 'data/confidence_merged_v8/confidence_train.lmdb'),
+        ('v8_val', PROJECT_DIR / 'data/confidence_merged_v8/confidence_val.lmdb'),
+    ]:
+        if path.exists():
+            entry_groups[name] = load_lmdb(path)
+            n_idp = sum(1 for e in entry_groups[name] if e.get('is_idp'))
+            print(f'  {name}: {len(entry_groups[name])} entries ({n_idp} IDP)')
+
+    # Load IDP v3
+    idp_path = Path(idp_dir) if idp_dir else PROJECT_DIR / 'data/confidence_idp_v3'
+    if idp_path.exists():
+        idp_entries = load_lmdb(idp_path)
+        entry_groups['idp_v3'] = idp_entries
+        n_idp = sum(1 for e in idp_entries if e.get('is_idp'))
+        print(f'  idp_v3: {len(idp_entries)} entries ({n_idp} IDP)')
+    else:
+        print(f'  WARNING: IDP v3 not found at {idp_path}')
+
+    output_dir = PROJECT_DIR / 'data/confidence_merged_v9'
+    summary = merge_and_split(entry_groups, output_dir, label='is_idp')
+
+    # Explicit IDP count for training_config reference
+    n_idp_train = sum(1 for e in load_lmdb(output_dir / 'confidence_train.lmdb') if e.get('is_idp'))
+    n_idp_val = sum(1 for e in load_lmdb(output_dir / 'confidence_val.lmdb') if e.get('is_idp'))
+    summary['n_idp_train'] = n_idp_train
+    summary['n_idp_val'] = n_idp_val
+    summary['n_idp_total'] = n_idp_train + n_idp_val
+    with open(output_dir / 'dataset_summary.json', 'w') as f:
+        json.dump(summary, f, indent=2)
+    print(f'  IDP entries: {n_idp_train} train + {n_idp_val} val = {n_idp_train + n_idp_val} total')
+    return summary
+
+
 def main():
     import argparse
     p = argparse.ArgumentParser(description='Merge confidence datasets')
-    p.add_argument('--version', choices=['v4', 'v5', 'v6'], help='Merge to specific version')
+    p.add_argument('--version', choices=['v4', 'v5', 'v6', 'v7', 'v8', 'v9'], help='Merge to specific version')
     p.add_argument('--datasets', nargs='+', help='Custom: LMDB directories to merge')
     p.add_argument('--output_dir', help='Custom: output directory')
     p.add_argument('--disease_dir', help='v5 only: disease v2 dataset directory')
-    p.add_argument('--brain_dir', help='v6 only: brain disease dataset directory')
+    p.add_argument('--brain_dir', help='v6/v8: brain disease dataset directory')
+    p.add_argument('--liver_dir', help='v7/v8: liver disease dataset directory')
+    p.add_argument('--v8_expansion_dir', help='v8 only: brain expansion dataset directory')
+    p.add_argument('--idp_dir', help='v9 only: IDP v3 dataset directory')
+    p.add_argument('--iptm_threshold', type=float, default=0.6, help='v8: ipTM quality threshold')
     p.add_argument('--train_split', type=float, default=0.8)
     p.add_argument('--seed', type=int, default=2026)
     args = p.parse_args()
@@ -173,6 +339,12 @@ def main():
         merge_v5(args.disease_dir)
     elif args.version == 'v6':
         merge_v6(args.brain_dir)
+    elif args.version == 'v7':
+        merge_v7(args.liver_dir)
+    elif args.version == 'v8':
+        merge_v8(args.brain_dir, args.v8_expansion_dir, args.liver_dir, args.iptm_threshold)
+    elif args.version == 'v9':
+        merge_v9(args.idp_dir)
     elif args.datasets and args.output_dir:
         entry_groups = {}
         for ds in args.datasets:

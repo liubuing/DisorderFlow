@@ -38,6 +38,13 @@ def get_scheduler(cfg, optimizer):
             optimizer,
             gamma=cfg.gamma,
         )
+    elif cfg.type == 'cosine':
+        return torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            optimizer,
+            T_0=cfg.T_0,
+            T_mult=cfg.get('T_mult', 1),
+            eta_min=cfg.get('eta_min', 1e-7),
+        )
     elif cfg.type is None:
         return BlackHole()
     else:

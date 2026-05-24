@@ -1,7 +1,7 @@
 alphafold:
   af2:
     executable: colabfold_batch
-    venv: C:\biological\AntibodyDesignBFN-main\venv
+    venv: ../venv
   defaults:
     num_models: 1
     num_recycle: 1
@@ -111,3 +111,83 @@ target_design:
     min_rel_sasa: 0.15
     protrusion_weight: 0.25
     sasa_weight: 0.4
+
+# ── Misfolding Disease Module Configuration ──
+misfolding_disease:
+  targets_dir: data/misfolding_targets
+  output_dir: misfolding_results
+  defaults:
+    constraint_cutoff: 8.0
+    design_samples: 10
+    af2_recycle: 3
+    model_type: alphafold2_multimer_v3
+    top_k_iterative: 3
+    max_refinement_rounds: 3
+    design_tool: BFN (通用蛋白设计)
+  cascade:
+    thresholds:
+      iptm_min: 0.25
+      ppl_max: 200.0
+      entropy_max: 2.8
+    weights:
+      iptm: 0.45
+      plddt: 0.15
+      ppl_inv: 0.15
+      entropy_inv: 0.10
+      recovery: 0.15
+  idp:
+    warn_on_design: true
+    require_af2_validation: true
+    min_plddt_for_idp: 0.40
+
+# ── Closed-Loop Multi-Objective Alignment ──
+closed_loop:
+  defaults:
+    n_samples: 20
+    top_k: 5
+    max_cycles: 5
+    convergence_delta: 0.02
+    convergence_patience: 2
+    design_tool: BFN (抗体CDR设计)
+  physics:
+    enable_relax: false
+    scorefxn: ref2015
+    relax_max_iter: 200
+    antibody_chains: HL
+    antigen_chain: A
+  multi_objective:
+    weights:
+      iptm: 0.25
+      plddt: 0.15
+      ptm: 0.10
+      max_pae: 0.05
+      dG: 0.15
+      ddG: 0.05
+      relax_e: 0.05
+      ppl_inv: 0.10
+      entropy_inv: 0.05
+      contacts: 0.05
+      recovery: 0.05
+    thresholds:
+      iptm_min: 0.25
+      plddt_min: 50.0
+      ptm_min: 0.25
+      max_pae_max: 20.0
+      dG_max: 5.0
+      ddG_max: 10.0
+      ppl_max: 200.0
+      entropy_max: 2.8
+  finetune:
+    enabled: false
+    frequency: 2
+    freeze_backbone: true
+    n_epochs: 3
+    lr: 1.0e-05
+    batch_size: 4
+  ranking:
+    strategy: pareto_first
+    hybrid_ratio: 0.5
+  output:
+    dir: closed_loop_results
+    save_cycles: true
+    save_pareto_plots: true

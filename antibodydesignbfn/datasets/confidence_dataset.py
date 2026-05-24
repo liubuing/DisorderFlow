@@ -28,8 +28,11 @@ class ConfidenceRegressionDataset(Dataset):
         # Accept both EasyDict/config dict and plain string path
         if isinstance(cfg, str):
             self.db_path = cfg
+            cfg = {}
         else:
             self.db_path = cfg.db_path if hasattr(cfg, 'db_path') else cfg['db_path']
+        self.max_residues = cfg.get('max_residues', 0) if isinstance(cfg, dict) else 0
+        self.idp_sample_weight = cfg.get('idp_sample_weight', 1.0) if isinstance(cfg, dict) else 1.0
         # transform is ignored — data is already preprocessed in the LMDB
 
         if os.path.isdir(self.db_path) and not os.path.exists(os.path.join(self.db_path, 'data.mdb')):
@@ -45,23 +48,63 @@ class ConfidenceRegressionDataset(Dataset):
                 # Count .pkl files
                 self._length = len([f for f in os.listdir(self.db_path) if f.endswith('.pkl')])
             self._pkl_dir = self.db_path
+            self._valid_indices = list(range(self._length))
         else:
             self._use_lmdb = True
             import lmdb
             self._env = lmdb.open(self.db_path, readonly=True, lock=False, readahead=False)
             with self._env.begin() as txn:
                 self._length = pickle.loads(txn.get(b'__len__'))
+            self._valid_indices = list(range(self._length))
+
+        # Filter by max_residues to avoid CUDA OOM on large proteins
+        if self.max_residues > 0 and self._use_lmdb:
+            self._valid_indices = []
+            with self._env.begin() as txn:
+                for i in range(self._length):
+                    key = f'{i:08d}'.encode()
+                    entry = pickle.loads(txn.get(key))
+                    seq_len = len(entry.get('sequence', ''))
+                    if seq_len <= self.max_residues:
+                        self._valid_indices.append(i)
+            n_filtered = self._length - len(self._valid_indices)
+            if n_filtered > 0:
+                print(f'[ConfidenceRegression] Filtered {n_filtered} entries > {self.max_residues} residues '
+                      f'({len(self._valid_indices)}/{self._length} retained)')
+
+        # Build sample weights for IDP-stratified sampling
+        self._sample_weights = None
+        if self.idp_sample_weight > 1.0:
+            self._sample_weights = torch.ones(len(self._valid_indices), dtype=torch.float64)
+            n_idp = 0
+            for idx, real_idx in enumerate(self._valid_indices):
+                if self._use_lmdb:
+                    with self._env.begin() as txn:
+                        entry = pickle.loads(txn.get(f'{real_idx:08d}'.encode()))
+                else:
+                    pkl_path = os.path.join(self._pkl_dir, f'{real_idx:08d}.pkl')
+                    with open(pkl_path, 'rb') as f:
+                        entry = pickle.load(f)
+                if entry.get('is_idp', False):
+                    self._sample_weights[idx] = self.idp_sample_weight
+                    n_idp += 1
+            if n_idp > 0:
+                print(f'[ConfidenceRegression] IDP-weighted sampling: {n_idp} IDP entries '
+                      f'(weight={self.idp_sample_weight:.1f}x, {n_idp}/{len(self._valid_indices)})')
+            else:
+                self._sample_weights = None  # No IDPs found, fall back to uniform
 
     def __len__(self):
-        return self._length
+        return len(self._valid_indices)
 
     def __getitem__(self, index):
+        real_idx = self._valid_indices[index]
         if self._use_lmdb:
             with self._env.begin() as txn:
-                key = f'{index:08d}'.encode()
+                key = f'{real_idx:08d}'.encode()
                 entry = pickle.loads(txn.get(key))
         else:
-            pkl_path = os.path.join(self._pkl_dir, f'{index:08d}.pkl')
+            pkl_path = os.path.join(self._pkl_dir, f'{real_idx:08d}.pkl')
             with open(pkl_path, 'rb') as f:
                 entry = pickle.load(f)
 
@@ -82,6 +125,34 @@ class ConfidenceRegressionDataset(Dataset):
         batch['generate_flag'] = torch.zeros(batch['aa'].shape[0], dtype=torch.bool)
 
         return batch
+
+    def set_max_residues(self, max_residues):
+        """Dynamically update the max_residues filter (for length curriculum).
+
+        Rebuilds _valid_indices using the original full index set, then
+        re-filters for the new max_residues. Safe to call mid-training when
+        num_workers=0.
+        """
+        self.max_residues = max_residues
+        full_indices = list(range(self._length))
+        if max_residues <= 0:
+            self._valid_indices = full_indices
+            return
+        self._valid_indices = []
+        if self._use_lmdb:
+            with self._env.begin() as txn:
+                for i in full_indices:
+                    key = f'{i:08d}'.encode()
+                    entry = pickle.loads(txn.get(key))
+                    if len(entry.get('sequence', '')) <= max_residues:
+                        self._valid_indices.append(i)
+        else:
+            for i in full_indices:
+                pkl_path = os.path.join(self._pkl_dir, f'{i:08d}.pkl')
+                with open(pkl_path, 'rb') as f:
+                    entry = pickle.load(f)
+                if len(entry.get('sequence', '')) <= max_residues:
+                    self._valid_indices.append(i)
 
     def close(self):
         if self._use_lmdb and hasattr(self, '_env'):

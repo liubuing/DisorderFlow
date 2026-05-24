@@ -1,0 +1,62 @@
+[
+  {
+    "sequence": "DDASAERPDLKVLHWLWSQNWLYTITGDRPTDV",
+    "ppl": 51.73257064819336,
+    "entropy": 1.996486783027649,
+    "plddt": 0.9171023964881897,
+    "iptm": 0.7851575016975403,
+    "pae": 0.14660252630710602,
+    "recovery": 0.15151515151515152,
+    "composite_score": 0.516513094956616,
+    "entropy_inv": 0.0,
+    "rank": 1
+  },
+  {
+    "sequence": "LQIPYYDGCIIQPNGDCDSHGGIPETDNQFEEM",
+    "ppl": 48.77456283569336,
+    "entropy": 1.996487021446228,
+    "plddt": 0.9171024560928345,
+    "iptm": 0.7851575016975403,
+    "pae": 0.1466023176908493,
+    "recovery": 0.12121212121212122,
+    "composite_score": 0.5121434836678488,
+    "entropy_inv": 0.0,
+    "rank": 2
+  },
+  {
+    "sequence": "TEVSMSACLTWLCHIFEQIRLRAATDVFGECAC",
+    "ppl": 43.58789825439453,
+    "entropy": 1.9964879751205444,
+    "plddt": 0.9171021580696106,
+    "iptm": 0.7851572036743164,
+    "pae": 0.14660285413265228,
+    "recovery": 0.09090909090909091,
+    "composite_score": 0.5079637511563321,
+    "entropy_inv": 0.0,
+    "rank": 3
+  },
+  {
+    "sequence": "QLMVDAQLKATVCQIAYTCWCMEKIDPMIQDNL",
+    "ppl": 48.7426872253418,
+    "entropy": 1.9964872598648071,
+    "plddt": 0.9171023964881897,
+    "iptm": 0.7851574420928955,
+    "pae": 0.14660252630710602,
+    "recovery": 0.09090909090909091,
+    "composite_score": 0.5075999925790587,
+    "entropy_inv": 0.0,
+    "rank": 4
+  },
+  {
+    "sequence": "RFWNPFNIMIYMTTMDLQSYHQQVPVYHRCTMK",
+    "ppl": 62.37739562988281,
+    "entropy": 1.996485710144043,
+    "plddt": 0.9171026349067688,
+    "iptm": 0.7851579785346985,
+    "pae": 0.1466018110513687,
+    "recovery": 0.09090909090909091,
+    "composite_score": 0.506927679922557,
+    "entropy_inv": 0.0,
+    "rank": 5
+  }
+]
