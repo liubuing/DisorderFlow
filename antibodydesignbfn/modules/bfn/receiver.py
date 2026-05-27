@@ -4,8 +4,79 @@ import torch.nn.functional as F
 from antibodydesignbfn.modules.encoders.ga import GAEncoder
 from antibodydesignbfn.modules.bfn.orientation import svd_project_so3
 
+
+class ResidualMLP(nn.Module):
+    """MLP with residual blocks, LayerNorm, and Dropout for confidence heads.
+
+    Structure:
+        input -> Linear(in_dim, hidden_dim) -> ReLU -> [ResBlock x N] -> Linear(hidden_dim, out_dim)
+
+    where each ResBlock is:
+        x -> LinearNorm(hidden) -> ReLU -> Dropout -> + x (residual)
+    """
+
+    def __init__(self, in_dim, hidden_dim, out_dim, num_blocks=2, dropout=0.1):
+        super().__init__()
+        self.input_proj = nn.Linear(in_dim, hidden_dim)
+        self.blocks = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(hidden_dim, hidden_dim),
+                nn.LayerNorm(hidden_dim),
+                nn.ReLU(),
+                nn.Dropout(dropout),
+            ) for _ in range(num_blocks)
+        ])
+        self.output_proj = nn.Linear(hidden_dim, out_dim)
+
+    def forward(self, x):
+        x = F.relu(self.input_proj(x))
+        for block in self.blocks:
+            x = x + block(x)
+        return self.output_proj(x)
+
+
+class AttentionPAEHead(nn.Module):
+    """Lightweight attention-based PAE head with pair feature bias.
+
+    Uses Q/K outer product to capture pairwise relationships,
+    with pair_feat (geometric/evolutionary features) as attention bias.
+    Output: (N, L, L) pairwise error prediction.
+    """
+
+    def __init__(self, res_dim=256, pair_dim=128, num_heads=4, dropout=0.1):
+        super().__init__()
+        self.num_heads = num_heads
+        head_dim = res_dim // 2 // num_heads  # 128 // 4 = 32
+        self.head_dim = head_dim
+        self.q_proj = nn.Linear(res_dim, res_dim // 2)    # 256 -> 128
+        self.k_proj = nn.Linear(res_dim, res_dim // 2)    # 256 -> 128
+        self.pair_bias_proj = nn.Linear(pair_dim, num_heads)  # 128 -> 4
+        self.output = nn.Sequential(
+            nn.Linear(num_heads + pair_dim, 128),
+            nn.LayerNorm(128),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, 1),
+        )
+
+    def forward(self, features, pair_feat):
+        N, L, D = features.shape
+        Q = self.q_proj(features)  # (N, L, 128)
+        K = self.k_proj(features)  # (N, L, 128)
+        Q = Q.view(N, L, self.num_heads, self.head_dim)  # (N, L, 4, 32)
+        K = K.view(N, L, self.num_heads, self.head_dim)  # (N, L, 4, 32)
+        attn = torch.einsum('nihd,njhd->nijh', Q, K) / (self.head_dim ** 0.5)
+        pair_bias = self.pair_bias_proj(pair_feat)  # (N, L, L, 4)
+        attn = attn + pair_bias
+        attn = F.relu(attn)
+        combined = torch.cat([attn, pair_feat], dim=-1)  # (N, L, L, 4+128=132)
+        return self.output(combined).squeeze(-1)  # (N, L, L)
+
+
 class AntibodyBFN_Receiver(nn.Module):
-    def __init__(self, res_feat_dim, pair_feat_dim, num_layers, encoder_opt={}, num_classes=20, seq_only=False):
+    def __init__(self, res_feat_dim, pair_feat_dim, num_layers, encoder_opt={}, num_classes=20, seq_only=False, head_dropout=0.1):
         super().__init__()
         self.res_feat_dim = res_feat_dim
         self.num_classes = num_classes
@@ -47,33 +118,19 @@ class AntibodyBFN_Receiver(nn.Module):
         self.head_ori = nn.Linear(res_feat_dim, 6) # 6D representation for rotation
         self.head_ang = nn.Linear(res_feat_dim, 4 * 2) # sin/cos for 4 angles
 
-        # Confidence Heads
-        self.head_plddt = nn.Sequential(
-            nn.Linear(res_feat_dim, res_feat_dim // 2),
-            nn.ReLU(),
-            nn.Linear(res_feat_dim // 2, 32),
-            nn.ReLU(),
-            nn.Linear(32, 1)
+        # Confidence Heads (V10: deeper residual MLPs with dropout)
+        self.head_plddt = ResidualMLP(res_feat_dim, res_feat_dim, 1, num_blocks=3, dropout=head_dropout)
+        self.head_iptm = ResidualMLP(res_feat_dim, res_feat_dim // 2, 1, num_blocks=2, dropout=head_dropout)
+        self.head_pae = AttentionPAEHead(
+            res_dim=res_feat_dim, pair_dim=pair_feat_dim,
+            num_heads=4, dropout=head_dropout,
         )
-        # Context-only ipTM head: pool over context residues (mask_gen=0) only
-        self.head_iptm = nn.Sequential(
-            nn.Linear(res_feat_dim, res_feat_dim),
-            nn.ReLU(),
-            nn.Linear(res_feat_dim, 1)
-        )
-        self.head_pae = nn.Sequential(
-            nn.Linear(res_feat_dim, res_feat_dim // 2),
-            nn.ReLU(),
-            nn.Linear(res_feat_dim // 2, 1)
-        )
-        
+
         # Feedback embedding: pLDDT, ipTM, and PAE back to features
         self.conf_embed = nn.Linear(1, res_feat_dim)
         self.iptm_embed = nn.Linear(1, res_feat_dim)
         self.pae_embed = nn.Linear(1, pair_feat_dim)
         
-        # Project pair_feat to res_feat_dim for PAE head
-        self.pair_proj = nn.Linear(pair_feat_dim, res_feat_dim)
 
     def forward(self, theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res,
                 backbone_pos=None, prev_conf=None, prev_iptm=None, prev_pae=None, mask_gen=None):
@@ -158,12 +215,7 @@ class AntibodyBFN_Receiver(nn.Module):
 
             pred_iptm = torch.sigmoid(self.head_iptm(context_feat)).squeeze(-1)
 
-            # PAE: pair features
-            D = features.shape[-1]
-            feat_row = features.view(N, L, 1, D).expand(N, L, L, D)
-            feat_col = features.view(N, 1, L, D).expand(N, L, L, D)
-            pair_combined = feat_row + feat_col + self.pair_proj(pair_feat)
-            pred_pae = torch.sigmoid(self.head_pae(pair_combined)).squeeze(-1)
+            pred_pae = torch.sigmoid(self.head_pae(features, pair_feat))
         else:
             # Full prediction
             pred_pos_local = self.head_pos(features)
@@ -184,10 +236,5 @@ class AntibodyBFN_Receiver(nn.Module):
 
             pred_iptm = torch.sigmoid(self.head_iptm(context_feat)).squeeze(-1)
 
-            # PAE: pair features
-            D = features.shape[-1]
-            feat_row = features.view(N, L, 1, D).expand(N, L, L, D)
-            feat_col = features.view(N, 1, L, D).expand(N, L, L, D)
-            pair_combined = feat_row + feat_col + self.pair_proj(pair_feat)
-            pred_pae = torch.sigmoid(self.head_pae(pair_combined)).squeeze(-1)
+            pred_pae = torch.sigmoid(self.head_pae(features, pair_feat))
         return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae

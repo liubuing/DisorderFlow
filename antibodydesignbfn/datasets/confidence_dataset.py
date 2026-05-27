@@ -57,6 +57,8 @@ class ConfidenceRegressionDataset(Dataset):
                 self._length = pickle.loads(txn.get(b'__len__'))
             self._valid_indices = list(range(self._length))
 
+        self.min_plddt = cfg.get('min_af2_plddt', 0.0) if isinstance(cfg, dict) else 0.0
+
         # Filter by max_residues to avoid CUDA OOM on large proteins
         if self.max_residues > 0 and self._use_lmdb:
             self._valid_indices = []
@@ -71,6 +73,31 @@ class ConfidenceRegressionDataset(Dataset):
             if n_filtered > 0:
                 print(f'[ConfidenceRegression] Filtered {n_filtered} entries > {self.max_residues} residues '
                       f'({len(self._valid_indices)}/{self._length} retained)')
+
+        # Quality filter: remove entries with low mean AF2 pLDDT (V10)
+        if self.min_plddt > 0.0:
+            plddt_before = len(self._valid_indices)
+            plddt_filtered = []
+            plddt_threshold = self.min_plddt / 100.0  # config uses 0-100 scale, data uses 0-1
+            if self._use_lmdb:
+                with self._env.begin() as txn:
+                    for idx in self._valid_indices:
+                        entry = pickle.loads(txn.get(f'{idx:08d}'.encode()))
+                        if entry.get('af2_plddt', torch.tensor([0.0])).mean().item() >= plddt_threshold:
+                            plddt_filtered.append(idx)
+            else:
+                for idx in self._valid_indices:
+                    pkl_path = os.path.join(self._pkl_dir, f'{idx:08d}.pkl')
+                    with open(pkl_path, 'rb') as f:
+                        entry = pickle.load(f)
+                    if entry.get('af2_plddt', torch.tensor([0.0])).mean().item() >= plddt_threshold:
+                        plddt_filtered.append(idx)
+            n_removed = plddt_before - len(plddt_filtered)
+            self._valid_indices = plddt_filtered
+            if n_removed > 0:
+                print(f'[ConfidenceRegression] Quality filter (>={self.min_plddt} pLDDT): '
+                      f'removed {n_removed} low-quality entries '
+                      f'({len(self._valid_indices)}/{plddt_before} retained)')
 
         # Build sample weights for IDP-stratified sampling
         self._sample_weights = None

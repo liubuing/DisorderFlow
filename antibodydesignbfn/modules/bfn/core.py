@@ -33,7 +33,8 @@ class AntibodyBFN_Core(nn.Module):
         has_structure_loss = any(k in loss_weight and loss_weight.get(k, 0) > 0 for k in ['dist', 'fape', 'pos', 'rot'])
         has_conf_loss = any(k in loss_weight and loss_weight.get(k, 0) > 0 for k in conf_loss_keys)
         seq_only = not has_structure_loss
-        self.receiver = AntibodyBFN_Receiver(res_feat_dim, pair_feat_dim, num_layers=6, encoder_opt=eps_net_opt, num_classes=self.num_classes, seq_only=seq_only)
+        head_dropout = loss_weight.get('head_dropout', 0.1) if loss_weight else 0.1
+        self.receiver = AntibodyBFN_Receiver(res_feat_dim, pair_feat_dim, num_layers=6, encoder_opt=eps_net_opt, num_classes=self.num_classes, seq_only=seq_only, head_dropout=head_dropout)
         
         ot_iters = ot_opt.get('num_iters', 10)
         ot_eps = ot_opt.get('epsilon', 2.0)
@@ -208,8 +209,10 @@ class AntibodyBFN_Core(nn.Module):
             losses['ang_aux'] = (loss_ang_aux * mask_gen).sum() / (mask_gen.sum() + 1e-8)
 
         # === Confidence Losses (pLDDT / ipTM / PAE) ===
-        # Computed only when AF2 ground truth is available in the batch.
-        # Used for fine-tuning confidence heads on general protein data.
+        # V10: Huber loss for robustness against outliers (especially IDP regions).
+        # Per-residue confidence weighting for pLDDT.
+        huber_beta = self.loss_weight.get('huber_beta', 0.1)
+
         if 'af2_plddt' in batch and 'plddt' in self.loss_weight and self.loss_weight['plddt'] > 0:
             af2_plddt = batch['af2_plddt']
             pred_len = pred_plddt.shape[1]
@@ -218,12 +221,16 @@ class AntibodyBFN_Core(nn.Module):
             else:
                 af2_plddt = af2_plddt[:, :pred_len]
             mask_plddt = mask_res[:, :pred_len]
-            loss_plddt = F.mse_loss(pred_plddt, af2_plddt, reduction='none')
-            losses['plddt'] = (loss_plddt * mask_plddt).sum() / (mask_plddt.sum() + 1e-8)
+            # Per-residue confidence weight: higher AF2 pLDDT -> more reliable target
+            conf_weight = 0.5 + 0.5 * af2_plddt  # [0.5, 1.0]
+            huber = nn.SmoothL1Loss(reduction='none', beta=huber_beta)
+            loss_plddt = huber(pred_plddt, af2_plddt)
+            losses['plddt'] = (loss_plddt * conf_weight * mask_plddt).sum() / (mask_plddt.sum() + 1e-8)
 
         if 'af2_iptm' in batch and 'iptm' in self.loss_weight and self.loss_weight['iptm'] > 0:
             af2_iptm = batch['af2_iptm'].float()
-            losses['iptm'] = F.mse_loss(pred_iptm, af2_iptm, reduction='mean')
+            huber_iptm = nn.SmoothL1Loss(beta=huber_beta)
+            losses['iptm'] = huber_iptm(pred_iptm, af2_iptm)
 
         if 'af2_pae_matrix' in batch and 'pae' in self.loss_weight and self.loss_weight['pae'] > 0:
             af2_pae = batch['af2_pae_matrix']
@@ -235,7 +242,9 @@ class AntibodyBFN_Core(nn.Module):
             mask_row = mask_res[:, :pred_len].unsqueeze(-1)
             mask_col = mask_res[:, :pred_len].unsqueeze(1)
             mask_pair = mask_row & mask_col
-            loss_pae = F.mse_loss(pred_pae, af2_pae / 31.0, reduction='none')
+            pae_target = af2_pae / 31.0
+            huber_pae = nn.SmoothL1Loss(reduction='none', beta=huber_beta)
+            loss_pae = huber_pae(pred_pae, pae_target)
             losses['pae'] = (loss_pae * mask_pair).sum() / (mask_pair.sum() + 1e-8)
 
         losses['avg_t'] = t.mean()

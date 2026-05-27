@@ -11,27 +11,18 @@ def svd_project_so3(F):
     device = F.device
     # Add small noise to break degeneracy for SVD stability
     F = F + 1e-6 * torch.randn_like(F)
-    
-    if device.type == 'mps':
-        F_cpu = F.float().cpu() # Ensure float32 on CPU
-        U, S, Vh = torch.linalg.svd(F_cpu)
-        
-        # Calculate R on CPU to avoid MPS limitations with det/LU
-        # R_temp = U @ Vh
-        d = torch.det(torch.matmul(U, Vh))
-        
-        mid = torch.ones_like(S)
-        mid[..., -1] = d
-        
-        R = U @ torch.diag_embed(mid) @ Vh
-        return R.to(device)
-    else:
-        U, S, Vh = torch.linalg.svd(F)
-        d = torch.det(U @ Vh)
-        mid = torch.ones_like(S)
-        mid[..., -1] = d
-        R = U @ torch.diag_embed(mid) @ Vh
-        return R
+
+    # MPS/XPU: torch.linalg.svd and det don't support float16.
+    # Force float32 and disable autocast for this region.
+    if device.type in ('mps', 'xpu'):
+        with torch.autocast(device_type=device.type, enabled=False):
+            F32 = F.float()
+            U, S, Vh = torch.linalg.svd(F32)
+            d = torch.linalg.det(U @ Vh)
+            mid = torch.ones_like(S)
+            mid[..., -1] = d
+            R = U @ torch.diag_embed(mid) @ Vh
+        return R.to(F.dtype)
 
 class OrientationBFN(nn.Module):
     def __init__(self, beta=1.0):

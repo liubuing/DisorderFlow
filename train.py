@@ -7,8 +7,9 @@ import torch.utils.tensorboard
 from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
-torch.backends.cuda.matmul.allow_tf32 = True
-torch.backends.cudnn.allow_tf32 = True
+if torch.cuda.is_available():
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
 
 from antibodydesignbfn.datasets import get_dataset
 from antibodydesignbfn.models import get_model
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('config', type=str)
     parser.add_argument('--logdir', type=str, default='./logs')
     parser.add_argument('--debug', action='store_true', default=False)
-    parser.add_argument('--device', type=str, default='cuda')
+    parser.add_argument('--device', type=str, default='xpu' if hasattr(torch, 'xpu') and torch.xpu.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu')
     parser.add_argument('--num_workers', type=int, default=0)
     parser.add_argument('--tag', type=str, default='')
     parser.add_argument('--resume', type=str, default=None)
@@ -116,7 +117,7 @@ if __name__ == '__main__':
     # Optimizer & scheduler
     optimizer = get_optimizer(config.train.optimizer, model)
     scheduler = get_scheduler(config.train.scheduler, optimizer)
-    scaler = torch.amp.GradScaler('cuda', enabled=(args.device == 'cuda' and not args.no_amp))
+    scaler = torch.amp.GradScaler('xpu' if args.device == 'xpu' else 'cuda', enabled=(args.device not in ('cpu', 'mps') and not args.no_amp), init_scale=128.0)
     optimizer.zero_grad()
     it_first = 1
     min_val_loss = float('inf')
@@ -138,25 +139,30 @@ if __name__ == '__main__':
         # Finetune: only load model weights, start fresh (new optimizer, scheduler, warmup)
         logger.info('Finetuning from checkpoint: %s' % args.finetune)
         ckpt = torch.load(args.finetune, map_location=args.device, weights_only=False)
-        # Remove old head weights if architecture mismatch
         ckpt_state = ckpt['model']
-        # pLDDT head: V3→V4 upgrade (2-layer → 4-layer)
-        old_plddt_keys = [k for k in ckpt_state if 'head_plddt' in k and 'head_plddt.0' not in k]
-        for k in old_plddt_keys:
-            ckpt_state.pop(k)
-            logger.info('Skipping old pLDDT key: %s (new head will train from scratch)' % k)
-        if old_plddt_keys:
-            logger.info('New pLDDT head initialized randomly (architecture upgrade)')
-        # ipTM head: context-only pooling (Linear(256,256) → Linear(256,1))
-        old_iptm_keys = [k for k in ckpt_state if 'head_iptm' in k]
-        for k in old_iptm_keys:
-            ckpt_state.pop(k)
-            logger.info('Skipping old ipTM key: %s (context-only head will train from scratch)' % k)
-        if old_iptm_keys:
-            logger.info('New ipTM head initialized randomly (context-only architecture)')
-        model.load_state_dict(ckpt_state, strict=False)
-        logger.info('Loaded model weights only. Starting fresh with new optimizer/scheduler.')
-        logger.info('Warmup will be applied from the beginning.')
+
+        # Strip old confidence head weights (architecture may differ).
+        # Use substring match because checkpoint keys include module prefix
+        # (e.g. bfn.receiver.head_plddt.0.weight).
+        old_head_names = ['head_plddt.', 'head_iptm.', 'head_pae.', 'pair_proj.']
+        stripped_keys = []
+        for k in list(ckpt_state.keys()):
+            if any(name in k for name in old_head_names):
+                stripped_keys.append(k)
+                ckpt_state.pop(k)
+
+        missing_keys, unexpected_keys = model.load_state_dict(ckpt_state, strict=False)
+        if stripped_keys:
+            logger.info(f'Stripped {len(stripped_keys)} old confidence head weights (new heads randomized)')
+            for k in stripped_keys[:5]:
+                logger.info(f'  - {k}')
+        if missing_keys:
+            logger.info(f'New parameters (random init): {len(missing_keys)}')
+            for k in missing_keys[:10]:
+                logger.info(f'  + {k}')
+        if unexpected_keys:
+            logger.info(f'Deprecated parameters (skipped): {len(unexpected_keys)}')
+        logger.info('Loaded model weights. Starting fresh with new optimizer/scheduler.')
         # it_first and min_val_loss stay at default (1 and inf)
 
     # Freeze backbone for confidence head fine-tuning
@@ -215,9 +221,8 @@ if __name__ == '__main__':
 
             # Forward
             # if args.debug: torch.set_anomaly_enabled(True)
-            device_type = 'cuda' if args.device == 'cuda' else 'cpu'
-            if args.device == 'mps': device_type = 'mps'
-            use_amp = args.device != 'cpu' and not args.no_amp and args.device != 'mps'
+            device_type = args.device if args.device in ('cuda', 'xpu') else ('mps' if args.device == 'mps' else 'cpu')
+            use_amp = args.device not in ('cpu', 'mps') and not args.no_amp
 
             with torch.autocast(device_type=device_type, dtype=torch.float16, enabled=use_amp):
                 loss_dict = model(batch)
@@ -273,7 +278,15 @@ if __name__ == '__main__':
         # Optimizer Step
         scaler.unscale_(optimizer)
         orig_grad_norm = clip_grad_norm_(model.parameters(), config.train.max_grad_norm)
-        
+
+        # Skip step if gradients overflowed (FP16 can produce NaN/Inf grads
+        # even with finite loss, especially early in training)
+        if not torch.isfinite(orig_grad_norm):
+            logger.warning(f'Iter {it}: NaN/Inf gradients detected, skipping optimizer step')
+            scaler.update()
+            optimizer.zero_grad()
+            return
+
         # Linear Warmup
         warmup_steps = config.train.get('warmup_steps', 1000)
         if it <= warmup_steps:
@@ -348,6 +361,10 @@ if __name__ == '__main__':
                 scheduler.step()
         return avg_loss
 
+    # Early stopping
+    early_stop_patience = config.train.get('early_stopping_patience', 0)
+    early_stop_counter = 0
+
     try:
         for it in range(it_first, config.train.max_iters + 1):
             # Length curriculum: progressively increase max_residues during training
@@ -367,6 +384,9 @@ if __name__ == '__main__':
                 is_best = avg_val_loss < min_val_loss
                 if is_best:
                     min_val_loss = avg_val_loss
+                    early_stop_counter = 0
+                else:
+                    early_stop_counter += 1
                 if not args.debug:
                     ckpt_state = {
                         'config': config,
@@ -384,6 +404,13 @@ if __name__ == '__main__':
                         best_path = os.path.join(ckpt_dir, 'best.pt')
                         torch.save(ckpt_state, best_path)
                         logger.info(f'New best model saved to {best_path} with loss {min_val_loss:.4f}')
+                # Early stopping check
+                if early_stop_patience > 0 and early_stop_counter >= early_stop_patience:
+                    logger.info(
+                        f'Early stopping: no improvement for {early_stop_patience} '
+                        f'validations (best={min_val_loss:.4f})'
+                    )
+                    break
     except KeyboardInterrupt:
         logger.info('Terminating...')
     finally:

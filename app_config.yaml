@@ -44,7 +44,7 @@ esmif_defaults:
   temperature: 0.1
 models:
   bfn:
-    checkpoint: ./logs/bfn_confidence_combined_v6_phase2_2026_05_18__14_05_03/checkpoints/best.pt
+    checkpoint: ./logs/bfn_confidence_combined_v9_phase1_2026_05_25__17_24_03/checkpoints/best.pt
     config: configs/demo_design.yml
 
   esmif:
