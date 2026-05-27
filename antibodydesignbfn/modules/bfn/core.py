@@ -34,7 +34,8 @@ class AntibodyBFN_Core(nn.Module):
         has_conf_loss = any(k in loss_weight and loss_weight.get(k, 0) > 0 for k in conf_loss_keys)
         seq_only = not has_structure_loss
         head_dropout = loss_weight.get('head_dropout', 0.1) if loss_weight else 0.1
-        self.receiver = AntibodyBFN_Receiver(res_feat_dim, pair_feat_dim, num_layers=6, encoder_opt=eps_net_opt, num_classes=self.num_classes, seq_only=seq_only, head_dropout=head_dropout)
+        disorder_head = loss_weight.get('disorder', 0) > 0 if loss_weight else False
+        self.receiver = AntibodyBFN_Receiver(res_feat_dim, pair_feat_dim, num_layers=6, encoder_opt=eps_net_opt, num_classes=self.num_classes, seq_only=seq_only, head_dropout=head_dropout, disorder_head=disorder_head)
         
         ot_iters = ot_opt.get('num_iters', 10)
         ot_eps = ot_opt.get('epsilon', 2.0)
@@ -148,7 +149,7 @@ class AntibodyBFN_Core(nn.Module):
         prev_plddt, prev_iptm, prev_pae = None, None, None
 
         for _ in range(train_recycles):
-            pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae = self.receiver(
+            pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = self.receiver(
                 inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
                 backbone_pos=backbone_pos, prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
                 mask_gen=mask_gen
@@ -247,6 +248,25 @@ class AntibodyBFN_Core(nn.Module):
             loss_pae = huber_pae(pred_pae, pae_target)
             losses['pae'] = (loss_pae * mask_pair).sum() / (mask_pair.sum() + 1e-8)
 
+        # === Disorder BCE Loss ===
+        if 'disorder_label' in batch and 'disorder' in self.loss_weight and self.loss_weight['disorder'] > 0:
+            disorder_target = batch['disorder_label'].float()  # (N, L) binary
+            if disorder_target.dim() == 1:
+                disorder_target = disorder_target.unsqueeze(0).expand(N, -1)
+            pred_len = pred_disorder.shape[1]
+            if disorder_target.shape[1] < pred_len:
+                disorder_target = F.pad(disorder_target, (0, pred_len - disorder_target.shape[1]))
+            else:
+                disorder_target = disorder_target[:, :pred_len]
+            mask_disorder = mask_res[:, :pred_len]
+            # Weight positive (disordered) samples higher to handle class imbalance
+            pos_weight = torch.tensor(2.0, device=x_seq.device)
+            loss_disorder = F.binary_cross_entropy_with_logits(
+                pred_disorder, disorder_target, weight=mask_disorder, pos_weight=pos_weight,
+                reduction='sum'
+            )
+            losses['disorder'] = loss_disorder / (mask_disorder.sum() + 1e-8)
+
         losses['avg_t'] = t.mean()
         return losses
 
@@ -337,7 +357,7 @@ class AntibodyBFN_Core(nn.Module):
                                     backbone_pos=backbone_pos,
                                     prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
                                     mask_gen=mask_gen)
-                pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae = res
+                pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, _ = res
 
                 # Update sequence - deterministic mode removes noise
                 pred_seq_probs = F.softmax(pred_seq_logits, dim=-1)

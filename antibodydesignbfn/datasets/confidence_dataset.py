@@ -151,6 +151,14 @@ class ConfidenceRegressionDataset(Dataset):
         # The generate_flag from the saved batch is overridden here.
         batch['generate_flag'] = torch.zeros(batch['aa'].shape[0], dtype=torch.bool)
 
+        # Per-residue disorder labels for Phase 1: broadcast entry-level is_idp.
+        # Phase 2 will replace this with real per-residue labels from MobiDB.
+        is_idp = batch.get('is_idp', False)
+        if isinstance(is_idp, torch.Tensor):
+            is_idp = is_idp.item() if is_idp.numel() == 1 else is_idp[0].item()
+        seq_len = batch['aa'].shape[0]
+        batch['disorder_label'] = torch.ones(seq_len, dtype=torch.float32) if is_idp else torch.zeros(seq_len, dtype=torch.float32)
+
         return batch
 
     def set_max_residues(self, max_residues):

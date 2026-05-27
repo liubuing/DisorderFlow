@@ -23,6 +23,14 @@ def svd_project_so3(F):
             mid[..., -1] = d
             R = U @ torch.diag_embed(mid) @ Vh
         return R.to(F.dtype)
+    else:
+        F32 = F.float() if F.dtype != torch.float32 else F
+        U, S, Vh = torch.linalg.svd(F32)
+        d = torch.linalg.det(U @ Vh)
+        mid = torch.ones_like(S)
+        mid[..., -1] = d
+        R = U @ torch.diag_embed(mid) @ Vh
+        return R.to(F.dtype)
 
 class OrientationBFN(nn.Module):
     def __init__(self, beta=1.0):

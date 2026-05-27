@@ -139,23 +139,23 @@ if __name__ == '__main__':
         # Finetune: only load model weights, start fresh (new optimizer, scheduler, warmup)
         logger.info('Finetuning from checkpoint: %s' % args.finetune)
         ckpt = torch.load(args.finetune, map_location=args.device, weights_only=False)
+        # Strip old confidence head weights only if architecture differs from checkpoint.
+        # V9+ checkpoints have the current head architecture; older checkpoints
+        # (V8 and before) have incompatible head shapes. We detect this by checking
+        # for the old 'pair_proj' key which was replaced by AttentionPAEHead.
         ckpt_state = ckpt['model']
-
-        # Strip old confidence head weights (architecture may differ).
-        # Use substring match because checkpoint keys include module prefix
-        # (e.g. bfn.receiver.head_plddt.0.weight).
-        old_head_names = ['head_plddt.', 'head_iptm.', 'head_pae.', 'pair_proj.']
-        stripped_keys = []
-        for k in list(ckpt_state.keys()):
-            if any(name in k for name in old_head_names):
-                stripped_keys.append(k)
-                ckpt_state.pop(k)
-
-        missing_keys, unexpected_keys = model.load_state_dict(ckpt_state, strict=False)
-        if stripped_keys:
+        has_old_heads = any('pair_proj.' in k for k in ckpt_state.keys())
+        if has_old_heads:
+            old_head_names = ['head_plddt.', 'head_iptm.', 'head_pae.', 'pair_proj.']
+            stripped_keys = []
+            for k in list(ckpt_state.keys()):
+                if any(name in k for name in old_head_names):
+                    stripped_keys.append(k)
+                    ckpt_state.pop(k)
             logger.info(f'Stripped {len(stripped_keys)} old confidence head weights (new heads randomized)')
             for k in stripped_keys[:5]:
                 logger.info(f'  - {k}')
+        missing_keys, unexpected_keys = model.load_state_dict(ckpt_state, strict=False)
         if missing_keys:
             logger.info(f'New parameters (random init): {len(missing_keys)}')
             for k in missing_keys[:10]:
@@ -172,6 +172,7 @@ if __name__ == '__main__':
             'head_plddt',
             'head_iptm',
             'head_pae',
+            'head_disorder',
             'conf_embed',
             'iptm_embed',
             'pae_embed',

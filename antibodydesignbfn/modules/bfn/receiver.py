@@ -76,11 +76,12 @@ class AttentionPAEHead(nn.Module):
 
 
 class AntibodyBFN_Receiver(nn.Module):
-    def __init__(self, res_feat_dim, pair_feat_dim, num_layers, encoder_opt={}, num_classes=20, seq_only=False, head_dropout=0.1):
+    def __init__(self, res_feat_dim, pair_feat_dim, num_layers, encoder_opt={}, num_classes=20, seq_only=False, head_dropout=0.1, disorder_head=False):
         super().__init__()
         self.res_feat_dim = res_feat_dim
         self.num_classes = num_classes
         self.seq_only = seq_only
+        self.disorder_head = disorder_head
         
         # Embeddings
         self.seq_embed = nn.Linear(num_classes, res_feat_dim)
@@ -125,6 +126,16 @@ class AntibodyBFN_Receiver(nn.Module):
             res_dim=res_feat_dim, pair_dim=pair_feat_dim,
             num_heads=4, dropout=head_dropout,
         )
+
+        # Disorder Classification Head (per-residue binary)
+        if disorder_head:
+            self.head_disorder = nn.Sequential(
+                nn.Linear(res_feat_dim, res_feat_dim // 2),
+                nn.LayerNorm(res_feat_dim // 2),
+                nn.ReLU(),
+                nn.Dropout(head_dropout),
+                nn.Linear(res_feat_dim // 2, 1),
+            )
 
         # Feedback embedding: pLDDT, ipTM, and PAE back to features
         self.conf_embed = nn.Linear(1, res_feat_dim)
@@ -195,6 +206,12 @@ class AntibodyBFN_Receiver(nn.Module):
         if pred_seq.size(-1) > 20:
             pred_seq[..., 20:] = -1e4
 
+        # Disorder prediction (per-residue binary logits)
+        if self.disorder_head:
+            pred_disorder = self.head_disorder(features).squeeze(-1)  # (N, L)
+        else:
+            pred_disorder = None
+
         # Seq-only mode: skip structure predictions (pos, ori) but keep angle prediction for aux loss
         # Confidence predictions (pLDDT/ipTM/PAE) are still computed for fine-tuning
         if self.seq_only:
@@ -237,4 +254,4 @@ class AntibodyBFN_Receiver(nn.Module):
             pred_iptm = torch.sigmoid(self.head_iptm(context_feat)).squeeze(-1)
 
             pred_pae = torch.sigmoid(self.head_pae(features, pair_feat))
-        return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae
+        return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder
