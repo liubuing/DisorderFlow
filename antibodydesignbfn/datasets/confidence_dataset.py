@@ -151,13 +151,18 @@ class ConfidenceRegressionDataset(Dataset):
         # The generate_flag from the saved batch is overridden here.
         batch['generate_flag'] = torch.zeros(batch['aa'].shape[0], dtype=torch.bool)
 
-        # Per-residue disorder labels for Phase 1: broadcast entry-level is_idp.
-        # Phase 2 will replace this with real per-residue labels from MobiDB.
-        is_idp = batch.get('is_idp', False)
-        if isinstance(is_idp, torch.Tensor):
-            is_idp = is_idp.item() if is_idp.numel() == 1 else is_idp[0].item()
-        seq_len = batch['aa'].shape[0]
-        batch['disorder_label'] = torch.ones(seq_len, dtype=torch.float32) if is_idp else torch.zeros(seq_len, dtype=torch.float32)
+        # Per-residue disorder labels from EBI MobiDB-lite (Phase 2).
+        # Falls back to AF2 pLDDT < 50 for entries where API was unavailable.
+        disorder_mask = batch.get('disorder_mask', None)
+        if disorder_mask is not None:
+            batch['disorder_label'] = disorder_mask.float()
+        else:
+            # Legacy: no disorder_mask, use is_idp broadcast (Phase 1 style)
+            is_idp = batch.get('is_idp', False)
+            if isinstance(is_idp, torch.Tensor):
+                is_idp = is_idp.item() if is_idp.numel() == 1 else is_idp[0].item()
+            seq_len = batch['aa'].shape[0]
+            batch['disorder_label'] = torch.ones(seq_len, dtype=torch.float32) if is_idp else torch.zeros(seq_len, dtype=torch.float32)
 
         return batch
 
