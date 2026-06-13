@@ -31,6 +31,7 @@ def parse_args():
     p.add_argument('--device', default='cuda', help='Device (cpu/cuda)')
     p.add_argument('--output', '-o', default=None, help='Output JSON path (default: print to stdout)')
     p.add_argument('--num_recycles', type=int, default=1, help='BFN recycle rounds')
+    p.add_argument('--disorder', action='store_true', help='Also predict per-residue disorder scores')
     return p.parse_args()
 
 
@@ -84,7 +85,7 @@ def load_model(checkpoint_path, device):
     return model
 
 
-def run_inference(model, batch_data, device, num_recycles=1):
+def run_inference(model, batch_data, device, num_recycles=1, return_disorder=False):
     """Run confidence inference on preprocessed batch."""
     from disorderflow.utils.data import PaddingCollate
     from disorderflow.utils.train import recursive_to
@@ -100,18 +101,19 @@ def run_inference(model, batch_data, device, num_recycles=1):
         result = model.sample(collated, sample_opt={
             'deterministic': True,
             'num_recycles': num_recycles,
+            'return_disorder': return_disorder,
         })
 
     return result
 
 
 def extract_predictions(result, n_native):
-    """Extract per-residue pLDDT, ipTM, and PAE from model output."""
+    """Extract per-residue pLDDT, ipTM, PAE, and optionally disorder from model output."""
     plddt = result['plddt'][0, :n_native].cpu().numpy()
     iptm = result['iptm'][0].cpu().item()
     pae = result['pae'][0, :n_native, :n_native].cpu().numpy()
 
-    return {
+    preds = {
         'plddt': plddt.tolist(),
         'iptm': iptm,
         'pae': pae.tolist(),
@@ -119,6 +121,16 @@ def extract_predictions(result, n_native):
         'plddt_min': float(np.min(plddt)),
         'plddt_max': float(np.max(plddt)),
     }
+
+    if 'disorder' in result and result['disorder'] is not None:
+        disorder_raw = result['disorder'][0, :n_native].cpu().numpy()
+        disorder_prob = 1.0 / (1.0 + np.exp(-disorder_raw))  # sigmoid
+        preds['disorder_logits'] = disorder_raw.tolist()
+        preds['disorder_prob'] = disorder_prob.tolist()
+        preds['disorder_mean'] = float(np.mean(disorder_prob))
+        preds['disorder_fraction'] = float(np.mean(disorder_prob > 0.5))
+
+    return preds
 
 
 def get_sequence(batch_data):
@@ -164,7 +176,9 @@ def main():
 
     # Step 3: Run inference
     print('Running inference...')
-    result = run_inference(model, batch_data, args.device, num_recycles=args.num_recycles)
+    result = run_inference(model, batch_data, args.device,
+                           num_recycles=args.num_recycles,
+                           return_disorder=args.disorder)
 
     # Step 4: Extract predictions
     pred = extract_predictions(result, n_res)
@@ -195,6 +209,20 @@ def main():
         for i, (aa, p) in enumerate(zip(seq, pred['plddt'])):
             bar = '#' * int(p * 20) + '-' * (20 - int(p * 20))
             print(f'    {i:4d} {aa}  {p:.4f}  {bar}')
+
+        if 'disorder_prob' in pred:
+            print(f'\n  Disorder scores:')
+            print(f'    Mean disorder prob:  {pred["disorder_mean"]:.4f}')
+            print(f'    Fraction > 0.5:      {pred["disorder_fraction"]:.3f} '
+                  f'({int(pred["disorder_fraction"] * n_res)}/{n_res} residues)')
+            print(f'\n  Per-residue disorder:')
+            for i, (aa, d) in enumerate(zip(seq, pred['disorder_prob'])):
+                if d > 0.5:
+                    bar = '#' * int(d * 20) + '-' * (20 - int(d * 20))
+                    print(f'    {i:4d} {aa}  {d:.4f}  {bar}  *** DISORDERED ***')
+                else:
+                    bar = '-' * int((1 - d) * 20) + '#' * int(d * 20)
+                    print(f'    {i:4d} {aa}  {d:.4f}  {bar}')
 
     # Also print basic residue-level stats
     print(f'\nDone. Sequence: {seq[:60]}{"..." if n_res > 60 else ""}')
