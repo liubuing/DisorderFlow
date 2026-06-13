@@ -204,7 +204,7 @@ def format_disorder_report(disorder_scores, sequence, residue_ids=None,
             end_idx = residue_ids.index(seg['end']) + 1
             seg_seq = sequence[start_idx:end_idx]
             if len(seg_seq) > 50:
-                seg_seq = seg_seq[:24] + '鈥? + seg_seq[-24:]
+                seg_seq = seg_seq[:24] + '...' + seg_seq[-24:]
             lines.append(
                 f"  [{i+1}] {seg['start']}-{seg['end']}  "
                 f"ordered={seg['length']}/{seg['total_span']}  "

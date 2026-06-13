@@ -193,7 +193,7 @@ def main():
         print(f'  pLDDT max:    {pred["plddt_max"]:.4f}')
         print(f'\n  Per-residue pLDDT:')
         for i, (aa, p) in enumerate(zip(seq, pred['plddt'])):
-            bar = '鈻? * int(p * 20) + '鈻? * (20 - int(p * 20))
+            bar = '#' * int(p * 20) + '-' * (20 - int(p * 20))
             print(f'    {i:4d} {aa}  {p:.4f}  {bar}')
 
     # Also print basic residue-level stats
