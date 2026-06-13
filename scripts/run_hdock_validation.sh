@@ -6,7 +6,7 @@
 
 set -e
 
-HDOCK_DIR="/home/liubuzi/HDOCKlite-v1.1"
+HDOCK_DIR="${HDOCK_DIR:-/opt/HDOCKlite-v1.1}"
 HDOCK="$HDOCK_DIR/hdock"
 CREATEPL="$HDOCK_DIR/createpl"
 DATA_DIR="./data/misfolding_targets"

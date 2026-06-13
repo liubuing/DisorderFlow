@@ -53,7 +53,52 @@ val_phase6_dummy.pdb
 # Claude Code local config
 .claude/
 
+# Build logs (contain local paths)
+conformation_build*.log
+*.log
+
+# Design results (contain user data)
+design_results/
+idp_design_results/
+results/
+batch_results/
+
+# Analysis outputs
+disorder_analysis.txt
+disorder_scores.npy
+*.npy
+
+# Build scripts (contain local paths)
+_launch_build.*
+
+# IDE / Editor
+.idea/
+*.swp
+*.swo
+*~
+
+# Virtual environments
+venv_colabfold/
+.cf/
+
+# CASP / competition data
+casp17/
+
+# Logs directory
+日誌/
+日志/
+
 # OS files
 .DS_Store
 Thumbs.db
 test.txt
+
+# Docs with personal info
+docs/send_email.py
+docs/底层原理全解_从零开始.md
+docs/给夏老师的调研报告_课题论证.md
+docs/研究流程_完整版.md
+docs/*.pdf
+
+# Git itself
+.gitignore
