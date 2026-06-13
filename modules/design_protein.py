@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """
 General Protein Sequence Design using BFN.
 
@@ -24,12 +24,12 @@ import torch
 import numpy as np
 from tqdm.auto import tqdm
 
-from antibodydesignbfn.datasets.protein import preprocess_protein_structure
-from antibodydesignbfn.models import get_model
-from antibodydesignbfn.utils.train import recursive_to
-from antibodydesignbfn.utils.misc import load_config, seed_all
-from antibodydesignbfn.utils.data import PaddingCollate
-from antibodydesignbfn.utils.transforms import get_transform
+from disorderflow.datasets.protein import preprocess_protein_structure
+from disorderflow.models import get_model
+from disorderflow.utils.train import recursive_to
+from disorderflow.utils.misc import load_config, seed_all
+from disorderflow.utils.data import PaddingCollate
+from disorderflow.utils.transforms import get_transform
 
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 

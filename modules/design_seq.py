@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """
 Sequence Design for Antibody CDR using BFN.
 
@@ -18,13 +18,13 @@ import torch
 import numpy as np
 from tqdm.auto import tqdm
 
-from antibodydesignbfn.datasets.custom import preprocess_antibody_structure
-from antibodydesignbfn.models import get_model
-from antibodydesignbfn.utils.train import recursive_to
-from antibodydesignbfn.utils.misc import load_config, seed_all
-from antibodydesignbfn.utils.data import PaddingCollate
-from antibodydesignbfn.utils.transforms import get_transform
-from antibodydesignbfn.tools.renumber import renumber as renumber_antibody
+from disorderflow.datasets.custom import preprocess_antibody_structure
+from disorderflow.models import get_model
+from disorderflow.utils.train import recursive_to
+from disorderflow.utils.misc import load_config, seed_all
+from disorderflow.utils.data import PaddingCollate
+from disorderflow.utils.transforms import get_transform
+from disorderflow.tools.renumber import renumber as renumber_antibody
 
 # BLOSUM62 matrix (complete 20x20) - for evaluation mode
 BLOSUM62_MATRIX = {
@@ -205,7 +205,7 @@ def design_seq(args):
             nll = -log_probs[range(len(pred_aa)), pred_aa].mean()
             perplexity = torch.exp(nll).item()
             
-            # BFN内置置信度 (receiver.py 已做 sigmoid → [0,1])
+            # BFN鍐呯疆缃俊搴?(receiver.py 宸插仛 sigmoid 鈫?[0,1])
             plddt_val = traj['plddt'][0][gen_mask].mean().item()
             iptm_val = traj['iptm'][0].item()
             pae_val = traj['pae'][0][gen_mask][:, gen_mask].mean().item()
@@ -320,7 +320,7 @@ Examples:
     parser.add_argument('--config', type=str, required=True, help='Config YAML file')
     parser.add_argument('--output', '-o', type=str, default=None, help='Output JSON file')
     parser.add_argument('--num_samples', '-n', type=int, default=1, help='Number of sequences (default: 1)')
-    parser.add_argument('--device', type=str, default='cuda', help='Device (default: cuda)')
+    parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'xpu' if hasattr(torch, 'xpu') and torch.xpu.is_available() else 'cpu', help='Device (default: cuda/xpu if available, else cpu)')
     parser.add_argument('--stochastic', action='store_true', help='Use stochastic sampling (default: deterministic)')
     parser.add_argument('--skip_renumber', action='store_true', help='Skip Chothia renumbering (PDB already numbered)')
     parser.add_argument('--eval', action='store_true', help='Evaluation mode: compare to native sequence')

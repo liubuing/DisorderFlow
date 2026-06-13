@@ -22,7 +22,7 @@ font.size = Pt(10)
 title = doc.add_heading('BFN Confidence Head Fine-Tuning - Work Log', level=0)
 title.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-doc.add_paragraph(f'Generated: 2026-05-16 | Project: AntibodyDesignBFN')
+doc.add_paragraph(f'Generated: 2026-05-16 | Project: disorderflow')
 doc.add_paragraph('=' * 80)
 
 # ============ SECTION 1: Overview ============
@@ -45,7 +45,7 @@ doc.add_heading('2. Critical Bugs Discovered and Fixed', level=1)
 doc.add_heading('Bug #1: seq_only logic incorrectly set for confidence training', level=2)
 p = doc.add_paragraph()
 p.add_run('File: ').bold = True
-p.add_run('antibodydesignbfn/modules/bfn/core.py:33')
+p.add_run('disorderflow/modules/bfn/core.py:33')
 doc.add_paragraph(
     'Original: seq_only = not has_structure_loss and not has_conf_loss\n'
     'Fixed:    seq_only = not has_structure_loss\n\n'
@@ -59,7 +59,7 @@ doc.add_paragraph(
 doc.add_heading('Bug #2: generate_flag mismatch between training and evaluation', level=2)
 p = doc.add_paragraph()
 p.add_run('File: ').bold = True
-p.add_run('antibodydesignbfn/datasets/confidence_dataset.py:80')
+p.add_run('disorderflow/datasets/confidence_dataset.py:80')
 doc.add_paragraph(
     'The dataset preprocessing saved generate_flag=True for ALL residues (masking '
     'all structure from the encoder during training), but evaluation set '
@@ -97,7 +97,7 @@ doc.add_paragraph(
 doc.add_heading('Bug #5: Config file encoding on Windows', level=2)
 p = doc.add_paragraph()
 p.add_run('File: ').bold = True
-p.add_run('antibodydesignbfn/utils/misc.py:109')
+p.add_run('disorderflow/utils/misc.py:109')
 doc.add_paragraph(
     'YAML config files were opened without encoding specification on Windows, causing '
     'GBK decode errors for UTF-8 characters (em dashes, Chinese chars). '
@@ -216,7 +216,7 @@ doc.add_heading('5. Training and Evaluation Results', level=1)
 doc.add_heading('Training Configuration', level=2)
 doc.add_paragraph(
     'Config: configs/train/bfn_confidence_combined.yml\n'
-    'Base checkpoint: YueHuLab/AntibodyDesignBFN best.pt (108MB)\n'
+    'Base checkpoint: YueHuLab/disorderflow best.pt (108MB)\n'
     'Trainable params: 133,635 / 10,200,662 (1.3%) - backbone frozen\n'
     'Batch size: 1 (PAE matrix collation constraint)\n'
     'Iterations: 20,000 | LR: 1e-4 | Scheduler: Plateau (factor=0.5, patience=30)\n'
@@ -328,11 +328,11 @@ doc.add_paragraph()
 doc.add_heading('8. Existing Files Modified', level=1)
 
 modfiles = [
-    ('antibodydesignbfn/modules/bfn/core.py', 'seq_only logic, confidence loss computation'),
-    ('antibodydesignbfn/modules/bfn/receiver.py', 'seq_only confidence head computation'),
-    ('antibodydesignbfn/datasets/confidence_dataset.py', 'generate_flag override'),
-    ('antibodydesignbfn/utils/data.py', 'DEFAULT_NO_PADDING for AF2 tensors'),
-    ('antibodydesignbfn/utils/misc.py', 'UTF-8 encoding for config files'),
+    ('disorderflow/modules/bfn/core.py', 'seq_only logic, confidence loss computation'),
+    ('disorderflow/modules/bfn/receiver.py', 'seq_only confidence head computation'),
+    ('disorderflow/datasets/confidence_dataset.py', 'generate_flag override'),
+    ('disorderflow/utils/data.py', 'DEFAULT_NO_PADDING for AF2 tensors'),
+    ('disorderflow/utils/misc.py', 'UTF-8 encoding for config files'),
     ('train.py', 'freeze_backbone support'),
 ]
 

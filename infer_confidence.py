@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """Single-PDB confidence inference using fine-tuned BFN confidence heads.
 
 Predicts pLDDT (per-residue), ipTM (scalar), and PAE (matrix) from a PDB file.
@@ -36,7 +36,7 @@ def parse_args():
 
 def load_pdb_structure(pdb_path):
     """Parse PDB into BFN structure dict."""
-    from antibodydesignbfn.datasets.protein import preprocess_protein_structure
+    from disorderflow.datasets.protein import preprocess_protein_structure
     structure = preprocess_protein_structure(str(pdb_path))
     if structure is None:
         raise RuntimeError(f'Failed to parse PDB: {pdb_path}')
@@ -48,15 +48,15 @@ def preprocess_for_confidence(structure):
 
     All residues are context (generate_flag=False); no design region.
     """
-    from antibodydesignbfn.utils.transforms import get_transform
-    from antibodydesignbfn.utils.train import recursive_to
+    from disorderflow.utils.transforms import get_transform
+    from disorderflow.utils.train import recursive_to
 
     # Collect all chain IDs and their residue counts
     n_total = 0
     for chain_entry in structure['chains']:
         n_total += chain_entry['data']['aa'].size(0)
 
-    # Mask all chains as context (empty regions → no generate_flag set)
+    # Mask all chains as context (empty regions 鈫?no generate_flag set)
     transform = get_transform([
         {'type': 'mask_region', 'regions': {}},
         {'type': 'merge_protein'},
@@ -70,8 +70,8 @@ def preprocess_for_confidence(structure):
 
 def load_model(checkpoint_path, device):
     """Load BFN confidence model from checkpoint."""
-    from antibodydesignbfn.models import get_model
-    from antibodydesignbfn.utils.misc import load_config as _lc
+    from disorderflow.models import get_model
+    from disorderflow.utils.misc import load_config as _lc
 
     ckpt = torch.load(checkpoint_path, map_location=device, weights_only=False)
     mc = ckpt['config'].model
@@ -86,14 +86,14 @@ def load_model(checkpoint_path, device):
 
 def run_inference(model, batch_data, device, num_recycles=1):
     """Run confidence inference on preprocessed batch."""
-    from antibodydesignbfn.utils.data import PaddingCollate
-    from antibodydesignbfn.utils.train import recursive_to
+    from disorderflow.utils.data import PaddingCollate
+    from disorderflow.utils.train import recursive_to
 
     # Build batch of 1
     collated = PaddingCollate()([batch_data])
     collated = recursive_to(collated, device)
 
-    # All residues are context — no generation
+    # All residues are context 鈥?no generation
     collated['generate_flag'] = torch.zeros_like(collated['mask_heavyatom'][:, :, 0], dtype=torch.bool)
 
     with torch.no_grad():
@@ -185,7 +185,7 @@ def main():
     else:
         # Print summary to stdout
         print(f'\n{"=" * 50}')
-        print(f'  BFN Confidence Predictions — {pdb_id} ({n_res} residues)')
+        print(f'  BFN Confidence Predictions 鈥?{pdb_id} ({n_res} residues)')
         print(f'{"=" * 50}')
         print(f'  ipTM:         {pred["iptm"]:.4f}')
         print(f'  pLDDT mean:   {pred["plddt_mean"]:.4f}')
@@ -193,7 +193,7 @@ def main():
         print(f'  pLDDT max:    {pred["plddt_max"]:.4f}')
         print(f'\n  Per-residue pLDDT:')
         for i, (aa, p) in enumerate(zip(seq, pred['plddt'])):
-            bar = '█' * int(p * 20) + '░' * (20 - int(p * 20))
+            bar = '鈻? * int(p * 20) + '鈻? * (20 - int(p * 20))
             print(f'    {i:4d} {aa}  {p:.4f}  {bar}')
 
     # Also print basic residue-level stats

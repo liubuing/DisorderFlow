@@ -1,5 +1,5 @@
-model:
-  type: antibodydesignbfn
+﻿model:
+  type: disorderflow
   res_feat_dim: 128
   pair_feat_dim: 64
   diffusion:

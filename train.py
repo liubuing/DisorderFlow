@@ -1,4 +1,4 @@
-import os
+﻿import os
 import shutil
 import argparse
 import pickle
@@ -11,11 +11,11 @@ if torch.cuda.is_available():
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
 
-from antibodydesignbfn.datasets import get_dataset
-from antibodydesignbfn.models import get_model
-from antibodydesignbfn.utils.misc import *
-from antibodydesignbfn.utils.data import *
-from antibodydesignbfn.utils.train import *
+from disorderflow.datasets import get_dataset
+from disorderflow.models import get_model
+from disorderflow.utils.misc import *
+from disorderflow.utils.data import *
+from disorderflow.utils.train import *
 
 
 if __name__ == '__main__':
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('config', type=str)
     parser.add_argument('--logdir', type=str, default='./logs')
     parser.add_argument('--debug', action='store_true', default=False)
-    parser.add_argument('--device', type=str, default='xpu' if hasattr(torch, 'xpu') and torch.xpu.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu')
+    parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'xpu' if hasattr(torch, 'xpu') and torch.xpu.is_available() else 'cpu')
     parser.add_argument('--num_workers', type=int, default=0)
     parser.add_argument('--tag', type=str, default='')
     parser.add_argument('--resume', type=str, default=None)
@@ -201,11 +201,71 @@ if __name__ == '__main__':
         n_total = sum(p.numel() for p in model.parameters())
         logger.info(f'Trainable: {n_trainable:,}/{n_total:,} ({100*n_trainable/n_total:.1f}%)')
 
+    # EMA
+    ema_decay = config.train.get('ema_decay', 0.0)
+    ema = EMAModel(model, decay=ema_decay) if ema_decay > 0 else None
+    if ema is not None:
+        logger.info(f'EMA enabled with decay={ema_decay}')
+
+    # Negative sample augmentation for confidence calibration (Phase 4)
+    # Randomly scramble sequences to create "bad design" examples,
+    # forcing confidence heads to learn low-confidence predictions.
+    def neg_sample_aug(batch, neg_prob, neg_confidence, neg_scramble_ratio):
+        """In-place batch modification for negative sample training.
+
+        neg_prob: probability of converting a sample to negative
+        neg_confidence: dict of low confidence values {plddt, iptm, pae}
+        neg_scramble_ratio: [min, max] fraction of sequence to scramble
+        """
+        if neg_prob <= 0 or torch.rand(1).item() > neg_prob:
+            return
+
+        aa = batch['aa']  # (N, L)
+        mask = batch['mask']  # (N, L)
+        N, L = aa.shape
+
+        for b in range(N):
+            valid_len = mask[b].sum().int().item()
+            if valid_len < 4:
+                continue
+            ratio_min, ratio_max = neg_scramble_ratio
+            ratio = ratio_min + (ratio_max - ratio_min) * torch.rand(1).item()
+            scramble_len = max(2, int(valid_len * ratio))
+            start = torch.randint(0, max(1, valid_len - scramble_len), (1,)).item()
+            end = start + scramble_len
+
+            # Scramble amino acids in the region
+            random_aa = torch.randint(0, 20, (scramble_len,), device=aa.device)
+            aa[b, start:end] = random_aa
+
+            # Modify ground truth: low confidence for scrambled regions
+            neg_plddt = neg_confidence.get('plddt', 0.1)
+            neg_iptm = neg_confidence.get('iptm', 0.05)
+            neg_pae_norm = neg_confidence.get('pae', 0.65)  # ~20.0 / 31.0
+
+            if 'af2_plddt' in batch:
+                batch['af2_plddt'][b, start:end] = neg_plddt
+            if 'af2_iptm' in batch:
+                batch['af2_iptm'][b] = neg_iptm
+            if 'af2_pae_matrix' in batch:
+                pae_mat = batch['af2_pae_matrix']
+                pae_mat[b, start:end, :] = neg_pae_norm
+                pae_mat[b, :, start:end] = neg_pae_norm
+            # NOTE: We do NOT modify disorder_label for negative samples.
+            # The structure is still correct (only sequence is scrambled),
+            # so the disorder state of the structure is unchanged.
+            # Only confidence labels (pLDDT/ipTM/PAE) should change because
+            # they measure sequence-structure compatibility.
+
+    neg_prob = config.train.get('neg_sample_prob', 0.0)
+    neg_confidence = config.train.get('neg_confidence', {'plddt': 0.1, 'iptm': 0.05, 'pae': 0.65})
+    neg_scramble_ratio = config.train.get('neg_scramble_ratio', [0.2, 0.5])
+
     # Train
     def train(it):
         time_start = current_milli_time()
         model.train()
-        
+
         accum_loss_dict = {}
         valid_batch_count = 0
 
@@ -216,6 +276,9 @@ if __name__ == '__main__':
                 batch = recursive_to(next(train_iterator), args.device)
             except StopIteration:
                 break
+
+            # Negative sample augmentation (Phase 4)
+            neg_sample_aug(batch, neg_prob, neg_confidence, neg_scramble_ratio)
 
             if 'fixed_t' in config.train:
                 batch['fixed_t'] = config.train.fixed_t
@@ -301,6 +364,10 @@ if __name__ == '__main__':
         scaler.step(optimizer)
         scaler.update()
         optimizer.zero_grad()
+
+        if ema is not None:
+            ema.update(model)
+
         time_backward_end = current_milli_time()
 
         log_freq = config.train.get('log_freq', 1)
@@ -315,6 +382,9 @@ if __name__ == '__main__':
 
     # Validate
     def validate(it):
+        if ema is not None:
+            ema.apply(model)
+
         loss_tape = ValidationLossTape()
         loss_tape_idp = ValidationLossTape()
         loss_tape_folded = ValidationLossTape()
@@ -352,7 +422,7 @@ if __name__ == '__main__':
             loss_tape_idp.log(it, logger, writer, 'val/idp')
         if n_folded > 0:
             loss_tape_folded.log(it, logger, writer, 'val/folded')
-        # Don't step scheduler during warmup — warmup manually controls LR.
+        # Don't step scheduler during warmup 鈥?warmup manually controls LR.
         # Stepping during warmup can cause the scheduler to decay its internal LR,
         # leading to a sudden drop when warmup ends and the scheduler takes over.
         if it > config.train.get('warmup_steps', 0):
@@ -360,6 +430,10 @@ if __name__ == '__main__':
                 scheduler.step(avg_loss)
             else:
                 scheduler.step()
+
+        if ema is not None:
+            ema.restore(model)
+
         return avg_loss
 
     # Early stopping

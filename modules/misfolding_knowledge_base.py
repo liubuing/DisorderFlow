@@ -582,17 +582,18 @@ NANOBODY_SCAFFOLDS = {
         'pdb_id': '5IMK',
         'type': 'VHH (Camelid nanobody)',
         'sequence': (
-            "QVQLQESGGGLVQAGGSLRLSCAASGRTFSSYAMGWFRQAPGKEREFVAAISWS"
-            "GGSTYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCAAGGGTVVRDGG"
-            "PLGLDYWGQGTQVTVSS"
+            "QVQLVESGGGLVQAGGSLRLSCAASGRTFSSYGMGWFRQAPGKEREFVAAIRWN"
+            "GGSTYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCAAGRWDKYGSSF"
+            "QDEYDYWGQGTQVTVSS"
         ),
-        'length': 118,
+        'length': 125,
         'cdr_definitions': {
             'H_CDR1': (26, 33),
             'H_CDR2': (51, 58),
             'H_CDR3': (97, 113),
         },
-        'notes': 'Nanobody optimized for amyloid fibril binding. Extended CDR3 for groove recognition.',
+        'notes': 'Nanobody optimized for amyloid fibril binding. Extended CDR3 for groove recognition. '
+                 'Sequence corrected 2026-05-31 from PDB chain B (was 118AA, now 125AA).',
     },
 }
 

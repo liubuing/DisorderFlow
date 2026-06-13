@@ -38,7 +38,7 @@ Each LMDB entry is a pickled dict with `pdb_id`, `sequence`, `batch`, `af2_plddt
 
 ## Usage
 ```python
-from antibodydesignbfn.datasets.confidence_dataset import ConfidenceRegressionDataset
+from disorderflow.datasets.confidence_dataset import ConfidenceRegressionDataset
 dataset = ConfidenceRegressionDataset("path/to/confidence_train.lmdb")
 ```
 """

@@ -1,0 +1,87 @@
+# BFN Direction 1+3 Combined — IDP-Aware + Conformational Robustness (CUDA)
+#
+# Core idea:
+#   Direction 1: disorder head + per-residue EBI labels → detect IDP ordered regions
+#   Direction 3: EMA + encoder_dropout + plateau → conformational regularization
+#
+# Training strategy:
+#   - V11 data (3921 entries, 2366 IDPs with real disorder labels)
+#   - Freeze backbone, train confidence heads only (Phase A)
+#   - EMA(0.999) + encoder_dropout(0.05) for anti-overfitting
+#   - Plateau scheduler for stable convergence
+#   - Huber loss on continuous disorder labels
+#
+# Target: deliver a model that can identify ordered regions in IDPs
+# for antibody epitope design.
+#
+# Usage:
+#   python train.py configs/train/bfn_idp_combined_cuda.yml \
+#       --finetune ./logs/bfn_idp_phase2_xpu_2026_05_28__01_22_06/checkpoints/best.pt \
+#       --device cuda
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 1.0
+    huber_beta: 0.1
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+
+train:
+  loss_weights:
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 1.0
+  freeze_backbone: true
+  unfreeze_encoder_layers: 0
+  max_iters: 5000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 200
+  seed: 2032
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  early_stopping_patience: 25
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_train.lmdb
+    max_residues: 250
+    idp_sample_weight: 1.5
+    min_af2_plddt: 40.0
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_val.lmdb
+    max_residues: 350

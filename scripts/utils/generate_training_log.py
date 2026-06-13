@@ -70,7 +70,7 @@ def format_markdown(train_iters, val_iters, best_losses,
     md = f"""# BFN置信度头微调训练日志
 
 **生成时间:** {now}
-**项目:** AntibodyDesignBFN — Confidence Head Fine-Tuning
+**项目:** disorderflow — Confidence Head Fine-Tuning
 **日志目录:** {log_dir_name}
 
 ---
@@ -79,7 +79,7 @@ def format_markdown(train_iters, val_iters, best_losses,
 
 | 参数 | 值 |
 |------|-----|
-| 基础检查点 | YueHuLab/AntibodyDesignBFN best.pt (113MB) |
+| 基础检查点 | YueHuLab/disorderflow best.pt (113MB) |
 | 训练数据集 | 234蛋白质 (187 train / 47 val) |
 | 数据来源 | EBI AFDB v6 + PDB + ColabFold |
 | 批次大小 | 1 |

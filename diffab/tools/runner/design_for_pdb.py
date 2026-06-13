@@ -265,7 +265,7 @@ def args_from_cmdline():
     parser.add_argument('-o', '--out_root', type=str, default='./results')
     parser.add_argument('-t', '--tag', type=str, default='')
     parser.add_argument('-s', '--seed', type=int, default=None)
-    parser.add_argument('-d', '--device', type=str, default='cuda')
+    parser.add_argument('-d', '--device', type=str, default='cuda' if torch.cuda.is_available() else 'xpu' if hasattr(torch, 'xpu') and torch.xpu.is_available() else 'cpu')
     parser.add_argument('-b', '--batch_size', type=int, default=16)
     args = parser.parse_args()
     return args
@@ -280,7 +280,7 @@ def args_factory(**kwargs):
         out_root = './results',
         tag = '',
         seed = None,
-        device = 'cuda',
+        device = 'cuda' if torch.cuda.is_available() else 'cpu',
         batch_size = 16
     )
     default_args.update(kwargs)

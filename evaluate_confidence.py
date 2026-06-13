@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """Evaluate fine-tuned BFN confidence heads against AF2 ground truth.
 
-Computes Pearson r, Spearman ρ, and MAE for pLDDT, ipTM, and PAE predictions
+Computes Pearson r, Spearman 蟻, and MAE for pLDDT, ipTM, and PAE predictions
 on the validation set. Outputs per-protein details to JSON.
 """
 import sys, os, json, pickle, argparse
@@ -61,8 +61,8 @@ def load_lmdb_entries(db_path, max_residues=0):
 
 
 def load_model(checkpoint_path, device):
-    from antibodydesignbfn.models import get_model
-    from antibodydesignbfn.utils.misc import load_config as _lc
+    from disorderflow.models import get_model
+    from disorderflow.utils.misc import load_config as _lc
 
     config_path = PROJECT_DIR / 'configs' / 'train' / 'bfn_confidence_finetune.yml'
     config, _ = _lc(str(config_path))
@@ -79,7 +79,7 @@ def load_model(checkpoint_path, device):
 
 
 def compute_correlations(pred, true, mask=None):
-    """Compute Pearson r, Spearman ρ, MAE between pred and true tensors."""
+    """Compute Pearson r, Spearman 蟻, MAE between pred and true tensors."""
     if mask is not None:
         pred = pred[mask.bool()]
         true = true[mask.bool()]
@@ -104,9 +104,9 @@ def compute_correlations(pred, true, mask=None):
 
 
 def evaluate(model, entries, device, num_recycles=1):
-    """Run evaluation — run BFN sample() to get confidence predictions, compare against AF2."""
-    from antibodydesignbfn.utils.train import recursive_to
-    from antibodydesignbfn.utils.data import PaddingCollate
+    """Run evaluation 鈥?run BFN sample() to get confidence predictions, compare against AF2."""
+    from disorderflow.utils.train import recursive_to
+    from disorderflow.utils.data import PaddingCollate
 
     per_protein = []
     all_pred_plddt = []
@@ -143,8 +143,7 @@ def evaluate(model, entries, device, num_recycles=1):
         # confidence predictions for every residue.
         batch_c['generate_flag'] = torch.zeros_like(batch_c['mask'])
 
-        # Run BFN sample through the WRAPPER (not core directly) —
-        # the wrapper computes pair_feat via PairEmbedding before calling core.
+        # Run BFN sample through the WRAPPER (not core directly) 鈥?        # the wrapper computes pair_feat via PairEmbedding before calling core.
         with torch.no_grad():
             try:
                 result = model.sample(batch_c, sample_opt={
@@ -208,7 +207,7 @@ def evaluate(model, entries, device, num_recycles=1):
         per_protein.append(res)
 
         print(f'  [{i+1}/{len(entries)}] {pdb_id} (L={n_native}): '
-              f'pLDDT r={plddt_metrics["pearson_r"]:.3f} ρ={plddt_metrics["spearman_rho"]:.3f} MAE={plddt_metrics["mae"]:.4f} | '
+              f'pLDDT r={plddt_metrics["pearson_r"]:.3f} 蟻={plddt_metrics["spearman_rho"]:.3f} MAE={plddt_metrics["mae"]:.4f} | '
               f'ipTM err={iptm_abs_error:.4f} | '
               f'PAE r={pae_metrics["pearson_r"]:.3f}' if pae_metrics['pearson_r'] is not None else 'PAE r=N/A')
 
@@ -278,7 +277,7 @@ def main():
         mae = np.mean(np.abs(cat_pred - cat_true))
         print(f'  pLDDT (per-residue, N={len(cat_pred)}):')
         print(f'    Pearson r   = {pr:.4f}')
-        print(f'    Spearman ρ  = {sr:.4f}')
+        print(f'    Spearman 蟻  = {sr:.4f}')
         print(f'    MAE         = {mae:.4f}')
 
     if all_pred_iptm:
@@ -289,7 +288,7 @@ def main():
         mae_i = np.mean(np.abs(pred_arr - true_arr))
         print(f'\n  ipTM (per-protein, N={len(pred_arr)}):')
         print(f'    Pearson r   = {pr_i:.4f}')
-        print(f'    Spearman ρ  = {sr_i:.4f}')
+        print(f'    Spearman 蟻  = {sr_i:.4f}')
         print(f'    MAE         = {mae_i:.4f}')
 
     # Per-protein pLDDT summary
@@ -300,7 +299,7 @@ def main():
         mean_mae = np.mean([r['plddt_mae'] for r in valid_plddt])
         print(f'\n  Per-protein pLDDT avg:')
         print(f'    Mean Pearson r  = {mean_r:.4f}')
-        print(f'    Mean Spearman ρ = {mean_rho:.4f}')
+        print(f'    Mean Spearman 蟻 = {mean_rho:.4f}')
         print(f'    Mean MAE        = {mean_mae:.4f}')
 
     # ---- IDP vs Folded Split ----
@@ -315,7 +314,7 @@ def main():
         mmae = np.mean([r['plddt_mae'] for r in valid])
         miptm = np.mean([r['iptm_abs_error'] for r in valid])
         print(f'\n  [{label}] n={len(subset)}:')
-        print(f'    pLDDT: r={mr:.4f}  ρ={mrho:.4f}  MAE={mmae:.4f}')
+        print(f'    pLDDT: r={mr:.4f}  蟻={mrho:.4f}  MAE={mmae:.4f}')
         print(f'    ipTM:  abs_err={miptm:.4f}')
 
     # ---- Save Results ----

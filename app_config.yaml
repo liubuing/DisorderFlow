@@ -3,14 +3,14 @@ alphafold:
     executable: colabfold_batch
     venv: ../venv
   defaults:
+    calc_extra_ptm: false
+    model_type: auto
     num_models: 1
     num_recycle: 1
+    rank: auto
     stop_at_score: 85
     use_amber: false
     use_dropout: false
-    model_type: auto               # auto / alphafold2_ptm / alphafold2_multimer_v3
-    rank: auto                     # auto / plddt / ptm / iptm / multimer
-    calc_extra_ptm: false          # compute pTM for all models
   output_dir: alphafold_results
 batch:
   max_workers: 2
@@ -38,15 +38,97 @@ bfn_defaults:
     num_samples: 3
     region: A:10-25
     stochastic: false
+closed_loop:
+  defaults:
+    convergence_delta: 0.02
+    convergence_patience: 2
+    design_tool: "BFN (\u6297\u4F53CDR\u8BBE\u8BA1)"
+    max_cycles: 5
+    n_samples: 20
+    top_k: 5
+  finetune:
+    batch_size: 4
+    enabled: false
+    freeze_backbone: true
+    frequency: 2
+    lr: 1.0e-05
+    n_epochs: 3
+  multi_objective:
+    thresholds:
+      dG_max: 5.0
+      ddG_max: 10.0
+      entropy_max: 2.8
+      iptm_min: 0.25
+      max_pae_max: 20.0
+      plddt_min: 50.0
+      ppl_max: 200.0
+      ptm_min: 0.25
+    weights:
+      contacts: 0.05
+      dG: 0.15
+      ddG: 0.05
+      entropy_inv: 0.05
+      iptm: 0.25
+      max_pae: 0.05
+      plddt: 0.15
+      ppl_inv: 0.1
+      ptm: 0.1
+      recovery: 0.05
+      relax_e: 0.05
+  output:
+    dir: closed_loop_results
+    save_cycles: true
+    save_pareto_plots: true
+  physics:
+    antibody_chains: HL
+    antigen_chain: A
+    enable_relax: false
+    relax_max_iter: 200
+    scorefxn: ref2015
+  ranking:
+    hybrid_ratio: 0.5
+    strategy: pareto_first
+confidence:
+  iptm_high: 0.7
+  iptm_medium: 0.4
+  pae_low: 4.0
+  pae_medium: 8.0
+  plddt_high: 0.8
+  plddt_medium: 0.6
 esmif_defaults:
   chain: A
   num_samples: 3
   temperature: 0.1
+misfolding_disease:
+  cascade:
+    thresholds:
+      entropy_max: 2.8
+      iptm_min: 0.25
+      ppl_max: 200.0
+    weights:
+      entropy_inv: 0.1
+      iptm: 0.45
+      plddt: 0.15
+      ppl_inv: 0.15
+      recovery: 0.15
+  defaults:
+    af2_recycle: 3
+    constraint_cutoff: 8.0
+    design_samples: 10
+    design_tool: "BFN (\u901A\u7528\u86CB\u767D\u8BBE\u8BA1)"
+    max_refinement_rounds: 3
+    model_type: alphafold2_multimer_v3
+    top_k_iterative: 3
+  idp:
+    min_plddt_for_idp: 0.4
+    require_af2_validation: true
+    warn_on_design: true
+  output_dir: misfolding_results
+  targets_dir: data/misfolding_targets
 models:
   bfn:
-    checkpoint: ./logs/bfn_confidence_combined_v9_phase1_2026_05_25__17_24_03/checkpoints/best.pt
+    checkpoint: ./logs/bfn_phase3_v11_nosmooth_v2_2026_06_01__16_08_58/checkpoints/best.pt
     config: configs/demo_design.yml
-
   esmif:
     model_name: esm_if1_gvp4_t16_142M_UR50
   proteinmpnn:
@@ -54,14 +136,6 @@ models:
     model_name: v_48_020
     soluble_weights_dir: ProteinMPNN/soluble_model_weights
     weights_dir: ProteinMPNN/vanilla_model_weights
-
-confidence:
-  plddt_high: 0.80
-  plddt_medium: 0.60
-  iptm_high: 0.70
-  iptm_medium: 0.40
-  pae_low: 4.0
-  pae_medium: 8.0
 mpnn_defaults:
   ca_only: false
   chains: A
@@ -76,33 +150,13 @@ server:
   port: 7860
   reload: false
   share: false
-
-# ── Workflow Pipeline Configuration ──
-workflow:
-  cascade:
-    thresholds:
-      plddt_min: 0.6
-      iptm_min: 0.4
-      ppl_max: 100.0
-      entropy_max: 2.5
-    weights:
-      iptm: 0.35
-      plddt: 0.25
-      ppl_inv: 0.15
-      entropy_inv: 0.10
-      recovery: 0.15
-  af2_validation:
-    enabled: false
-    max_sequences: 5
-    num_recycle: 1
-
 target_design:
   contact:
     interface_cutoff: 8.0
     strict_contact_cutoff: 5.0
   defaults:
     constraint_mode: true
-    design_tool: BFN (抗体CDR设计)
+    design_tool: "BFN (\u6297\u4F53CDR\u8BBE\u8BA1)"
     top_n_epitopes: 20
   design:
     default_constraint_cutoff: 10.0
@@ -111,83 +165,20 @@ target_design:
     min_rel_sasa: 0.15
     protrusion_weight: 0.25
     sasa_weight: 0.4
-
-# ── Misfolding Disease Module Configuration ──
-misfolding_disease:
-  targets_dir: data/misfolding_targets
-  output_dir: misfolding_results
-  defaults:
-    constraint_cutoff: 8.0
-    design_samples: 10
-    af2_recycle: 3
-    model_type: alphafold2_multimer_v3
-    top_k_iterative: 3
-    max_refinement_rounds: 3
-    design_tool: BFN (通用蛋白设计)
+workflow:
+  af2_validation:
+    enabled: false
+    max_sequences: 5
+    num_recycle: 1
   cascade:
     thresholds:
-      iptm_min: 0.25
-      ppl_max: 200.0
-      entropy_max: 2.8
+      entropy_max: 2.5
+      iptm_min: 0.4
+      plddt_min: 0.6
+      ppl_max: 100.0
     weights:
-      iptm: 0.45
-      plddt: 0.15
+      entropy_inv: 0.1
+      iptm: 0.35
+      plddt: 0.25
       ppl_inv: 0.15
-      entropy_inv: 0.10
       recovery: 0.15
-  idp:
-    warn_on_design: true
-    require_af2_validation: true
-    min_plddt_for_idp: 0.40
-
-# ── Closed-Loop Multi-Objective Alignment ──
-closed_loop:
-  defaults:
-    n_samples: 20
-    top_k: 5
-    max_cycles: 5
-    convergence_delta: 0.02
-    convergence_patience: 2
-    design_tool: BFN (抗体CDR设计)
-  physics:
-    enable_relax: false
-    scorefxn: ref2015
-    relax_max_iter: 200
-    antibody_chains: HL
-    antigen_chain: A
-  multi_objective:
-    weights:
-      iptm: 0.25
-      plddt: 0.15
-      ptm: 0.10
-      max_pae: 0.05
-      dG: 0.15
-      ddG: 0.05
-      relax_e: 0.05
-      ppl_inv: 0.10
-      entropy_inv: 0.05
-      contacts: 0.05
-      recovery: 0.05
-    thresholds:
-      iptm_min: 0.25
-      plddt_min: 50.0
-      ptm_min: 0.25
-      max_pae_max: 20.0
-      dG_max: 5.0
-      ddG_max: 10.0
-      ppl_max: 200.0
-      entropy_max: 2.8
-  finetune:
-    enabled: false
-    frequency: 2
-    freeze_backbone: true
-    n_epochs: 3
-    lr: 1.0e-05
-    batch_size: 4
-  ranking:
-    strategy: pareto_first
-    hybrid_ratio: 0.5
-  output:
-    dir: closed_loop_results
-    save_cycles: true
-    save_pareto_plots: true

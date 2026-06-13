@@ -46,7 +46,12 @@ training_output_*.txt
 workflow_*_report.*
 ProteinStudio_Project_Guide.docx
 convert_md_to_docx.py
+PROJECT_GUIDE.md
+USER_GUIDE.md
 val_phase6_dummy.pdb
+
+# Claude Code local config
+.claude/
 
 # OS files
 .DS_Store

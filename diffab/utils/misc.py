@@ -64,9 +64,12 @@ def get_new_log_dir(root='./logs', prefix='', tag=''):
 
 
 def seed_all(seed):
-    torch.backends.cudnn.deterministic = True
     torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = True
+        torch.cuda.manual_seed_all(seed)
+    if hasattr(torch, 'xpu') and torch.xpu.is_available():
+        torch.xpu.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
 

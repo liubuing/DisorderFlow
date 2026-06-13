@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """Alzheimer's antibody design: BFN on 5IMK nanobody CDRs targeting Abeta42 fibril."""
 import os, sys, json, time
-os.chdir(r'C:\biological\AntibodyDesignBFN-main\AntibodyDesignBFN-main')
+os.chdir('/home/liubuzi/disorderflow-main/disorderflow-main')
 sys.path.insert(0, '.')
 sys.path.insert(0, 'modules')
 
@@ -13,10 +13,10 @@ import target_design_helpers as tdh
 from app import load_bfn, run_bfn_protein
 
 print("=" * 80)
-print("  Alzheimer's Disease Antibody Design — BFN on 5IMK Nanobody Scaffold")
+print("  Alzheimer's Disease Antibody Design 鈥?BFN on 5IMK Nanobody Scaffold")
 print("=" * 80)
 
-# ── Load target info ──
+# 鈹€鈹€ Load target info 鈹€鈹€
 target = mkb.get_target('alzheimer_abeta')
 scaffold = mkb.get_scaffold('nanobody_5imk')
 print(f"\nTarget: {target['disease_cn']}")
@@ -24,19 +24,19 @@ print(f"Pathogenic form: {target['pathogenic_form']}")
 print(f"Scaffold: {scaffold['name']} ({scaffold['type']})")
 print(f"CDRs: {scaffold['cdr_definitions']}")
 
-# ── Target PDB ──
+# 鈹€鈹€ Target PDB 鈹€鈹€
 target_pdb = 'data/misfolding_targets/2NAO_model1_A_1-42.pdb'
 print(f"\nTarget PDB: {target_pdb}")
 
-# ── Epitope analysis ──
-print("\n" + "─" * 80)
+# 鈹€鈹€ Epitope analysis 鈹€鈹€
+print("\n" + "鈹€" * 80)
 print("  STEP 1: Epitope Analysis")
-print("─" * 80)
+print("鈹€" * 80)
 
 epitope_data = tdh.score_epitope_residues(target_pdb, 'A')
 print(f"\nTop 15 epitope residues (by combined score):")
 for res in epitope_data[:15]:
-    marker = " ★" if res['rank'] <= 5 else ""
+    marker = " 鈽? if res['rank'] <= 5 else ""
     print(f"  #{res['rank']:2d}: {res['chain_id']}{res['resseq']}({res['resname']}) "
           f"score={res['combined_score']:.3f} (SASA={res['sasa']:.1f} "
           f"relSASA={res['rel_sasa']:.3f} hydro={res['hydrophilicity']:.2f} "
@@ -46,7 +46,7 @@ for res in epitope_data[:15]:
 known_epitopes = mkb.get_known_epitope_regions('alzheimer_abeta')
 print(f"\nKnown therapeutic epitopes:")
 for ep in known_epitopes:
-    print(f"  {ep.get('ab', '?'):30s} region {ep['region']} — {ep.get('source', '')}")
+    print(f"  {ep.get('ab', '?'):30s} region {ep['region']} 鈥?{ep.get('source', '')}")
 
 # Score epitopes against known regions
 print(f"\nValidation against known epitopes:")
@@ -62,10 +62,10 @@ for ep in known_epitopes:
 epitope_ui = tdh.format_epitope_summary_for_ui(epitope_data, top_n=20)
 print(f"\n{epitope_ui}")
 
-# ── BFN Design on 5IMK CDRs ──
-print("\n" + "─" * 80)
+# 鈹€鈹€ BFN Design on 5IMK CDRs 鈹€鈹€
+print("\n" + "鈹€" * 80)
 print("  STEP 2: BFN CDR Design on 5IMK Nanobody")
-print("─" * 80)
+print("鈹€" * 80)
 
 scaffold_pdb = 'data/misfolding_targets/5IMK.pdb'
 # Design CDR regions: H1=26-33, H2=51-58, H3=97-113 on chain A
@@ -86,10 +86,10 @@ elapsed = time.time() - t0
 print(f"\nDesign completed in {elapsed:.1f}s")
 print(design_output)
 
-# ── Misfolding Cascade Filter ──
-print("\n" + "─" * 80)
+# 鈹€鈹€ Misfolding Cascade Filter 鈹€鈹€
+print("\n" + "鈹€" * 80)
 print("  STEP 3: Misfolding-Specific Cascade Filtering")
-print("─" * 80)
+print("鈹€" * 80)
 
 misfolding_filtered, misfolding_report = cf.apply_cascade_misfolding(results_list)
 print(misfolding_report)
@@ -112,10 +112,10 @@ else:
     print("No designs passed misfolding cascade. Using all raw results...")
     misfolding_filtered = results_list
 
-# ── IDP Warning ──
-print("\n" + "─" * 80)
+# 鈹€鈹€ IDP Warning 鈹€鈹€
+print("\n" + "鈹€" * 80)
 print("  STEP 4: IDP Risk Assessment")
-print("─" * 80)
+print("鈹€" * 80)
 
 if mkb.is_idp_target('alzheimer_abeta'):
     warning = mkb.get_idp_warning('alzheimer_abeta')
@@ -123,12 +123,12 @@ if mkb.is_idp_target('alzheimer_abeta'):
     cf_warning = cf.format_idp_score_warning('alzheimer_abeta', warning)
     print(cf_warning)
 else:
-    print("\nTarget is not flagged as IDP — confidence scores are reliable for structured fibril core")
+    print("\nTarget is not flagged as IDP 鈥?confidence scores are reliable for structured fibril core")
 
-# ── AF2 Multimer Validation Prep ──
-print("\n" + "─" * 80)
+# 鈹€鈹€ AF2 Multimer Validation Prep 鈹€鈹€
+print("\n" + "鈹€" * 80)
 print("  STEP 5: AF2 Multimer Validation Prep")
-print("─" * 80)
+print("鈹€" * 80)
 
 # Build best design sequence
 best_design = misfolding_filtered[0]['sequence'] if misfolding_filtered else results_list[0]['sequence']
@@ -187,10 +187,10 @@ with open(fasta_path, 'w') as f:
 print(f"\nMultimer FASTA saved to: {fasta_path}")
 print(multimer_fasta)
 
-# ── Mutations summary ──
-print("─" * 80)
+# 鈹€鈹€ Mutations summary 鈹€鈹€
+print("鈹€" * 80)
 print("  Mutation Summary vs Original 5IMK Scaffold")
-print("─" * 80)
+print("鈹€" * 80)
 mutations = []
 for i, (orig, new) in enumerate(zip(scaffold_seq, full_ab_seq_str)):
     if orig != new:
@@ -199,13 +199,13 @@ for i, (orig, new) in enumerate(zip(scaffold_seq, full_ab_seq_str)):
 if mutations:
     print(f"Total mutations: {len(mutations)}")
     for pos, orig, new in mutations:
-        print(f"  Pos {pos:3d}: {orig} → {new}")
+        print(f"  Pos {pos:3d}: {orig} 鈫?{new}")
 else:
     print("No mutations (all CDRs identical to scaffold)")
 
-# ── Summary ──
+# 鈹€鈹€ Summary 鈹€鈹€
 print("\n" + "=" * 80)
-print("  DESIGN COMPLETE — Alzheimer's Abeta Nanobody Ready for AF2 Validation")
+print("  DESIGN COMPLETE 鈥?Alzheimer's Abeta Nanobody Ready for AF2 Validation")
 print("=" * 80)
 print(f"""
 Design Summary:

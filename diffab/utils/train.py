@@ -10,8 +10,15 @@ def get_optimizer(cfg, model):
         return torch.optim.Adam(
             model.parameters(),
             lr=cfg.lr,
-            weight_decay=cfg.weight_decay,
-            betas=(cfg.beta1, cfg.beta2, )
+            weight_decay=cfg.get('weight_decay', 0.0),
+            betas=(cfg.get('beta1', 0.9), cfg.get('beta2', 0.999)),
+        )
+    elif cfg.type == 'adamw':
+        return torch.optim.AdamW(
+            model.parameters(),
+            lr=cfg.lr,
+            weight_decay=cfg.get('weight_decay', 1e-4),
+            betas=(cfg.get('beta1', 0.9), cfg.get('beta2', 0.999)),
         )
     else:
         raise NotImplementedError('Optimizer not supported: %s' % cfg.type)
@@ -103,14 +110,12 @@ class ValidationLossTape(object):
 
 def recursive_to(obj, device):
     if isinstance(obj, torch.Tensor):
-        if device == 'cpu':
-            return obj.cpu()
-        if device == 'mps':
-            return obj.to('mps')
-        try:
-            return obj.cuda(device=device, non_blocking=True)
-        except (RuntimeError, AssertionError):
+        if device == 'mps' or device == 'xpu':
             return obj.to(device)
+        try:
+            return obj.to(device)
+        except (RuntimeError, AssertionError):
+            return obj.cpu()
     elif isinstance(obj, list):
         return [recursive_to(o, device=device) for o in obj]
     elif isinstance(obj, tuple):

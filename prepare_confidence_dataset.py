@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """Prepare dataset for BFN confidence head fine-tuning.
 
 Workflow:
   1. Take a set of single-chain protein PDB files
   2. Extract native sequence from each PDB
   3. Run AF2 on native sequence to get ground-truth pLDDT/ipTM/PAE
-  4. Preprocess PDB into BFN batch format (MaskRegion full → MergeProtein → PatchProtein)
+  4. Preprocess PDB into BFN batch format (MaskRegion full 鈫?MergeProtein 鈫?PatchProtein)
   5. Save as LMDB: each entry = {batch_dict, af2_plddt, af2_iptm, af2_pae_matrix}
 
 Usage:
@@ -69,10 +69,10 @@ def preprocess_pdb_for_bfn(pdb_path, chain_id=None):
     Auto-detects first available chain if chain_id not specified.
     Returns (batch, sequence, num_residues).
     """
-    from antibodydesignbfn.datasets.protein import preprocess_protein_structure
-    from antibodydesignbfn.utils.train import recursive_to
-    from antibodydesignbfn.utils.data import PaddingCollate
-    from antibodydesignbfn.utils.transforms import get_transform
+    from disorderflow.datasets.protein import preprocess_protein_structure
+    from disorderflow.utils.train import recursive_to
+    from disorderflow.utils.data import PaddingCollate
+    from disorderflow.utils.transforms import get_transform
 
     # Auto-detect chain ID if not specified
     if chain_id is None:
@@ -106,7 +106,7 @@ def preprocess_pdb_for_bfn(pdb_path, chain_id=None):
     ])
     data = transform(structure)
     batch = recursive_to(data, 'cpu')
-    # PaddingCollate is applied later by the DataLoader — do NOT add batch dim here
+    # PaddingCollate is applied later by the DataLoader 鈥?do NOT add batch dim here
     return batch, seq, n_res
 
 
@@ -167,7 +167,7 @@ def build_lmdb_entry(batch, seq, af2_result, pdb_id):
     # ipTM
     af2_iptm = torch.tensor(af2_result['iptm'], dtype=torch.float32)
 
-    # PAE matrix — fill with identity-like if missing
+    # PAE matrix 鈥?fill with identity-like if missing
     pae = af2_result.get('pae_matrix')
     if pae is not None:
         pae_t = torch.tensor(pae, dtype=torch.float32)
@@ -248,7 +248,7 @@ def load_lmdb_keys(db_path):
         return set()
 
 
-# ── Main ──
+# 鈹€鈹€ Main 鈹€鈹€
 if __name__ == '__main__':
     args = parse_args()
     pdb_dir = Path(args.pdb_dir)
@@ -274,7 +274,7 @@ if __name__ == '__main__':
     print(f'Output: {output_dir}')
     print(f'AF2 timeout: {args.af2_timeout}s | Recycle: {args.af2_num_recycle}')
     if args.no_af2:
-        print('WARNING: AF2 disabled — using dummy confidence targets')
+        print('WARNING: AF2 disabled 鈥?using dummy confidence targets')
 
     # Resume: skip already-processed
     processed = set()
@@ -324,7 +324,7 @@ if __name__ == '__main__':
                 num_recycle=args.af2_num_recycle,
             )
             if af2_result is None:
-                print(f'  AF2 FAILED for {pdb_id} — using fallback')
+                print(f'  AF2 FAILED for {pdb_id} 鈥?using fallback')
                 af2_result = {
                     'plddt_array': [0.5] * n_res,
                     'iptm': 0.4,
@@ -374,4 +374,4 @@ if __name__ == '__main__':
     with open(output_dir / 'dataset_summary.json', 'w') as f:
         json.dump(summary, f, indent=2)
 
-    print(f'\nDone! {len(all_entries)} entries → {output_dir}')
+    print(f'\nDone! {len(all_entries)} entries 鈫?{output_dir}')
