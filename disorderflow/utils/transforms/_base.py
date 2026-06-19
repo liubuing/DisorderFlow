@@ -1,6 +1,28 @@
 import copy
 import torch
-from torchvision.transforms import Compose
+
+
+class Compose:
+    """Drop-in replacement for torchvision.transforms.Compose.
+    Avoids the heavy torchvision dependency for a simple transform chain."""
+    def __init__(self, transforms):
+        self.transforms = list(transforms)
+
+    def __call__(self, *args, **kwargs):
+        for t in self.transforms:
+            result = t(*args, **kwargs)
+            if isinstance(result, tuple):
+                args = result
+                kwargs = {}
+            else:
+                args = (result,)
+                kwargs = {}
+        if len(args) == 1:
+            return args[0]
+        return args
+
+    def __repr__(self):
+        return f"Compose({self.transforms})"
 
 
 _TRANSFORM_DICT = {}

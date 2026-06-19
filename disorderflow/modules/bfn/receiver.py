@@ -127,6 +127,33 @@ class AntibodyBFN_Receiver(nn.Module):
             num_heads=4, dropout=head_dropout,
         )
 
+        # Sequence-aware confidence bypass (V11):
+        # Backbone-only confidence is constant across designs on the same scaffold.
+        # These small heads process per-residue sequence uncertainty (entropy, max_prob)
+        # and produce design-specific confidence adjustments.
+        # Kept separate from backbone heads for checkpoint compatibility.
+        SEQ_CONF_IN_DIM = 2  # entropy + max_prob per residue
+        self.head_plddt_seq = nn.Sequential(
+            nn.Linear(SEQ_CONF_IN_DIM, 32),
+            nn.ReLU(),
+            nn.Dropout(head_dropout),
+            nn.Linear(32, 1),
+        )
+        self.head_iptm_seq = nn.Sequential(
+            nn.Linear(SEQ_CONF_IN_DIM, 16),
+            nn.ReLU(),
+            nn.Dropout(head_dropout),
+            nn.Linear(16, 1),
+        )
+        # PAE pair-level sequence adjustment: uses pairwise entropy products
+        self.head_pae_seq = nn.Sequential(
+            nn.Linear(2, 32),  # pairwise entropy diff + product
+            nn.LayerNorm(32),
+            nn.ReLU(),
+            nn.Dropout(head_dropout),
+            nn.Linear(32, 1),
+        )
+
         # Disorder Classification Head (per-residue binary)
         if disorder_head:
             self.head_disorder = nn.Sequential(
@@ -200,13 +227,32 @@ class AntibodyBFN_Receiver(nn.Module):
         
         # 2. Encoder
         features = self.encoder(rot, pos, res_feat, pair_feat, mask_res)
-        
+
+        # ── Sequence confidence features (V11): bypass IPA to capture design quality ──
+        # probs_seq carries per-residue sequence uncertainty that differs across designs.
+        # The IPA encoder is backbone-dominated and washes out these differences, making
+        # confidence heads output near-identical values for all designs on the same scaffold.
+        # We compute entropy/max_prob directly from probs_seq and feed into small bypass
+        # heads whose outputs are ADDED to the backbone-only confidence logits.
+        log_probs = torch.log(probs_seq + 1e-8)
+        entropy = -(probs_seq * log_probs).sum(dim=-1)  # (N, L), 0=peaked, ~3.0=uniform
+        max_prob = probs_seq.max(dim=-1).values         # (N, L), 1.0=certain, 0.05=blind
+        seq_conf = torch.stack([entropy, max_prob], dim=-1)  # (N, L, 2)
+
+        # Pairwise sequence features for PAE adjustment
+        entropy_i = entropy.unsqueeze(-1)    # (N, L, 1)
+        entropy_j = entropy.unsqueeze(-2)    # (N, 1, L)
+        pae_seq_feat = torch.cat([
+            (entropy_i - entropy_j).abs(),    # entropy difference
+            entropy_i * entropy_j,            # entropy product (both uncertain → high)
+        ], dim=-1)  # (N, L, L, 2)
+
         # 3. Heads
         pred_seq = self.head_seq(features)
         if pred_seq.size(-1) > 20:
             pred_seq[..., 20:] = -1e4
 
-        # Disorder prediction (per-residue binary logits)
+        # Disorder prediction (per-residue binary logits) — backbone-only, unchanged
         if self.disorder_head:
             pred_disorder = self.head_disorder(features).squeeze(-1)  # (N, L)
         else:
@@ -215,33 +261,57 @@ class AntibodyBFN_Receiver(nn.Module):
         # Seq-only mode: skip structure predictions (pos, ori) but keep angle prediction for aux loss
         # Confidence predictions (pLDDT/ipTM/PAE) are still computed for fine-tuning
         if self.seq_only:
-            pred_pos = pos  # Just return input
+            pred_pos = pos
             pred_ori_6d = torch.zeros(N, L, 6, device=device)
-            pred_ang_sc = self.head_ang(features)  # Still predict angles for auxiliary loss
-            pred_plddt = torch.sigmoid(self.head_plddt(features)).squeeze(-1)
+            pred_ang_sc = self.head_ang(features)
 
+            # pLDDT: backbone + sequence-aware adjustment
+            plddt_backbone = self.head_plddt(features)          # (N, L, 1)
+            plddt_seq = self.head_plddt_seq(seq_conf)           # (N, L, 1)
+            pred_plddt = torch.sigmoid(plddt_backbone + plddt_seq).squeeze(-1)
+
+            # ipTM: pooled backbone + pooled sequence adjustment
             masked_features = features * mask_res.unsqueeze(-1)
-
-            # All-residue ipTM: pool over both context AND generated residues.
-            # Previously pooled only over context (non-generated) residues, which
-            # made ipTM constant across designs since context residues are identical.
             all_sum = mask_res.sum(dim=1, keepdim=True).clamp(min=1)
             all_feat = masked_features.sum(dim=1) / all_sum
-            pred_iptm = torch.sigmoid(self.head_iptm(all_feat)).squeeze(-1)
+            iptm_backbone = self.head_iptm(all_feat)            # (N, 1)
+            all_seq_conf = (seq_conf * mask_res.unsqueeze(-1)).sum(dim=1) / all_sum
+            iptm_seq = self.head_iptm_seq(all_seq_conf)         # (N, 1)
+            pred_iptm = torch.sigmoid(iptm_backbone + iptm_seq).squeeze(-1)
 
-            pred_pae = torch.sigmoid(self.head_pae(features, pair_feat))
+            # PAE: backbone + pairwise sequence adjustment
+            pae_backbone = self.head_pae(features, pair_feat)   # (N, L, L)
+            N_pae, L_pae = pae_seq_feat.shape[0], pae_seq_feat.shape[1]
+            pae_seq = self.head_pae_seq(
+                pae_seq_feat.reshape(-1, 2)  # (N*L*L, 2)
+            ).reshape(N_pae, L_pae, L_pae)  # (N, L, L)
+            pred_pae = torch.sigmoid(pae_backbone + pae_seq)
         else:
             # Full prediction
             pred_pos_local = self.head_pos(features)
             pred_pos = torch.matmul(rot, pred_pos_local.unsqueeze(-1)).squeeze(-1) + pos
             pred_ori_6d = self.head_ori(features)
             pred_ang_sc = self.head_ang(features)
-            pred_plddt = torch.sigmoid(self.head_plddt(features)).squeeze(-1)
 
+            # pLDDT: backbone + sequence-aware adjustment
+            plddt_backbone = self.head_plddt(features)
+            plddt_seq = self.head_plddt_seq(seq_conf)
+            pred_plddt = torch.sigmoid(plddt_backbone + plddt_seq).squeeze(-1)
+
+            # ipTM: pooled backbone + pooled sequence adjustment
             masked_features = features * mask_res.unsqueeze(-1)
             all_sum = mask_res.sum(dim=1, keepdim=True).clamp(min=1)
             all_feat = masked_features.sum(dim=1) / all_sum
-            pred_iptm = torch.sigmoid(self.head_iptm(all_feat)).squeeze(-1)
+            iptm_backbone = self.head_iptm(all_feat)
+            all_seq_conf = (seq_conf * mask_res.unsqueeze(-1)).sum(dim=1) / all_sum
+            iptm_seq = self.head_iptm_seq(all_seq_conf)
+            pred_iptm = torch.sigmoid(iptm_backbone + iptm_seq).squeeze(-1)
 
-            pred_pae = torch.sigmoid(self.head_pae(features, pair_feat))
+            # PAE: backbone + pairwise sequence adjustment
+            pae_backbone = self.head_pae(features, pair_feat)
+            N_full, L_full = pae_seq_feat.shape[0], pae_seq_feat.shape[1]
+            pae_seq = self.head_pae_seq(
+                pae_seq_feat.reshape(-1, 2)
+            ).reshape(N_full, L_full, L_full)
+            pred_pae = torch.sigmoid(pae_backbone + pae_seq)
         return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder
