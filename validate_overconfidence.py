@@ -63,6 +63,11 @@ CHECKPOINTS = {
         'label': 'IDP Combined (best val)',
         'desc': 'Frozen backbone, encoder dropout 0.05, quality filtered',
     },
+    'v11_seqconf': {
+        'path': 'logs/bfn_v11_seqconf_xpu_2026_06_19__23_01_18/checkpoints/best.pt',
+        'label': 'V11 SeqConf (sequence-aware bypass)',
+        'desc': 'Entropy+max_prob bypass heads, trained 2000 iters',
+    },
 }
 
 DESIGN_CONFIG = {

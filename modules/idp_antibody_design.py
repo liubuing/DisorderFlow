@@ -442,18 +442,21 @@ def composite_score(design, weights=None, use_af2=True):
     if weights is None:
         if has_af2:
             weights = {
-                'iptm': 0.35,
-                'plddt': 0.20,
-                'ppl': 0.20,
-                'entropy': 0.10,
+                'iptm': 0.25,
+                'plddt': 0.15,
+                'ppl': 0.30,
+                'entropy': 0.15,
                 'pae': 0.15,
             }
         else:
+            # FixBB mode: backbone confidence (pLDDT/ipTM/PAE) is constant
+            # across all designs on the same scaffold (verified: std<1e-4).
+            # Heavily weight PPL and entropy as the only differentiating signals.
             weights = {
-                'plddt': 0.30,
-                'iptm': 0.25,
-                'ppl': 0.20,
-                'entropy': 0.15,
+                'plddt': 0.05,
+                'iptm': 0.10,
+                'ppl': 0.45,
+                'entropy': 0.30,
                 'pae': 0.10,
             }
 
