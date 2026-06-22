@@ -177,6 +177,11 @@ if __name__ == '__main__':
             'iptm_embed',
             'pae_embed',
             'pair_proj',
+            'v12_plddt',      # V12 pure-sequence confidence heads
+            'v12_iptm',
+            'v12_pae',
+            'v12_seq_emb',
+            'v13_seq_feedback',  # V13 sequence embedding feedback
         ]
         # Optionally unfreeze the last N encoder layers (GAEncoder blocks)
         unfreeze_encoder_layers = config.train.get('unfreeze_encoder_layers', 0)
@@ -422,7 +427,7 @@ if __name__ == '__main__':
             loss_tape_idp.log(it, logger, writer, 'val/idp')
         if n_folded > 0:
             loss_tape_folded.log(it, logger, writer, 'val/folded')
-        # Don't step scheduler during warmup 鈥?warmup manually controls LR.
+        # Don't step scheduler during warmup —warmup manually controls LR.
         # Stepping during warmup can cause the scheduler to decay its internal LR,
         # leading to a sudden drop when warmup ends and the scheduler takes over.
         if it > config.train.get('warmup_steps', 0):

@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env python
-"""Minimal BFN model loader 鈥?no Gradio/UI dependencies.
+"""Minimal BFN model loader —no Gradio/UI dependencies.
 
 Loads the BFN model from checkpoint with proper config handling.
 Supports XPU and CUDA devices.
@@ -158,7 +158,7 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
     all_chains = sorted(set(design_chains + context_chains),
                         key=lambda c: design_chains.index(c) if c in design_chains else 999)
 
-    # Preprocess 鈥?load all chains (design + context)
+    # Preprocess —load all chains (design + context)
     structure = preprocess_protein_structure(pdb_path, chain_ids=all_chains)
     if structure is None:
         raise ValueError(f"Cannot parse structure: {pdb_path}")

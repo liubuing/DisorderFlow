@@ -27,7 +27,7 @@ class AntibodyBFN_Core(nn.Module):
         self.flow_ang = SidechainBFN()
         
         # Detect seq-only mode: true when no structure losses are present.
-        # Confidence losses (pLDDT/ipTM/PAE) don't need structure prediction 鈥?
+        # Confidence losses (pLDDT/ipTM/PAE) don't need structure prediction —
         # the receiver should use the true backbone positions and predict confidence.
         conf_loss_keys = ['plddt', 'iptm', 'pae']
         has_structure_loss = any(k in loss_weight and loss_weight.get(k, 0) > 0 for k in ['dist', 'fape', 'pos', 'rot'])
@@ -139,24 +139,26 @@ class AntibodyBFN_Core(nn.Module):
         inp_ang_raw = self.flow_ang.get_angle(theta_ang_full)
         
         # CRITICAL FIX: Mask CDR sidechain angles during training to prevent data leakage
-        # Sidechain torsion angles reveal amino acid identity; model should learn backbone鈫抯equence only
+        # Sidechain torsion angles reveal amino acid identity; model should learn backbone→抯equence only
         mask_gen_ang = mask_gen.unsqueeze(-1)  # (N, L, 1)
         inp_ang = torch.where(mask_gen_ang, torch.zeros_like(inp_ang_raw), inp_ang_raw)
 
         # --- Recycling Pass ---
         # Training uses train_recycles (default 1); inference uses sample_opt.num_recycles.
-        # Set train_recycles >= 2 to train feedback embeddings (conf_embed/iptm_embed/pae_embed).
+        # Set train_recycles >= 2 to train feedback embeddings.
         train_recycles = self.loss_weight.get('train_recycles', 1)
         prev_plddt, prev_iptm, prev_pae = None, None, None
+        prev_seq_emb = None  # V13
 
         for _ in range(train_recycles):
             pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = self.receiver(
                 inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
                 backbone_pos=backbone_pos, prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
-                mask_gen=mask_gen
+                prev_seq_emb=prev_seq_emb, mask_gen=mask_gen
             )
-            # Feed confidence into next recycle (feedback embeddings get gradients)
+            # Feed confidence + sequence embedding into next recycle
             prev_plddt, prev_iptm, prev_pae = pred_plddt, pred_iptm, pred_pae
+            prev_seq_emb = self.receiver.v12_seq_emb(F.softmax(pred_seq.detach(), dim=-1))
         # --- End Recycling ---
         
         # 4. Training Losses
@@ -265,6 +267,44 @@ class AntibodyBFN_Core(nn.Module):
             loss_disorder = (huber(disorder_prob, disorder_target) * mask_disorder).sum()
             losses['disorder'] = loss_disorder / (mask_disorder.sum() + 1e-8)
 
+        # === V12 Self-Supervised Confidence Losses ===
+        # 1. Variance loss: penalise zero variance in predicted confidence.
+        #    Same-backbone designs MUST get different confidence scores.
+        conf_var_w = self.loss_weight.get('conf_variance', 0.0)
+        if conf_var_w > 0 and 'iptm' in losses and pred_iptm.numel() > 1:
+            iptm_std = pred_iptm.detach().std()
+            losses['conf_variance'] = conf_var_w * (-iptm_std.clamp(max=0.3))
+
+        # 2. Ranking loss: lower PPL should imply higher confidence.
+        conf_rank_w = self.loss_weight.get('conf_ranking', 0.0)
+        if conf_rank_w > 0 and 'iptm' in losses and pred_iptm.numel() > 1:
+            # Compute PPL on-the-fly from sequence logits.
+            # Use safe gather: x_seq_target may contain -100 (ignore_index).
+            with torch.no_grad():
+                logp = torch.log_softmax(pred_seq.detach(), dim=-1)
+                # Clamp target to [0, num_classes-1], mask out invalid positions
+                seq_target_safe = x_seq_target.clamp(0, self.num_classes - 1)
+                nll_per_pos = -(logp.gather(-1, seq_target_safe.unsqueeze(-1)).squeeze(-1))
+                # Only compute over real (non-ignore) positions
+                real_pos = (x_seq_target >= 0).float()
+                valid_mask = mask_res.bool() & (~mask_gen.bool()) & (real_pos > 0.5)
+                ppl = torch.zeros(N, device=pred_seq.device)
+                for b in range(N):
+                    b_valid = valid_mask[b]
+                    if b_valid.sum() > 1:
+                        ppl[b] = torch.exp(nll_per_pos[b][b_valid].mean())
+                    else:
+                        ppl[b] = 1.0  # degenerate case
+            ppl_diff = ppl.unsqueeze(0) - ppl.unsqueeze(1)
+            iptm_diff = pred_iptm.unsqueeze(0) - pred_iptm.unsqueeze(1)
+            target = (ppl_diff < -0.5).float()
+            pred = torch.sigmoid(iptm_diff * 10.0)
+            mask = (ppl_diff.abs() > 1.0).float().detach()
+            n_pairs = mask.sum()
+            if n_pairs > 0:
+                bce = -(target * torch.log(pred + 1e-8) + (1 - target) * torch.log(1 - pred + 1e-8))
+                losses['conf_ranking'] = conf_rank_w * (bce * mask).sum() / n_pairs
+
         losses['avg_t'] = t.mean()
         return losses
 
@@ -299,8 +339,9 @@ class AntibodyBFN_Core(nn.Module):
         delta_alpha = self.beta / steps
         sqrt_delta_alpha = torch.sqrt(torch.tensor(delta_alpha, device=device))
 
-        # Confidence feedback from previous recycle (None on first pass)
+        # Feedback from previous recycle (None on first pass)
         prev_plddt, prev_iptm, prev_pae = None, None, None
+        prev_seq_emb = None  # V13: per-residue sequence embedding feedback
 
         for recycle in range(num_recycles):
             # Initialize Priors (fresh diffusion per recycle)
@@ -350,11 +391,11 @@ class AntibodyBFN_Core(nn.Module):
                 theta_seq = torch.where(mask_gen.unsqueeze(-1), theta_seq, theta_seq_ctx)
                 inp_seq = self.flow_seq.probabilities(theta_seq)
 
-                # Receiver forward with confidence feedback from previous recycle
+                # Receiver forward with feedback from previous recycle
                 res = self.receiver(inp_seq, inp_pos, inp_ori, inp_ang, t_tensor, pair_feat, mask_res,
                                     backbone_pos=backbone_pos,
                                     prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
-                                    mask_gen=mask_gen)
+                                    prev_seq_emb=prev_seq_emb, mask_gen=mask_gen)
                 pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = res
 
                 # Update sequence - deterministic mode removes noise
@@ -379,10 +420,13 @@ class AntibodyBFN_Core(nn.Module):
                     y_ang_expanded = y_ang.unsqueeze(-1).expand_as(theta_ang[1])
                     theta_ang = (theta_ang[0] + delta_alpha, theta_ang[1] + y_ang_expanded, theta_ang[2] + delta_alpha)
 
-            # Feed confidence into next recycle
+            # Feed confidence + sequence embedding into next recycle
             prev_plddt = pred_plddt
             prev_iptm = pred_iptm
             prev_pae = pred_pae
+            # V13: per-residue sequence embedding for rich feedback
+            prev_seq_emb = self.receiver.v12_seq_emb(
+                F.softmax(pred_seq_logits, dim=-1))
         
         # Final outputs
         if theta_seq.size(-1) > 20:

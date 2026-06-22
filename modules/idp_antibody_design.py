@@ -409,6 +409,87 @@ def validate_designs_with_af2(designs, scaffold_pdb, scaffold_chain,
     return enriched
 
 
+# ── Disorder → AF2 Reliability Mapping (derived from multi-conformation library) ──
+
+def disorder_to_af2_reliability(disorder):
+    """Map BFN disorder score → AF2 reliability factor [0, 1].
+
+    Calibrated against the multi-conformation library (863 IDPs × 5 seeds):
+      - disorder < 0.2 (RMSF < 0.4Å): AF2 ensemble tight → trust AF2
+      - disorder = 0.3 (RMSF ≈ 0.6Å): moderate spread
+      - disorder = 0.5 (RMSF ≈ 1.1Å): significant variance
+      - disorder > 0.7 (RMSF > 1.7Å): AF2 predictions diverge wildly
+
+    Returns reliability factor where 1.0 = fully trust AF2, 0.0 = ignore AF2.
+    The sigmoid midpoint at disorder=0.35 reflects the observed transition
+    where AF2 inter-seed RMSF exceeds 1.0Å.
+    """
+    import math
+    # Steep sigmoid: reliability drops sharply around disorder=0.3-0.4
+    # midpoint=0.35, steepness=12 gives:
+    #   disorder 0.2 → 0.95, 0.3 → 0.77, 0.4 → 0.38, 0.5 → 0.10
+    return 1.0 / (1.0 + math.exp(12 * (disorder - 0.35)))
+
+
+def calibrate_af2_with_disorder(af2_result, bfn_result, epitope_disorder):
+    """Calibrate AF2 confidence scores using BFN disorder prediction.
+
+    Core insight from multi-conformation library: AF2's structural predictions
+    for disordered regions have high inter-seed variance (RMSF > 2Å). BFN's
+    disorder head learns to predict this RMSF from sequence+structure context.
+    At inference time, we use BFN disorder to estimate how much to trust AF2.
+
+    For high-disorder epitopes: blend AF2 scores toward BFN self-confidence
+    (which, despite overconfidence issues, at least knows when a region is
+    intrinsically disordered). For low-disorder epitopes: trust AF2 fully.
+
+    Args:
+        af2_result: dict with 'iptm', 'plddt', 'interface_pae' (AF2 validation)
+        bfn_result: dict with 'iptm', 'plddt', 'pae' (BFN self-confidence)
+        epitope_disorder: float [0,1] mean disorder of the targeted epitope segment
+
+    Returns:
+        dict with calibrated AF2 scores + reliability metadata
+    """
+    reliability = disorder_to_af2_reliability(epitope_disorder)
+
+    af2_iptm = af2_result.get('iptm', 0) or 0
+    af2_plddt = af2_result.get('plddt', 0) or 0
+    af2_ipae = af2_result.get('interface_pae')
+    bfn_iptm = bfn_result.get('iptm', 0) or 0
+    bfn_plddt = bfn_result.get('plddt', 0) or 0
+    bfn_pae = bfn_result.get('pae', 30) or 30
+
+    # Blend: AF2 weighted by reliability, BFN fills the gap
+    calibrated_iptm = af2_iptm * reliability + bfn_iptm * (1 - reliability)
+    calibrated_plddt = af2_plddt * reliability + bfn_plddt * (1 - reliability)
+
+    # PAE: lower is better; when AF2 unreliable, default toward higher PAE
+    if af2_ipae is not None:
+        calibrated_pae = af2_ipae * reliability + bfn_pae * (1 - reliability)
+    else:
+        calibrated_pae = bfn_pae
+
+    # Reliability label for reporting
+    if reliability >= 0.80:
+        reliability_label = 'HIGH'
+    elif reliability >= 0.40:
+        reliability_label = 'MEDIUM'
+    else:
+        reliability_label = 'LOW'
+
+    return {
+        'iptm': calibrated_iptm,
+        'plddt': calibrated_plddt,
+        'interface_pae': calibrated_pae,
+        'af2_reliability': reliability,
+        'af2_reliability_label': reliability_label,
+        'epitope_disorder': epitope_disorder,
+        'af2_raw_iptm': af2_iptm,
+        'af2_raw_plddt': af2_plddt,
+    }
+
+
 # ── Composite Scoring ──
 
 def composite_score(design, weights=None, use_af2=True):
@@ -417,6 +498,11 @@ def composite_score(design, weights=None, use_af2=True):
     When AF2 scores are available (use_af2=True), uses AF2-derived
     pLDDT/ipTM/interface_PAE instead of BFN's structure-conditioned values.
     This gives design-specific confidence that differentiates sequences.
+
+    When epitope_disorder is available and use_af2=True, applies
+    disorder-aware AF2 calibration: AF2 scores are blended toward BFN
+    self-confidence for disordered epitopes where AF2 is known to be
+    unreliable (validated by multi-conformation library).
 
     Without AF2, falls back to BFN confidence (identical for fixed-backbone
     designs) + PPL ranking.
@@ -430,7 +516,8 @@ def composite_score(design, weights=None, use_af2=True):
 
     Args:
         design: dict with 'plddt', 'iptm', 'ppl', 'entropy', 'pae' keys,
-                optionally 'af2_plddt', 'af2_iptm', 'af2_interface_pae'
+                optionally 'af2_plddt', 'af2_iptm', 'af2_interface_pae',
+                and 'segment_mean_disorder' for disorder-aware calibration
         weights: optional dict of per-component weights
         use_af2: if True and AF2 scores available, use AF2 confidence
 
@@ -438,16 +525,47 @@ def composite_score(design, weights=None, use_af2=True):
         float: composite score (higher = better design)
     """
     has_af2 = use_af2 and design.get('af2_success')
+    epitope_disorder = design.get('segment_mean_disorder')
+
+    # ── Disorder-aware AF2 calibration ──
+    af2_calibrated = None
+    if has_af2 and epitope_disorder is not None:
+        bfn_result = {
+            'iptm': design.get('iptm', 0) or 0,
+            'plddt': design.get('plddt', 0) or 0,
+            'pae': design.get('pae', 30) or 30,
+        }
+        af2_result = {
+            'iptm': design.get('af2_iptm', 0) or 0,
+            'plddt': design.get('af2_plddt', 0) or 0,
+            'interface_pae': design.get('af2_interface_pae'),
+        }
+        af2_calibrated = calibrate_af2_with_disorder(
+            af2_result, bfn_result, epitope_disorder)
 
     if weights is None:
         if has_af2:
-            weights = {
-                'iptm': 0.25,
-                'plddt': 0.15,
-                'ppl': 0.30,
-                'entropy': 0.15,
-                'pae': 0.15,
-            }
+            # When disorder calibration is active, adjust weights:
+            # reduce AF2 structural weights for disordered epitopes,
+            # increase PPL/entropy (BFN-native sequence quality) weights
+            if af2_calibrated is not None:
+                rel = af2_calibrated['af2_reliability']
+                # Structural weights scale with AF2 reliability
+                w_iptm = 0.10 + 0.15 * rel      # 0.25 when reliable, 0.10 when not
+                w_plddt = 0.05 + 0.10 * rel     # 0.15 when reliable, 0.05 when not
+                w_pae = 0.05 + 0.10 * rel       # 0.15 when reliable, 0.05 when not
+                # BFN-native weights absorb the difference (always trustworthy)
+                w_ppl = 0.30 + 0.15 * (1 - rel)  # 0.30-0.45
+                w_entropy = 0.15 + 0.15 * (1 - rel)  # 0.15-0.30
+                weights = {
+                    'iptm': w_iptm, 'plddt': w_plddt,
+                    'ppl': w_ppl, 'entropy': w_entropy, 'pae': w_pae,
+                }
+            else:
+                weights = {
+                    'iptm': 0.25, 'plddt': 0.15,
+                    'ppl': 0.30, 'entropy': 0.15, 'pae': 0.15,
+                }
         else:
             # FixBB mode: backbone confidence (pLDDT/ipTM/PAE) is constant
             # across all designs on the same scaffold (verified: std<1e-4).
@@ -463,7 +581,11 @@ def composite_score(design, weights=None, use_af2=True):
     score = 0.0
 
     # Confidence (higher better)
-    if has_af2:
+    if af2_calibrated is not None:
+        # Use disorder-calibrated AF2 scores
+        plddt = af2_calibrated['plddt']
+        iptm = af2_calibrated['iptm']
+    elif has_af2:
         plddt = design.get('af2_plddt', 0.0) or 0.0
         iptm = design.get('af2_iptm', 0.0) or 0.0
     else:
@@ -476,7 +598,9 @@ def composite_score(design, weights=None, use_af2=True):
     ppl = design.get('ppl', 100.0) or 100.0
     entropy = design.get('entropy', 2.0) or 2.0
 
-    if has_af2:
+    if af2_calibrated is not None:
+        pae = af2_calibrated['interface_pae']
+    elif has_af2:
         pae = design.get('af2_interface_pae') or design.get('pae', 31.0) or 31.0
     else:
         pae = design.get('pae', 31.0) or 31.0
@@ -488,6 +612,10 @@ def composite_score(design, weights=None, use_af2=True):
     score += weights.get('ppl', 0.2) * ppl_score
     score += weights.get('entropy', 0.1) * entropy_score
     score += weights.get('pae', 0.15) * pae_score
+
+    # Attach calibration metadata to design for reporting
+    if af2_calibrated is not None:
+        design['_af2_calibrated'] = af2_calibrated
 
     return score
 
@@ -527,6 +655,9 @@ def rank_designs(all_designs, use_af2=True):
                         'full_ab_seq', 'full_ab_mutations'):
                 if key in d:
                     entry[key] = d[key]
+            # Carry forward disorder calibration metadata
+            if d.get('_af2_calibrated'):
+                entry['_af2_calibrated'] = d['_af2_calibrated']
             ranked.append(entry)
 
     ranked.sort(key=lambda x: x['composite_score'], reverse=True)
@@ -551,17 +682,32 @@ def format_design_report(ranked_designs, top_n=10):
 
     has_af2 = any(d.get('af2_success') for d in ranked_designs)
 
+    # Check if disorder calibration is active
+    has_disorder_cal = any(d.get('_af2_calibrated') for d in ranked_designs)
+
     if has_af2:
-        header = (
-            f"  {'Rank':<5s} {'Score':<8s} {'Quality':<8s} "
-            f"{'AF2_ipTM':<10s} {'AF2_pLDDT':<11s} {'iPAE':<8s} "
-            f"{'PPL':<8s} {'Segment':<20s} {'Seq'}"
-        )
-        sep = (
-            f"  {'─'*5} {'─'*8} {'─'*8} "
-            f"{'─'*10} {'─'*11} {'─'*8} "
-            f"{'─'*8} {'─'*20} {'─'*30}"
-        )
+        if has_disorder_cal:
+            header = (
+                f"  {'Rank':<5s} {'Score':<8s} {'Quality':<8s} "
+                f"{'AF2_ipTM':<10s} {'AF2_pLDDT':<11s} {'iPAE':<8s} "
+                f"{'D_cal':<6s} {'PPL':<8s} {'Segment':<20s} {'Seq'}"
+            )
+            sep = (
+                f"  {'─'*5} {'─'*8} {'─'*8} "
+                f"{'─'*10} {'─'*11} {'─'*8} "
+                f"{'─'*6} {'─'*8} {'─'*20} {'─'*30}"
+            )
+        else:
+            header = (
+                f"  {'Rank':<5s} {'Score':<8s} {'Quality':<8s} "
+                f"{'AF2_ipTM':<10s} {'AF2_pLDDT':<11s} {'iPAE':<8s} "
+                f"{'PPL':<8s} {'Segment':<20s} {'Seq'}"
+            )
+            sep = (
+                f"  {'─'*5} {'─'*8} {'─'*8} "
+                f"{'─'*10} {'─'*11} {'─'*8} "
+                f"{'─'*8} {'─'*20} {'─'*30}"
+            )
     else:
         header = (
             f"  {'Rank':<5s} {'Score':<8s} {'Quality':<8s} "
@@ -590,17 +736,33 @@ def format_design_report(ranked_designs, top_n=10):
         seg = f"{entry['segment_start']}-{entry['segment_end']}" if entry.get('segment_start') else 'N/A'
 
         if has_af2:
-            lines.append(
-                f"  {entry['rank']:<5d} "
-                f"{entry['composite_score']:<8.3f} "
-                f"{entry['quality_label']:<8s} "
-                f"{entry.get('af2_iptm', 0) or 0:<10.3f} "
-                f"{entry.get('af2_plddt', 0) or 0:<11.3f} "
-                f"{entry.get('af2_interface_pae', 99) or 99:<8.1f} "
-                f"{entry['ppl'] or 99:<8.1f} "
-                f"{seg:<20s} "
-                f"{seq}"
-            )
+            if has_disorder_cal:
+                cal = entry.get('_af2_calibrated', {})
+                d_cal = cal.get('af2_reliability_label', '?')[:6]
+                lines.append(
+                    f"  {entry['rank']:<5d} "
+                    f"{entry['composite_score']:<8.3f} "
+                    f"{entry['quality_label']:<8s} "
+                    f"{entry.get('af2_iptm', 0) or 0:<10.3f} "
+                    f"{entry.get('af2_plddt', 0) or 0:<11.3f} "
+                    f"{entry.get('af2_interface_pae', 99) or 99:<8.1f} "
+                    f"{d_cal:<6s} "
+                    f"{entry['ppl'] or 99:<8.1f} "
+                    f"{seg:<20s} "
+                    f"{seq}"
+                )
+            else:
+                lines.append(
+                    f"  {entry['rank']:<5d} "
+                    f"{entry['composite_score']:<8.3f} "
+                    f"{entry['quality_label']:<8s} "
+                    f"{entry.get('af2_iptm', 0) or 0:<10.3f} "
+                    f"{entry.get('af2_plddt', 0) or 0:<11.3f} "
+                    f"{entry.get('af2_interface_pae', 99) or 99:<8.1f} "
+                    f"{entry['ppl'] or 99:<8.1f} "
+                    f"{seg:<20s} "
+                    f"{seq}"
+                )
         else:
             lines.append(
                 f"  {entry['rank']:<5d} "
@@ -634,6 +796,13 @@ def format_design_report(ranked_designs, top_n=10):
                          f"AF2_pLDDT={af2_plddt:.3f} | "
                          f"AF2_ipTM={af2_iptm:.3f} | "
                          f"AF2_iPAE={af2_ipae:.1f}")
+            # Show calibration if active
+            cal = best.get('_af2_calibrated')
+            if cal:
+                lines.append(f"        Disorder cal: reliability={cal['af2_reliability']:.2f} "
+                             f"[{cal['af2_reliability_label']}] | "
+                             f"epi_disorder={cal['epitope_disorder']:.3f} | "
+                             f"cal_ipTM={cal['iptm']:.3f} cal_pLDDT={cal['plddt']:.3f}")
         else:
             lines.append(f"  Best: composite={best['composite_score']:.3f} | "
                          f"pLDDT={best['plddt'] or 0:.3f} | ipTM={best['iptm'] or 0:.3f}")

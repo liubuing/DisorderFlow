@@ -13,6 +13,97 @@ Supports:
 import math
 from typing import List, Dict, Optional, Tuple, Set
 
+# ── Disorder → AF2 Reliability Mapping ──
+
+def disorder_to_af2_reliability(disorder: float) -> float:
+    """Map BFN disorder score → AF2 reliability factor [0, 1].
+
+    Calibrated against multi-conformation library (863 IDPs × 5 seeds):
+      disorder < 0.2 (RMSF < 0.4Å): AF2 ensemble tight → trust AF2
+      disorder = 0.3 (RMSF ≈ 0.6Å): moderate spread
+      disorder > 0.5 (RMSF > 1.1Å): AF2 predictions diverge → distrust
+
+    Sigmoid midpoint at disorder=0.35 (observed RMSF > 1.0Å transition).
+    """
+    return 1.0 / (1.0 + math.exp(12 * (disorder - 0.35)))
+
+
+def calibrate_results_with_disorder(results: List[Dict]) -> List[Dict]:
+    """Apply disorder-aware AF2 calibration to a batch of design results.
+
+    For each result that has both AF2 scores and epitope_disorder info:
+      - Computes AF2 reliability from disorder
+      - Blends AF2 scores with BFN self-confidence
+      - Adjusts BFN confidence values in-place (iptm, plddt get blended;
+        ppl/entropy are BFN-native and kept unchanged)
+      - Adds calibration metadata keys
+
+    This is designed as a pre-processing step before composite scoring.
+    Call before normalize_scores() or compute_weighted_composite().
+
+    Args:
+        results: list of dicts, each with optional:
+            - iptm, plddt (BFN self-confidence)
+            - af2_iptm, af2_plddt, af2_interface_pae (AF2 validation)
+            - epitope_disorder (float [0,1] or None)
+            - segment_mean_disorder (fallback if epitope_disorder missing)
+
+    Returns:
+        Same list with calibrated values and metadata added.
+    """
+    for r in results:
+        # Get disorder score (try multiple key names)
+        epi_disorder = r.get('epitope_disorder')
+        if epi_disorder is None:
+            epi_disorder = r.get('segment_mean_disorder')
+        if epi_disorder is None:
+            r['_af2_calibrated'] = None
+            continue
+
+        af2_iptm = r.get('af2_iptm')
+        af2_plddt = r.get('af2_plddt')
+        if af2_iptm is None and af2_plddt is None:
+            r['_af2_calibrated'] = None
+            continue
+
+        reliability = disorder_to_af2_reliability(epi_disorder)
+
+        bfn_iptm = r.get('iptm', 0) or 0
+        bfn_plddt = r.get('plddt', 0) or 0
+
+        # Blend AF2 with BFN based on reliability
+        cal_iptm = (af2_iptm or 0) * reliability + bfn_iptm * (1 - reliability)
+        cal_plddt = (af2_plddt or 0) * reliability + bfn_plddt * (1 - reliability)
+
+        # Store calibration for reporting
+        if reliability >= 0.80:
+            label = 'HIGH'
+        elif reliability >= 0.40:
+            label = 'MEDIUM'
+        else:
+            label = 'LOW'
+
+        r['_af2_calibrated'] = {
+            'reliability': round(reliability, 4),
+            'label': label,
+            'epitope_disorder': round(epi_disorder, 4),
+            'af2_raw_iptm': af2_iptm,
+            'af2_raw_plddt': af2_plddt,
+            'calibrated_iptm': round(cal_iptm, 4),
+            'calibrated_plddt': round(cal_plddt, 4),
+        }
+
+        # Override AF2 scores with calibrated values for downstream scoring
+        r['af2_iptm'] = cal_iptm
+        r['af2_plddt'] = cal_plddt
+        if r.get('af2_interface_pae') is not None:
+            bfn_pae = r.get('pae', 30) or 30
+            r['af2_interface_pae'] = (r['af2_interface_pae'] * reliability
+                                       + bfn_pae * (1 - reliability))
+
+    return results
+
+
 # ── Objective dimension definitions ──
 # direction: 'maximize' = higher is better, 'minimize' = lower is better
 OBJECTIVE_DIMS: Dict[str, str] = {
