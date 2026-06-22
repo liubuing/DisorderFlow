@@ -104,7 +104,7 @@ def compute_correlations(pred, true, mask=None):
 
 
 def evaluate(model, entries, device, num_recycles=1):
-    """Run evaluation 鈥?run BFN sample() to get confidence predictions, compare against AF2."""
+    """Run evaluation —run BFN sample() to get confidence predictions, compare against AF2."""
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.data import PaddingCollate
 
@@ -143,7 +143,7 @@ def evaluate(model, entries, device, num_recycles=1):
         # confidence predictions for every residue.
         batch_c['generate_flag'] = torch.zeros_like(batch_c['mask'])
 
-        # Run BFN sample through the WRAPPER (not core directly) 鈥?        # the wrapper computes pair_feat via PairEmbedding before calling core.
+        # Run BFN sample through the WRAPPER (not core directly) —        # the wrapper computes pair_feat via PairEmbedding before calling core.
         with torch.no_grad():
             try:
                 result = model.sample(batch_c, sample_opt={

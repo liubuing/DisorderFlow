@@ -120,7 +120,7 @@ def build_finetune_dataset(
             except OSError:
                 pass  # Skip if copy fails, use placeholder
         else:
-            # Write a minimal placeholder 鈥?actual training will need real PDBs
+            # Write a minimal placeholder — actual training will need real PDBs
             with open(dest_pdb, 'w') as f:
                 f.write(f'REMARK Placeholder for {name}\nEND\n')
 
@@ -238,7 +238,7 @@ def fine_tune_on_designs(
         for name, param in model.named_parameters():
             if not any(hp in name for hp in head_params):
                 param.requires_grad = False
-        _log(f"Backbone frozen 鈥?only confidence heads trainable")
+        _log(f"Backbone frozen — only confidence heads trainable")
 
     # Build optimizer
     trainable = [p for p in model.parameters() if p.requires_grad]
@@ -246,7 +246,7 @@ def fine_tune_on_designs(
     n_trainable = sum(p.numel() for p in trainable)
     _log(f"Trainable parameters: {n_trainable:,}")
 
-    # Simple training loop (minimal, no dataloader 鈥?trains on top designs directly)
+    # Simple training loop (minimal, no dataloader —trains on top designs directly)
     t_start = time.time()
     best_loss = float('inf')
     sw_loss = ScoreWeightedLoss(sum_weighted_losses, scale=1.0) if use_score_weighting else None
@@ -314,7 +314,7 @@ def fine_tune_on_designs(
                 continue
 
             if (i + 1) % max(1, len(top_designs) // 2) == 0:
-                _log(f"  Epoch {epoch}/{n_epochs} 鈥?{i+1}/{len(top_designs)} batches")
+                _log(f"  Epoch {epoch}/{n_epochs} — {i+1}/{len(top_designs)} batches")
 
         avg_loss = sum(epoch_losses) / max(len(epoch_losses), 1) if epoch_losses else float('inf')
         _log(f"  Epoch {epoch}/{n_epochs} avg loss: {avg_loss:.4f}")
@@ -341,13 +341,13 @@ def fine_tune_on_designs(
     }, ckpt_path)
 
     elapsed = time.time() - t_start
-    _log(f"Fine-tuning complete ({elapsed:.0f}s) 鈥?saved to {ckpt_path}")
+    _log(f"Fine-tuning complete ({elapsed:.0f}s) — saved to {ckpt_path}")
     _log(f"  Best loss: {best_loss:.4f}")
 
     return ckpt_path
 
 
-# 鈹€鈹€ Convenience function for direct training loop integration 鈹€鈹€
+# ── Convenience function for direct training loop integration ──
 
 def create_finetune_fn(checkpoint_path: str,
                        output_dir: str,

@@ -57,7 +57,7 @@ def preprocess_for_confidence(structure):
     for chain_entry in structure['chains']:
         n_total += chain_entry['data']['aa'].size(0)
 
-    # Mask all chains as context (empty regions 鈫?no generate_flag set)
+    # Mask all chains as context (empty regions →no generate_flag set)
     transform = get_transform([
         {'type': 'mask_region', 'regions': {}},
         {'type': 'merge_protein'},
@@ -94,7 +94,7 @@ def run_inference(model, batch_data, device, num_recycles=1, return_disorder=Fal
     collated = PaddingCollate()([batch_data])
     collated = recursive_to(collated, device)
 
-    # All residues are context 鈥?no generation
+    # All residues are context —no generation
     collated['generate_flag'] = torch.zeros_like(collated['mask_heavyatom'][:, :, 0], dtype=torch.bool)
 
     with torch.no_grad():
@@ -199,7 +199,7 @@ def main():
     else:
         # Print summary to stdout
         print(f'\n{"=" * 50}')
-        print(f'  BFN Confidence Predictions 鈥?{pdb_id} ({n_res} residues)')
+        print(f'  BFN Confidence Predictions —{pdb_id} ({n_res} residues)')
         print(f'{"=" * 50}')
         print(f'  ipTM:         {pred["iptm"]:.4f}')
         print(f'  pLDDT mean:   {pred["plddt_mean"]:.4f}')

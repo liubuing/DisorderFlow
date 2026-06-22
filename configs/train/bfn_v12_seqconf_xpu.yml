@@ -63,7 +63,7 @@ train:
   max_iters: 3000
   val_freq: 200
   log_freq: 10
-  batch_size: 2              # foundation: more contrast pairs
+  batch_size: 2              # 1000 backbones: more contrast pairs in batch
   warmup_steps: 100
   seed: 2031
   max_grad_norm: 1.0
@@ -83,7 +83,7 @@ train:
 dataset:
   train:
     type: confidence_regression
-    db_path: ./data/confidence_foundation_v1/train.lmdb
+    db_path: ./data/confidence_foundation_v2/train.lmdb
     max_residues: 256
   val:
     type: confidence_regression

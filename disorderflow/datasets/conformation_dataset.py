@@ -18,7 +18,7 @@ AF2_N_IDX = 0
 AF2_CA_IDX = 1
 AF2_C_IDX = 2
 
-# BFN atom indices 鈥?N, CA, C are the first 3 in pos_heavyatom
+# BFN atom indices —N, CA, C are the first 3 in pos_heavyatom
 BFN_N_IDX = 0
 BFN_CA_IDX = 1
 BFN_C_IDX = 2
@@ -75,7 +75,7 @@ class ConformationRegressionDataset(ConfidenceRegressionDataset):
                 rmsf_t = torch.from_numpy(rmsf[:n_res])
                 # For high-RMSF residues, zero out N and C positions
                 # to signal structural uncertainty
-                high_rmsf = rmsf_t > 2.0  # RMSF > 2脜 = disordered
+                high_rmsf = rmsf_t > 2.0  # RMSF > 2Å = disordered
                 batch['pos_heavyatom'][:n_res, BFN_N_IDX][high_rmsf] = 0
                 batch['pos_heavyatom'][:n_res, BFN_C_IDX][high_rmsf] = 0
                 batch['mask_heavyatom'][:n_res, BFN_N_IDX][high_rmsf] = 0

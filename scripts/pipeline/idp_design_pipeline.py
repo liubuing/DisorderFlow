@@ -3,10 +3,10 @@
 Direction 1+3 Combined: IDP Ordered-Region Antibody Design Pipeline
 
 Pipeline:
-  1. Load IDP from V11 LMDB 鈫?extract AF2 structure as PDB
-  2. BFN disorder head 鈫?per-residue disorder scores
+  1. Load IDP from V11 LMDB →extract AF2 structure as PDB
+  2. BFN disorder head →per-residue disorder scores
   3. Find ordered segments (D < 0.3, len >= 8)
-  4. For each ordered segment 鈫?BFN CDR design
+  4. For each ordered segment →BFN CDR design
   5. Output: designable epitopes + designed sequences + confidence scores
 
 Usage:

@@ -1,4 +1,4 @@
-﻿# disorderflow 鈥?Protein Sequence Design Platform
+﻿# disorderflow — Protein Sequence Design Platform
 
 **disorderflow** is a full-stack platform for fixed-backbone protein/antibody sequence design powered by **Bayesian Flow Networks (BFN)**. It integrates sequence design, confidence evaluation, cascade filtering, and AlphaFold2 validation into a unified Gradio web interface.
 
@@ -8,7 +8,7 @@
 |-----------|-------------|
 | **BFN Model** | Bayesian Flow Network with Geometric Transformer (IPA) backbone |
 | **Confidence Heads** | Built-in pLDDT, ipTM (context-only), and PAE prediction (V6 Phase 2) |
-| **Cascade Filter** | 3-stage filtering: hard thresholds 鈫?dedup 鈫?composite scoring (PPL + entropy + pLDDT + ipTM) |
+| **Cascade Filter** | 3-stage filtering: hard thresholds → dedup → composite scoring (PPL + entropy + pLDDT + ipTM) |
 | **Web Platform** | Gradio UI with 8 specialized tabs for design, evaluation, and analysis |
 | **Design Tools** | BFN, ProteinMPNN, ESM-IF all integrated with unified workflow |
 
@@ -21,21 +21,21 @@ pip install -e .
 # Launch web platform
 python manage.py start
 
-# Open browser 鈫?http://127.0.0.1:7860
+# Open browser → http://127.0.0.1:7860
 ```
 
 ## Web Platform Tabs
 
 | Tab | Function |
 |-----|----------|
-| 馃幆 **鍗曟璁捐** | Single PDB 鈫?sequence design (BFN/ProteinMPNN/ESM-IF) |
-| 馃摝 **鎵归噺澶勭悊** | Batch process multiple PDBs |
-| 馃敭 **缁撴瀯棰勬祴** | AlphaFold2 (ColabFold) from FASTA 鈫?PDB |
-| 鈿欙笍 **璁剧疆** | Config editor, model preloading, system status |
-| 馃幆 **闈剁偣璁捐** | 5-step target-aware constrained antibody design |
-| 馃攧 **杩唬绮句慨** | AF2-driven iterative refinement (design 鈫?validate 鈫?redesign) |
-| 馃搳 **缃俊搴﹁瘎浼?* | Standalone BFN confidence assessment (pLDDT/ipTM/PAE) without designing |
-| 馃殌 **缁熶竴宸ヤ綔娴?* | One-click pipeline: confidence 鈫?design 鈫?filter 鈫?AF2 validation |
+| 🎯 **单步设计** | Single PDB → sequence design (BFN/ProteinMPNN/ESM-IF) |
+| 📦 **批量处理** | Batch process multiple PDBs |
+| 🔮 **结构预测** | AlphaFold2 (ColabFold) from FASTA → PDB |
+| ⚙️ **设置** | Config editor, model preloading, system status |
+| 🎯 **靶点设计** | 5-step target-aware constrained antibody design |
+| 🔄 **迭代精修** | AF2-driven iterative refinement (design → validate → redesign) |
+| 📊 **置信度评估** | Standalone BFN confidence assessment (pLDDT/ipTM/PAE) without designing |
+| 🚀 **统一工作流** | One-click pipeline: confidence → design → filter → AF2 validation |
 
 ## Model Versions
 
@@ -54,9 +54,9 @@ Three-stage filtering for design result ranking:
 
 1. **Hard thresholds**: pLDDT, ipTM, PPL, entropy
 2. **Deduplication**: Keep best PPL per unique sequence
-3. **Composite scoring**: `0.35脳ipTM + 0.25脳pLDDT + 0.15脳PPL鈦宦?+ 0.10脳ent鈦宦?+ 0.15脳recovery`
+3. **Composite scoring**: `0.35×ipTM + 0.25×pLDDT + 0.15×PPL⁻¹+ 0.10×ent⁻¹+ 0.15×recovery`
 
-Weights configurable in `app_config.yaml` 鈫?`workflow.cascade.weights`.
+Weights configurable in `app_config.yaml` →`workflow.cascade.weights`.
 
 ## Sequence Quality Proxy (PPL + Entropy)
 
@@ -70,27 +70,27 @@ Since ipTM is constant per protein (context-only pooling), **PPL** and **entropy
 
 ```
 disorderflow-main/
-鈹溾攢鈹€ app.py                    # Gradio web interface (main entry)
-鈹溾攢鈹€ manage.py                 # Server management CLI
-鈹溾攢鈹€ app_config.yaml           # Web platform configuration
-鈹溾攢鈹€ cascade_filter.py         # 3-stage cascade filter
-鈹溾攢鈹€ target_design_helpers.py  # Epitope scoring & contact analysis
-鈹溾攢鈹€ af2_validator.py          # AlphaFold2 validation integration
-鈹溾攢鈹€ iterative_refiner.py      # AF2-driven iterative refinement
-鈹溾攢鈹€ configs/                  # Training & inference YAML configs
-鈹?  鈹溾攢鈹€ train/                # Training configurations (V4-V6)
-鈹?  鈹溾攢鈹€ test/                 # Test/evaluation configs
-鈹?  鈹斺攢鈹€ demo_design.yml       # Default inference config
-鈹溾攢鈹€ disorderflow/        # Core BFN package
-鈹?  鈹溾攢鈹€ models/               # BFN model architectures
-鈹?  鈹溾攢鈹€ modules/               # IPA, attention, diffusion, encoders
-鈹?  鈹溾攢鈹€ datasets/             # Data loading (SAbDab, custom, LMDB)
-鈹?  鈹溾攢鈹€ tools/                # Docking, evaluation, relaxation
-鈹?  鈹斺攢鈹€ utils/                # Training, inference, transforms
-鈹溾攢鈹€ ProteinMPNN/              # ProteinMPNN reference implementation
-鈹溾攢鈹€ logs/                     # Training logs & checkpoints
-鈹溾攢鈹€ 鏃ュ織/                     # Training log archive (parsed summaries)
-鈹斺攢鈹€ data/                     # Training & evaluation datasets
+├── app.py                    # Gradio web interface (main entry)
+├── manage.py                 # Server management CLI
+├── app_config.yaml           # Web platform configuration
+├── cascade_filter.py         # 3-stage cascade filter
+├── target_design_helpers.py  # Epitope scoring & contact analysis
+├── af2_validator.py          # AlphaFold2 validation integration
+├── iterative_refiner.py      # AF2-driven iterative refinement
+├── configs/                  # Training & inference YAML configs
+│   ├── train/                # Training configurations (V4-V6)
+│   ├── test/                 # Test/evaluation configs
+│   └── demo_design.yml       # Default inference config
+├── disorderflow/             # Core BFN package
+│   ├── models/               # BFN model architectures
+│   ├── modules/              # IPA, attention, diffusion, encoders
+│   ├── datasets/             # Data loading (SAbDab, custom, LMDB)
+│   ├── tools/                # Docking, evaluation, relaxation
+│   └── utils/                # Training, inference, transforms
+├── ProteinMPNN/              # ProteinMPNN reference implementation
+├── logs/                     # Training logs & checkpoints
+├── 日志/                     # Training log archive (parsed summaries)
+└── data/                     # Training & evaluation datasets
 ```
 
 ## Training Data

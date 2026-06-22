@@ -1,10 +1,10 @@
 ﻿#!/usr/bin/env python
-"""AQP4 Water Channel Antibody Design 鈥?V2 Optimized.
+"""AQP4 Water Channel Antibody Design — V2 Optimized.
 
 Key improvements over V1 to push ipTM above 0.80:
-  1. More BFN recycles (5 vs 3) 鈥?better convergence
-  2. Higher sample count (50+ per segment) 鈥?wider exploration
-  3. Optimized epitope positioning (12脜 vs 6脜) 鈥?more natural interface
+  1. More BFN recycles (5 vs 3) — better convergence
+  2. Higher sample count (50+ per segment) — wider exploration
+  3. Optimized epitope positioning (12Å vs 6Å) — more natural interface
   4. Deterministic top-K validation pass after stochastic exploration
 
 Usage:
@@ -20,7 +20,7 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
-# 鈹€鈹€ Project path setup 鈹€鈹€
+# ── Project path setup ──
 SCRIPT_DIR = Path(__file__).resolve().parent.parent.parent
 os.chdir(str(SCRIPT_DIR))
 sys.path.insert(0, str(SCRIPT_DIR))
@@ -142,9 +142,9 @@ def build_epitopes(aqp4_pdb, chain, epitope_info, output_dir, max_segments=3):
                 'pdb_path': epi_pdb, 'sequence': seq,
                 'n_residues': len(seq), 'mean_score': float(mean_score),
             })
-            print(f"  {name}: {s}-{e} ({len(seq)}aa) 鈫?{epi_pdb}")
+            print(f"  {name}: {s}-{e} ({len(seq)}aa) → {epi_pdb}")
         except Exception as e:
-            print(f"  {name}: FAILED 鈥?{e}")
+            print(f"  {name}: FAILED — {e}")
 
     segments.sort(key=lambda x: x['mean_score'], reverse=True)
     return segments[:max_segments]
@@ -159,7 +159,7 @@ def run_bfn_design_optimized(scaffold_pdb, scaffold_chain, epitope_segments,
     - distance=12.0 (vs 6.0) for more natural interface positioning
     - Two-pass: stochastic exploration + deterministic best refinement
     """
-    print(f"\n[4/6] BFN CDR Design (optimized: {num_recycles} recycles, 12脜 distance)")
+    print(f"\n[4/6] BFN CDR Design (optimized: {num_recycles} recycles, 12Å distance)")
 
     model, config = load_bfn(device)
     seed_all(42)
@@ -167,15 +167,15 @@ def run_bfn_design_optimized(scaffold_pdb, scaffold_chain, epitope_segments,
     all_results = []
 
     for i, seg in enumerate(epitope_segments):
-        print(f"\n  鈹€鈹€ {seg['name']} ({seg['start']}-{seg['end']}, {seg['n_residues']}aa) 鈹€鈹€")
+        print(f"\n  ── {seg['name']} ({seg['start']}-{seg['end']}, {seg['n_residues']}aa) ──")
 
         try:
-            # Position epitope at 12脜 (more natural interface distance)
+            # Position epitope at 12Å (more natural interface distance)
             complex_info = position_epitope(
                 scaffold_pdb, seg['pdb_path'],
                 scaffold_chain=scaffold_chain,
                 epitope_chain='B',
-                distance=12.0,  # Key: 12脜 vs old 6脜
+                distance=12.0,  # Key: 12Å vs old 6Å
             )
 
             # Parse CDR positions
@@ -306,7 +306,7 @@ def filter_and_rank(all_design_results):
 
 def save_results(ranked, output_dir, config):
     """Save JSON + FASTA + Markdown."""
-    print(f"\n[6/6] Saving 鈫?{output_dir}")
+    print(f"\n[6/6] Saving → {output_dir}")
     os.makedirs(output_dir, exist_ok=True)
 
     # JSON
@@ -357,7 +357,7 @@ def save_results(ranked, output_dir, config):
 
     # Summary
     print(f"\n{'='*80}")
-    print(f"  AQP4 WATER CHANNEL DESIGN 鈥?COMPLETE")
+    print(f"  AQP4 WATER CHANNEL DESIGN — COMPLETE")
     print(f"{'='*80}")
     if ranked:
         best = ranked[0]
@@ -379,7 +379,7 @@ def save_results(ranked, output_dir, config):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='AQP4 Water Channel Design 鈥?V2 Optimized')
+        description='AQP4 Water Channel Design — V2 Optimized')
     parser.add_argument('--aqp4-pdb', default='data/aqp4/1RC2.pdb')
     parser.add_argument('--target-chain', default='A')
     parser.add_argument('--scaffold', default='data/misfolding_targets/5IMK.pdb')
@@ -390,7 +390,7 @@ def main():
     parser.add_argument('--num-recycles', type=int, default=5,
                        help='BFN recycles (default: 5, higher = better convergence)')
     parser.add_argument('--distance', type=float, default=12.0,
-                       help='Epitope positioning distance in 脜 (default: 12.0)')
+                       help='Epitope positioning distance in Å (default: 12.0)')
     parser.add_argument('--num-segments', type=int, default=3)
     parser.add_argument('--output-dir', default=None)
     parser.add_argument('--device', default=None)
@@ -403,8 +403,8 @@ def main():
         args.output_dir = f'design_results/aqp4_v2_{int(time.time())}'
 
     print("=" * 80)
-    print("  AQP4 Water Channel Antibody Design 鈥?V2 Optimized")
-    print(f"  Recycles: {args.num_recycles} | Distance: {args.distance}脜 "
+    print("  AQP4 Water Channel Antibody Design — V2 Optimized")
+    print(f"  Recycles: {args.num_recycles} | Distance: {args.distance}Å "
           f"| Samples: {args.samples}/segment")
     print("=" * 80)
 

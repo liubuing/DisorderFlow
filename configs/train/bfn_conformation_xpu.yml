@@ -81,7 +81,7 @@ train:
 dataset:
   train:
     type: conformation_regression
-    db_path: ./data/confidence_conformation_v1/confidence_train.lmdb
+    db_path: ./data/confidence_conformation_v4/confidence_train.lmdb
     max_residues: 350
   val:
     type: confidence_regression

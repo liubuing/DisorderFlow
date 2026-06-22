@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+"""Phase 1: BFN design with V12 best checkpoint, save for AF2 validation."""
+import sys, os
+if sys.platform == 'win32':
+    import io; sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+os.chdir(PROJECT_ROOT)
+sys.path.insert(0, '.'); sys.path.insert(0, 'modules')
+
+import yaml, time, json, numpy as np
+
+V12_CKPT = 'logs/bfn_v12_seqconf_xpu_2026_06_20__02_02_10/checkpoints/best.pt'
+OUTPUT = 'oc_validation_results/oc_v12_phase1.json'
+
+DESIGN_CONFIG = {
+    'scaffold_pdb': 'data/misfolding_targets/5IMK.pdb',
+    'scaffold_chain': 'B', 'target_pdb': 'data/misfolding_targets/2NAO_model1_A_1-42.pdb',
+    'target_chain': 'A', 'cdr_spec': 'B:26-33,51-58,97-113',
+    'context_chains': None, 'n_samples': 10, 'design_top_n': 5,
+}
+
+def auto_detect_device():
+    import torch
+    return 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# Setup checkpoint
+cfg_path = os.path.join(PROJECT_ROOT, 'app_config.yaml')
+with open(cfg_path) as f: app_cfg = yaml.safe_load(f)
+orig = app_cfg['models']['bfn']['checkpoint']
+app_cfg['models']['bfn']['checkpoint'] = V12_CKPT
+with open(cfg_path, 'w') as f: yaml.dump(app_cfg, f, default_flow_style=False)
+
+try:
+    from bfn_loader import run_bfn_design, load_bfn, has_disorder_head
+    from idp_antibody_design import _extract_sequence_from_pdb, _parse_cdr_ranges, graft_cdrs
+
+    import bfn_loader; bfn_loader._bfn_model = None; bfn_loader._bfn_config = None
+    from disorderflow.utils.misc import seed_all; seed_all(42)
+
+    device = auto_detect_device()
+    print(f'Device: {device}')
+    model, config = load_bfn(device)
+    _has_d = has_disorder_head(model)
+    print(f'V12 model loaded. Disorder head: {_has_d}')
+
+    epi_seq = _extract_sequence_from_pdb(DESIGN_CONFIG['target_pdb'], DESIGN_CONFIG['target_chain'])
+    scaffold_seq = _extract_sequence_from_pdb(DESIGN_CONFIG['scaffold_pdb'], DESIGN_CONFIG['scaffold_chain'])
+    cdr_ranges = _parse_cdr_ranges(DESIGN_CONFIG['cdr_spec'])
+
+    t0 = time.time()
+    designs = run_bfn_design(
+        DESIGN_CONFIG['scaffold_pdb'], DESIGN_CONFIG['cdr_spec'],
+        num_samples=DESIGN_CONFIG['n_samples'], stochastic=True,
+        context_chains=DESIGN_CONFIG['context_chains'], device=device,
+    )
+    dt = time.time() - t0
+
+    plddts = [d['plddt'] for d in designs]
+    iptms = [d['iptm'] for d in designs]
+    ppls = [d.get('ppl', 0) for d in designs]
+    entropies = [d.get('entropy', 0) for d in designs]
+
+    print(f'\nV12 designs: {len(designs)} in {dt:.0f}s')
+    print(f'  pLDDT: mean={np.mean(plddts):.4f} std={np.std(plddts):.6f}')
+    print(f'  ipTM:  mean={np.mean(iptms):.4f} std={np.std(iptms):.6f}')
+    print(f'  PPL:   mean={np.mean(ppls):.1f} [{min(ppls):.0f}-{max(ppls):.0f}]')
+    print(f'  Entropy: mean={np.mean(entropies):.4f} std={np.std(entropies):.4f}')
+
+    # Build AF2 input
+    af2_input = []
+    for i, d in enumerate(designs[:DESIGN_CONFIG['design_top_n']]):
+        full_ab, mutations = graft_cdrs(scaffold_seq, d['sequence'], cdr_ranges)
+        af2_input.append({
+            'rank': i + 1, 'sequence': d['sequence'], 'full_ab': full_ab,
+            'bfn_plddt': d['plddt'], 'bfn_iptm': d['iptm'],
+            'bfn_ppl': d.get('ppl', 0), 'bfn_pae': d.get('pae', 0),
+            'bfn_entropy': d.get('entropy', 0),
+            'disorder_score': d.get('disorder_score'),
+            'mutations': len(mutations),
+        })
+        print(f'  [{i+1}] pLDDT={d["plddt"]:.6f} ipTM={d["iptm"]:.6f} PPL={d.get("ppl",0):.0f} {d["sequence"][:40]}')
+
+    results = {
+        'config': DESIGN_CONFIG,
+        'af2_config': {'num_recycle': 3, 'use_jax': True, 'colabfold_exe': 'colabfold_batch', 'timeout_per_design': 1800},
+        'epi_seq': epi_seq, 'scaffold_seq': scaffold_seq,
+        'cdr_ranges': [[s, e, l] for s, e, l in cdr_ranges],
+        'models': {
+            'v12': {
+                'checkpoint': V12_CKPT, 'label': 'V12 Pure-Seq (backbone-free)',
+                'desc': 'Deep sequence confidence heads, variance+ranking loss',
+                'n_designs': len(designs),
+                'bfn_plddt_mean': float(np.mean(plddts)), 'bfn_plddt_std': float(np.std(plddts)),
+                'bfn_iptm_mean': float(np.mean(iptms)), 'bfn_iptm_std': float(np.std(iptms)),
+                'af2_input': af2_input,
+            }
+        }
+    }
+
+    os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
+    with open(OUTPUT, 'w') as f: json.dump(results, f, indent=2, default=str)
+    print(f'\nPhase 1 saved: {OUTPUT}')
+    print(f'Next: python run_oc_v12_p2.py')
+
+finally:
+    app_cfg['models']['bfn']['checkpoint'] = orig
+    with open(cfg_path, 'w') as f: yaml.dump(app_cfg, f, default_flow_style=False)

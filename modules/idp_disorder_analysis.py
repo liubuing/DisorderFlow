@@ -1,12 +1,12 @@
 ﻿#!/usr/bin/env python
-"""IDP Disorder Analysis 鈥?identify ordered segments using BFN disorder head.
+"""IDP Disorder Analysis — identify ordered segments using BFN disorder head.
 
 Core capability unique to BFN: per-residue disorder prediction during
 sequence design. For intrinsically disordered proteins (IDPs), this
 identifies which segments are ordered enough for structure-based design.
 
-Disorder < 0.3 鈫?"ordered" (suitable for antibody epitope design)
-Disorder >= 0.3 鈫?"disordered" (unreliable for structure-based methods)
+Disorder < 0.3 → "ordered" (suitable for antibody epitope design)
+Disorder >= 0.3 → "disordered" (unreliable for structure-based methods)
 """
 
 import torch
@@ -198,7 +198,7 @@ def format_disorder_report(disorder_scores, sequence, residue_ids=None,
     if segments:
         lines.append("")
         lines.append(f"  Ordered Segments: {len(segments)} found")
-        lines.append(f"  {'鈹€' * 55}")
+        lines.append(f"  {'─' * 55}")
         for i, seg in enumerate(segments):
             start_idx = residue_ids.index(seg['start'])
             end_idx = residue_ids.index(seg['end']) + 1

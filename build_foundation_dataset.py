@@ -28,7 +28,7 @@ from disorderflow.utils.data import PaddingCollate
 from disorderflow.utils.train import recursive_to
 
 SRC_LMDB = 'data/confidence_merged_v11/confidence_train.lmdb'
-DST_DIR = 'data/confidence_foundation_v1'
+DST_DIR = 'data/confidence_foundation_v2'
 V12_CKPT = 'logs/bfn_v12_seqconf_xpu_2026_06_20__02_54_40/checkpoints/best.pt'
 AA = 'ACDEFGHIKLMNPQRSTVWY'
 
@@ -117,6 +117,7 @@ def build(n_backbones=500, device='cuda'):
 
         n_aug = 0
         n_skip = 0
+        next_key = n_data  # sequential numeric keys
 
         with src_env.begin() as src_txn, dst_env.begin(write=True) as dst_txn:
             # Copy all originals
@@ -144,7 +145,6 @@ def build(n_backbones=500, device='cuda'):
                 gen_idx = gen_mask.nonzero(as_tuple=True)[0]
 
                 def update_entry(seq, quality_mult, tag):
-                    """Create variant entry with quality * multiplier."""
                     aug_batch = dict(batch)
                     aug_aa = aa_orig.clone()
                     for j, pos in enumerate(gen_idx):
@@ -153,37 +153,31 @@ def build(n_backbones=500, device='cuda'):
                     aug_batch['aa'] = aug_aa
                     aug_entry = dict(entry)
                     aug_entry['batch'] = aug_batch
-                    # Scale confidence labels by quality multiplier
                     if 'af2_plddt' in aug_entry and aug_entry['af2_plddt'] is not None:
                         aug_entry['af2_plddt'] = aug_entry['af2_plddt'] * quality_mult
                     if 'af2_iptm' in aug_entry and aug_entry['af2_iptm'] is not None:
                         aug_entry['af2_iptm'] = torch.tensor(
                             float(aug_entry['af2_iptm']) * quality_mult)
                     if 'af2_pae_matrix' in aug_entry and aug_entry['af2_pae_matrix'] is not None:
-                        # Higher PAE for worse designs
                         aug_entry['af2_pae_matrix'] = torch.clamp(
                             aug_entry['af2_pae_matrix'] * (2.0 - quality_mult), max=0.95)
                     aug_entry['foundation_tag'] = tag
                     return aug_entry
 
-                # 1. Native = good (unchanged, already copied)
-                # 2. BFN variant 1 = medium
-                e1 = update_entry(variants[0][0], 0.5, 'bfn_medium_1')
-                dst_txn.put(f'aug_{idx:08d}_m1'.encode(), pickle.dumps(e1))
-                n_aug += 1
+                e1 = update_entry(variants[0][0], 0.5, 'bfn_med_1')
+                dst_txn.put(f'{next_key:08d}'.encode(), pickle.dumps(e1))
+                n_aug += 1; next_key += 1
 
-                # 3. BFN variant 2 = medium
-                e2 = update_entry(variants[1][0], 0.5, 'bfn_medium_2')
-                dst_txn.put(f'aug_{idx:08d}_m2'.encode(), pickle.dumps(e2))
-                n_aug += 1
+                e2 = update_entry(variants[1][0], 0.5, 'bfn_med_2')
+                dst_txn.put(f'{next_key:08d}'.encode(), pickle.dumps(e2))
+                n_aug += 1; next_key += 1
 
-                # 4. Scrambled = bad
                 scrambled_aa = scramble_cdr(aa_orig, gen_mask)
                 scrambled_seq = ''.join(AA[a] if a < 20 else 'X'
                                         for a in scrambled_aa[gen_idx])
                 e3 = update_entry(scrambled_seq, 0.1, 'scrambled_bad')
-                dst_txn.put(f'aug_{idx:08d}_b'.encode(), pickle.dumps(e3))
-                n_aug += 1
+                dst_txn.put(f'{next_key:08d}'.encode(), pickle.dumps(e3))
+                n_aug += 1; next_key += 1
 
                 if (i + 1) % 50 == 0:
                     dt = time.time() - t0

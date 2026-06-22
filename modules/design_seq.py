@@ -205,7 +205,7 @@ def design_seq(args):
             nll = -log_probs[range(len(pred_aa)), pred_aa].mean()
             perplexity = torch.exp(nll).item()
             
-            # BFN鍐呯疆缃俊搴?(receiver.py 宸插仛 sigmoid 鈫?[0,1])
+            # BFN内置置信度 (receiver.py 已做 sigmoid → [0,1])
             plddt_val = traj['plddt'][0][gen_mask].mean().item()
             iptm_val = traj['iptm'][0].item()
             pae_val = traj['pae'][0][gen_mask][:, gen_mask].mean().item()

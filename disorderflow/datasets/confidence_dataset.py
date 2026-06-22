@@ -19,8 +19,8 @@ class ConfidenceRegressionDataset(Dataset):
         pdb_id, sequence, batch, af2_plddt, af2_iptm, af2_pae_matrix
 
     The batch dict contains standard BFN input tensors (aa, pos_heavyatom,
-    mask_heavyatom, generate_flag, etc.) prepared by MaskRegion 鈫?MergeProtein
-    鈫?PatchProtein transform pipeline.
+    mask_heavyatom, generate_flag, etc.) prepared by MaskRegion →MergeProtein
+    →PatchProtein transform pipeline.
     """
 
     def __init__(self, cfg, transform=None, **kwargs):
@@ -33,7 +33,7 @@ class ConfidenceRegressionDataset(Dataset):
             self.db_path = cfg.db_path if hasattr(cfg, 'db_path') else cfg['db_path']
         self.max_residues = cfg.get('max_residues', 0) if isinstance(cfg, dict) else 0
         self.idp_sample_weight = cfg.get('idp_sample_weight', 1.0) if isinstance(cfg, dict) else 1.0
-        # transform is ignored 鈥?data is already preprocessed in the LMDB
+        # transform is ignored —data is already preprocessed in the LMDB
 
         if os.path.isdir(self.db_path) and not os.path.exists(os.path.join(self.db_path, 'data.mdb')):
             # Pickle directory fallback
@@ -137,7 +137,7 @@ class ConfidenceRegressionDataset(Dataset):
 
         # Reconstruct batch and attach AF2 ground truth
         batch = entry['batch']
-        # Data is stored without batch dim 鈥?PaddingCollate handles stacking
+        # Data is stored without batch dim —PaddingCollate handles stacking
         batch['af2_plddt'] = entry['af2_plddt']
         batch['af2_iptm'] = entry['af2_iptm']
         batch['af2_pae_matrix'] = entry['af2_pae_matrix']
