@@ -184,6 +184,13 @@ class AntibodyBFN_Receiver(nn.Module):
         self.pae_embed = nn.Linear(1, pair_feat_dim)
         # V13: per-residue sequence embedding feedback — much richer than scalar conf
         self.v13_seq_feedback = nn.Linear(64, res_feat_dim)
+        # V14 Complex-mode fix: learnable gates on scalar confidence feedback
+        # channels, initialised low (0.3) to stop backbone-constant confidence
+        # from drowning the epitope signal during recycling. The seq_emb channel
+        # (above) stays ungated.
+        self.recycle_gate_conf = nn.Parameter(torch.tensor(0.3))
+        self.recycle_gate_iptm = nn.Parameter(torch.tensor(0.3))
+        self.recycle_gate_pae = nn.Parameter(torch.tensor(0.3))
 
     def forward(self, theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res,
                 backbone_pos=None, prev_conf=None, prev_iptm=None, prev_pae=None,
@@ -234,12 +241,20 @@ class AntibodyBFN_Receiver(nn.Module):
         res_feat = self.res_mixer(torch.cat([emb_seq, emb_ang, emb_t, emb_backbone], dim=-1))
         
         # Feedback recycling
+        # Complex-mode fix: the scalar confidence channels (prev_conf/iptm/pae)
+        # are quasi-constant across designs on the same backbone (backbone-
+        # dominated), so feeding them at full strength drowns the encoder's
+        # epitope attention signal and makes Complex output ~= FixBB. We gate
+        # these scalar channels with learnable gates initialised LOW (0.3), so
+        # the design-specific prev_seq_emb channel (ungated, V13) dominates the
+        # recycle feedback. The gates are learned; a frozen-backbone Phase A
+        # leaves them at init, which already reduces the drowning effect.
         if prev_conf is not None:
-            res_feat = res_feat + self.conf_embed(prev_conf.unsqueeze(-1))
+            res_feat = res_feat + self.recycle_gate_conf * self.conf_embed(prev_conf.unsqueeze(-1))
         if prev_iptm is not None:
-            res_feat = res_feat + self.iptm_embed(prev_iptm.view(-1, 1, 1))
+            res_feat = res_feat + self.recycle_gate_iptm * self.iptm_embed(prev_iptm.view(-1, 1, 1))
         if prev_pae is not None:
-            pair_feat = pair_feat + self.pae_embed(prev_pae.unsqueeze(-1))
+            pair_feat = pair_feat + self.recycle_gate_pae * self.pae_embed(prev_pae.unsqueeze(-1))
         if prev_seq_emb is not None:
             res_feat = res_feat + self.v13_seq_feedback(prev_seq_emb)
 

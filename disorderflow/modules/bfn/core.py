@@ -9,6 +9,75 @@ from disorderflow.modules.bfn.receiver import AntibodyBFN_Receiver
 from disorderflow.modules.common.geometry import repr_6d_to_rotation_matrix, compute_fape
 from disorderflow.modules.common.ot_align import LieOTAlign
 
+
+def _within_group_pair_mask(scaffold_id, n, device):
+    """Boolean (N,N) mask: True where i,j belong to the same scaffold group.
+
+    Returns None when scaffold_id is None (legacy/non-grouped batch) so callers
+    can fall back to whole-batch behaviour.
+    """
+    if scaffold_id is None:
+        return None
+    sid = scaffold_id.to(device).view(-1)
+    return sid.unsqueeze(0) == sid.unsqueeze(1)
+
+
+def _grouped_std(values, scaffold_id):
+    """Mean of per-group stds of `values` (N,). Gradient flows through values.
+
+    Maximising this (via the variance loss) pushes designs that share a backbone
+    toward distinct confidences — the opposite of the constant-output failure.
+    """
+    if scaffold_id is None:
+        return values.std()
+    device = values.device
+    sid = scaffold_id.to(device).view(-1)
+    stds = []
+    for g in torch.unique(sid):
+        v = values[sid == g]
+        if v.numel() > 1:
+            stds.append(v.std())
+    if not stds:
+        return torch.zeros((), device=device)
+    return torch.stack(stds).mean()
+
+
+def _grouped_margin_ranking(pred_iptm, af2_iptm, scaffold_id, margin=0.05):
+    """Pairwise margin-ranking of predicted ipTM against REAL af2_iptm labels,
+    restricted to designs sharing a scaffold.
+
+    For each within-group pair (i,j) with af2_iptm[i] > af2_iptm[j], penalises
+    when pred_iptm[i] is not higher than pred_iptm[j] by at least `margin`.
+    This is the supervisory signal that anchors the confidence head to real
+    design-specific AF2 quality (absent in the synthetic-label dataset).
+    """
+    if scaffold_id is None:
+        return torch.zeros((), device=pred_iptm.device)
+    device = pred_iptm.device
+    sid = scaffold_id.to(device).view(-1)
+    total, count = torch.zeros((), device=device), 0
+    for g in torch.unique(sid):
+        idx = (sid == g).nonzero(as_tuple=True)[0]
+        if idx.numel() < 2:
+            continue
+        p = pred_iptm[idx]      # (k,)
+        a = af2_iptm[idx]       # (k,)
+        # Pairs where a_i > a_j: target sign +1
+        a_i, a_j = a.unsqueeze(1), a.unsqueeze(0)
+        p_i, p_j = p.unsqueeze(1), p.unsqueeze(0)
+        sign = torch.sign(a_i - a_j)
+        valid = sign != 0
+        if valid.sum() == 0:
+            continue
+        # margin ranking loss: max(0, -sign * (p_i - p_j) + margin)
+        loss = torch.clamp(-sign * (p_i - p_j) + margin, min=0.0)
+        total = total + (loss * valid.float()).sum()
+        count += int(valid.sum().item())
+    if count == 0:
+        return torch.zeros((), device=device)
+    return total / count
+
+
 class AntibodyBFN_Core(nn.Module):
     def __init__(self, res_feat_dim, pair_feat_dim, num_steps, eps_net_opt={}, position_mean=[0.0, 0.0, 0.0], position_scale=[10.0], loss_weight={}, ot_opt={}, beta=1.0, schedule='linear'):
         super().__init__()
@@ -267,25 +336,33 @@ class AntibodyBFN_Core(nn.Module):
             loss_disorder = (huber(disorder_prob, disorder_target) * mask_disorder).sum()
             losses['disorder'] = loss_disorder / (mask_disorder.sum() + 1e-8)
 
-        # === V12 Self-Supervised Confidence Losses ===
-        # 1. Variance loss: penalise zero variance in predicted confidence.
-        #    Same-backbone designs MUST get different confidence scores.
+        # === V12 Self-Supervised + V14 Grouped Confidence Losses ===
+        # V14 fix: previous conf_variance detached pred_iptm, providing ZERO
+        # gradient (cosmetic loss) — a root cause of the stuck 9.47x OC. The
+        # losses are now: (a) gradient-bearing, (b) restricted to *within-scaffold*
+        # design-variant pairs so they teach design-specificity, and (c) anchored
+        # to real AF2 labels via a grouped margin-ranking term.
+        scaffold_id = batch.get('scaffold_id', None)  # (N,) long tensor, or None
+        group_mask = _within_group_pair_mask(scaffold_id, N, device=x_seq.device)  # (N,N) bool
+
+        # 1. Variance loss: maximise WITHIN-group std of predicted ipTM (keeps grad).
+        #    Same-scaffold designs MUST receive different confidence scores.
         conf_var_w = self.loss_weight.get('conf_variance', 0.0)
         if conf_var_w > 0 and 'iptm' in losses and pred_iptm.numel() > 1:
-            iptm_std = pred_iptm.detach().std()
-            losses['conf_variance'] = conf_var_w * (-iptm_std.clamp(max=0.3))
+            if group_mask is not None:
+                within_std = _grouped_std(pred_iptm, scaffold_id)  # mean of per-group stds
+            else:
+                within_std = pred_iptm.std()  # legacy: whole-batch std
+            losses['conf_variance'] = conf_var_w * (-within_std.clamp(max=0.3))
 
-        # 2. Ranking loss: lower PPL should imply higher confidence.
+        # 2. Ranking loss: within a scaffold group, lower PPL → higher confidence.
         conf_rank_w = self.loss_weight.get('conf_ranking', 0.0)
         if conf_rank_w > 0 and 'iptm' in losses and pred_iptm.numel() > 1:
             # Compute PPL on-the-fly from sequence logits.
-            # Use safe gather: x_seq_target may contain -100 (ignore_index).
             with torch.no_grad():
                 logp = torch.log_softmax(pred_seq.detach(), dim=-1)
-                # Clamp target to [0, num_classes-1], mask out invalid positions
                 seq_target_safe = x_seq_target.clamp(0, self.num_classes - 1)
                 nll_per_pos = -(logp.gather(-1, seq_target_safe.unsqueeze(-1)).squeeze(-1))
-                # Only compute over real (non-ignore) positions
                 real_pos = (x_seq_target >= 0).float()
                 valid_mask = mask_res.bool() & (~mask_gen.bool()) & (real_pos > 0.5)
                 ppl = torch.zeros(N, device=pred_seq.device)
@@ -299,11 +376,26 @@ class AntibodyBFN_Core(nn.Module):
             iptm_diff = pred_iptm.unsqueeze(0) - pred_iptm.unsqueeze(1)
             target = (ppl_diff < -0.5).float()
             pred = torch.sigmoid(iptm_diff * 10.0)
-            mask = (ppl_diff.abs() > 1.0).float().detach()
-            n_pairs = mask.sum()
+            pair_mask = (ppl_diff.abs() > 1.0).float().detach()
+            if group_mask is not None:
+                pair_mask = pair_mask * group_mask.float()  # restrict to within-scaffold
+            n_pairs = pair_mask.sum()
             if n_pairs > 0:
                 bce = -(target * torch.log(pred + 1e-8) + (1 - target) * torch.log(1 - pred + 1e-8))
-                losses['conf_ranking'] = conf_rank_w * (bce * mask).sum() / n_pairs
+                losses['conf_ranking'] = conf_rank_w * (bce * pair_mask).sum() / n_pairs
+
+        # 3. Grouped margin-ranking loss (V14, CORE): within a scaffold group,
+        #    designs with higher REAL af2_iptm must get higher predicted ipTM.
+        #    This is the supervisory signal that the synthetic-label dataset
+        #    (build_foundation_dataset.py) could never provide.
+        grouped_margin_w = self.loss_weight.get('grouped_margin', 0.0)
+        if (grouped_margin_w > 0 and 'iptm' in losses and group_mask is not None
+                and 'af2_iptm' in batch):
+            losses['conf_grouped_margin'] = (
+                grouped_margin_w * _grouped_margin_ranking(
+                    pred_iptm, batch['af2_iptm'].float().view(-1), scaffold_id, margin=0.05)
+            )
+
 
         losses['avg_t'] = t.mean()
         return losses

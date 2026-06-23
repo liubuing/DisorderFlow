@@ -24,6 +24,40 @@ python manage.py start
 # Open browser → http://127.0.0.1:7860
 ```
 
+### BFN design from the command line
+
+`run_bfn_design` (in `modules/bfn_loader.py`) is the core design entry point —
+it samples diverse sequences for the masked regions of a fixed backbone:
+
+```python
+from bfn_loader import run_bfn_design
+
+# Fixed-backbone (FixBB) design: design CDRs on chain B, residues 26-33,51-58,97-113
+designs = run_bfn_design(
+    pdb_path="data/misfolding_targets/5IMK.pdb",
+    region_spec="B:26-33,51-58,97-113",
+    num_samples=10, stochastic=True,
+)
+# → list of {sequence, ppl, entropy, plddt, iptm, pae, ...} one per sample
+```
+
+For antibody CDR design against a target epitope (Complex mode), use the
+end-to-end IDP-aware pipeline:
+
+```bash
+# Target-aware antibody design with disorder analysis + AF2 validation
+python run_idp_design.py \
+    --target data/misfolding_targets/2NAO_model1_A_1-42.pdb --target-chain A \
+    --scaffold data/misfolding_targets/5IMK.pdb --scaffold-chain B \
+    --samples 10 --af2
+
+# Single PDB → sequence design (BFN) with cascade filtering + AF2 validation
+python run_design.py --pdb <your.pdb> --chain A --regions "A:10-30"
+```
+
+`context_chains=None` (Complex, epitope visible) vs `[]` (FixBB) is what
+distinguishes epitope-aware design from backbone-only design.
+
 ## Web Platform Tabs
 
 | Tab | Function |

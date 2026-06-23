@@ -13,6 +13,19 @@ Output: data/confidence_foundation_v1/train.lmdb
 
 Usage:
   python build_foundation_dataset.py --n_backbones 500 --device cuda
+
+################################################################################
+DEPRECATED (2026-06-23): The "label = original × quality_mult" heuristic below
+is SYNTHETIC — it does NOT run real AF2 on the designed sequences. Two different
+designs on the same scaffold therefore receive the SAME fake label
+(~0.5 × native), which actively trains the confidence head to be
+sequence-invariant. This is a root cause of the stuck 9.47x overconfidence
+(see DIAGNOSIS.md and modules/bfn/core.py V14 loss notes).
+
+For V14 training, use build_design_variant_dataset.py instead — it runs REAL
+AF2 per design variant and writes scaffold_grouped entries with true labels.
+This script is retained for reproducibility/ablation only.
+################################################################################
 """
 import sys, os
 if sys.platform == 'win32':

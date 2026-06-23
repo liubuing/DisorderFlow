@@ -145,6 +145,14 @@ class ConfidenceRegressionDataset(Dataset):
         batch['is_idp'] = entry.get('is_idp', False)
         batch['source'] = entry.get('source', '')
 
+        # V14 grouped-contrastive mode: design variants of the same scaffold carry
+        # a scaffold_id (int) so the grouped margin/variance losses
+        # (disorderflow/modules/bfn/core.py) can compare designs that share a
+        # backbone. Stored per-entry by build_design_variant_dataset.py.
+        # Legacy entries (no scaffold_id) get a unique id -> singletons.
+        batch['scaffold_id'] = torch.tensor(int(entry.get('scaffold_id', real_idx)),
+                                            dtype=torch.long)
+
         # For confidence regression, all residues are "context" (not generated).
         # This allows the encoder to see full structural information, which is
         # the correct setting for predicting confidence from structure features.

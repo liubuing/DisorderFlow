@@ -127,7 +127,7 @@ misfolding_disease:
   targets_dir: data/misfolding_targets
 models:
   bfn:
-    checkpoint: ./logs/bfn_v11_seqconf_xpu_2026_06_19__23_01_18/checkpoints/best.pt
+    checkpoint: logs/bfn_v12_seqconf_xpu_2026_06_20__02_54_40/checkpoints/best.pt
     config: configs/demo_design.yml
   esmif:
     model_name: esm_if1_gvp4_t16_142M_UR50
