@@ -18,6 +18,10 @@ DEFAULT_THRESHOLDS = {
     'ppl_max': 100.0,       # Maximum perplexity — adjust per use case
     'entropy_max': 2.5,     # Max mean entropy over design region (0-2.996)
     'score_max': 10.0,      # Maximum score (ProteinMPNN, lower is better)
+    # Developability (negative-design + immunogenicity). Disabled by default
+    # (set to large values); enable by passing a tighter threshold at call time.
+    'off_target_iptm_max': 999.0,   # negative-design: max off-target ipTM (lower=better)
+    'immunogenicity_max':   999.0,  # max proxy immunogenicity (0–1)
 }
 
 # ── Composite scoring weights ──
@@ -58,7 +62,10 @@ def apply_cascade(
 
     # ── Stage 1: Hard thresholds ──
     stage1_pass = []
-    stage1_reasons = {'plddt': 0, 'iptm': 0, 'ppl': 0, 'entropy': 0, 'score': 0}
+    stage1_reasons = {
+        'plddt': 0, 'iptm': 0, 'ppl': 0, 'entropy': 0, 'score': 0,
+        'off_target': 0, 'immuno': 0,
+    }
 
     for r in results:
         plddt = r.get('plddt')
@@ -66,6 +73,8 @@ def apply_cascade(
         ppl = r.get('ppl')
         entropy = r.get('entropy')
         score = r.get('score')
+        off_iptm = r.get('off_target_iptm')
+        immuno = r.get('immunogenicity')
 
         if plddt is not None and plddt < th['plddt_min']:
             stage1_reasons['plddt'] += 1
@@ -81,6 +90,12 @@ def apply_cascade(
             continue
         if score is not None and score > th['score_max']:
             stage1_reasons['score'] += 1
+            continue
+        if off_iptm is not None and off_iptm > th.get('off_target_iptm_max', 999):
+            stage1_reasons['off_target'] += 1
+            continue
+        if immuno is not None and immuno > th.get('immunogenicity_max', 999):
+            stage1_reasons['immuno'] += 1
             continue
         stage1_pass.append(r)
 

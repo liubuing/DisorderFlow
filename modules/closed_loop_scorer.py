@@ -119,6 +119,9 @@ OBJECTIVE_DIMS: Dict[str, str] = {
     'contacts':   'maximize',
     'charge_comp':'maximize',
     'recovery':   'maximize',
+    # Negative-design + developability dimensions
+    'off_target_iptm': 'minimize',   # ipTM against off-target (e.g. Transferrin) — lower = more specific
+    'md_rmsd':          'minimize',  # 100ns MD backbone RMSD (Å) — lower = more stable
 }
 
 # Default weights for weighted composite scoring
@@ -134,6 +137,9 @@ MULTI_OBJECTIVE_WEIGHTS: Dict[str, float] = {
     'entropy_inv':0.05,
     'contacts':   0.05,
     'recovery':   0.05,
+    # Negative-design + developability (light weights; mainly enforced as hard thresholds)
+    'off_target_iptm': 0.10,
+    'md_rmsd':         0.05,
 }
 
 # Hard thresholds for Stage 1 filtering
@@ -146,6 +152,10 @@ MULTI_OBJECTIVE_THRESHOLDS: Dict[str, float] = {
     'ddG_max':       10.0,
     'ppl_max':       200.0,
     'entropy_max':   2.8,
+    # Negative-design + developability hard cut-offs
+    'off_target_iptm_max': 0.30,   # reject designs that also bind the off-target
+    'md_rmsd_max':         3.0,    # reject structurally unstable designs (Å, 100ns)
+    'immunogenicity_max':  0.6,    # reject highly immunogenic designs (proxy 0–1)
 }
 
 
@@ -224,7 +234,8 @@ class MultiObjectiveRanker:
         passed = []
         rejected_counts = {
             'plddt': 0, 'iptm': 0, 'ptm': 0, 'max_pae': 0,
-            'dG': 0, 'ddG': 0, 'ppl': 0, 'entropy': 0, 'total': 0,
+            'dG': 0, 'ddG': 0, 'ppl': 0, 'entropy': 0,
+            'off_target': 0, 'md': 0, 'immuno': 0, 'total': 0,
         }
 
         for r in results:
@@ -261,6 +272,21 @@ class MultiObjectiveRanker:
             entropy = r.get('entropy')
             if entropy is not None and entropy > th.get('entropy_max', 999):
                 rejected_counts['entropy'] += 1; rejected = True; continue
+
+            # Negative-design: off-target (Transferrin) ipTM
+            off_iptm = r.get('off_target_iptm')
+            if off_iptm is not None and off_iptm > th.get('off_target_iptm_max', 999):
+                rejected_counts['off_target'] += 1; rejected = True; continue
+
+            # Developability: MD backbone RMSD (Å)
+            md_rmsd = r.get('md_rmsd')
+            if md_rmsd is not None and md_rmsd > th.get('md_rmsd_max', 999):
+                rejected_counts['md'] += 1; rejected = True; continue
+
+            # Developability: immunogenicity (proxy, 0–1)
+            immuno = r.get('immunogenicity')
+            if immuno is not None and immuno > th.get('immunogenicity_max', 999):
+                rejected_counts['immuno'] += 1; rejected = True; continue
 
             passed.append(r)
 
