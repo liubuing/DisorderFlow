@@ -308,9 +308,20 @@ def main():
         if step % 20 == 0:
             print(f"  ft step {step}: loss(seq)={loss.item():.4f}")
 
-    # Save finetuned checkpoint
+    # Save finetuned checkpoint (include config for bfn_loader compatibility)
     ft_ckpt_path = os.path.join(tmpdir, 'finetuned.pt')
-    torch.save({'model': model.state_dict(), 'iteration': args.finetune_steps}, ft_ckpt_path)
+    # Load original checkpoint to get config
+    orig_ckpt = torch.load(args.ckpt, map_location='cpu', weights_only=False)
+    ft_state = {
+        'model': model.state_dict(),
+        'iteration': args.finetune_steps,
+        'config': orig_ckpt.get('config', {}),
+    }
+    # Copy any other metadata from original checkpoint
+    for k in ['optimizer', 'scheduler', 'min_val_loss']:
+        if k in orig_ckpt:
+            ft_state[k] = orig_ckpt[k]
+    torch.save(ft_state, ft_ckpt_path)
     ft_best = ft_ckpt_path
     print(f"Finetuned checkpoint saved: {ft_best}")
 
