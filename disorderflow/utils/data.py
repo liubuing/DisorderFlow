@@ -34,7 +34,12 @@ class PaddingCollate(object):
     @staticmethod
     def _pad_last(x, n, value=0):
         if isinstance(x, torch.Tensor):
-            assert x.size(0) <= n
+            if x.dim() == 0:  # scalar tensor —no padding
+                return x
+            if x.size(0) > n:
+                raise AssertionError(
+                    f'Padding error: tensor shape={tuple(x.shape)}, '
+                    f'dim0={x.size(0)} > max_length={n}')
             if x.size(0) == n:
                 return x
             pad_size = [n - x.size(0)] + list(x.shape[1:])
@@ -87,7 +92,10 @@ class PaddingCollate(object):
                     padded[:L, :L] = v
                     data_padded[k] = padded
                 else:
-                    data_padded[k] = self._pad_last(v, max_length, value=self._get_pad_value(k))
+                    try:
+                        data_padded[k] = self._pad_last(v, max_length, value=self._get_pad_value(k))
+                    except AssertionError as e:
+                        raise AssertionError(f'Key="{k}" {e}')
             data_padded['mask'] = self._get_pad_mask(data[self.length_ref_key].size(0), max_length)
             data_list_padded.append(data_padded)
         return default_collate(data_list_padded)

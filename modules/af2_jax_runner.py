@@ -68,6 +68,9 @@ NUM_ATOM_TYPES = 37  # all-atom representation
 # Global cache for loaded model runner and params
 _MODEL_RUNNER = None
 _MODEL_CONFIG = None
+_CACHED_PARAMS = None
+_CACHED_FORWARD = None
+_CACHED_CFG = None
 
 
 def _load_model(data_dir=None):
@@ -248,6 +251,8 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     import jax.numpy as jnp
     import haiku as hk
 
+    global _CACHED_PARAMS, _CACHED_FORWARD, _CACHED_CFG
+
     if data_dir is None:
         data_dir = os.path.expanduser('~/.cache/colabfold')
 
@@ -258,29 +263,51 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     model_type = 'alphafold2_multimer_v3'
     model_number = 1
 
-    from colabfold.alphafold.models import model_to_config_name
-    config_name = model_to_config_name(model_type, model_number)
-    cfg = af_config.model_config(config_name)
+    # Reuse cached config/params/forward to avoid JAX memory accumulation (crashes
+    # after ~40 calls when re-creating Haiku transforms every time).
+    if _CACHED_FORWARD is None:
+        from colabfold.alphafold.models import model_to_config_name
+        config_name = model_to_config_name(model_type, model_number)
+        cfg = af_config.model_config(config_name)
 
-    # Configure for single-sequence mode
-    cfg.model.embeddings_and_evoformer.num_msa = 1
-    cfg.model.embeddings_and_evoformer.num_extra_msa = 1
-    cfg.model.embeddings_and_evoformer.template.enabled = False
-    cfg.model.embeddings_and_evoformer.use_cluster_profile = False
-    cfg.model.num_recycle = num_recycle
-    cfg.model.global_config.eval_dropout = False
-    cfg.model.global_config.bfloat16 = False
-    cfg.model.heads.distogram.weight = 0.0
-    cfg.model.heads.masked_msa.weight = 0.0
-    cfg.model.heads.experimentally_resolved.weight = 0.0
-    cfg.model.calc_extended_ptm = True  # needed to return PAE matrix
-    cfg.model.rank_by = 'plddt'
+        # Configure for single-sequence mode
+        cfg.model.embeddings_and_evoformer.num_msa = 1
+        cfg.model.embeddings_and_evoformer.num_extra_msa = 1
+        cfg.model.embeddings_and_evoformer.template.enabled = False
+        cfg.model.embeddings_and_evoformer.use_cluster_profile = False
+        cfg.model.num_recycle = num_recycle
+        cfg.model.global_config.eval_dropout = False
+        cfg.model.global_config.bfloat16 = False
+        cfg.model.heads.distogram.weight = 0.0
+        cfg.model.heads.masked_msa.weight = 0.0
+        cfg.model.heads.experimentally_resolved.weight = 0.0
+        cfg.model.calc_extended_ptm = True  # needed to return PAE matrix
+        cfg.model.rank_by = 'plddt'
 
-    # Load params
-    npz_path = os.path.join(data_dir, 'params',
-                            f'params_model_{model_number}_multimer_v3.npz')
-    flat_params = np.load(npz_path, allow_pickle=False)
-    params = flat_params_to_haiku(flat_params)
+        # Load params once
+        npz_path = os.path.join(data_dir, 'params',
+                                f'params_model_{model_number}_multimer_v3.npz')
+        flat_params = np.load(npz_path, allow_pickle=False)
+        params = flat_params_to_haiku(flat_params)
+
+        # Define forward function once
+        def forward_fn(batch):
+            model = modules_multimer.AlphaFold(cfg.model)
+            return model(
+                batch=batch,
+                is_training=False,
+                return_representations=False,
+            )
+
+        _CACHED_FORWARD = hk.transform(forward_fn)
+        _CACHED_PARAMS = params
+        _CACHED_CFG = cfg
+    else:
+        cfg = _CACHED_CFG
+        # Update num_recycle in case it changed between calls
+        cfg.model.num_recycle = num_recycle
+
+    params = _CACHED_PARAMS
 
     # Filter sequences (same as build_multimer_features does internally)
     ab_seq_clean = ''.join(aa for aa in ab_seq.upper() if aa in AA_TO_IDX)
@@ -291,16 +318,7 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     # Build features
     feature_dict = build_multimer_features(ab_seq_clean, epi_seq_clean)
 
-    # Define forward function that wraps the AlphaFold model
-    def forward_fn(batch):
-        model = modules_multimer.AlphaFold(cfg.model)
-        return model(
-            batch=batch,
-            is_training=False,
-            return_representations=False,
-        )
-
-    forward = hk.transform(forward_fn)
+    forward = _CACHED_FORWARD
     rng = jax.random.PRNGKey(jax_random_seed)
 
     # Convert features to JAX arrays

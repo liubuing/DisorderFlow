@@ -18,6 +18,56 @@ from disorderflow.utils.data import *
 from disorderflow.utils.train import *
 
 
+class ScaffoldGroupedBatchSampler(torch.utils.data.Sampler):
+    """Samples batches where each batch groups variants from the same scaffold.
+
+    This is essential for V14 grouped losses (conf_variance, conf_ranking,
+    grouped_margin) that compare different CDR designs WITHIN the same scaffold.
+
+    Each batch draws `batch_size` entries that share the same scaffold_id.
+    """
+    def __init__(self, dataset, batch_size, shuffle=True):
+        scaffold_ids = getattr(dataset, '_scaffold_ids', None)
+        groups = {}  # scaffold_id -> list of indices
+        for idx in range(len(dataset)):
+            sid = scaffold_ids[idx] if scaffold_ids else idx
+            groups.setdefault(sid, []).append(idx)
+
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+        self.batches = []
+
+        for sid, indices in groups.items():
+            for start in range(0, len(indices), batch_size):
+                batch = indices[start:start + batch_size]
+                if len(batch) > 1:
+                    self.batches.append(batch)
+
+        # Remaining singletons (1 variant/scaffold or leftovers) grouped together
+        singles = []
+        for sid, indices in groups.items():
+            if len(indices) == 1:
+                singles.append(indices[0])
+        while len(singles) >= batch_size:
+            self.batches.append(singles[:batch_size])
+            singles = singles[batch_size:]
+
+        if not self.batches:
+            for sid, indices in groups.items():
+                for i in indices:
+                    self.batches.append([i])
+
+    def __iter__(self):
+        if self.shuffle:
+            import random
+            random.shuffle(self.batches)
+        for batch in self.batches:
+            yield batch
+
+    def __len__(self):
+        return len(self.batches)
+
+
 if __name__ == '__main__':
     # Fix for macOS shared memory issue
     import torch.multiprocessing
@@ -82,28 +132,41 @@ if __name__ == '__main__':
             num_workers=args.num_workers
         )
     else:
-        # Use WeightedRandomSampler if dataset provides sample weights (e.g., IDP oversampling)
-        sample_weights = getattr(train_dataset, '_sample_weights', None)
-        if sample_weights is not None:
-            from torch.utils.data import WeightedRandomSampler
-            sampler = WeightedRandomSampler(
-                sample_weights, num_samples=len(sample_weights), replacement=True
+        # Use grouped batch sampler if dataset has scaffold_ids (V14+)
+        scaffold_ids = getattr(train_dataset, '_scaffold_ids', None)
+        if scaffold_ids is not None:
+            batch_sampler = ScaffoldGroupedBatchSampler(
+                train_dataset, config.train.batch_size, shuffle=True
             )
             train_loader = DataLoader(
                 train_dataset,
-                batch_size=config.train.batch_size,
+                batch_sampler=batch_sampler,
                 collate_fn=PaddingCollate(),
-                sampler=sampler,
                 num_workers=args.num_workers
             )
         else:
-            train_loader = DataLoader(
-                train_dataset,
-                batch_size=config.train.batch_size,
-                collate_fn=PaddingCollate(),
-                shuffle=True,
-                num_workers=args.num_workers
-            )
+            # Use WeightedRandomSampler if dataset provides sample weights (e.g., IDP oversampling)
+            sample_weights = getattr(train_dataset, '_sample_weights', None)
+            if sample_weights is not None:
+                from torch.utils.data import WeightedRandomSampler
+                sampler = WeightedRandomSampler(
+                    sample_weights, num_samples=len(sample_weights), replacement=True
+                )
+                train_loader = DataLoader(
+                    train_dataset,
+                    batch_size=config.train.batch_size,
+                    collate_fn=PaddingCollate(),
+                    sampler=sampler,
+                    num_workers=args.num_workers
+                )
+            else:
+                train_loader = DataLoader(
+                    train_dataset,
+                    batch_size=config.train.batch_size,
+                    collate_fn=PaddingCollate(),
+                    shuffle=True,
+                    num_workers=args.num_workers
+                )
         
     train_iterator = inf_iterator(train_loader)
     val_loader = DataLoader(val_dataset, batch_size=config.train.batch_size, collate_fn=PaddingCollate(), shuffle=False, num_workers=args.num_workers)

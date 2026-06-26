@@ -114,6 +114,20 @@ class AntibodyBFN_Receiver(nn.Module):
             num_layers = opt.pop('num_layers')
         self.encoder = GAEncoder(res_feat_dim, pair_feat_dim, num_layers, ga_block_opt=opt, dropout=encoder_dropout)
 
+        # ── Direction D: antigen→CDR cross-attention into the sequence head ──
+        # probe_antigen_signal_usage showed complex-vs-fixbb CDR recovery is
+        # identical (Δ +0.1pp): the antigen chain reaches the encoder via
+        # pair_feat but NEVER reaches the per-residue head_seq (Linear, reads
+        # only the CDR residue's own features). Fix: a cross-attention block
+        # where CDR residues query antigen-residue encoder features, then gate-
+        # fuse as a RESIDUAL onto features before head_seq. Residual (not concat)
+        # preserves the V15-trained head_seq weights — only the new antigen_xa
+        # block is fresh-init. In fixbb (no antigen) the path is a no-op.
+        self.antigen_xa = nn.MultiheadAttention(res_feat_dim, num_heads=4, kdim=res_feat_dim,
+                                                vdim=res_feat_dim, batch_first=True, dropout=head_dropout)
+        self.antigen_xa_norm = nn.LayerNorm(res_feat_dim)
+        self.antigen_xa_gate = nn.Parameter(torch.tensor(-3.0))  # sigmoid(-3)≈0.05: near-inert at start (V15 behavior preserved), learns up
+
         # Output Heads
         self.head_seq = nn.Linear(res_feat_dim, num_classes)
         self.head_pos = nn.Linear(res_feat_dim, 3)
@@ -139,6 +153,13 @@ class AntibodyBFN_Receiver(nn.Module):
                 nn.Linear(64, 32), nn.ReLU(), nn.Dropout(head_dropout),
                 nn.Linear(32, 1),
             )
+            # V14-unfreeze: backbone-geometry pathway for ipTM, FRESH init.
+            # The v12 ipTM head is pure-sequence and was poisoned by synthetic
+            # constant labels (probe_conf_collapse.py: val pred std=1.8e-5).
+            # This fresh ResidualMLP on pooled encoder features gives the head
+            # real structural signal AND an escape route out of the constant
+            # basin via randomly-initialized weights.
+            self.v14_iptm_bb = ResidualMLP(res_feat_dim, res_feat_dim // 2, 1, num_blocks=2, dropout=head_dropout)
             self.v12_pae = nn.Sequential(
                 nn.Linear(3, 64), nn.LayerNorm(64), nn.ReLU(), nn.Dropout(head_dropout),
                 nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 1),
@@ -191,10 +212,13 @@ class AntibodyBFN_Receiver(nn.Module):
         self.recycle_gate_conf = nn.Parameter(torch.tensor(0.3))
         self.recycle_gate_iptm = nn.Parameter(torch.tensor(0.3))
         self.recycle_gate_pae = nn.Parameter(torch.tensor(0.3))
+        # B1 diagnostic: None by default so training-time Receivers
+        # have the attribute (probe scripts set it to [] to enable stash).
+        self._dbg_iptm_components = None
 
     def forward(self, theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res,
                 backbone_pos=None, prev_conf=None, prev_iptm=None, prev_pae=None,
-                prev_seq_emb=None, mask_gen=None):
+                prev_seq_emb=None, mask_gen=None, mask_antigen=None):
         N, L, _ = theta_seq.shape
         device = theta_seq.device
         
@@ -266,6 +290,23 @@ class AntibodyBFN_Receiver(nn.Module):
         entropy = -(probs_seq * log_probs).sum(dim=-1)  # (N, L), 0=peaked, ~3.0=uniform
         max_prob = probs_seq.max(dim=-1).values         # (N, L), 1.0=certain, 0.05=blind
 
+        # Direction D: antigen→CDR cross-attention. CDR residues query the
+        # antigen residues' encoder features; the attended antigen context is
+        # gated and fused as a RESIDUAL onto the CDR features before head_seq.
+        # In fixbb (no antigen) mask_antigen is empty → no-op, so the path
+        # stays inert (matches the seq_only baseline). With an antigen present,
+        # this is the ONLY place the antigen explicitly conditions CDR decoding.
+        if mask_antigen is not None and mask_antigen.any() and mask_gen is not None:
+            ag_mask = mask_antigen.bool()          # (N, L)
+            key_padding_mask = ~ag_mask             # (N, L) True where NOT antigen (ignore)
+            xa_out, _ = self.antigen_xa(features, features, features,
+                                        key_padding_mask=key_padding_mask,
+                                        need_weights=False)
+            # only CDR residues get the antigen update (framework stays as-is)
+            xa_out = torch.where(mask_gen.unsqueeze(-1), xa_out, torch.zeros_like(xa_out))
+            gate = torch.sigmoid(self.antigen_xa_gate)
+            features = self.antigen_xa_norm(features + gate * xa_out)
+
         # 3. Heads
         pred_seq = self.head_seq(features)
         if pred_seq.size(-1) > 20:
@@ -289,7 +330,20 @@ class AntibodyBFN_Receiver(nn.Module):
                 all_sum = mask_res.sum(dim=1, keepdim=True).clamp(min=1)
                 pooled_seq = (seq_emb * mask_res.unsqueeze(-1)).sum(dim=1) / all_sum
                 iptm_seq = self.v12_iptm(pooled_seq)
-                pred_iptm = torch.sigmoid(iptm_seq).squeeze(-1)
+                # V14-unfreeze: add fresh backbone-geometry pathway (see __init__).
+                masked_features = features * mask_res.unsqueeze(-1)
+                all_feat = masked_features.sum(dim=1) / all_sum
+                iptm_bb = self.v14_iptm_bb(all_feat)
+                if self._dbg_iptm_components is not None:
+                    self._dbg_iptm_components = (iptm_seq.detach().cpu(), iptm_bb.detach().cpu())
+                # B1 fix: per-pathway sigmoid + blend, NOT additive logits.
+                # The old sigmoid(iptm_seq + iptm_bb) let v14_iptm_bb's -5.27
+                # negative bias push the combined logit into deep sigmoid
+                # saturation (-4.5), flattening pred_iptm to a near-constant
+                # across CDR variants (probe: design std=1e-6, rho=0.30).
+                # Blending two sigmoids keeps each pathway's dynamic range
+                # independent, so neither bias can drown the other.
+                pred_iptm = (0.5 * torch.sigmoid(iptm_seq) + 0.5 * torch.sigmoid(iptm_bb)).squeeze(-1)
                 pae_pair_feat = torch.stack([
                     entropy.unsqueeze(-1) * entropy.unsqueeze(-2),
                     (entropy.unsqueeze(-1) - entropy.unsqueeze(-2)).abs(),
@@ -332,7 +386,20 @@ class AntibodyBFN_Receiver(nn.Module):
                 all_sum = mask_res.sum(dim=1, keepdim=True).clamp(min=1)
                 pooled_seq = (seq_emb * mask_res.unsqueeze(-1)).sum(dim=1) / all_sum
                 iptm_seq = self.v12_iptm(pooled_seq)
-                pred_iptm = torch.sigmoid(iptm_seq).squeeze(-1)
+                # V14-unfreeze: add fresh backbone-geometry pathway (see __init__).
+                masked_features = features * mask_res.unsqueeze(-1)
+                all_feat = masked_features.sum(dim=1) / all_sum
+                iptm_bb = self.v14_iptm_bb(all_feat)
+                if self._dbg_iptm_components is not None:
+                    self._dbg_iptm_components = (iptm_seq.detach().cpu(), iptm_bb.detach().cpu())
+                # B1 fix: per-pathway sigmoid + blend, NOT additive logits.
+                # The old sigmoid(iptm_seq + iptm_bb) let v14_iptm_bb's -5.27
+                # negative bias push the combined logit into deep sigmoid
+                # saturation (-4.5), flattening pred_iptm to a near-constant
+                # across CDR variants (probe: design std=1e-6, rho=0.30).
+                # Blending two sigmoids keeps each pathway's dynamic range
+                # independent, so neither bias can drown the other.
+                pred_iptm = (0.5 * torch.sigmoid(iptm_seq) + 0.5 * torch.sigmoid(iptm_bb)).squeeze(-1)
                 pae_pair_feat = torch.stack([
                     entropy.unsqueeze(-1) * entropy.unsqueeze(-2),
                     (entropy.unsqueeze(-1) - entropy.unsqueeze(-2)).abs(),

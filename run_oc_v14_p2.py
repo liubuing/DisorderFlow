@@ -46,10 +46,16 @@ def run_phase2(input_path=None, output_path=None):
     with open(input_path, encoding='utf-8') as f:
         data = json.load(f)
 
-    from af2_jax_runner import validate_antibody_epitope
-
     epi_seq = data['epi_seq']
     models = data['models']
+
+    # Choose AF2 backend. WSL2 GPU batch is ~100x faster than Windows CPU JAX
+    # and is the validated data-pipeline path (see machine-setup memory).
+    use_wsl = os.environ.get('OC_AF2_BACKEND', 'wsl').lower() in ('wsl', '1', 'true')
+    if use_wsl:
+        from build_design_variant_dataset import _batch_af2_wsl
+        af2_recycle = int(os.environ.get('OC_AF2_RECYCLE', '3'))
+        print(f'[AF2] backend = WSL2 GPU batch (recycle={af2_recycle})')
 
     for model_name, model_data in models.items():
         af2_inputs = model_data.get('af2_input', [])
@@ -59,30 +65,55 @@ def run_phase2(input_path=None, output_path=None):
 
         print(f'\n{"=" * 60}')
         print(f'  Phase 2: AF2 Validation — {model_data["label"]}')
-        print(f'  {len(af2_inputs)} designs, recycle=3')
+        print(f'  {len(af2_inputs)} designs, recycle={os.environ.get("OC_AF2_RECYCLE","3")}')
         print(f'{"=" * 60}')
 
-        results = []
-        for i, inp in enumerate(af2_inputs):
-            full_ab = inp['full_ab']
-            print(f'  [{i+1}/{len(af2_inputs)}] {len(full_ab)}+{len(epi_seq)} AA... ',
-                  end='', flush=True)
+        if use_wsl:
+            # Batch all designs through WSL GPU at once (handles chunking internally).
+            seqs = [inp['full_ab'] for inp in af2_inputs]
+            print(f'  [AF2] {len(seqs)} sequences ({len(seqs[0])}+{len(epi_seq)} AA each), warmup...')
             t0 = time.time()
-            try:
-                af2_r = validate_antibody_epitope(full_ab, epi_seq, num_recycle=3, verbose=False)
-                dt = time.time() - t0
-                if af2_r.get('success'):
-                    print(f'ipTM={af2_r["iptm"]:.3f} pLDDT={af2_r["plddt"]:.3f} ({dt:.0f}s)')
-                else:
-                    print(f'FAILED ({dt:.0f}s)')
+            af2_results = _batch_af2_wsl(seqs, epi_seq, af2_recycle, warmup_seq=seqs[0])
+            print(f'  [AF2] batch done in {time.time()-t0:.0f}s')
+            results = []
+            for inp, af2_r in zip(af2_inputs, af2_results):
                 result = dict(inp)
-                result['af2_plddt'] = af2_r.get('plddt')
-                result['af2_iptm'] = af2_r.get('iptm')
-                result['af2_ptm'] = af2_r.get('ptm')
-                result['af2_interface_pae'] = af2_r.get('interface_pae')
+                if af2_r and af2_r.get('success'):
+                    result['af2_plddt'] = float(np.mean(af2_r.get('plddt_seq', [0.0])))
+                    result['af2_iptm'] = float(af2_r.get('iptm', 0.0))
+                    result['af2_ptm'] = float(af2_r.get('ptm', 0.0))
+                    result['af2_interface_pae'] = float(af2_r.get('interface_pae', 0.0))
+                    print(f"  rank{inp['rank']}: AF2 ipTM={result['af2_iptm']:.4f} "
+                          f"pLDDT={result['af2_plddt']:.3f}")
+                else:
+                    err = (af2_r or {}).get('error', 'failed')
+                    result['af2_plddt'] = None
+                    result['af2_iptm'] = None
+                    print(f"  rank{inp['rank']}: AF2 FAILED ({err})")
                 results.append(result)
-            except Exception as e:
-                print(f'ERROR: {e}')
+        else:
+            from af2_jax_runner import validate_antibody_epitope
+            results = []
+            for i, inp in enumerate(af2_inputs):
+                full_ab = inp['full_ab']
+                print(f'  [{i+1}/{len(af2_inputs)}] {len(full_ab)}+{len(epi_seq)} AA... ',
+                      end='', flush=True)
+                t0 = time.time()
+                try:
+                    af2_r = validate_antibody_epitope(full_ab, epi_seq, num_recycle=3, verbose=False)
+                    dt = time.time() - t0
+                    if af2_r.get('success'):
+                        print(f'ipTM={af2_r["iptm"]:.3f} pLDDT={af2_r["plddt"]:.3f} ({dt:.0f}s)')
+                    else:
+                        print(f'FAILED ({dt:.0f}s)')
+                    result = dict(inp)
+                    result['af2_plddt'] = af2_r.get('plddt')
+                    result['af2_iptm'] = af2_r.get('iptm')
+                    result['af2_ptm'] = af2_r.get('ptm')
+                    result['af2_interface_pae'] = af2_r.get('interface_pae')
+                    results.append(result)
+                except Exception as e:
+                    print(f'ERROR: {e}')
 
         model_data['af2_results'] = results
 

@@ -119,6 +119,29 @@ class AntibodyBFN_Core(nn.Module):
         p_norm = (p - self.position_mean) / self.position_scale
         return p_norm
 
+    def _mask_antigen(self, batch, mask_gen):
+        """Antigen-context mask: real residues on chains other than the scaffold.
+        Scaffold chain = the chain_nb that bears any generate_flag (CDR) residue.
+        Antigen = real residues with a different chain_nb. Empty when there is
+        only one chain (fixbb → no antigen visible). Drives direction D's
+        antigen→CDR cross-attention."""
+        cn = batch.get('chain_nb')
+        if cn is None:
+            return None
+        device = mask_gen.device
+        N, L = mask_gen.shape
+        out = torch.zeros(N, L, dtype=torch.bool, device=device)
+        for b in range(N):
+            cdr_idx = mask_gen[b].bool()
+            if cdr_idx.any() and cn is not None:
+                # scaffold chain nb = chain_nb at the first CDR residue
+                cnd = cn[b]
+                if cnd.numel() >= L:
+                    scaff_nb = int(cnd[cdr_idx][0].item())
+                    real = batch['mask'][b].bool()
+                    out[b] = real & (cnd[:L] != scaff_nb)
+        return out
+
     def _unnormalize_position(self, p_norm):
         p = p_norm * self.position_scale + self.position_mean
         return p
@@ -149,6 +172,12 @@ class AntibodyBFN_Core(nn.Module):
         x_ang = batch['torsion'] # (N, L, 4) - sidechain chi angles
         mask_res = batch['mask']
         mask_gen = batch['generate_flag'].clone()
+
+        # Direction D: build mask_antigen (residues on chains OTHER than the
+        # scaffold, i.e. the antigen context visible in complex mode). The
+        # scaffold chain is the one bearing generate_flag residues; antigen =
+        # real residues on different chain_nb. Empty in fixbb (single chain).
+        batch['mask_antigen'] = self._mask_antigen(batch, mask_gen)
 
         # === Confidence Mask Augmentation ===
         # Randomly set generate_flag=1 for a fraction of residues to simulate
@@ -223,7 +252,8 @@ class AntibodyBFN_Core(nn.Module):
             pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = self.receiver(
                 inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
                 backbone_pos=backbone_pos, prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
-                prev_seq_emb=prev_seq_emb, mask_gen=mask_gen
+                prev_seq_emb=prev_seq_emb, mask_gen=mask_gen,
+                mask_antigen=batch.get('mask_antigen', None)
             )
             # Feed confidence + sequence embedding into next recycle
             prev_plddt, prev_iptm, prev_pae = pred_plddt, pred_iptm, pred_pae
@@ -430,6 +460,9 @@ class AntibodyBFN_Core(nn.Module):
         mask_gen = batch['generate_flag'].bool()
         pair_feat = batch['pair_feat']
         mask_res = batch['mask']
+        # Direction D: antigen-context mask for the cross-attention seq head.
+        if 'mask_antigen' not in batch:
+            batch['mask_antigen'] = self._mask_antigen(batch, mask_gen)
         deterministic = sample_opt.get('deterministic', False)  # Greedy/no noise sampling
         num_recycles = sample_opt.get('num_recycles', 1)  # Confidence feedback rounds
         # Disorder-aware sampling (balance ordered/disordered). When enabled, the
@@ -520,7 +553,8 @@ class AntibodyBFN_Core(nn.Module):
                 res = self.receiver(inp_seq, inp_pos, inp_ori, inp_ang, t_tensor, pair_feat, mask_res,
                                     backbone_pos=backbone_pos,
                                     prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
-                                    prev_seq_emb=prev_seq_emb, mask_gen=mask_gen)
+                                    prev_seq_emb=prev_seq_emb, mask_gen=mask_gen,
+                                    mask_antigen=batch.get('mask_antigen', None))
                 pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = res
 
                 # Update sequence - deterministic mode removes noise

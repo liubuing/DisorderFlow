@@ -101,6 +101,7 @@ class ConfidenceRegressionDataset(Dataset):
 
         # Build sample weights for IDP-stratified sampling
         self._sample_weights = None
+        self._scaffold_ids = []  # scaffold_id per valid_index — for grouped batch sampler
         if self.idp_sample_weight > 1.0:
             self._sample_weights = torch.ones(len(self._valid_indices), dtype=torch.float64)
             n_idp = 0
@@ -121,6 +122,18 @@ class ConfidenceRegressionDataset(Dataset):
             else:
                 self._sample_weights = None  # No IDPs found, fall back to uniform
 
+        # Build scaffold_id index for grouped batch sampler (V14+)
+        self._scaffold_ids = []
+        for idx in self._valid_indices:
+            if self._use_lmdb:
+                with self._env.begin() as txn:
+                    entry = pickle.loads(txn.get(f'{idx:08d}'.encode()))
+            else:
+                pkl_path = os.path.join(self._pkl_dir, f'{idx:08d}.pkl')
+                with open(pkl_path, 'rb') as f:
+                    entry = pickle.load(f)
+            self._scaffold_ids.append(int(entry.get('scaffold_id', idx)))
+
     def __len__(self):
         return len(self._valid_indices)
 
@@ -137,10 +150,18 @@ class ConfidenceRegressionDataset(Dataset):
 
         # Reconstruct batch and attach AF2 ground truth
         batch = entry['batch']
-        # Data is stored without batch dim —PaddingCollate handles stacking
-        batch['af2_plddt'] = entry['af2_plddt']
+        aa_len = batch['aa'].shape[0]
+        # AF2 multimer runs on antibody + epitope → plddt/pae cover the FULL
+        # complex. Truncate to the antibody portion for training.
+        af2_plddt = entry['af2_plddt']
+        if af2_plddt.shape[0] > aa_len:
+            af2_plddt = af2_plddt[:aa_len]
+        batch['af2_plddt'] = af2_plddt
         batch['af2_iptm'] = entry['af2_iptm']
-        batch['af2_pae_matrix'] = entry['af2_pae_matrix']
+        af2_pae = entry['af2_pae_matrix']
+        if af2_pae.dim() >= 2 and af2_pae.shape[0] > aa_len:
+            af2_pae = af2_pae[:aa_len, :aa_len]
+        batch['af2_pae_matrix'] = af2_pae
         batch['pdb_id'] = entry.get('pdb_id', '')
         batch['is_idp'] = entry.get('is_idp', False)
         batch['source'] = entry.get('source', '')
