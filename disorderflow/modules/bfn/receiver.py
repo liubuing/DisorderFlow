@@ -134,8 +134,12 @@ class AntibodyBFN_Receiver(nn.Module):
         # (<8Å Cβ-Cβ)? Gives the antigen path a DIRECT supervised signal,
         # bypassing the BFN diffusion noise that drowns the seq loss gradient.
         self.contact_head = nn.Linear(res_feat_dim, 1)  # per-residue logit
+        # Bias init -1.0 → sigmoid≈0.27 (close to ~30% contact rate in Ab-Ag).
+        # Zero init gave BCE=ln2=0.693 for all residues → gradient too weak.
+        # Negative bias gives lower initial loss AND stronger gradient for the
+        # minority (contact=1) class.
         nn.init.zeros_(self.contact_head.weight)
-        nn.init.zeros_(self.contact_head.bias)
+        nn.init.constant_(self.contact_head.bias, -1.0)
 
         # Output Heads
         self.head_seq = nn.Linear(res_feat_dim, num_classes)
