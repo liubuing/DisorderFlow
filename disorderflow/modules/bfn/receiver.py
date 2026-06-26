@@ -150,6 +150,23 @@ class AntibodyBFN_Receiver(nn.Module):
         nn.init.zeros_(self.contact_head.weight)
         nn.init.constant_(self.contact_head.bias, -1.0)
 
+        # ── Direction H: contrastive CDR-antigen matching head ──
+        # Plan §2.2: seq recovery (~5% CDR recovery) cannot teach antigen
+        # specificity because each (scaffold, antigen) has only one CDR answer.
+        # Contrastive head predicts whether a given CDR sequence matches the
+        # antigen: real CDR → 1, shuffled CDR → 0. This forces the encoder to
+        # learn antigen-compatible CDR features that the sequence head can use.
+        # Input: pooled CDR features + pooled antigen features → scalar logit.
+        self.contrastive_head = nn.Sequential(
+            nn.Linear(res_feat_dim * 2, res_feat_dim),
+            nn.LayerNorm(res_feat_dim),
+            nn.ReLU(),
+            nn.Dropout(head_dropout),
+            nn.Linear(res_feat_dim, res_feat_dim // 2),
+            nn.ReLU(),
+            nn.Linear(res_feat_dim // 2, 1),
+        )
+
         # Output Heads
         self.head_seq = nn.Linear(res_feat_dim, num_classes)
         self.head_pos = nn.Linear(res_feat_dim, 3)
@@ -335,6 +352,19 @@ class AntibodyBFN_Receiver(nn.Module):
         # contact any antigen residue? BCE loss gives antigen path direct signal.
         pred_contact = self.contact_head(features).squeeze(-1)  # (N, L)
 
+        # Direction H: contrastive CDR-antigen matching — does this CDR sequence
+        # match the antigen? Pool CDR + antigen features → scalar logit.
+        # Zero when no antigen (fixbb) or no CDR mask.
+        pred_contrastive = torch.zeros(N, device=device)
+        if mask_antigen is not None and mask_antigen.any() and mask_gen is not None and mask_gen.any():
+            ag_mask = mask_antigen.bool()
+            cdr_mask = mask_gen.bool()
+            # Pool CDR features
+            cdr_feat = (features * cdr_mask.unsqueeze(-1)).sum(dim=1) / cdr_mask.sum(dim=1, keepdim=True).clamp(min=1)
+            # Pool antigen features
+            ag_feat = (features * ag_mask.unsqueeze(-1)).sum(dim=1) / ag_mask.sum(dim=1, keepdim=True).clamp(min=1)
+            pred_contrastive = self.contrastive_head(torch.cat([cdr_feat, ag_feat], dim=-1)).squeeze(-1)
+
         # NaN safety: clamp features before heads to prevent BFN noise at high t
         # from producing extreme logits that cause NaN in loss.
         features = torch.clamp(features, min=-100.0, max=100.0)
@@ -461,4 +491,4 @@ class AntibodyBFN_Receiver(nn.Module):
                 pae_seq = self.head_pae_seq(pae_seq_feat.reshape(-1, 2)).reshape(N_full, L_full, L_full)
                 pred_pae = torch.sigmoid(pae_backbone + pae_seq)
 
-        return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact
+        return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact, pred_contrastive

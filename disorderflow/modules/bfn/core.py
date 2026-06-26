@@ -199,17 +199,34 @@ class AntibodyBFN_Core(nn.Module):
                     chosen = real_idx[torch.randperm(len(real_idx))[:n_m]]
                     mask_gen[b, chosen] = True
 
+        # Direction H: contrastive CDR-antigen matching (§2.2).
+        # Shuffle CDR within mask_gen so the model sees fake CDR+antigen pairs.
+        # The contrastive head (receiver) predicts real=1 / shuffled=0,
+        # forcing the encoder to learn antigen-compatible CDR features.
+        N_batch = x_seq.size(0)
+        contrastive_w = self.loss_weight.get('contrastive', 0)
+        contrastive_target = torch.zeros(N_batch, device=x_seq.device)  # 0=shuffled, will set 1 for real
+        if contrastive_w > 0 and mask_gen.any() and batch.get('mask_antigen') is not None and batch['mask_antigen'].any():
+            contrastive_target = torch.ones(N_batch, device=x_seq.device)  # default: real
+            for b in range(N_batch):
+                cdr_idx = torch.where(mask_gen[b].bool())[0]
+                if len(cdr_idx) >= 2 and torch.rand(1).item() < 0.5:
+                    # Shuffle CDR amino acids in-place
+                    perm = torch.randperm(len(cdr_idx))
+                    x_seq[b, cdr_idx] = x_seq[b, cdr_idx[perm]]
+                    contrastive_target[b] = 0.0  # this entry is now fake
+
         # 1. Sample Time t
-        N = x_seq.size(0)
+        N = N_batch
         if 'fixed_t' in batch and batch['fixed_t'] is not None:
             t = torch.full((N,), batch['fixed_t'], device=x_seq.device)
         else:
             t_clamp_max = self.loss_weight.get('t_clamp', 1.0)
             t = torch.rand(N, device=x_seq.device).clamp(1e-5, t_clamp_max)
-        
+
         # 2. Sample Theta (Parameters) from Clean Data
         t_expanded = t[:, None].expand(N, x_seq.size(1))
-        
+
         theta_seq = self.flow_seq.sample_theta(x_seq, t_expanded)
         theta_pos = self.flow_pos.sample_theta(x_pos, t_expanded)
         theta_ori = self.flow_ori.sample_theta(x_ori, t_expanded)
@@ -250,7 +267,7 @@ class AntibodyBFN_Core(nn.Module):
         prev_seq_emb = None  # V13
 
         for _ in range(train_recycles):
-            pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact = self.receiver(
+            pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact, pred_contrastive = self.receiver(
                 inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
                 backbone_pos=backbone_pos, prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
                 prev_seq_emb=prev_seq_emb, mask_gen=mask_gen,
@@ -308,6 +325,14 @@ class AntibodyBFN_Core(nn.Module):
                     pred_contact, contact_label, reduction='none')
                 n_cdr = mask_gen.sum().clamp(min=1)
                 losses['contact'] = (loss_contact * mask_gen).sum() / n_cdr
+
+        # Direction H: contrastive CDR-antigen matching loss.
+        # BCE: real CDR → 1, shuffled CDR → 0. Forces encoder to learn
+        # antigen-compatible features that benefit the sequence decoder.
+        if contrastive_w > 0 and contrastive_target is not None:
+            loss_contrastive = F.binary_cross_entropy_with_logits(
+                pred_contrastive, contrastive_target, reduction='mean')
+            losses['contrastive'] = loss_contrastive
 
         # === Optional Structure Losses (only compute if in config) ===
         if any(k in self.loss_weight for k in ['dist', 'fape', 'ang']):
@@ -584,7 +609,7 @@ class AntibodyBFN_Core(nn.Module):
                                     prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
                                     prev_seq_emb=prev_seq_emb, mask_gen=mask_gen,
                                     mask_antigen=batch.get('mask_antigen', None))
-                pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact = res
+                pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact, pred_contrastive = res
 
                 # Update sequence - deterministic mode removes noise
                 pred_seq_probs = F.softmax(pred_seq_logits, dim=-1)
