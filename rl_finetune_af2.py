@@ -214,53 +214,53 @@ def main():
 
     print(f"Selected {len(selected)} designs for finetuning")
 
-    # ── 6. Build in-memory finetuning dataset ──
-    print("Building finetuning dataset (in-memory)...")
+    # ── 6. Build in-memory finetuning dataset from phase3 LMDB entries ──
+    print("Building finetuning dataset from phase3 LMDB entries...")
     from torch.utils.data import Dataset as TorchDataset
 
+    # Re-open phase3 val LMDB to get preprocessed batch dicts
+    env2 = lmdb.open('data/sabdab_phase3_processed/val.lmdb', readonly=True, lock=False, readahead=False, subdir=False)
+    all_ids = pickle.load(open('data/sabdab_phase3_processed/val.lmdb-ids', 'rb'))
+    id_to_idx = {sid: i for i, sid in enumerate(all_ids)}
+
     ft_samples = []
-    for i, d in enumerate(selected):
-        entry = d['entry']
-        cdr_spec = d['cdr_spec']
-        cdr_seq = d['cdr_seq']
+    with env2.begin() as txn:
+        for i, d in enumerate(selected):
+            sid = d['sid']
+            cdr_seq = d['cdr_seq']
+            cdr_spec = d['cdr_spec']
 
-        # Load original phase3 val entry and transform it
-        # We rebuild the batch from the SAbDab entry dict
-        from disorderflow.utils.transforms import get_transform
-        from disorderflow.datasets.protein import preprocess_protein_structure
+            # Load preprocessed batch from phase3 val LMDB
+            raw = pickle.loads(txn.get(sid.encode()))
+            # raw is already a batch dict with aa, pos_heavyatom, generate_flag, etc.
+            # after merge_chains + mask_multiple_cdrs + patch_around_anchor
 
-        # Write temp PDB for preprocessing
-        pdb_path = os.path.join(tmpdir, f'ft_{i}.pdb')
-        write_complex_pdb(entry, pdb_path)
+            batch = recursive_to(raw, 'cpu')  # keep on CPU, training will move to GPU
 
-        # Preprocess with merge_chains transform (same as phase3)
-        structure = preprocess_protein_structure(pdb_path, chain_ids=['H', 'P'])
-        if structure is None:
-            print(f"  WARNING: cannot parse PDB for design {i}, skipping")
-            continue
+            # Replace aa at CDR positions (generate_flag=True) with designed sequence
+            gen_flag = batch.get('generate_flag')
+            if gen_flag is None:
+                print(f"  WARNING: no generate_flag in batch for {sid}, skipping")
+                continue
 
-        transform = get_transform([
-            {'type': 'mask_multiple_cdrs'},
-            {'type': 'merge_chains'},
-            {'type': 'patch_around_anchor'},
-        ])
-        batch = transform(structure)
+            aa_tensor = batch['aa'].clone()
+            cdr_indices = gen_flag.nonzero(as_tuple=True)[0]
+            if len(cdr_indices) == 0:
+                print(f"  WARNING: no CDR residues in batch for {sid}, skipping")
+                continue
 
-        # Replace aa at CDR positions with designed sequence
-        gen_flag = batch['generate_flag']
-        cdr_indices = gen_flag.nonzero(as_tuple=True)[0]
-        cdr_seq_full = cdr_seq  # as-is from run_bfn_design
+            # Write designed CDR sequence into aa at CDR positions
+            cdr_seq_full = cdr_seq
+            pos = 0
+            for idx in cdr_indices:
+                if pos < len(cdr_seq_full):
+                    aa_char = cdr_seq_full[pos]
+                    aa_tensor[idx] = AA.index(aa_char) if aa_char in AA else 0
+                    pos += 1
 
-        aa_tensor = batch['aa'].clone()
-        pos = 0
-        for idx in cdr_indices:
-            if pos < len(cdr_seq_full):
-                aa_char = cdr_seq_full[pos]
-                aa_tensor[idx] = AA.index(aa_char) if aa_char in AA else 0
-                pos += 1
-
-        batch['aa'] = aa_tensor
-        ft_samples.append(batch)
+            batch['aa'] = aa_tensor
+            ft_samples.append(batch)
+    env2.close()
 
     print(f"  Built {len(ft_samples)} finetuning samples")
 
