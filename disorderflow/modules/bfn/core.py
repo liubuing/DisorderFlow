@@ -237,9 +237,16 @@ class AntibodyBFN_Core(nn.Module):
         weights = torch.full((N, 1), self.beta, device=x_seq.device)
 
         # === Sequence Loss ===
+        # Run CE in fp32 (autocast disabled) for numerical stability. Under
+        # AMP fp16 the receiver's sequence logits can overflow in the softmax
+        # (inf - inf), producing NaN seq loss on a subset of batches — V15 was
+        # skipping ~1/4 of micro-batches to NaN. fp32 CE is cheap relative to
+        # the encoder and eliminates the spurious NaNs.
         x_seq_target = x_seq.clone()
         x_seq_target[x_seq >= 20] = -100
-        loss_seq = F.cross_entropy(pred_seq.reshape(-1, self.num_classes), x_seq_target.flatten(), reduction='none', ignore_index=-100, label_smoothing=self.loss_weight.get('label_smoothing', 0.0))
+        with torch.autocast(device_type=x_seq.device.type, enabled=False):
+            pred_seq_f32 = pred_seq.float()
+            loss_seq = F.cross_entropy(pred_seq_f32.reshape(-1, self.num_classes), x_seq_target.flatten(), reduction='none', ignore_index=-100, label_smoothing=self.loss_weight.get('label_smoothing', 0.0))
         loss_seq = loss_seq.reshape(N, -1)
         losses['seq'] = (loss_seq * mask_gen * weights).sum() / (mask_gen.sum() + 1e-8)
 
@@ -354,6 +361,22 @@ class AntibodyBFN_Core(nn.Module):
             else:
                 within_std = pred_iptm.std()  # legacy: whole-batch std
             losses['conf_variance'] = conf_var_w * (-within_std.clamp(max=0.3))
+
+        # 1b. Anti-collapse hinge (V14-unfreeze): direct counter to the constant-
+        #     output failure. Only fires when within-group std drops below eps,
+        #     pushing predictions apart. Unlike conf_variance (smooth linear
+        #     reward, easily outweighed by the iptm MSE), this is a hard floor
+        #     with a steep gradient in the collapse regime (std→0).
+        anticollapse_w = self.loss_weight.get('conf_anticollapse', 0.0)
+        if anticollapse_w > 0 and 'iptm' in losses and pred_iptm.numel() > 1:
+            if group_mask is not None:
+                std_val = _grouped_std(pred_iptm, scaffold_id)
+            else:
+                std_val = pred_iptm.std()
+            eps_c = 0.05
+            # ReLU: penalty = (eps - std)+ / eps, in [0, 1]. Max when std=0.
+            collar = (eps_c - std_val).clamp(min=0.0) / eps_c
+            losses['conf_anticollapse'] = anticollapse_w * collar
 
         # 2. Ranking loss: within a scaffold group, lower PPL → higher confidence.
         conf_rank_w = self.loss_weight.get('conf_ranking', 0.0)
