@@ -196,21 +196,55 @@ def main():
     af2_results = _batch_af2_wsl(ab_seqs, epi_seq, num_recycle=3, warmup_seq=ab_seqs[0])
 
     for d, r in zip(all_designs, af2_results):
-        d['af2_iptm'] = r.get('iptm') if r.get('success') else None
-        d['af2_plddt'] = r.get('plddt') if r.get('success') else None
+        if r and r.get('success'):
+            d['af2_iptm'] = r.get('iptm')
+            d['af2_plddt'] = r.get('plddt')
+            d['af2_interface_pae'] = r.get('interface_pae')
+        else:
+            d['af2_iptm'] = None
+            d['af2_plddt'] = None
+            d['af2_interface_pae'] = None
+
+    # Also try to read interface_pae from WSL results file (not extracted by _batch_af2_wsl)
+    wsl_results_path = '.af2_wsl_results.jsonl'
+    if os.path.exists(wsl_results_path):
+        try:
+            with open(wsl_results_path) as f:
+                for line in f:
+                    r = json.loads(line)
+                    idx = r.get('id')
+                    if idx is not None and idx < len(all_designs):
+                        if 'interface_pae' in r and all_designs[idx].get('af2_interface_pae') is None:
+                            all_designs[idx]['af2_interface_pae'] = r['interface_pae']
+        except Exception:
+            pass
 
     valid = [d for d in all_designs if d['af2_iptm'] is not None]
     print(f"  AF2 succeeded: {len(valid)}/{len(all_designs)}")
 
     # ── 5. Select top designs ──
-    print(f"Selecting top {args.top} per scaffold...")
+    # Try multiple ranking metrics: interface_pae (lower=better), iptm (higher=better)
+    # interface_pae measures per-residue interface confidence — often more variance
+    use_interface_pae = all(d.get('af2_interface_pae') is not None for d in valid)
+    if use_interface_pae:
+        sort_key = lambda d: d['af2_interface_pae']  # lower = better
+        reverse_sort = False
+        metric_name = 'interface_pae'
+    else:
+        sort_key = lambda d: d['af2_iptm']
+        reverse_sort = True
+        metric_name = 'iptm'
+
+    print(f"Selecting top {args.top} per scaffold (by {metric_name})...")
     selected = []
     for si in range(len(scaffolds)):
         group = sorted([d for d in valid if d['scaffold_idx'] == si],
-                       key=lambda d: d['af2_iptm'], reverse=True)
+                       key=sort_key, reverse=reverse_sort)
         selected.extend(group[:args.top])
         if group:
-            print(f"  scaffold {si}: best AF2 ipTM = {group[0]['af2_iptm']:.4f} (BFN ipTM = {group[0]['bfn_iptm']:.4f})")
+            best = group[0]
+            print(f"  scaffold {si}: best {metric_name}={best.get(metric_name, 'N/A'):.4f}, "
+                  f"AF2 iptm={best.get('af2_iptm', 0):.4f}, BFN iptm={best['bfn_iptm']:.4f}")
 
     print(f"Selected {len(selected)} designs for finetuning")
 
