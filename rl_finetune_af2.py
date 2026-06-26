@@ -214,138 +214,101 @@ def main():
 
     print(f"Selected {len(selected)} designs for finetuning")
 
-    # ── 6. Create finetuning dataset (in-memory) ──
-    print("Building finetuning dataset...")
-    ft_data_dir = os.path.join(tmpdir, 'finetune_pdbs')
-    os.makedirs(ft_data_dir, exist_ok=True)
+    # ── 6. Build in-memory finetuning dataset ──
+    print("Building finetuning dataset (in-memory)...")
+    from torch.utils.data import Dataset as TorchDataset
 
+    ft_samples = []
     for i, d in enumerate(selected):
-        # Create a modified PDB with the designed CDR sequence
         entry = d['entry']
         cdr_spec = d['cdr_spec']
         cdr_seq = d['cdr_seq']
 
-        # Build modified aa array
-        heavy = entry['heavy']
-        aa_orig = heavy['aa'].clone()
+        # Load original phase3 val entry and transform it
+        # We rebuild the batch from the SAbDab entry dict
+        from disorderflow.utils.transforms import get_transform
+        from disorderflow.datasets.protein import preprocess_protein_structure
+
+        # Write temp PDB for preprocessing
+        pdb_path = os.path.join(tmpdir, f'ft_{i}.pdb')
+        write_complex_pdb(entry, pdb_path)
+
+        # Preprocess with merge_chains transform (same as phase3)
+        structure = preprocess_protein_structure(pdb_path, chain_ids=['H', 'P'])
+        if structure is None:
+            print(f"  WARNING: cannot parse PDB for design {i}, skipping")
+            continue
+
+        transform = get_transform([
+            {'type': 'mask_multiple_cdrs'},
+            {'type': 'merge_chains'},
+            {'type': 'patch_around_anchor'},
+        ])
+        batch = transform(structure)
+
+        # Replace aa at CDR positions with designed sequence
+        gen_flag = batch['generate_flag']
+        cdr_indices = gen_flag.nonzero(as_tuple=True)[0]
+        cdr_seq_full = cdr_seq  # as-is from run_bfn_design
+
+        aa_tensor = batch['aa'].clone()
         pos = 0
-        for start, end, name in cdr_spec:
-            length = end - start + 1
-            for j in range(length):
-                aa_val = AA.index(cdr_seq[pos + j]) if cdr_seq[pos + j] in AA else 0
-                aa_orig[start - 1 + j] = aa_val
-            pos += length
+        for idx in cdr_indices:
+            if pos < len(cdr_seq_full):
+                aa_char = cdr_seq_full[pos]
+                aa_tensor[idx] = AA.index(aa_char) if aa_char in AA else 0
+                pos += 1
 
-        # Write PDB with modified sequence
-        pdb_path = os.path.join(ft_data_dir, f'design_{i:03d}.pdb')
-        modified_entry = {
-            'heavy': {**{k: v for k, v in heavy.items()}, 'aa': aa_orig},
-            'antigen': entry.get('antigen'),
-        }
-        write_complex_pdb(modified_entry, pdb_path)
+        batch['aa'] = aa_tensor
+        ft_samples.append(batch)
 
-    print(f"  Created {len(selected)} PDB files in {ft_data_dir}")
+    print(f"  Built {len(ft_samples)} finetuning samples")
+
+    class FinetuneDataset(TorchDataset):
+        def __init__(self, samples):
+            self.samples = samples
+        def __len__(self):
+            return len(self.samples)
+        def __getitem__(self, idx):
+            return self.samples[idx]
+
+    ft_dataset = FinetuneDataset(ft_samples)
 
     # ── 7. Finetune BFN ──
-    print(f"Finetuning BFN for {args.finetune_steps} steps...")
-    # Create finetune config
-    ft_config_path = os.path.join(tmpdir, 'finetune_config.yml')
-    with open(ft_config_path, 'w') as f:
-        f.write(f"""
-model:
-  type: antibody_bfn
-  res_feat_dim: 256
-  pair_feat_dim: 128
-  diffusion:
-    num_steps: 20
-    beta: 1.0
-    schedule: cosine
-    eps_net_opt:
-      num_layers: 6
-  train_structure: true
-  train_sequence: true
-  ot_opt:
-    num_iters: 5
-  loss_weight:
-    seq: 1.0
-    dist: 0.0
-    ang: 0.0
-    plddt: 0.0
-    iptm: 0.0
-    pae: 0.0
-    disorder: 0.0
-    conf_variance: 0.0
-    conf_ranking: 0.0
-    grouped_margin: 0.0
-    conf_anticollapse: 0.0
-    huber_beta: 0.1
-    train_recycles: 1
-    mask_aug_prob: 0.0
-    label_smoothing: 0.0
-    encoder_dropout: 0.0
+    print(f"Finetuning BFN for {args.finetune_steps} steps on {len(ft_samples)} samples...")
 
-train:
-  loss_weights:
-    seq: 1.0
-  freeze_backbone: false
-  max_iters: {args.finetune_steps}
-  val_freq: 50
-  log_freq: 10
-  batch_size: 1
-  warmup_steps: 20
-  seed: 2042
-  max_grad_norm: 5.0
-  ema_decay: 0.999
-  optimizer:
-    type: adamw
-    lr: 1.e-4
-    weight_decay: 1.0e-4
-    beta1: 0.9
-    beta2: 0.999
-  scheduler:
-    type: plateau
-    factor: 0.5
-    patience: 5
-    min_lr: 1.e-7
+    # Manual training loop
+    from torch.utils.data import DataLoader
+    ft_loader = DataLoader(ft_dataset, batch_size=1, shuffle=True,
+                           collate_fn=PaddingCollate(), num_workers=0)
 
-dataset:
-  train:
-    type: custom
-    structure_dir: {ft_data_dir.replace(chr(92), '/')}
-    transform:
-      - type: mask_multiple_cdrs
-      - type: merge_chains
-      - type: patch_around_anchor
-  val:
-    type: custom
-    structure_dir: {ft_data_dir.replace(chr(92), '/')}
-    transform:
-      - type: mask_multiple_cdrs
-      - type: merge_chains
-      - type: patch_around_anchor
-""")
+    # Load model
+    model, _ = load_bfn_model(args.ckpt, args.device)
+    model.train()
 
-    ft_logdir = os.path.join(tmpdir, 'finetune_logs')
-    os.makedirs(ft_logdir, exist_ok=True)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
+    ft_log_path = os.path.join(tmpdir, 'finetune_log.txt')
 
-    ret = os.system(
-        f'python train.py {ft_config_path} '
-        f'--finetune {args.ckpt} '
-        f'--accum_steps 2 '
-        f'--logdir {ft_logdir} '
-        f'--device {args.device}'
-    )
-    if ret != 0:
-        print(f"ERROR: Finetuning failed with exit code {ret}")
-        sys.exit(1)
+    for step in range(args.finetune_steps):
+        for batch in ft_loader:
+            batch = recursive_to(batch, args.device)
+            loss_dict = model(batch)
+            loss = loss_dict.get('seq', torch.tensor(0.0))
+            if torch.isnan(loss) or torch.isinf(loss):
+                continue
+            optimizer.zero_grad()
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
+            optimizer.step()
 
-    # Find the best checkpoint
-    ft_ckpt_dirs = glob.glob(os.path.join(ft_logdir, '*', 'checkpoints'))
-    if not ft_ckpt_dirs:
-        print("ERROR: No finetune checkpoint found")
-        sys.exit(1)
-    ft_best = os.path.join(ft_ckpt_dirs[0], 'best.pt')
-    print(f"Finetuned checkpoint: {ft_best}")
+        if step % 20 == 0:
+            print(f"  ft step {step}: loss(seq)={loss.item():.4f}")
+
+    # Save finetuned checkpoint
+    ft_ckpt_path = os.path.join(tmpdir, 'finetuned.pt')
+    torch.save({'model': model.state_dict(), 'iteration': args.finetune_steps}, ft_ckpt_path)
+    ft_best = ft_ckpt_path
+    print(f"Finetuned checkpoint saved: {ft_best}")
 
     # ── 8. Verify with probe ──
     print("\n=== Running antigen signal probe ===")
