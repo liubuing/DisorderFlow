@@ -294,7 +294,7 @@ class AntibodyBFN_Core(nn.Module):
                 pos = torch.where(cb_mask.unsqueeze(-1), cb, ca)  # (N, L, 3)
 
                 # Contact label: per CDR residue, 1 if Cβ < 8Å to any antigen residue
-                contact_label = torch.zeros(N_batch, L_batch, device=device)
+                contact_label = torch.zeros(N_batch, L_batch, device=pred_contact.device)
                 for b in range(N_batch):
                     cdr_idx = mask_gen[b].bool()
                     ag_idx = mask_antigen[b].bool()
