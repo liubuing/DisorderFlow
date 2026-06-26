@@ -192,9 +192,20 @@ if __name__ == '__main__':
         ckpt = torch.load(args.resume, map_location=args.device, weights_only=False)
         it_first = ckpt['iteration'] + 1
         min_val_loss = ckpt.get('min_val_loss', float('inf'))
-        model.load_state_dict(ckpt['model'])
-        logger.info('Resuming optimizer states...')
-        optimizer.load_state_dict(ckpt['optimizer'])
+        missing_keys, unexpected_keys = model.load_state_dict(ckpt['model'], strict=False)
+        if missing_keys:
+            logger.info(f'New parameters (random init): {len(missing_keys)}')
+            for k in missing_keys[:8]:
+                logger.info(f'  + {k}')
+        if unexpected_keys:
+            logger.info(f'Removed parameters (ignored): {len(unexpected_keys)}')
+        # Optimizer state may be incompatible when model has new parameters.
+        # Fall back to fresh optimizer if sizes don't match.
+        try:
+            logger.info('Resuming optimizer states...')
+            optimizer.load_state_dict(ckpt['optimizer'])
+        except ValueError:
+            logger.info('Optimizer state incompatible (new params added) — using fresh optimizer.')
         logger.info('Resuming scheduler states...')
         scheduler.load_state_dict(ckpt['scheduler'])
         scaler.load_state_dict(ckpt['scaler'])
