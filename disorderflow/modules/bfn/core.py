@@ -286,6 +286,7 @@ class AntibodyBFN_Core(nn.Module):
         if 'contact' in self.loss_weight and self.loss_weight.get('contact', 0) > 0:
             mask_antigen = batch.get('mask_antigen', None)
             if mask_antigen is not None and mask_antigen.any() and mask_gen.any():
+                N_batch, L_batch = mask_gen.shape
                 # Cβ positions (fallback to CA for GLY)
                 cb = batch['pos_heavyatom'][:, :, 3]  # (N, L, 3)
                 cb_mask = batch['mask_heavyatom'][:, :, 3]  # (N, L)
@@ -293,12 +294,12 @@ class AntibodyBFN_Core(nn.Module):
                 pos = torch.where(cb_mask.unsqueeze(-1), cb, ca)  # (N, L, 3)
 
                 # Contact label: per CDR residue, 1 if Cβ < 8Å to any antigen residue
-                contact_label = torch.zeros(N, L, device=device)
-                for b in range(N):
+                contact_label = torch.zeros(N_batch, L_batch, device=device)
+                for b in range(N_batch):
                     cdr_idx = mask_gen[b].bool()
                     ag_idx = mask_antigen[b].bool()
                     if cdr_idx.any() and ag_idx.any():
-                        dists = torch.cdist(pos[b][cdr_idx], pos[b][ag_idx])  # (n_cdr, n_ag)
+                        dists = torch.cdist(pos[b][cdr_idx], pos[b][ag_idx])
                         contact_label[b][cdr_idx] = (dists.min(dim=1).values < 8.0).float()
 
                 # BCE loss only on CDR residues
