@@ -41,7 +41,7 @@ def probe_model(ckpt_path, label):
     import bfn_loader
     bfn_loader._bfn_model = None
     bfn_loader._bfn_config = None
-    model, _ = bfn_loader.load_bfn('cuda')
+    model, _ = bfn_loader.load_bfn('cpu')
     print(f'[{label}] Loaded {ckpt_path}')
 
     env = lmdb.open('data/sabdab_phase3_processed/train.lmdb', readonly=True, lock=False, readahead=False, subdir=False)

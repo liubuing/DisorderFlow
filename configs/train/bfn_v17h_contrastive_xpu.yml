@@ -62,7 +62,7 @@ train:
     conf_anticollapse: 0.50
   freeze_backbone: false
   unfreeze_encoder_layers: 6
-  max_iters: 2000
+  max_iters: 4000               # resume from 2000, train 2000 more
   val_freq: 500
   log_freq: 10
   batch_size: 1
