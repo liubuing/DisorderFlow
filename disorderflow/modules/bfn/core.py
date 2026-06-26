@@ -432,6 +432,16 @@ class AntibodyBFN_Core(nn.Module):
         mask_res = batch['mask']
         deterministic = sample_opt.get('deterministic', False)  # Greedy/no noise sampling
         num_recycles = sample_opt.get('num_recycles', 1)  # Confidence feedback rounds
+        # Disorder-aware sampling (balance ordered/disordered). When enabled, the
+        # stochastic noise added to the CDR sequence update is scaled per-residue
+        # by a pliability factor: residues the disorder head reads as disordered
+        # (or an externally-supplied pliability map, e.g. epitope RMSF) get MORE
+        # noise → pliable, diverse CDRs facing a disordered epitope; ordered
+        # framework-facing residues get less noise. Off by default.
+        disorder_guided = sample_opt.get('disorder_guided', False)
+        dg_strength = sample_opt.get('disorder_guided_strength', 1.0)  # 0..1+
+        # Optional external pliability map (N, L) in [0,1]; overrides model pred.
+        dg_pliability = sample_opt.get('disorder_pliability', None)
         # Ground Truth Structure (always used in seq-only mode)
         x_seq = batch['aa']
         x_pos = batch['pos_heavyatom'][:, :, 1] # CA
@@ -518,7 +528,23 @@ class AntibodyBFN_Core(nn.Module):
                 if deterministic:
                     y_seq = delta_alpha * pred_seq_probs  # No noise
                 else:
-                    y_seq = delta_alpha * pred_seq_probs + sqrt_delta_alpha * torch.randn_like(pred_seq_probs)
+                    noise = torch.randn_like(pred_seq_probs)
+                    if disorder_guided:
+                        # Per-residue pliability in [0,1]: higher → more entropy.
+                        if dg_pliability is not None:
+                            plia = dg_pliability.to(device)  # (N, L) or (L,)
+                            if plia.dim() == 1:
+                                plia = plia.unsqueeze(0).expand(N, -1)
+                        elif pred_disorder is not None:
+                            plia = torch.sigmoid(pred_disorder).clamp(0.0, 1.0)  # (N, L)
+                        else:
+                            plia = None
+                        if plia is not None:
+                            # noise_scale in [1-dg_strength, 1+dg_strength] mapped from pliability
+                            scale = (1.0 - dg_strength) + 2.0 * dg_strength * plia  # (N, L)
+                            scale = scale.unsqueeze(-1)  # (N, L, 1) -> broadcast over classes
+                            noise = noise * scale
+                    y_seq = delta_alpha * pred_seq_probs + sqrt_delta_alpha * noise
                 theta_seq = theta_seq + y_seq
 
                 # Update structure (only if not seq-only)

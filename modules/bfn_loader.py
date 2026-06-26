@@ -101,7 +101,8 @@ def has_disorder_head(model=None):
 
 
 def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
-                   context_chains=None, device=None):
+                   context_chains=None, device=None, sort_by=None, descending=True,
+                   disorder_guided=False, disorder_guided_strength=1.0):
     """Run BFN protein sequence design on specified regions.
 
     Args:
@@ -113,6 +114,11 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
             (e.g. ['A'] for antigen). These chains are NOT designed.
             None or [] = FixBB mode (no context).
         device: torch device
+        disorder_guided: if True, scale the CDR sampling noise per-residue by the
+            disorder head's prediction (residues it reads as disordered get more
+            entropy → pliable CDRs; ordered framework-facing residues get less).
+            Requires a checkpoint with a trained disorder head. See task-A.
+        disorder_guided_strength: 0..1+ pliability scaling strength.
 
     Returns:
         list of dicts, each with: sequence, ppl, entropy, plddt, iptm, pae,
@@ -174,6 +180,9 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
         raise ValueError("No residues selected for design")
 
     sample_opt = {'deterministic': not stochastic, 'num_recycles': 3}
+    if disorder_guided:
+        sample_opt['disorder_guided'] = True
+        sample_opt['disorder_guided_strength'] = disorder_guided_strength
     results_list = []
 
     _has_disorder = has_disorder_head(model)
@@ -213,5 +222,15 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
                 result['disorder_score'] = d_val
 
         results_list.append(result)
+
+    # Optional ranking. Without this (the historical default), callers like
+    # run_oc_v14_p1.py took designs[:top_n] = the first N *random* samples, so
+    # the AF2 yield test was effectively blind sampling — a root cause of the
+    # low OC yield (designs all had AF2 ipTM ~0.05). With a calibrated
+    # confidence head, sort_by='iptm' picks the highest-self-confidence designs
+    # to send to AF2, turning the pipeline into confidence-ranked selection.
+    if sort_by is not None and results_list:
+        reverse = bool(descending)
+        results_list.sort(key=lambda r: r.get(sort_by, float('-inf')), reverse=reverse)
 
     return results_list

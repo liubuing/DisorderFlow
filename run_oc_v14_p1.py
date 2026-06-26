@@ -44,6 +44,10 @@ ap.add_argument('--n-samples', type=int, default=10)
 ap.add_argument('--design-top-n', type=int, default=5)
 ap.add_argument('--output', default=None,
                 help='output json path; default oc_v14_phase1_<mode>.json')
+ap.add_argument('--disorder-guided', action='store_true',
+                help='Enable disorder-aware CDR sampling (pliability-scaled entropy).')
+ap.add_argument('--dg-strength', type=float, default=1.0,
+                help='Disorder-guided pliability scaling strength (0..1+).')
 args = ap.parse_args()
 
 MODE = args.mode
@@ -139,7 +143,8 @@ try:
         # highest-confidence designs to send to AF2 (was designs[:n] = blind
         # random sampling → all AF2 ipTM ~0.05). Requires an un-collapsed head.
         sort_by='iptm', descending=True,
-    )
+        disorder_guided=args.disorder_guided,
+        disorder_guided_strength=args.dg_strength)
     dt = time.time() - t0
 
     plddts = [d['plddt'] for d in designs]
