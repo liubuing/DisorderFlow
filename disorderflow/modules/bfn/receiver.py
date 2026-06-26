@@ -119,14 +119,21 @@ class AntibodyBFN_Receiver(nn.Module):
         # identical (Δ +0.1pp): the antigen chain reaches the encoder via
         # pair_feat but NEVER reaches the per-residue head_seq (Linear, reads
         # only the CDR residue's own features). Fix: a cross-attention block
-        # where CDR residues query antigen-residue encoder features, then gate-
-        # fuse as a RESIDUAL onto features before head_seq. Residual (not concat)
-        # preserves the V15-trained head_seq weights — only the new antigen_xa
-        # block is fresh-init. In fixbb (no antigen) the path is a no-op.
+        # where CDR residues query antigen-residue encoder features, fused as a
+        # RESIDUAL onto features before head_seq. In fixbb the path is a no-op.
+        #
+        # V17c (zero-init): learned gate failed — random xa weights produce
+        # noise, gate learns to suppress it (gate→-0.01 in 100 steps at lr=5e-4).
+        # Fix: zero-init out_proj so xa_out=0 at start (preserving V15 behavior
+        # exactly), then let weights grow only where antigen helps. No gate needed
+        # — the weights themselves control contribution per dimension.
         self.antigen_xa = nn.MultiheadAttention(res_feat_dim, num_heads=4, kdim=res_feat_dim,
                                                 vdim=res_feat_dim, batch_first=True, dropout=head_dropout)
+        # Zero-init out projection: xa_out=0 initially, preserving V15 exactly.
+        # Weights grow from zero only where antigen context helps seq prediction.
+        nn.init.zeros_(self.antigen_xa.out_proj.weight)
+        nn.init.zeros_(self.antigen_xa.out_proj.bias)
         self.antigen_xa_norm = nn.LayerNorm(res_feat_dim)
-        self.antigen_xa_gate = nn.Parameter(torch.tensor(0.0))  # sigmoid(0)=0.5: cross-attn has equal weight from start. V15 behavior preservation was keeping gate at 0.05 → antigen never reaches head_seq → loss stays flat → gate gradient zero → deadlock. Starting at 0.5 gives seq loss a chance to use antigen, then gate can be learned up or down.
 
         # Output Heads
         self.head_seq = nn.Linear(res_feat_dim, num_classes)
@@ -292,10 +299,13 @@ class AntibodyBFN_Receiver(nn.Module):
 
         # Direction D: antigen→CDR cross-attention. CDR residues query the
         # antigen residues' encoder features; the attended antigen context is
-        # gated and fused as a RESIDUAL onto the CDR features before head_seq.
+        # fused as a RESIDUAL onto the CDR features before head_seq.
         # In fixbb (no antigen) mask_antigen is empty → no-op, so the path
         # stays inert (matches the seq_only baseline). With an antigen present,
         # this is the ONLY place the antigen explicitly conditions CDR decoding.
+        # V17c: no learned gate — out_proj is zero-init, so xa_out=0 initially
+        # (V15 behavior exactly preserved). Weights grow from zero toward useful
+        # antigen features; useless directions stay near zero.
         if mask_antigen is not None and mask_antigen.any() and mask_gen is not None:
             ag_mask = mask_antigen.bool()          # (N, L)
             key_padding_mask = ~ag_mask             # (N, L) True where NOT antigen (ignore)
@@ -304,8 +314,7 @@ class AntibodyBFN_Receiver(nn.Module):
                                         need_weights=False)
             # only CDR residues get the antigen update (framework stays as-is)
             xa_out = torch.where(mask_gen.unsqueeze(-1), xa_out, torch.zeros_like(xa_out))
-            gate = torch.sigmoid(self.antigen_xa_gate)
-            features = self.antigen_xa_norm(features + gate * xa_out)
+            features = self.antigen_xa_norm(features + xa_out)
 
         # 3. Heads
         pred_seq = self.head_seq(features)
