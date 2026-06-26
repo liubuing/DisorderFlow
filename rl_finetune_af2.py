@@ -214,54 +214,58 @@ def main():
 
     print(f"Selected {len(selected)} designs for finetuning")
 
-    # ── 6. Build in-memory finetuning dataset from phase3 LMDB entries ──
-    print("Building finetuning dataset from phase3 LMDB entries...")
+    # ── 6. Build in-memory finetuning dataset ──
+    print("Building finetuning dataset...")
     from torch.utils.data import Dataset as TorchDataset
 
-    # Re-open phase3 val LMDB to get preprocessed batch dicts
+    # Phase3 LMDB stores raw SAbDab entry dicts (heavy/light/antigen).
+    # We need to apply transforms to get batch dicts, then replace CDR aa.
+    phase3_transform = get_transform([
+        {'type': 'mask_multiple_cdrs'},
+        {'type': 'merge_chains'},
+        {'type': 'patch_around_anchor'},
+    ])
+
+    # Re-open phase3 val LMDB
     env2 = lmdb.open('data/sabdab_phase3_processed/val.lmdb', readonly=True, lock=False, readahead=False, subdir=False)
-    all_ids = pickle.load(open('data/sabdab_phase3_processed/val.lmdb-ids', 'rb'))
-    id_to_idx = {sid: i for i, sid in enumerate(all_ids)}
 
     ft_samples = []
     with env2.begin() as txn:
         for i, d in enumerate(selected):
             sid = d['sid']
             cdr_seq = d['cdr_seq']
-            cdr_spec = d['cdr_spec']
 
-            # Load preprocessed batch from phase3 val LMDB
+            # Load raw SAbDab entry from phase3 val LMDB
             raw = pickle.loads(txn.get(sid.encode()))
-            # raw is already a batch dict with aa, pos_heavyatom, generate_flag, etc.
-            # after merge_chains + mask_multiple_cdrs + patch_around_anchor
 
-            batch = recursive_to(raw, 'cpu')  # keep on CPU, training will move to GPU
+            # Apply transforms to get batch dict
+            try:
+                batch = phase3_transform(raw)
+            except Exception as e:
+                print(f"  WARNING: transform failed for {sid}: {e}, skipping")
+                continue
 
-            # Replace aa at CDR positions (generate_flag=True) with designed sequence
-            gen_flag = batch.get('generate_flag')
-            if gen_flag is None:
-                print(f"  WARNING: no generate_flag in batch for {sid}, skipping")
+            batch = recursive_to(batch, 'cpu')
+
+            # Replace aa at CDR positions with designed sequence
+            gen_flag = batch['generate_flag']
+            cdr_indices = gen_flag.nonzero(as_tuple=True)[0]
+            if len(cdr_indices) == 0:
+                print(f"  WARNING: no CDR residues for {sid}, skipping")
                 continue
 
             aa_tensor = batch['aa'].clone()
-            cdr_indices = gen_flag.nonzero(as_tuple=True)[0]
-            if len(cdr_indices) == 0:
-                print(f"  WARNING: no CDR residues in batch for {sid}, skipping")
-                continue
-
-            # Write designed CDR sequence into aa at CDR positions
-            cdr_seq_full = cdr_seq
             pos = 0
             for idx in cdr_indices:
-                if pos < len(cdr_seq_full):
-                    aa_char = cdr_seq_full[pos]
+                if pos < len(cdr_seq):
+                    aa_char = cdr_seq[pos]
                     aa_tensor[idx] = AA.index(aa_char) if aa_char in AA else 0
                     pos += 1
 
             batch['aa'] = aa_tensor
             ft_samples.append(batch)
-    env2.close()
 
+    env2.close()
     print(f"  Built {len(ft_samples)} finetuning samples")
 
     class FinetuneDataset(TorchDataset):
