@@ -301,8 +301,10 @@ class AntibodyBFN_Receiver(nn.Module):
             ag_pooled = ag_pooled.expand(-1, L, -1)           # (N, L, D)
             feat_with_ag = torch.cat([features, ag_pooled], dim=-1)  # (N, L, 2D)
             ag_conditioned = self.antigen_proj(feat_with_ag)  # (N, L, D)
-            # only CDR residues get the antigen update; framework stays as-is
-            features = torch.where(mask_gen.unsqueeze(-1), ag_conditioned, features)
+            # only CDR residues get the antigen update; framework stays as-is.
+            # RESIDUAL: features + ag_conditioned (not replacement!) so zero-init
+            # proj preserves original CDR features at start.
+            features = torch.where(mask_gen.unsqueeze(-1), features + ag_conditioned, features)
 
         # 3. Heads
         pred_seq = self.head_seq(features)
