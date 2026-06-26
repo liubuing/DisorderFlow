@@ -1,0 +1,144 @@
+{
+  "config": {
+    "scaffold_pdb": "data/misfolding_targets/5IMK.pdb",
+    "scaffold_chain": "B",
+    "target_pdb": "data/misfolding_targets/2NAO_model1_A_1-42.pdb",
+    "target_chain": "A",
+    "cdr_spec": "B:26-33,51-58,97-113",
+    "context_chains": [
+      "A"
+    ],
+    "n_samples": 8,
+    "design_top_n": 8,
+    "mode": "complex",
+    "complex_pdb": "C:\\biological\\DisorderFlow\\oc_validation_results\\_complexes\\5IMK_2NAO_model1_A_1-42_complex.pdb",
+    "complex_distance": 18.0
+  },
+  "af2_config": {
+    "num_recycle": 3,
+    "use_jax": true,
+    "colabfold_exe": "colabfold_batch",
+    "timeout_per_design": 1800
+  },
+  "epi_seq": "DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA",
+  "scaffold_seq": "QVQLVESGGGLVQAGGSLRLSCAASGRTFSSYGMGWFRQAPGKEREFVAAIRWNGGSTYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCAAGRWDKYGSSFQDEYDYWGQGTQVTVSS",
+  "cdr_ranges": [
+    [
+      26,
+      33,
+      8
+    ],
+    [
+      51,
+      58,
+      8
+    ],
+    [
+      97,
+      113,
+      17
+    ]
+  ],
+  "models": {
+    "v14": {
+      "checkpoint": "logs/disorder_head_retrain.pt",
+      "label": "V14 Grouped Real-AF2",
+      "desc": "Real-AF2 design-variant training + grouped margin/variance loss",
+      "n_designs": 8,
+      "bfn_plddt_mean": 0.26687226444482803,
+      "bfn_plddt_std": 2.816549182503697e-05,
+      "bfn_iptm_mean": 0.35551443696022034,
+      "bfn_iptm_std": 9.766503423235227e-06,
+      "af2_input": [
+        {
+          "rank": 1,
+          "sequence": "ESHFGDDAPMTQVDLKMWLMHGMEWSQNWLYTQ",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASESHFGDDAMGWFRQAPGKEREFVAAPMTQVDLKYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCMWLMHGMEWSQNWLYTQYWGQGTQVTVSS",
+          "bfn_plddt": 0.2668295204639435,
+          "bfn_iptm": 0.35552987456321716,
+          "bfn_ppl": 35.97942352294922,
+          "bfn_pae": 0.012253164313733578,
+          "bfn_entropy": 2.5102343559265137,
+          "mutations": 31
+        },
+        {
+          "rank": 2,
+          "sequence": "RHTSTNSQNTFAKDPWDPRASPCSHQWHHPKEW",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASRHTSTNSQMGWFRQAPGKEREFVAANTFAKDPWYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCDPRASPCSHQWHHPKEWYWGQGTQVTVSS",
+          "bfn_plddt": 0.26688051223754883,
+          "bfn_iptm": 0.35552260279655457,
+          "bfn_ppl": 34.79392623901367,
+          "bfn_pae": 0.01225320901721716,
+          "bfn_entropy": 2.5102345943450928,
+          "mutations": 32
+        },
+        {
+          "rank": 3,
+          "sequence": "IWPAYFYTSNAEPNGTKSGSAIETPWEFPYPRD",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASIWPAYFYTMGWFRQAPGKEREFVAASNAEPNGTYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCKSGSAIETPWEFPYPRDYWGQGTQVTVSS",
+          "bfn_plddt": 0.2668769657611847,
+          "bfn_iptm": 0.3555215895175934,
+          "bfn_ppl": 24.098501205444336,
+          "bfn_pae": 0.012253209948539734,
+          "bfn_entropy": 2.5102345943450928,
+          "mutations": 28
+        },
+        {
+          "rank": 4,
+          "sequence": "DIGLMTEVYGPDVLTWPSCFSGWIEQIRLAKAT",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASDIGLMTEVMGWFRQAPGKEREFVAAYGPDVLTWYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCPSCFSGWIEQIRLAKATYWGQGTQVTVSS",
+          "bfn_plddt": 0.2668623626232147,
+          "bfn_iptm": 0.355518639087677,
+          "bfn_ppl": 29.38630485534668,
+          "bfn_pae": 0.012253197841346264,
+          "bfn_entropy": 2.5102343559265137,
+          "mutations": 33
+        },
+        {
+          "rank": 5,
+          "sequence": "MDLVYGLPHAFCNKTGYFMSMFAYDAPCQLFPR",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASMDLVYGLPMGWFRQAPGKEREFVAAHAFCNKTGYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCYFMSMFAYDAPCQLFPRYWGQGTQVTVSS",
+          "bfn_plddt": 0.2668587267398834,
+          "bfn_iptm": 0.35551130771636963,
+          "bfn_ppl": 27.741483688354492,
+          "bfn_pae": 0.012253141961991787,
+          "bfn_entropy": 2.5102341175079346,
+          "mutations": 31
+        },
+        {
+          "rank": 6,
+          "sequence": "SPIMMMGYFQSAGSKFGYWENMMHNEIRNPRDM",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASSPIMMMGYMGWFRQAPGKEREFVAAFQSAGSKFYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCGYWENMMHNEIRNPRDMYWGQGTQVTVSS",
+          "bfn_plddt": 0.2669360935688019,
+          "bfn_iptm": 0.35550856590270996,
+          "bfn_ppl": 29.107595443725586,
+          "bfn_pae": 0.012253180146217346,
+          "bfn_entropy": 2.5102343559265137,
+          "mutations": 32
+        },
+        {
+          "rank": 7,
+          "sequence": "CIFLANIFPSRNCERDYGVQEYIAQWHNTFSNA",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASCIFLANIFMGWFRQAPGKEREFVAAPSRNCERDYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCYGVQEYIAQWHNTFSNAYWGQGTQVTVSS",
+          "bfn_plddt": 0.2668699324131012,
+          "bfn_iptm": 0.35550346970558167,
+          "bfn_ppl": 25.534271240234375,
+          "bfn_pae": 0.012253128923475742,
+          "bfn_entropy": 2.5102345943450928,
+          "mutations": 32
+        },
+        {
+          "rank": 8,
+          "sequence": "DTMAYAYRFWDAKVSHVTYKSSVIYPILEQSIF",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASDTMAYAYRMGWFRQAPGKEREFVAAFWDAKVSHYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCVTYKSSVIYPILEQSIFYWGQGTQVTVSS",
+          "bfn_plddt": 0.26686400175094604,
+          "bfn_iptm": 0.3554994463920593,
+          "bfn_ppl": 22.263465881347656,
+          "bfn_pae": 0.01225312054157257,
+          "bfn_entropy": 2.5102343559265137,
+          "mutations": 31
+        }
+      ]
+    }
+  }
+}
