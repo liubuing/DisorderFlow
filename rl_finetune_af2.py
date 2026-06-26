@@ -20,8 +20,26 @@ from disorderflow.utils.transforms import get_transform
 from disorderflow.datasets.protein import preprocess_protein_structure
 from disorderflow.utils.misc import seed_all
 from build_design_variant_dataset import _batch_af2_wsl
-from ad_af2_validate import graft_cdrs
 AA = 'ACDEFGHIKLMNPQRSTVWY'
+
+
+def graft_cdrs(scaffold, cdr_seq, cdr_spec):
+    """Graft designed CDRs into scaffold sequence.
+    cdr_spec: list of (start_1based, end_1based, name)
+    Returns full antibody sequence."""
+    full = list(scaffold)
+    pos = 0
+    for start, end, name in cdr_spec:
+        length = end - start + 1
+        remaining = len(cdr_seq) - pos
+        if remaining <= 0:
+            break
+        actual_len = min(length, remaining)
+        cdr = cdr_seq[pos:pos + actual_len]
+        for j in range(actual_len):
+            full[start - 1 + j] = cdr[j]
+        pos += actual_len
+    return ''.join(full)
 
 
 def load_bfn_model(ckpt_path, device='cuda'):
