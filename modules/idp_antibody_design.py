@@ -32,6 +32,17 @@ AA3TO1 = {
     'SER': 'S', 'THR': 'T', 'TRP': 'W', 'TYR': 'Y', 'VAL': 'V',
 }
 
+# Modified residues (HETATM) that map to a standard amino acid. Anything else
+# under HETATM — HOH, UNK, ions, glycans, ligands — is NOT a polymer residue and
+# must be dropped, otherwise it becomes an 'X' that pollutes the extracted
+# sequence (e.g. 5IMK chain B has 220 HOH waters that were appended as X,
+# corrupting the AF2 multimer input).
+HET_MOD_AA3TO1 = {
+    'MSE': 'M', 'SEP': 'S', 'TPO': 'T', 'PTR': 'Y', 'CSO': 'C',
+    'HIP': 'H', 'HSD': 'H', 'HSE': 'H', 'HSP': 'H', 'LYP': 'K',
+    'KCX': 'K', 'CYX': 'C', 'ASH': 'D', 'GLH': 'E', 'MLY': 'K',
+}
+
 
 def _load_bfn():
     """Lazy-load BFN model (cached across calls)."""
@@ -154,13 +165,22 @@ def _parse_cdr_ranges(cdr_spec):
 def _extract_sequence_from_pdb(pdb_path, chain_id):
     """Extract amino acid sequence from a PDB file for a given chain.
 
+    Only standard amino-acid residues (ATOM records) plus a curated set of
+    modified residues (HETATM, e.g. MSE→M) are kept. HOH/UNK/ions/ligands and
+    any residue that does not map to a standard AA are dropped entirely — they
+    are not polymer residues and must not appear as 'X' in the sequence.
+    (5IMK chain B has 220 HOH waters that were previously appended as X and
+    corrupted the AF2 multimer input.)
+
     Returns:
-        str: 1-letter amino acid sequence
+        str: 1-letter amino acid sequence (only standard AAs, no 'X')
     """
     seen = {}
     with open(pdb_path) as f:
         for line in f:
-            if not (line.startswith('ATOM') or line.startswith('HETATM')):
+            is_atom = line.startswith('ATOM')
+            is_hetatm = line.startswith('HETATM')
+            if not (is_atom or is_hetatm):
                 continue
             cid = line[21:22].strip()
             if cid != chain_id:
@@ -172,7 +192,13 @@ def _extract_sequence_from_pdb(pdb_path, chain_id):
             if resid in seen:
                 continue
             resname = line[17:20].strip()
-            aa = AA3TO1.get(resname, 'X')
+            if is_atom:
+                aa = AA3TO1.get(resname, 'X')
+            else:
+                # HETATM: keep only recognised modified-amino-acid residues
+                aa = HET_MOD_AA3TO1.get(resname, 'X')
+            if aa == 'X':
+                continue  # drop water/UNK/ions/ligands — not a polymer residue
             seen[resid] = aa
 
     if not seen:

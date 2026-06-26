@@ -21,6 +21,7 @@ os.chdir(PROJECT_ROOT)
 sys.path.insert(0, '.')
 sys.path.insert(0, 'modules')
 
+import argparse
 import yaml
 import time
 import json
@@ -29,11 +30,27 @@ import numpy as np
 # Update after V14 training completes. Defaults to V12 until then (so the runner
 # is executable end-to-end and only the OC value changes post-training).
 V14_CKPT = os.environ.get('V14_CKPT',
-                          'logs/bfn_v14_grouped_conf_xpu/checkpoints/best.pt')
-if not os.path.exists(V14_CKPT):
-    V14_CKPT = 'logs/bfn_v12_seqconf_xpu_2026_06_20__02_54_40/checkpoints/best.pt'
-    print(f'[V14] checkpoint not found; falling back to V12 ({V14_CKPT})')
-OUTPUT = 'oc_validation_results/oc_v14_phase1.json'
+                          'logs/bfn_v14_grouped_conf_xpu_2026_06_26__01_06_36/checkpoints/best.pt')
+
+# Design mode:
+#   fixbb   — scaffold only, antigen INVISIBLE to BFN during CDR design (legacy).
+#   complex — build an Ab+Aβ42 complex PDB and pass the antigen chain as context
+#             so the BFN encoder sees the epitope while designing CDRs. This is
+#             the correct setup for binding design; the V14 ckpt was trained
+#             antibody-only so this is an OOD baseline until Phase 3 retraining.
+ap = argparse.ArgumentParser()
+ap.add_argument('--mode', choices=['fixbb', 'complex'], default='fixbb')
+ap.add_argument('--n-samples', type=int, default=10)
+ap.add_argument('--design-top-n', type=int, default=5)
+ap.add_argument('--output', default=None,
+                help='output json path; default oc_v14_phase1_<mode>.json')
+args = ap.parse_args()
+
+MODE = args.mode
+OUTPUT = args.output or f'oc_validation_results/oc_v14_phase1_{MODE}.json'
+# Keep the legacy default filename for the fixbb mode so old tooling resolves.
+if MODE == 'fixbb' and args.output is None:
+    OUTPUT = 'oc_validation_results/oc_v14_phase1.json'
 
 DESIGN_CONFIG = {
     'scaffold_pdb': 'data/misfolding_targets/5IMK.pdb',
@@ -41,15 +58,34 @@ DESIGN_CONFIG = {
     'target_pdb': 'data/misfolding_targets/2NAO_model1_A_1-42.pdb',
     'target_chain': 'A',
     'cdr_spec': 'B:26-33,51-58,97-113',
-    'context_chains': None,
-    'n_samples': 10,
-    'design_top_n': 5,
+    'context_chains': None,           # filled below for complex mode
+    'n_samples': args.n_samples,
+    'design_top_n': args.design_top_n,
+    'mode': MODE,
 }
 
 
 def auto_detect_device():
     import torch
     return 'cuda' if torch.cuda.is_available() else 'cpu'
+
+
+def build_complex_pdb(scaffold_pdb, scaffold_chain, target_pdb, target_chain,
+                      distance=18.0):
+    """Build an Ab+epitope complex PDB with the epitope facing the CDR loop.
+
+    Reuses antibody_epitope_complex.position_epitope. Returns (complex_pdb_path).
+    The complex keeps the scaffold on its original chain id and writes the
+    epitope onto `target_chain` so region_spec 'B:...' still resolves.
+    """
+    from antibody_epitope_complex import position_epitope
+    out_dir = os.path.join(PROJECT_ROOT, 'oc_validation_results', '_complexes')
+    os.makedirs(out_dir, exist_ok=True)
+    res = position_epitope(
+        scaffold_pdb, target_pdb,
+        scaffold_chain=scaffold_chain, epitope_chain=target_chain,
+        distance=distance, output_dir=out_dir)
+    return res['pdb_path'], res.get('distance')
 
 
 cfg_path = os.path.join(PROJECT_ROOT, 'app_config.yaml')
@@ -79,11 +115,30 @@ try:
     scaffold_seq = _extract_sequence_from_pdb(DESIGN_CONFIG['scaffold_pdb'], DESIGN_CONFIG['scaffold_chain'])
     cdr_ranges = _parse_cdr_ranges(DESIGN_CONFIG['cdr_spec'])
 
+    # In complex mode, build an Ab+epitope PDB and make the antigen visible to
+    # the BFN encoder during CDR design (context_chains=[target_chain]).
+    design_pdb = DESIGN_CONFIG['scaffold_pdb']
+    if MODE == 'complex':
+        design_pdb, cdist = build_complex_pdb(
+            DESIGN_CONFIG['scaffold_pdb'], DESIGN_CONFIG['scaffold_chain'],
+            DESIGN_CONFIG['target_pdb'], DESIGN_CONFIG['target_chain'])
+        DESIGN_CONFIG['context_chains'] = [DESIGN_CONFIG['target_chain']]
+        DESIGN_CONFIG['complex_pdb'] = design_pdb
+        DESIGN_CONFIG['complex_distance'] = cdist
+        print(f'Complex mode: built {design_pdb} (epitope-CDR ~{cdist:.1f} Å), '
+              f'context_chains={DESIGN_CONFIG["context_chains"]}')
+    else:
+        print('FixBB mode: antigen INVISIBLE during CDR design (legacy)')
+
     t0 = time.time()
     designs = run_bfn_design(
-        DESIGN_CONFIG['scaffold_pdb'], DESIGN_CONFIG['cdr_spec'],
+        design_pdb, DESIGN_CONFIG['cdr_spec'],
         num_samples=DESIGN_CONFIG['n_samples'], stochastic=True,
         context_chains=DESIGN_CONFIG['context_chains'], device=device,
+        # V14-unfreeze: rank by self-predicted ipTM so design_top_n picks the
+        # highest-confidence designs to send to AF2 (was designs[:n] = blind
+        # random sampling → all AF2 ipTM ~0.05). Requires an un-collapsed head.
+        sort_by='iptm', descending=True,
     )
     dt = time.time() - t0
 

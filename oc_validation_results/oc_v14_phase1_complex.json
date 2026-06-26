@@ -1,0 +1,111 @@
+{
+  "config": {
+    "scaffold_pdb": "data/misfolding_targets/5IMK.pdb",
+    "scaffold_chain": "B",
+    "target_pdb": "data/misfolding_targets/2NAO_model1_A_1-42.pdb",
+    "target_chain": "A",
+    "cdr_spec": "B:26-33,51-58,97-113",
+    "context_chains": [
+      "A"
+    ],
+    "n_samples": 10,
+    "design_top_n": 5,
+    "mode": "complex",
+    "complex_pdb": "C:\\biological\\DisorderFlow\\oc_validation_results\\_complexes\\5IMK_2NAO_model1_A_1-42_complex.pdb",
+    "complex_distance": 18.0
+  },
+  "af2_config": {
+    "num_recycle": 3,
+    "use_jax": true,
+    "colabfold_exe": "colabfold_batch",
+    "timeout_per_design": 1800
+  },
+  "epi_seq": "DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA",
+  "scaffold_seq": "QVQLVESGGGLVQAGGSLRLSCAASGRTFSSYGMGWFRQAPGKEREFVAAIRWNGGSTYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCAAGRWDKYGSSFQDEYDYWGQGTQVTVSS",
+  "cdr_ranges": [
+    [
+      26,
+      33,
+      8
+    ],
+    [
+      51,
+      58,
+      8
+    ],
+    [
+      97,
+      113,
+      17
+    ]
+  ],
+  "models": {
+    "v14": {
+      "checkpoint": "logs/bfn_v14_grouped_conf_xpu_2026_06_26__01_06_36/checkpoints/best.pt",
+      "label": "V14 Grouped Real-AF2",
+      "desc": "Real-AF2 design-variant training + grouped margin/variance loss",
+      "n_designs": 10,
+      "bfn_plddt_mean": 0.26690867841243743,
+      "bfn_plddt_std": 4.44241427837575e-05,
+      "bfn_iptm_mean": 0.33749933540821075,
+      "bfn_iptm_std": 7.998126610258109e-06,
+      "af2_input": [
+        {
+          "rank": 1,
+          "sequence": "KMESHFDDSWPMTQVDKDHVEWDDEHMWGMHGM",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASKMESHFDDMGWFRQAPGKEREFVAASWPMTQVDYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCKDHVEWDDEHMWGMHGMYWGQGTQVTVSS",
+          "bfn_plddt": 0.26682546734809875,
+          "bfn_iptm": 0.33751165866851807,
+          "bfn_ppl": 98.99113464355469,
+          "bfn_pae": 0.01225289236754179,
+          "bfn_entropy": 1.7013967037200928,
+          "mutations": 33
+        },
+        {
+          "rank": 2,
+          "sequence": "LKDIDLMTPSYGPDVQPMQEGRQHWYPSCFSGW",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASLKDIDLMTMGWFRQAPGKEREFVAAPSYGPDVQYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCPMQEGRQHWYPSCFSGWYWGQGTQVTVSS",
+          "bfn_plddt": 0.26697802543640137,
+          "bfn_iptm": 0.3375101387500763,
+          "bfn_ppl": 119.52641296386719,
+          "bfn_pae": 0.01225284393876791,
+          "bfn_entropy": 1.7013965845108032,
+          "mutations": 33
+        },
+        {
+          "rank": 3,
+          "sequence": "WTRHTSTNGGNTFAKDPVSETFIWITDPRASPC",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASWTRHTSTNMGWFRQAPGKEREFVAAGGNTFAKDYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCPVSETFIWITDPRASPCYWGQGTQVTVSS",
+          "bfn_plddt": 0.2668750584125519,
+          "bfn_iptm": 0.3375033438205719,
+          "bfn_ppl": 67.97730255126953,
+          "bfn_pae": 0.012253000400960445,
+          "bfn_entropy": 1.7013967037200928,
+          "mutations": 32
+        },
+        {
+          "rank": 4,
+          "sequence": "RWIWPAYFWFLNAEPNWQGPHARLGKKSGHAIE",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASRWIWPAYFMGWFRQAPGKEREFVAAWFLNAEPNYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCWQGPHARLGKKSGHAIEYWGQGTQVTVSS",
+          "bfn_plddt": 0.2669222950935364,
+          "bfn_iptm": 0.33750292658805847,
+          "bfn_ppl": 130.74957275390625,
+          "bfn_pae": 0.012252825312316418,
+          "bfn_entropy": 1.7013967037200928,
+          "mutations": 29
+        },
+        {
+          "rank": 5,
+          "sequence": "WTHAHADRLDWERPFQGVDSQTDDYTIGNPQDT",
+          "full_ab": "QVQLVESGGGLVQAGGSLRLSCAASWTHAHADRMGWFRQAPGKEREFVAALDWERPFQYYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCGVDSQTDDYTIGNPQDTYWGQGTQVTVSS",
+          "bfn_plddt": 0.2669122517108917,
+          "bfn_iptm": 0.33750221133232117,
+          "bfn_ppl": 44.85786819458008,
+          "bfn_pae": 0.012252803891897202,
+          "bfn_entropy": 1.7013965845108032,
+          "mutations": 32
+        }
+      ]
+    }
+  }
+}
