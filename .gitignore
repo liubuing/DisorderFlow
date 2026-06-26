@@ -57,6 +57,16 @@ val_phase6_dummy.pdb
 conformation_build*.log
 *.log
 
+# AF2 WSL batch files
+.af2_wsl_*.jsonl
+af2_wsl_*.py
+
+# Temp scripts
+_gen_*.py
+
+# Word temp files
+~$*.docx
+
 # Design results (contain user data)
 design_results/
 idp_design_results/

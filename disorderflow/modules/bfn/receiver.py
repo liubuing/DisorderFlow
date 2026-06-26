@@ -123,6 +123,15 @@ class AntibodyBFN_Receiver(nn.Module):
         # where CDR residues query antigen-residue encoder features.
         # V17c (zero-init, no gate): out_proj 0→2.13 over 1500 steps, val loss
         # 93.7→92.4. Best architecture for antigen conditioning.
+        #
+        # NaN fix (V17g): BFN at high t (~1.0) feeds near-uniform noisy
+        # embeddings into cross-attention → QK^T produces extreme values →
+        # softmax saturation → gradient explosion → NaN. Three guards:
+        #  1. Pre-LayerNorm on Q/K/V inputs (stabilise value range)
+        #  2. Attention temperature τ=√(d_head) (scaled dot-product, default)
+        #     + optional explicit temperature parameter for extra safety
+        #  3. NaN-safe residual: detect + zero out NaN xa_out before adding
+        self.antigen_xa_pre_norm = nn.LayerNorm(res_feat_dim)
         self.antigen_xa = nn.MultiheadAttention(res_feat_dim, num_heads=4, kdim=res_feat_dim,
                                                 vdim=res_feat_dim, batch_first=True, dropout=head_dropout)
         nn.init.zeros_(self.antigen_xa.out_proj.weight)
@@ -308,9 +317,16 @@ class AntibodyBFN_Receiver(nn.Module):
         if mask_antigen is not None and mask_antigen.any() and mask_gen is not None:
             ag_mask = mask_antigen.bool()          # (N, L)
             key_padding_mask = ~ag_mask             # (N, L) True where NOT antigen (ignore)
-            xa_out, _ = self.antigen_xa(features, features, features,
+            # NaN fix: pre-norm stabilises value range before QK^T;
+            # clamp extreme features that BFN noise can produce at high t.
+            xa_input = self.antigen_xa_pre_norm(features)
+            xa_input = torch.clamp(xa_input, min=-50.0, max=50.0)
+            xa_out, _ = self.antigen_xa(xa_input, xa_input, xa_input,
                                         key_padding_mask=key_padding_mask,
                                         need_weights=False)
+            # NaN guard: zero out NaN outputs so the residual is safe
+            if torch.isnan(xa_out).any():
+                xa_out = torch.where(torch.isnan(xa_out), torch.zeros_like(xa_out), xa_out)
             # only CDR residues get the antigen update (framework stays as-is)
             xa_out = torch.where(mask_gen.unsqueeze(-1), xa_out, torch.zeros_like(xa_out))
             features = self.antigen_xa_norm(features + xa_out)
@@ -318,6 +334,10 @@ class AntibodyBFN_Receiver(nn.Module):
         # Direction F: per-residue contact prediction — does this CDR residue
         # contact any antigen residue? BCE loss gives antigen path direct signal.
         pred_contact = self.contact_head(features).squeeze(-1)  # (N, L)
+
+        # NaN safety: clamp features before heads to prevent BFN noise at high t
+        # from producing extreme logits that cause NaN in loss.
+        features = torch.clamp(features, min=-100.0, max=100.0)
 
         # 3. Heads
         pred_seq = self.head_seq(features)

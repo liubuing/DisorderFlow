@@ -204,7 +204,8 @@ class AntibodyBFN_Core(nn.Module):
         if 'fixed_t' in batch and batch['fixed_t'] is not None:
             t = torch.full((N,), batch['fixed_t'], device=x_seq.device)
         else:
-            t = torch.rand(N, device=x_seq.device).clamp(1e-5, 1.0)
+            t_clamp_max = self.loss_weight.get('t_clamp', 1.0)
+            t = torch.rand(N, device=x_seq.device).clamp(1e-5, t_clamp_max)
         
         # 2. Sample Theta (Parameters) from Clean Data
         t_expanded = t[:, None].expand(N, x_seq.size(1))
