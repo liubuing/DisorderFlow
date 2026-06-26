@@ -249,7 +249,7 @@ class AntibodyBFN_Core(nn.Module):
         prev_seq_emb = None  # V13
 
         for _ in range(train_recycles):
-            pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = self.receiver(
+            pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact = self.receiver(
                 inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
                 backbone_pos=backbone_pos, prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
                 prev_seq_emb=prev_seq_emb, mask_gen=mask_gen,
@@ -279,6 +279,33 @@ class AntibodyBFN_Core(nn.Module):
             loss_seq = F.cross_entropy(pred_seq_f32.reshape(-1, self.num_classes), x_seq_target.flatten(), reduction='none', ignore_index=-100, label_smoothing=self.loss_weight.get('label_smoothing', 0.0))
         loss_seq = loss_seq.reshape(N, -1)
         losses['seq'] = (loss_seq * mask_gen * weights).sum() / (mask_gen.sum() + 1e-8)
+
+        # === Direction F: Contact prediction auxiliary loss ===
+        # BCE: does each CDR residue contact ANY antigen residue (<8Å Cβ-Cβ)?
+        # Gives antigen path direct supervised signal, bypassing BFN diffusion noise.
+        if 'contact' in self.loss_weight and self.loss_weight.get('contact', 0) > 0:
+            mask_antigen = batch.get('mask_antigen', None)
+            if mask_antigen is not None and mask_antigen.any() and mask_gen.any():
+                # Cβ positions (fallback to CA for GLY)
+                cb = batch['pos_heavyatom'][:, :, 3]  # (N, L, 3)
+                cb_mask = batch['mask_heavyatom'][:, :, 3]  # (N, L)
+                ca = batch['pos_heavyatom'][:, :, 1]  # (N, L, 3)
+                pos = torch.where(cb_mask.unsqueeze(-1), cb, ca)  # (N, L, 3)
+
+                # Contact label: per CDR residue, 1 if Cβ < 8Å to any antigen residue
+                contact_label = torch.zeros(N, L, device=device)
+                for b in range(N):
+                    cdr_idx = mask_gen[b].bool()
+                    ag_idx = mask_antigen[b].bool()
+                    if cdr_idx.any() and ag_idx.any():
+                        dists = torch.cdist(pos[b][cdr_idx], pos[b][ag_idx])  # (n_cdr, n_ag)
+                        contact_label[b][cdr_idx] = (dists.min(dim=1).values < 8.0).float()
+
+                # BCE loss only on CDR residues
+                loss_contact = F.binary_cross_entropy_with_logits(
+                    pred_contact, contact_label, reduction='none')
+                n_cdr = mask_gen.sum().clamp(min=1)
+                losses['contact'] = (loss_contact * mask_gen).sum() / n_cdr
 
         # === Optional Structure Losses (only compute if in config) ===
         if any(k in self.loss_weight for k in ['dist', 'fape', 'ang']):
@@ -555,7 +582,7 @@ class AntibodyBFN_Core(nn.Module):
                                     prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,
                                     prev_seq_emb=prev_seq_emb, mask_gen=mask_gen,
                                     mask_antigen=batch.get('mask_antigen', None))
-                pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = res
+                pred_seq_logits, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact = res
 
                 # Update sequence - deterministic mode removes noise
                 pred_seq_probs = F.softmax(pred_seq_logits, dim=-1)

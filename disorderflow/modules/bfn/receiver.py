@@ -115,18 +115,27 @@ class AntibodyBFN_Receiver(nn.Module):
         self.encoder = GAEncoder(res_feat_dim, pair_feat_dim, num_layers, ga_block_opt=opt, dropout=encoder_dropout)
 
         # ── Direction E: antigen→CDR pooling+concat conditioning ──
-        # Direction D (cross-attn + zero-init) proved gradient flows and out_proj
-        # grows, but probe showed Δ(complex-fixbb) still ~0 after 1500 steps.
-        # The BFN seq loss cannot drive antigen-SPECIFIC CDR learning through
-        # cross-attention — the antigen signal is drowned in BFN diffusion noise.
-        #
-        # Direction E replaces cross-attention with a simpler, stronger path:
-        # mean-pool all antigen residues' encoder features, concat to each CDR
-        # residue, project back. No learned attention — just a direct "here is
-        # the antigen" signal. Zero-init projection preserves V15 at start.
-        self.antigen_proj = nn.Linear(res_feat_dim * 2, res_feat_dim)
-        nn.init.zeros_(self.antigen_proj.weight)
-        nn.init.zeros_(self.antigen_proj.bias)
+        # ── Direction D: antigen→CDR cross-attention into the sequence head ──
+        # probe_antigen_signal_usage showed complex-vs-fixbb CDR recovery is
+        # identical (Δ ~0 pp): the antigen chain reaches the encoder via
+        # pair_feat but NEVER reaches the per-residue head_seq (Linear, reads
+        # only the CDR residue's own features). Direction D adds cross-attention
+        # where CDR residues query antigen-residue encoder features.
+        # V17c (zero-init, no gate): out_proj 0→2.13 over 1500 steps, val loss
+        # 93.7→92.4. Best architecture for antigen conditioning.
+        self.antigen_xa = nn.MultiheadAttention(res_feat_dim, num_heads=4, kdim=res_feat_dim,
+                                                vdim=res_feat_dim, batch_first=True, dropout=head_dropout)
+        nn.init.zeros_(self.antigen_xa.out_proj.weight)
+        nn.init.zeros_(self.antigen_xa.out_proj.bias)
+        self.antigen_xa_norm = nn.LayerNorm(res_feat_dim)
+
+        # ── Direction F: contact prediction auxiliary head ──
+        # Per-CDR-residue BCE: does this residue contact ANY antigen residue
+        # (<8Å Cβ-Cβ)? Gives the antigen path a DIRECT supervised signal,
+        # bypassing the BFN diffusion noise that drowns the seq loss gradient.
+        self.contact_head = nn.Linear(res_feat_dim, 1)  # per-residue logit
+        nn.init.zeros_(self.contact_head.weight)
+        nn.init.zeros_(self.contact_head.bias)
 
         # Output Heads
         self.head_seq = nn.Linear(res_feat_dim, num_classes)
@@ -290,21 +299,21 @@ class AntibodyBFN_Receiver(nn.Module):
         entropy = -(probs_seq * log_probs).sum(dim=-1)  # (N, L), 0=peaked, ~3.0=uniform
         max_prob = probs_seq.max(dim=-1).values         # (N, L), 1.0=certain, 0.05=blind
 
-        # Direction E: antigen→CDR pooling+concat. Mean-pool antigen residues'
-        # encoder features, concat to each CDR residue, project back to res_feat_dim.
-        # In fixbb (no antigen) mask_antigen is empty → no-op. Zero-init proj
-        # preserves V15 behavior at start; weights grow from zero as antigen helps.
+        # Direction D: antigen→CDR cross-attention + contact prediction.
+        # In fixbb (no antigen) mask_antigen is empty → both paths no-op.
         if mask_antigen is not None and mask_antigen.any() and mask_gen is not None:
-            ag_mask = mask_antigen.bool().unsqueeze(-1)      # (N, L, 1)
-            ag_count = ag_mask.sum(dim=1, keepdim=True).clamp(min=1)  # (N, 1, 1)
-            ag_pooled = (features * ag_mask).sum(dim=1, keepdim=True) / ag_count  # (N, 1, D)
-            ag_pooled = ag_pooled.expand(-1, L, -1)           # (N, L, D)
-            feat_with_ag = torch.cat([features, ag_pooled], dim=-1)  # (N, L, 2D)
-            ag_conditioned = self.antigen_proj(feat_with_ag)  # (N, L, D)
-            # only CDR residues get the antigen update; framework stays as-is.
-            # RESIDUAL: features + ag_conditioned (not replacement!) so zero-init
-            # proj preserves original CDR features at start.
-            features = torch.where(mask_gen.unsqueeze(-1), features + ag_conditioned, features)
+            ag_mask = mask_antigen.bool()          # (N, L)
+            key_padding_mask = ~ag_mask             # (N, L) True where NOT antigen (ignore)
+            xa_out, _ = self.antigen_xa(features, features, features,
+                                        key_padding_mask=key_padding_mask,
+                                        need_weights=False)
+            # only CDR residues get the antigen update (framework stays as-is)
+            xa_out = torch.where(mask_gen.unsqueeze(-1), xa_out, torch.zeros_like(xa_out))
+            features = self.antigen_xa_norm(features + xa_out)
+
+        # Direction F: per-residue contact prediction — does this CDR residue
+        # contact any antigen residue? BCE loss gives antigen path direct signal.
+        pred_contact = self.contact_head(features).squeeze(-1)  # (N, L)
 
         # 3. Heads
         pred_seq = self.head_seq(features)
@@ -428,4 +437,4 @@ class AntibodyBFN_Receiver(nn.Module):
                 pae_seq = self.head_pae_seq(pae_seq_feat.reshape(-1, 2)).reshape(N_full, L_full, L_full)
                 pred_pae = torch.sigmoid(pae_backbone + pae_seq)
 
-        return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder
+        return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact
