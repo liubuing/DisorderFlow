@@ -130,9 +130,13 @@ def position_epitope(scaffold_pdb, epitope_pdb, scaffold_chain='A',
     TER_LINE = f"{'TER':6s}{'':4s}{'':3s} {scaffold_chain:1s}{scaff_ids[-1][1]:4d}\n"
 
     with open(out_path, 'w') as f:
-        # Scaffold atoms (unchanged)
+        # Scaffold atoms — keep ONLY the requested scaffold chain. _read_ca_positions
+        # passes through atoms of other chains (cid in the tuple), which for a
+        # multi-chain scaffold PDB (e.g. 5IMK has chain A = a 118-residue antigen)
+        # would otherwise be written into the complex and collide with the
+        # epitope's chain, producing a wrong antigen. Drop every non-scaffold atom.
         for line, cid, resid in scaff_atoms:
-            if line.startswith('ATOM') or line.startswith('HETATM'):
+            if (line.startswith('ATOM') or line.startswith('HETATM')) and cid == scaffold_chain:
                 f.write(line)
         f.write(TER_LINE)
 
