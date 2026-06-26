@@ -24,7 +24,7 @@ sys.path.insert(0, '.'); sys.path.insert(0, 'modules')
 import yaml, numpy as np
 
 CKPT = os.environ.get('V14_CKPT', 'logs/disorder_head_retrain.pt')
-OUTPUT = 'oc_validation_results/oc_v15C_phase1.json'
+OUTPUT = os.environ.get('OUTPUT', 'oc_validation_results/oc_v15C_phase1.json')
 DG_STRENGTH = float(os.environ.get('DG_STRENGTH', '0.3'))
 N_SAMPLES = int(os.environ.get('N_SAMPLES', '6'))
 TOP_N = int(os.environ.get('TOP_N', '5'))

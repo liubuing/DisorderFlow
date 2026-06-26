@@ -72,7 +72,11 @@ train:
   batch_size: 1              # co-design structures; use --accum_steps 4
   warmup_steps: 200          # long warmup: protect V15 parts while head_pos/ori learn
   seed: 2031
-  max_grad_norm: 1.0
+  max_grad_norm: 100.0       # raised from 1.0: dist loss gradient ~hundreds (untrained
+                             # structure head) — global clip at 1.0 starved it to a halt
+                             # (dist stayed 250-500, no descent). Allow large grad so the
+                             # structure head can actually learn; V15 heads still move
+                             # gently thanks to lr 5e-6.
   ema_decay: 0.999
   optimizer:
     type: adamw
