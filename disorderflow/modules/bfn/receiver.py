@@ -112,6 +112,8 @@ class AntibodyBFN_Receiver(nn.Module):
         opt = encoder_opt.copy()
         if 'num_layers' in opt:
             num_layers = opt.pop('num_layers')
+        # Pop receiver-level options before passing to GAEncoder
+        opt.pop('pair_routing', None)
         self.encoder = GAEncoder(res_feat_dim, pair_feat_dim, num_layers, ga_block_opt=opt, dropout=encoder_dropout)
 
         # ── Direction E: antigen→CDR pooling+concat conditioning ──
@@ -167,8 +169,36 @@ class AntibodyBFN_Receiver(nn.Module):
             nn.Linear(res_feat_dim // 2, 1),
         )
 
+        # ── Direction I: Pair Feature Routing head (§3.1a) ──
+        # Current head_seq = Linear(res_feat) only reads CDR self-features.
+        # The encoder's pair_feat (N,L,L,D) encodes all pairwise interactions
+        # including CDR-antigen contacts, but NO head reads it for sequence
+        # decisions. Pair Routing injects pair_feat + antigen context directly
+        # into the sequence decoder:
+        #   head_seq_input = concat(res_feat, pair_aggr_proj, antigen_pooled)
+        # where pair_aggr aggregates pair_feat over the antigen dimension
+        # and is projected from pair_dim to res_dim.
+        self.pair_routing = encoder_opt.get('pair_routing', False)
+
         # Output Heads
-        self.head_seq = nn.Linear(res_feat_dim, num_classes)
+        if self.pair_routing:
+            # Project pair_feat (pair_dim) to res_dim for concat
+            self.pair_proj = nn.Linear(pair_feat_dim, res_feat_dim)
+            # MLP: res_feat + pair_aggr_proj + antigen_pooled → logits
+            in_dim = res_feat_dim * 3
+            self.head_seq = nn.Sequential(
+                nn.Linear(in_dim, res_feat_dim),
+                nn.LayerNorm(res_feat_dim),
+                nn.ReLU(),
+                nn.Dropout(head_dropout),
+                nn.Linear(res_feat_dim, res_feat_dim // 2),
+                nn.ReLU(),
+                nn.Linear(res_feat_dim // 2, num_classes),
+            )
+            # Fallback: simple Linear for fixbb mode (no antigen → no pair context)
+            self.head_seq_fixbb = nn.Linear(res_feat_dim, num_classes)
+        else:
+            self.head_seq = nn.Linear(res_feat_dim, num_classes)
         self.head_pos = nn.Linear(res_feat_dim, 3)
         self.head_ori = nn.Linear(res_feat_dim, 6) # 6D representation for rotation
         self.head_ang = nn.Linear(res_feat_dim, 4 * 2) # sin/cos for 4 angles
@@ -352,25 +382,44 @@ class AntibodyBFN_Receiver(nn.Module):
         # contact any antigen residue? BCE loss gives antigen path direct signal.
         pred_contact = self.contact_head(features).squeeze(-1)  # (N, L)
 
+        # ── Shared antigen pooling + pair_feat aggregation ──
+        # Computed once, used by contrastive head AND pair routing head.
+        ag_feat_pooled = None
+        pair_aggr = None
+        if mask_antigen is not None and mask_antigen.any():
+            ag_mask = mask_antigen.bool()
+            # Pool antigen features: (N, D)
+            ag_feat_pooled = (features * ag_mask.unsqueeze(-1)).sum(dim=1) / ag_mask.sum(dim=1, keepdim=True).clamp(min=1)
+            # Aggregate pair_feat over antigen dim: (N, L, pair_dim)
+            ag_mask_expand = ag_mask.unsqueeze(1).unsqueeze(-1)  # (N, 1, L, 1)
+            pair_aggr = (pair_feat * ag_mask_expand).sum(dim=2) / ag_mask.sum(dim=1, keepdim=True).clamp(min=1)
+
         # Direction H: contrastive CDR-antigen matching — does this CDR sequence
         # match the antigen? Pool CDR + antigen features → scalar logit.
         # Zero when no antigen (fixbb) or no CDR mask.
         pred_contrastive = torch.zeros(N, device=device)
-        if mask_antigen is not None and mask_antigen.any() and mask_gen is not None and mask_gen.any():
-            ag_mask = mask_antigen.bool()
+        if ag_feat_pooled is not None and mask_gen is not None and mask_gen.any():
             cdr_mask = mask_gen.bool()
-            # Pool CDR features
             cdr_feat = (features * cdr_mask.unsqueeze(-1)).sum(dim=1) / cdr_mask.sum(dim=1, keepdim=True).clamp(min=1)
-            # Pool antigen features
-            ag_feat = (features * ag_mask.unsqueeze(-1)).sum(dim=1) / ag_mask.sum(dim=1, keepdim=True).clamp(min=1)
-            pred_contrastive = self.contrastive_head(torch.cat([cdr_feat, ag_feat], dim=-1)).squeeze(-1)
+            pred_contrastive = self.contrastive_head(torch.cat([cdr_feat, ag_feat_pooled], dim=-1)).squeeze(-1)
 
         # NaN safety: clamp features before heads to prevent BFN noise at high t
         # from producing extreme logits that cause NaN in loss.
         features = torch.clamp(features, min=-100.0, max=100.0)
 
         # 3. Heads
-        pred_seq = self.head_seq(features)
+        if self.pair_routing and ag_feat_pooled is not None and pair_aggr is not None:
+            # Pair Feature Routing: concat(res_feat, pair_aggr_proj, ag_pooled) → MLP
+            pair_aggr_proj = self.pair_proj(pair_aggr)  # (N, L, pair_dim) → (N, L, res_dim)
+            ag_expanded = ag_feat_pooled.unsqueeze(1).expand(-1, features.shape[1], -1)
+            seq_input = torch.cat([features, pair_aggr_proj, ag_expanded], dim=-1)
+            pred_seq = self.head_seq(seq_input)
+        elif self.pair_routing:
+            pred_seq = self.head_seq_fixbb(features)  # fixbb: pair routing enabled but no antigen
+        else:
+            pred_seq = self.head_seq(features)  # default: simple Linear
+        if pred_seq.size(-1) > 20:
+            pred_seq[..., 20:] = -1e4
         if pred_seq.size(-1) > 20:
             pred_seq[..., 20:] = -1e4
 
