@@ -474,6 +474,9 @@ if __name__ == '__main__':
                     loss_dict['overall'] = loss
                     loss_dict['avg_t'] = avg_t
 
+                # Skip NaN val samples (same logic as training micro-batch NaN skip)
+                if torch.isnan(loss) or torch.isinf(loss):
+                    continue
                 loss_tape.update(loss_dict, 1)
                 # Split tracking: IDP vs folded
                 batch_is_idp = batch.get('is_idp', None)

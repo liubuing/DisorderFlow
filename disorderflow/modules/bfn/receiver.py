@@ -126,7 +126,7 @@ class AntibodyBFN_Receiver(nn.Module):
         self.antigen_xa = nn.MultiheadAttention(res_feat_dim, num_heads=4, kdim=res_feat_dim,
                                                 vdim=res_feat_dim, batch_first=True, dropout=head_dropout)
         self.antigen_xa_norm = nn.LayerNorm(res_feat_dim)
-        self.antigen_xa_gate = nn.Parameter(torch.tensor(-3.0))  # sigmoid(-3)≈0.05: near-inert at start (V15 behavior preserved), learns up
+        self.antigen_xa_gate = nn.Parameter(torch.tensor(0.0))  # sigmoid(0)=0.5: cross-attn has equal weight from start. V15 behavior preservation was keeping gate at 0.05 → antigen never reaches head_seq → loss stays flat → gate gradient zero → deadlock. Starting at 0.5 gives seq loss a chance to use antigen, then gate can be learned up or down.
 
         # Output Heads
         self.head_seq = nn.Linear(res_feat_dim, num_classes)
