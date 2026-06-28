@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "pdb_id": "4HIX",
+      "antibody": "solanezumab (3D6 Fab)",
+      "epitope_peptide": "KLVFFAED",
+      "native_cdr": "GFTFSNYRSGGGYCVRYDHY",
+      "cdr_components": {
+        "H1": "GFTFSNY",
+        "H2": "RSGGG",
+        "H3": "YCVRYDHY"
+      },
+      "peptide_iptm": 0.11766725033521652,
+      "full_abeta_iptm": 0.14436402916908264,
+      "scrambled_iptms": [
+        0.11598514020442963,
+        0.11576855182647705
+      ],
+      "scrambled_mean": 0.11587684601545334,
+      "separability": 0.0017904043197631836,
+      "m0_pass": false
+    }
+  ],
+  "m0_all_pass": false
+}
