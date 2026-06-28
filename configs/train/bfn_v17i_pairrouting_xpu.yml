@@ -66,8 +66,8 @@ train:
     conf_anticollapse: 0.50
   freeze_backbone: false
   unfreeze_encoder_layers: 6
-  max_iters: 2000
-  val_freq: 500
+  max_iters: 8000               # continue from 4000, train 4000 more
+  val_freq: 200                  # dense checkpoints for faster iteration
   log_freq: 10
   batch_size: 1
   warmup_steps: 100
