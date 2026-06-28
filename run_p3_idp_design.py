@@ -226,7 +226,7 @@ def graft_and_score(cdr_seq, scaffold_pdb, scaffold_chain, cdr_spec,
     return cs
 
 
-def anti_degen_filter(cdr_seq, max_run=6, min_shannon=1.5):
+def anti_degen_filter(cdr_seq, max_run=6, min_shannon=1.0, min_aromatic=0.08):
     """§P3-2: reject low-complexity CDRs."""
     import math
     # Consecutive run check
@@ -247,8 +247,8 @@ def anti_degen_filter(cdr_seq, max_run=6, min_shannon=1.5):
         return False, f'low_shannon_{shannon:.2f}'
     # Aromatic fraction check
     aromatic = sum(1 for a in cdr_seq if a in 'YWF')
-    if aromatic / len(cdr_seq) < 0.15:
-        return False, f'low_aromatic_{aromatic/len(cdr_seq):.2f}'
+    if aromatic / max(len(cdr_seq), 1) < min_aromatic:
+        return False, f'low_aromatic_{aromatic/max(len(cdr_seq),1):.2f}'
     return True, 'ok'
 
 
@@ -272,18 +272,46 @@ def main():
 
     # ── Step 1: MPNN generation ──
     print("[1/4] Building scaffold + peptide complex...")
-    complex_pdb = build_complex_pdb(SCAFFOLD, SCAFFOLD_CHAIN, epitope_seq)
+    # Use a short relative path to avoid ProteinMPNN's Windows path bug
+    # (os.path.basename on 'C:\\...' produces the full path)
+    complex_pdb = '_p3_complex.pdb'
+    # Build complex in-place
+    from Bio.PDB import PDBParser, PDBIO, Structure, Model, Chain, Residue, Atom
+    import numpy as np
+    parser = PDBParser(QUIET=True)
+    s1 = parser.get_structure('scaffold', SCAFFOLD)
+    merged = Structure.Structure('complex')
+    model = Model.Model(0)
+    for c in s1.get_chains():
+        if c.id == SCAFFOLD_CHAIN:
+            c.detach_parent()
+            model.add(c)
+    pep_chain = Chain.Chain('P')
+    for i, aa_char in enumerate(epitope_seq):
+        resname = AA3.get(aa_char, 'GLY')
+        res = Residue.Residue((' ', i+1, ' '), resname, ' ')
+        ca_pos = np.array([i * 3.8, 0.0, 0.0])
+        res.add(Atom.Atom('CA', ca_pos.tolist(), 0.0, 1.0, ' ', ' CA ', i+1, 'C'))
+        res.add(Atom.Atom('N', (ca_pos + [-1.46, 0, 0]).tolist(), 0.0, 1.0, ' ', ' N  ', i+1, 'N'))
+        res.add(Atom.Atom('C', (ca_pos + [1.52, 0, 0]).tolist(), 0.0, 1.0, ' ', ' C  ', i+1, 'C'))
+        res.add(Atom.Atom('O', (ca_pos + [2.1, 0, 0]).tolist(), 0.0, 1.0, ' ', ' O  ', i+1, 'O'))
+        pep_chain.add(res)
+    model.add(pep_chain)
+    merged.add(model)
+    io = PDBIO(); io.set_structure(merged); io.save(complex_pdb)
     print(f"  Complex: {complex_pdb}")
 
     print(f"[2/4] Running ProteinMPNN ({args.samples} designs, T={args.temperature})...")
     t0 = time.time()
-    # Convert bias dict to MPNN format
-    bias_str = ','.join(f'{AA}:{AMYLOID_AA_BIAS.get(AA,1.0):.2f}' for AA in 'ACDEFGHIKLMNPQRSTVWY'
-                        if AMYLOID_AA_BIAS.get(AA, 1.0) != 1.0)
+    # Convert bias dict to MPNN JSON format
+    import json as _json
+    bias_dict = {AA: AMYLOID_AA_BIAS.get(AA, 1.0) for AA in 'ACDEFGHIKLMNPQRSTVWY'}
+    bias_json = _json.dumps(bias_dict)
     omit = 'C'  # disallow cysteine (disulfide complications)
     try:
         designs = run_mpnn(complex_pdb, f'{SCAFFOLD_CHAIN} P', args.samples,
-                           args.temperature, args.seed, omit_aas=omit)
+                           args.temperature, args.seed, omit_aas=omit,
+                           bias_aas=bias_json)
     except Exception as e:
         print(f"  MPNN failed: {e}")
         designs = []
@@ -306,7 +334,9 @@ def main():
         d['contacts'] = cs['contacts']
         d['density'] = cs['density']
         d['mean_distance'] = cs['mean_distance']
-        d['composite'] = round(d['density'] * max(0, 1.0 - cs['mean_distance']/15.0), 4)
+        # Composite: contact density + MPNN score (lower=better, invert)
+        mpnn_quality = 1.0 / (1.0 + d.get('mpnn_score', 1.0))  # [0.33, 1.0]
+        d['composite'] = round(d['density'] * max(0, 1.0 - cs['mean_distance']/15.0) + 0.5 * mpnn_quality, 4)
         scored.append(d)
     print(f"  {len(scored)} passed ({n_filtered} filtered, {time.time()-t0:.0f}s)")
 
