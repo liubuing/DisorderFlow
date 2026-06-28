@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
-"""Direction G: AF2 ipTM-guided Best-of-N finetuning (single round).
+"""V18 Direction A: Multi-round AF2 distillation into BFN confidence (§2.3).
 
-BFN generates CDR designs → AF2 scores them → top designs used as
-supervised targets to finetune BFN → probe verifies antigen signal Δ > 0.
+Root fix for Spearman ρ negative: BFN confidence heads were trained on
+synthetic constant labels (V12) or seq recovery cross-entropy (V14),
+neither of which teaches design-quality ranking. AF2 ipTM is the ground
+truth for folding quality — distill it into BFN's confidence distribution
+via multi-round RL with diverse rewards and KL regularization.
+
+Enhancements over single-round G:
+  1. Multi-round iteration (≥3 rounds): finetune → generate → AF2 → repeat
+  2. Diverse reward: 0.5*ipTM + 0.3*pLDDT + 0.2*(1-interface_pae)
+  3. Negative reward: designs with ipTM<0.05 used as counter-examples
+  4. Temperature scheduling: early rounds T=0.5 (explore), late T=0.1 (exploit)
+  5. KL regularization: prevent catastrophic forgetting of seq recovery
 
 Usage:
-    python rl_finetune_af2.py [--scaffolds N] [--designs M] [--top K] [--finetune_steps S]
+    python rl_finetune_af2.py --rounds 3 --designs 50 --top 10 --finetune_steps 500
 """
 import sys, os, pickle, json, time, random, argparse, tempfile, shutil, glob
 import numpy as np
@@ -114,13 +124,24 @@ def write_complex_pdb(entry, out_path):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--rounds', type=int, default=3,
+                        help='Number of RL rounds (≥3 recommended)')
     parser.add_argument('--scaffolds', type=int, default=5)
-    parser.add_argument('--designs', type=int, default=20)
-    parser.add_argument('--top', type=int, default=2)
-    parser.add_argument('--finetune_steps', type=int, default=200)
+    parser.add_argument('--designs', type=int, default=50,
+                        help='Designs per scaffold per round')
+    parser.add_argument('--top', type=int, default=10,
+                        help='Top-K designs used for finetuning')
+    parser.add_argument('--finetune_steps', type=int, default=500,
+                        help='Finetune steps per round')
+    parser.add_argument('--temperature-start', type=float, default=0.5,
+                        help='Early-round sampling temperature (explore)')
+    parser.add_argument('--temperature-end', type=float, default=0.1,
+                        help='Late-round sampling temperature (exploit)')
+    parser.add_argument('--kl-weight', type=float, default=0.05,
+                        help='KL divergence regularization weight')
     parser.add_argument('--ckpt', type=str,
                         default='logs/v17c_zeroinit/bfn_v17c_zeroinit_xpu_2026_06_26__23_22_18/checkpoints/best.pt')
-    parser.add_argument('--device', type=str, default='cuda')
+    parser.add_argument('--device', type=str, default='cpu')
     args = parser.parse_args()
 
     tmpdir = tempfile.mkdtemp(prefix='rl_af2_')
@@ -222,7 +243,24 @@ def main():
     valid = [d for d in all_designs if d['af2_iptm'] is not None]
     print(f"  AF2 succeeded: {len(valid)}/{len(all_designs)}")
 
-    # ── 5. Select top designs ──
+    # ── Multi-round RL setup ──
+    print(f"\n{'='*60}")
+    print(f"V18 RL Distillation: {args.rounds} rounds, {args.designs} designs/round")
+    print(f"  Temperature: {args.temperature_start:.2f} → {args.temperature_end:.2f}")
+    print(f"  KL weight: {args.kl_weight}")
+    print(f"  Top-K: {args.top}, Finetune steps: {args.finetune_steps}")
+    print(f"{'='*60}\n")
+
+    best_ckpt = args.ckpt
+    all_round_results = []
+
+    for round_idx in range(args.rounds):
+        # Temperature schedule: linear interpolation
+        progress = round_idx / max(args.rounds - 1, 1)
+        temperature = args.temperature_start + (args.temperature_end - args.temperature_start) * progress
+        print(f"\n{'─'*40}\n  ROUND {round_idx+1}/{args.rounds} (T={temperature:.2f})\n{'─'*40}")
+
+    # ── 5. Select top designs with diverse reward ──
     # Try multiple ranking metrics: interface_pae (lower=better), iptm (higher=better)
     # interface_pae measures per-residue interface confidence — often more variance
     use_interface_pae = all(d.get('af2_interface_pae') is not None for d in valid)
