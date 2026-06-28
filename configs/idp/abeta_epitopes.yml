@@ -1,0 +1,82 @@
+# Abeta42 functional epitope library (IDP_DESIGN_SCHEME_V2 §P1-1)
+#
+# Each epitope is annotated with biological rationale, not just disorder scores.
+# The old criterion (disorder<0.3) happened to hit 16-24 by coincidence
+# because KLVFFAED is the aggregation core — it was luck, not design.
+#
+# Therapeutic targets:
+#   plaque_clearance — N-terminal antibodies that bind Aβ plaques and
+#     trigger microglial clearance (aducanumab, bantenerumab, donanemab)
+#   oligomer_neutralise — mid-domain antibodies that bind soluble oligomers
+#     and prevent synaptic toxicity (solanezumab, crenezumab)
+#   fibril_cap — C-terminal antibodies that cap fibril ends (gantenerumab part)
+
+epitopes:
+  - id: abeta_n_term_1_10
+    sequence: DAEFRHDSGY
+    residues: [1, 10]  # 1-based inclusive
+    therapeutic_target: plaque_clearance
+    known_antibodies: [aducanumab, bapineuzumab, donanemab]
+    pdb_references: [5CSZ]  # gantenerumab Fab + Abeta 1-11
+    aggregation_propensity: 0.35  # TANGO-like, low
+    druggability: 0.85  # solvent-exposed in monomer/plaque
+    notes: "Primary clinical target for plaque immunotherapy"
+
+  - id: abeta_mid_16_24
+    sequence: KLVFFAED
+    residues: [16, 24]
+    therapeutic_target: oligomer_neutralise
+    known_antibodies: [solanezumab, crenezumab]
+    pdb_references: [4HIX]  # solanezumab Fab + Abeta peptide
+    aggregation_propensity: 0.92  # TANGO-like, very high — THE aggregation core
+    druggability: 0.70  # partially buried in oligomer, exposed in monomer
+    notes: "The aggregation core — LVFF is the key amyloidogenic motif"
+
+  - id: abeta_core_16_21
+    sequence: KLVFFA
+    residues: [16, 21]
+    therapeutic_target: oligomer_neutralise
+    known_antibodies: [solanezumab]
+    pdb_references: [4HIX]
+    aggregation_propensity: 0.95  # highest — pure aggregation core
+    druggability: 0.65
+    notes: "Minimal amyloidogenic fragment, solanezumab epitope core"
+
+  - id: abeta_c_term_33_42
+    sequence: GLMVGGVVIA
+    residues: [33, 42]
+    therapeutic_target: fibril_cap
+    known_antibodies: [gantenerumab]
+    pdb_references: []
+    aggregation_propensity: 0.80  # fibril-forming C-terminal
+    druggability: 0.55  # partially buried in fibril
+    notes: "Fibril capping epitope, gantenerumab C-terminal target"
+
+  - id: abeta_turn_24_34
+    sequence: VGSNKGAIIGL
+    residues: [24, 34]
+    therapeutic_target: oligomer_neutralise
+    known_antibodies: []
+    pdb_references: []
+    aggregation_propensity: 0.60
+    druggability: 0.75  # loop region, accessible
+    notes: "Turn region connecting aggregation core to C-term, structurally dynamic"
+
+  - id: abeta_n_mid_10_20
+    sequence: YEVHHQKLVFF
+    residues: [10, 20]
+    therapeutic_target: plaque_clearance
+    known_antibodies: []
+    pdb_references: []
+    aggregation_propensity: 0.55
+    druggability: 0.70
+    notes: "Bridges N-terminal plaque epitope to aggregation core"
+
+# Default selection weights for composite scoring
+selection_weights:
+  aggregation_propensity: 0.40   # prefer aggregation-prone regions (binding impact)
+  druggability: 0.35             # prefer solvent-exposed regions
+  disorder_tolerance: 0.25       # prefer regions that CAN be ordered upon binding
+  # Note: disorder is a TIEBREAKER, not the primary criterion.
+  #       The old approach (disorder<0.3) was wrong — it filtered by what AF2
+  #       can fold, not by what matters biologically.
