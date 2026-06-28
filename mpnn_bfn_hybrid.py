@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
-"""§3.3C Fallback: ProteinMPNN (generator) + BFN (scorer) hybrid pipeline.
+"""V18: ProteinMPNN (generator) + BFN V14 (scorer) hybrid CDR design pipeline.
 
-When BFN cannot learn antigen-specific CDR design, ProteinMPNN provides
-the CDR generation (antigen-aware by design) while BFN supplies unique
-scoring capabilities: disorder head, confidence heads, PPL/entropy.
+Strategy pivot: BFN repositions as discriminator + confidence scorer.
+ProteinMPNN generates CDR candidates (antigen-aware by design).
+BFN V14 confidence heads score them — V14 has Spearman ρ>0.4 on
+design-quality ranking, unlike V17i (ρ=-0.71).
 
 Usage:
-    python mpnn_bfn_hybrid.py \
-        --scaffold data/.../5IMK.pdb --scaffold-chain B \
-        --antigen data/.../abeta42.pdb --antigen-chain A \
-        --cdr B:26-33,B:51-58,B:97-113 \
-        --samples 100 --top 10 --af2
+    python mpnn_bfn_hybrid.py \\
+        --scaffold data/.../5IMK.pdb --scaffold-chain B \\
+        --antigen data/.../abeta42.pdb --antigen-chain A \\
+        --cdr B:26-33,B:51-58,B:97-113 \\
+        --samples 100 --top 10
 
-Output: Top-10 designs ranked by BFN composite score, optionally
-        validated by AF2.
+Output: Top-10 designs ranked by BFN V14 composite score +
+        complexity penalty via cascade filter.
 """
+
+# Default V14 checkpoint (proven Spearman ρ>0.4, OC 0.19x)
+V14_CKPT = 'logs/bfn_v14_grouped_conf_xpu_2026_06_26__01_06_36/checkpoints/best.pt'
 import sys, os, json, tempfile, subprocess, argparse, time, shutil
 import numpy as np, torch, yaml
 AA = 'ACDEFGHIKLMNPQRSTVWY'
@@ -79,16 +83,31 @@ def run_proteinmpnn(complex_pdb, chains, num_samples, temperature, seed, omit_aa
     return results
 
 
-def score_with_bfn(designs, complex_pdb, region_spec):
-    """Score a list of CDR designs using BFN confidence heads.
+def score_with_bfn(designs, complex_pdb, region_spec, bfn_ckpt=None):
+    """Score CDR designs using BFN V14 confidence heads.
+
+    Uses V14 by default (Spearman ρ>0.4, OC 0.19x). Override with --bfn-ckpt.
 
     Returns designs list with added keys:
-        ppl, entropy, plddt_mean, iptm, disorder_mean, composite
+        ppl, entropy, plddt_mean, iptm, disorder_mean, composite, complexity
     """
     import bfn_loader
+    import yaml
     bfn_loader._bfn_model = None
     bfn_loader._bfn_config = None
+
+    # Point to V14 checkpoint for scoring
+    ckpt_path = bfn_ckpt or V14_CKPT
+    app = yaml.safe_load(open('app_config.yaml', encoding='utf-8'))
+    orig_ckpt = app['models']['bfn']['checkpoint']
+    app['models']['bfn']['checkpoint'] = ckpt_path
+    yaml.dump(app, open('app_config.yaml', 'w', encoding='utf-8'))
+
     model, cfg = bfn_loader.load_bfn('cpu')
+
+    # Restore original checkpoint
+    app['models']['bfn']['checkpoint'] = orig_ckpt
+    yaml.dump(app, open('app_config.yaml', 'w', encoding='utf-8'))
 
     from disorderflow.datasets.protein import preprocess_protein_structure
     from disorderflow.utils.data import PaddingCollate
@@ -175,15 +194,20 @@ def score_with_bfn(designs, complex_pdb, region_spec):
         iptm_val = iptm.mean().item()
         disorder_mean = disorder[cdr_mask].mean().item() if cdr_mask.any() else 0
 
-        # Composite score (same weights as cascade_filter)
+        # Composite score via cascade filter (includes V18 complexity penalty)
         composite = (0.35 * iptm_val + 0.25 * plddt_mean +
-                     0.15 * (1.0 / max(ppl, 1e-6)) +
-                     0.10 * (1.0 - cdr_entropy / 3.0) +
+                     0.10 * (1.0 / max(ppl, 1e-6)) +
+                     0.05 * (1.0 - cdr_entropy / 3.0) +
                      0.15 * (1.0 - disorder_mean))
+        # Complexity bonus applied by cascade filter
+        from modules.cascade_filter import _cdr_complexity
+        complexity = _cdr_complexity(d['sequence'])
+        composite += 0.10 * complexity
 
         scored.append({**d, 'ppl': ppl, 'entropy': cdr_entropy,
                        'plddt_mean': plddt_mean, 'iptm': iptm_val,
-                       'disorder_mean': disorder_mean, 'composite': composite})
+                       'disorder_mean': disorder_mean, 'composite': composite,
+                       'complexity': complexity})
 
     # Sort by composite score descending
     scored.sort(key=lambda x: x['composite'], reverse=True)
@@ -205,6 +229,8 @@ def main():
     parser.add_argument('--top', type=int, default=10,
                         help='Output top-K designs (default 10)')
     parser.add_argument('--seed', type=int, default=42)
+    parser.add_argument('--bfn-ckpt', default=None,
+                        help=f'BFN checkpoint for scoring (default: V14 {V14_CKPT})')
     parser.add_argument('--output', default=None, help='Output JSON path')
     parser.add_argument('--af2', action='store_true',
                         help='Also run AF2 validation on top designs')
@@ -224,7 +250,7 @@ def main():
 
     print(f'Scoring with BFN...')
     t0 = time.time()
-    scored = score_with_bfn(designs, complex_pdb, args.cdr)
+    scored = score_with_bfn(designs, complex_pdb, args.cdr, bfn_ckpt=args.bfn_ckpt)
     print(f'  → scored {len(scored)} in {time.time()-t0:.1f}s')
 
     os.unlink(complex_pdb)
@@ -234,7 +260,7 @@ def main():
     for i, d in enumerate(top):
         print(f'#{i+1}: composite={d["composite"]:.4f}  '
               f'iptm={d["iptm"]:.4f}  plddt={d["plddt_mean"]:.4f}  '
-              f'ppl={d["ppl"]:.1f}  entropy={d["entropy"]:.3f}  '
+              f'ppl={d["ppl"]:.1f}  cmplx={d.get("complexity",1.0):.3f}  '
               f'disorder={d["disorder_mean"]:.3f}')
         print(f'    CDR: {d["sequence"][:80]}{"..." if len(d["sequence"])>80 else ""}')
 
