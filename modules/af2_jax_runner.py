@@ -249,6 +249,14 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     """
     import jax
     import jax.numpy as jnp
+    # JAX 0.10+ compat: jnp.clip changed arg names (a_max→max, a_min→min).
+    # The alphafold package (colabfold 2.3.13) uses the old API.
+    _orig_clip = jnp.clip
+    def _compat_clip(a, a_min=None, a_max=None, min=None, max=None, **kwargs):
+        if min is None and a_min is not None: min = a_min
+        if max is None and a_max is not None: max = a_max
+        return _orig_clip(a, min=min, max=max, **kwargs)
+    jnp.clip = _compat_clip
     import haiku as hk
 
     global _CACHED_PARAMS, _CACHED_FORWARD, _CACHED_CFG
