@@ -28,10 +28,55 @@ DEFAULT_THRESHOLDS = {
 DEFAULT_WEIGHTS = {
     'iptm': 0.35,           # Interface/global fold confidence
     'plddt': 0.25,          # Per-residue confidence
-    'ppl_inv': 0.15,        # Inverse perplexity → sequence quality
-    'entropy_inv': 0.10,    # Inverse entropy → model certainty
+    'ppl_inv': 0.10,        # Inverse perplexity → sequence quality
+    'entropy_inv': 0.05,    # Inverse entropy → model certainty
     'recovery': 0.15,       # Native recovery rate (eval mode only)
+    'complexity': 0.10,     # CDR amino-acid diversity (penalises poly-Thr etc.)
 }
+
+
+def _cdr_complexity(sequence: str) -> float:
+    """Score CDR sequence diversity in [0, 1]. Higher = more diverse = better.
+
+    Penalises:
+      1. Homopolymeric runs (≥3 identical AAs)  → -0.3 per run
+      2. Single-AA dominance (>40% of one type)  → proportional penalty
+      3. Shannon entropy < 2.5 over 20-AA dist   → linear penalty below threshold
+
+    Returns 1.0 for ideal diversity, 0.0 for poly-X.
+    """
+    if not sequence or len(sequence) < 3:
+        return 1.0
+
+    score = 1.0
+    L = len(sequence)
+
+    # 1. Homopolymeric runs: ≥3 consecutive identical residues
+    run_len = 1
+    for i in range(1, L):
+        if sequence[i] == sequence[i-1]:
+            run_len += 1
+        else:
+            if run_len >= 3:
+                score -= 0.30 * (run_len - 2) / L
+            run_len = 1
+    if run_len >= 3:
+        score -= 0.30 * (run_len - 2) / L
+
+    # 2. Single-AA dominance
+    from collections import Counter
+    counts = Counter(sequence)
+    max_freq = max(counts.values()) / L
+    if max_freq > 0.40:
+        score -= (max_freq - 0.40) * 2.0  # 0.40→0 penalty, 1.0→-1.2 penalty
+
+    # 3. Shannon entropy of AA distribution (< 2.5 = low diversity)
+    total = sum(counts.values())
+    shannon = -sum((c/total) * math.log(c/total) for c in counts.values()) / math.log(20)
+    if shannon < 0.83:  # 0.83 ≈ 2.5 in raw bits (2.5 / log(20))
+        score -= (0.83 - shannon) * 1.5
+
+    return max(0.0, min(1.0, score))
 
 
 def apply_cascade(
@@ -180,11 +225,17 @@ def apply_cascade(
 
             quality_score = w['ppl_inv'] * min(ppl_inv, 1.0) + w['entropy_inv'] * entropy_inv
 
+        # CDR complexity bonus (penalises low-diversity sequences)
+        seq = r.get('sequence', '')
+        complexity = _cdr_complexity(seq) if seq else 1.0
+        r['complexity'] = round(complexity, 4)
+
         composite = (
             w['iptm'] * iptm +
             w['plddt'] * plddt +
             quality_score +
-            w['recovery'] * recovery
+            w['recovery'] * recovery +
+            w.get('complexity', 0.10) * complexity
         )
         r['composite_score'] = composite
         if entropy is not None:
@@ -198,10 +249,10 @@ def apply_cascade(
         r['rank'] = rank
 
     report_lines.append(f"  第3级 (综合评分):")
-    report_lines.append(f"    权重 — ipTM={w['iptm']}  pLDDT={w['plddt']}  PPL⁻¹={w['ppl_inv']}  ent⁻¹={w['entropy_inv']}  recovery={w['recovery']}")
+    report_lines.append(f"    权重 — ipTM={w['iptm']}  pLDDT={w['plddt']}  PPL={w['ppl_inv']}  ent={w['entropy_inv']}  recovery={w['recovery']}  complexity={w.get('complexity',0.10)}")
     report_lines.append("")
-    report_lines.append(f"  🏆 Top-5 综合排名:")
-    report_lines.append(f"  {'排名':<4} {'序列':<22} {'综合分':<8} {'ipTM':<7} {'PPL':<7} {'ent':<7} {'恢复率':<7}")
+    report_lines.append(f"  Top-5 综合排名:")
+    report_lines.append(f"  {'#':<4} {'CDR':<22} {'Comp':<8} {'ipTM':<7} {'PPL':<7} {'ent':<7} {'cmplx':<7}")
     report_lines.append(f"  {'-'*4} {'-'*22} {'-'*8} {'-'*7} {'-'*7} {'-'*7} {'-'*7}")
 
     for r in stage2[:5]:
@@ -210,8 +261,8 @@ def apply_cascade(
         iptm_s = f"{r.get('iptm', 0) or 0:.3f}"
         ppl_s = f"{r.get('ppl', r.get('score', '-')):.2f}" if r.get('ppl') or r.get('score') else '-'
         ent_s = f"{r.get('entropy', 0):.3f}" if r.get('entropy') is not None else '-'
-        rec_s = f"{(r.get('recovery', 0) or 0)*100:.0f}%" if r.get('recovery') is not None else '-'
-        report_lines.append(f"  {r['rank']:<4} {seq:<22} {cs:<8.3f} {iptm_s:<7} {ppl_s:<7} {ent_s:<7} {rec_s:<7}")
+        cmplx_s = f"{r.get('complexity', 1.0):.3f}"
+        report_lines.append(f"  {r['rank']:<4} {seq:<22} {cs:<8.3f} {iptm_s:<7} {ppl_s:<7} {ent_s:<7} {cmplx_s:<7}")
 
     report_lines.append("─" * 50)
     return stage2, '\n'.join(report_lines)
