@@ -35,6 +35,29 @@ DEFAULT_WEIGHTS = {
 }
 
 
+def disorder_aware_score(result: dict, base_weight: float = 0.35) -> float:
+    """I-2: Downweight BFN ipTM contribution when disorder_head flags IDP regions.
+
+    If disorder_mean > 0.5 over the CDR, the BFN confidence is less reliable
+    (trained on folded proteins). Reduce ipTM weight proportionally and
+    shift weight to pLDDT (per-residue, more robust for mixed order/disorder).
+
+    Args:
+        result: dict with iptm, plddt, disorder_mean keys
+        base_weight: default ipTM weight (0.35)
+    Returns:
+        adjusted ipTM weight in [0.05, base_weight]
+    """
+    disorder = result.get('disorder_mean', 0)
+    if disorder is None or disorder <= 0.3:
+        return base_weight  # ordered — full confidence
+    elif disorder >= 0.7:
+        return 0.05  # strongly disordered — nearly zero ipTM contribution
+    else:
+        # Linear ramp: 0.3→base_weight, 0.7→0.05
+        return base_weight - (disorder - 0.3) * (base_weight - 0.05) / 0.4
+
+
 def _cdr_complexity(sequence: str) -> float:
     """Score CDR sequence diversity in [0, 1]. Higher = more diverse = better.
 

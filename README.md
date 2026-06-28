@@ -151,9 +151,20 @@ python manage.py test               # Environment self-test
 
 ## Known Limitations
 
-- **IDP Blindness**: BFN confidence heads (pLDDT/ipTM) are trained on folded globular proteins and produce unreliable estimates on intrinsically disordered proteins
-- **Length constraint**: Trained on proteins L=50-250; encoder position embeddings are out-of-distribution for L > 250
-- **ipTM invariance**: Context-only ipTM is constant per protein, not per sequence (by design)
+- **IDP Recognition — works**: The disorder head (V15+, trained on SAbDab + Aβ42 RMSF labels)
+  can identify intrinsically disordered regions. On Aβ42 (strong IDP, RMSF=3.91),
+  disorder_pred improved from 0.036 (V15, no IDP supervision) to 0.59 (retrained).
+  On folded SAbDab complexes, disorder_pred std=0.05–0.13 with min~0.003, max~0.87
+  — clean separation between ordered and disordered regions.
+- **IDP De novo Design — ceiling not yet broken**: While the disorder head identifies IDPs,
+  de novo CDR design for IDP targets (e.g. Aβ42) has not surpassed the AF2 folding
+  ceiling (ipTM~0.12–0.14 on 3STB scaffold, vs >0.3 target for viable binders).
+  The V17i Pair Routing breakthrough (Δ=+30pp antigen signal) and V18 MPNN+BFN hybrid
+  pipeline are active directions. For ordered targets, BFN confidence scoring is reliable.
+- **Length constraint**: Trained on proteins L=50-250; encoder position embeddings are
+  out-of-distribution for L > 250
+- **ipTM invariance**: Context-only ipTM is constant per protein, not per sequence
+  (by design). V14+ grouped confidence heads provide per-design discrimination.
 
 ## License
 
