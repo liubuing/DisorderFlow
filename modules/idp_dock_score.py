@@ -39,8 +39,9 @@ CHARGE = {
     'S': 0, 'T': 0, 'W': 0, 'Y': 0, 'V': 0,
 }
 
-CONTACT_CUTOFF = 8.0  # Å
-ELEC_CUTOFF = 6.0     # charge-charge range
+CONTACT_CUTOFF = 8.0  # Å for shape/contact term
+ELEC_CUTOFF = 12.0    # charge-charge range (wider — captures more pairs)
+HYDRO_CUTOFF = 10.0   # hydrophobic matching range
 
 
 def _get_atoms(pdb_path, chain, atom_name='CB'):
@@ -67,6 +68,49 @@ def _get_atoms(pdb_path, chain, atom_name='CB'):
                     continue
                 residues.append(aa1)
     return np.array(coords), residues
+
+
+def compute_bsa(pdb_path, chain1, chain2):
+    """Compute Buried Surface Area between two chains.
+
+    BSA = (SASA_chain1_alone + SASA_chain2_alone - SASA_complex) / 2
+    Pure geometric metric — depends on atom positions and radii,
+    NOT on residue identities. Faster and more robust than charge/hydro.
+
+    Returns BSA in Å².
+    """
+    from Bio.PDB import PDBParser
+    from Bio.PDB.SASA import ShrakeRupley
+    import numpy as np
+
+    parser = PDBParser(QUIET=True)
+    s = parser.get_structure('s', pdb_path)
+
+    # Get atoms by chain
+    atoms_all = list(s.get_atoms())
+    atoms_c1 = [a for a in atoms_all if a.get_parent().get_parent().id.strip() == chain1]
+    atoms_c2 = [a for a in atoms_all if a.get_parent().get_parent().id.strip() == chain2]
+
+    sr = ShrakeRupley()
+
+    # Complex SASA
+    sr.compute(s, level='A')
+    sasa_complex = sum(a.sasa for a in atoms_all)
+
+    # Chain 1 alone
+    m1 = s[0][chain1]
+    s1 = m1.copy() if hasattr(m1, 'copy') else m1
+    sr.compute(s1, level='A')
+    sasa_c1 = sum(a.sasa for a in s1.get_atoms())
+
+    # Chain 2 alone
+    m2 = s[0][chain2]
+    s2 = m2.copy() if hasattr(m2, 'copy') else m2
+    sr.compute(s2, level='A')
+    sasa_c2 = sum(a.sasa for a in s2.get_atoms())
+
+    bsa = (sasa_c1 + sasa_c2 - sasa_complex) / 2.0
+    return max(0.0, bsa)
 
 
 def score_complex(pdb_path, cdr_chain='H', epitope_chain='P',
@@ -104,34 +148,40 @@ def score_complex(pdb_path, cdr_chain='H', epitope_chain='P',
     contacts = int(contact_mask.sum())
     contact_density = contacts / max(len(ab_coords), 1)
 
-    # ── 2. Electrostatic complementarity ──
-    elec_score = 0.0
+    # ── 2. Electrostatic complementarity (ALL pairs, distance-weighted) ──
+    # Compute full distance matrix for AB × EPI, weight by 1/distance
+    all_dists = np.linalg.norm(
+        ab_coords[:, None, :] - epi_coords[None, :, :], axis=-1)  # (n_ab, n_epi)
+    # Inverse distance weight, clamp at ELEC_CUTOFF
+    elec_weights = np.maximum(0, 1.0 - all_dists / ELEC_CUTOFF)  # (n_ab, n_epi)
+    elec_score = 0.0; n_elec = 0
     for i in range(len(ab_coords)):
-        if not contact_mask[i]:
-            continue
-        j = idxs[i]
-        if j < len(epi_res):
-            ab_charge = CHARGE.get(ab_res[i], 0)
-            epi_charge = CHARGE.get(epi_res[j], 0)
-            # Opposite charges = bonus, same charges = penalty
-            elec_score += -ab_charge * epi_charge  # negative product = opposite = good
-    elec_norm = elec_score / max(contacts, 1)
+        for j in range(len(epi_coords)):
+            w = elec_weights[i, j]
+            if w < 0.01: continue
+            ab_c = CHARGE.get(ab_res[i], 0)
+            epi_c = CHARGE.get(epi_res[j], 0)
+            if ab_c != 0 and epi_c != 0:
+                elec_score += w * (-ab_c * epi_c)  # opposite charges = positive
+                n_elec += 1
+    elec_norm = elec_score / max(n_elec, 1)
 
-    # ── 3. Hydrophobic matching ──
-    hydro_score = 0.0
+    # ── 3. Hydrophobic matching (ALL pairs, distance-weighted) ──
+    hydro_weights = np.maximum(0, 1.0 - all_dists / HYDRO_CUTOFF)
+    hydro_score = 0.0; n_hydro = 0
     for i in range(len(ab_coords)):
-        if not contact_mask[i]:
-            continue
-        j = idxs[i]
-        if j < len(epi_res):
-            ab_hydro = HYDROPHOBICITY.get(ab_res[i], 0)
-            epi_hydro = HYDROPHOBICITY.get(epi_res[j], 0)
-            # Both hydrophobic (>0) = bonus, mismatch = penalty
-            if ab_hydro > 0 and epi_hydro > 0:
-                hydro_score += min(ab_hydro, epi_hydro) / 4.5  # normalize
-            elif ab_hydro < 0 and epi_hydro < 0:
-                hydro_score += 0.3  # both hydrophilic
-    hydro_norm = hydro_score / max(contacts, 1)
+        for j in range(len(epi_coords)):
+            w = hydro_weights[i, j]
+            if w < 0.01: continue
+            ab_h = HYDROPHOBICITY.get(ab_res[i], 0)
+            epi_h = HYDROPHOBICITY.get(epi_res[j], 0)
+            if ab_h == 0 and epi_h == 0: continue
+            n_hydro += 1
+            if ab_h > 0 and epi_h > 0:
+                hydro_score += w * min(ab_h, epi_h) / 4.5
+            elif ab_h < 0 and epi_h < 0:
+                hydro_score += w * 0.3
+    hydro_norm = hydro_score / max(n_hydro, 1)
 
     # ── 4. Shape complementarity (local curvature) ──
     # Approximate by checking if contact distances are tightly clustered
