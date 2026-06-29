@@ -117,11 +117,15 @@ def score_pose(pdb_path, rec_chain='H', lig_chain='P', cdr_ranges=None):
     # E_shape
     cd = dists[dists<CONTACT_CUT]
     e_shape = 1.0-cd.std()/CONTACT_CUT if len(cd)>1 else 0.0
-    # Composite
+        # Composite — zero if contacts < 5 (invalid dock)
+    if contacts < 5:
+        return {'contacts':contacts,'e_contact':round(e_contact,4),'bsa':round(bsa_val,1),
+                'e_bsa':round(e_bsa,4),'e_elec':round(e_elec_n,4),'e_hydro':round(e_hydro_n,4),
+                'e_shape':round(e_shape,4),'composite':0.0,'invalid':True}
     comp = round(0.25*e_contact+0.25*e_bsa+0.20*max(0,e_elec_n)+0.15*max(0,e_hydro_n)+0.15*e_shape,4)
     return {'contacts':contacts,'e_contact':round(e_contact,4),'bsa':round(bsa_val,1),
             'e_bsa':round(e_bsa,4),'e_elec':round(e_elec_n,4),'e_hydro':round(e_hydro_n,4),
-            'e_shape':round(e_shape,4),'composite':comp}
+            'e_shape':round(e_shape,4),'composite':comp,'invalid':False}
 
 
 def three_way_vote(physical_score, inverse_fold_score=None, single_chain_plddt=None):
