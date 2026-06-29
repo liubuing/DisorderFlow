@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""HDOCK web server client — programmatic docking without binary installation.
+"""HDOCK docking client — web submission scaffold, binary install pending.
 
-Submits receptor + ligand PDBs to the HDOCK web server
-(http://hdock.phys.hust.edu.cn/), polls for completion, downloads
-the top-scoring docked complex and returns the docking score.
+STATUS (2026-06-29):
+  Web mode: form submission works but job_id extraction fails (no redirect).
+  Binary mode: GitHub repo huanglabpku/HDOCK deleted, source unavailable.
+  Current: hdock_client.py preserved as architecture reference.
+  Fallback: modules/idp_dock_score.py (pure-Python contact+electrostatics).
 
-Usage:
+Usage (when HDOCK binary is available):
     from modules.hdock_client import dock_complex
     result = dock_complex('receptor.pdb', 'ligand.pdb')
     # → {'score': -185.3, 'contacts': 45, 'complex_pdb': 'docked.pdb'}
@@ -34,9 +36,10 @@ def dock_complex(receptor_pdb: str, ligand_pdb: str,
     # ── Step 1: Submit job ──
     with open(receptor_pdb, 'rb') as fr, open(ligand_pdb, 'rb') as fl:
         files = {
-            'mol1': (os.path.basename(receptor_pdb), fr, 'application/octet-stream'),
-            'mol2': (os.path.basename(ligand_pdb), fl, 'application/octet-stream'),
+            'pdbfile1': (os.path.basename(receptor_pdb), fr, 'application/octet-stream'),
+            'pdbfile2': (os.path.basename(ligand_pdb), fl, 'application/octet-stream'),
         }
+        data = {'email': '', 'jobname': 'bfn_dock'}
         try:
             resp = session.post(HDOCK_URL, files=files, timeout=30)
         except requests.exceptions.RequestException as e:
@@ -47,31 +50,35 @@ def dock_complex(receptor_pdb: str, ligand_pdb: str,
 
     # Extract job ID from response URL or content
     html = resp.text
-    # HDOCK redirects to a job page like /hdock.php?jobid=xxxxx
     job_url = resp.url
     job_id = None
+
+    # HDOCK redirects to result.php?jobid=XXXXX or returns a page with the jobid
     for pattern in [r'jobid=([A-Za-z0-9_-]+)', r'id=([A-Za-z0-9_-]+)',
-                    r'job_id=([A-Za-z0-9_-]+)']:
+                    r'job_id=([A-Za-z0-9_-]+)', r'name="jobid"[^>]*value="([^"]+)"']:
         m = re.search(pattern, job_url)
+        if not m:
+            m = re.search(pattern, html)
         if m:
             job_id = m.group(1)
             break
-    if not job_id:
-        m = re.search(r'jobid[=/"\']+([A-Za-z0-9_-]+)', html)
-        if m:
-            job_id = m.group(1)
 
     if not job_id:
         # Try to match the download link pattern
         m = re.search(r'href="([^"]*result[^"]*\.tar\.gz[^"]*)"', html)
         if m:
             return {'error': 'No job_id found, direct result link: ' + m.group(1)[:80]}
-        return {'error': f'Could not extract job_id from {job_url[:100]}'}
+        # Check for error message
+        if 'error' in html.lower() or 'fail' in html.lower():
+            err_match = re.search(r'(error|fail)[^<]*', html, re.IGNORECASE)
+            return {'error': f'HDOCK error: {err_match.group(0)[:200] if err_match else html[:200]}'}
+        return {'error': f'Could not extract job_id. URL: {job_url[:80]}, content_len: {len(html)}'}
 
     print(f'  HDOCK job submitted: {job_id}')
 
     # ── Step 2: Poll for completion ──
-    status_url = f'{HDOCK_URL}hdock.php?jobid={job_id}'
+    # HDOCK uses result.php for job status
+    status_url = f'{HDOCK_URL}result.php?jobid={job_id}'
     t0 = time.time()
     result_url = None
 

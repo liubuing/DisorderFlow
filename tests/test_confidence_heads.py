@@ -40,7 +40,7 @@ def test_v12_confidence_head_shapes_seqonly():
     recv = _make_receiver("v12", seq_only=True)
     theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res = _inputs()
     out = recv(theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res)
-    pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder = out
+    pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, _, _ = out
     assert pred_plddt.shape == (N, L)
     assert pred_iptm.shape == (N,)
     assert pred_pae.shape == (N, L, L)
@@ -51,7 +51,7 @@ def test_v12_confidence_outputs_in_unit_interval():
     """pLDDT / ipTM / PAE are sigmoids → must lie in [0, 1]."""
     recv = _make_receiver("v12", seq_only=True)
     theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res = _inputs()
-    _, _, _, _, pred_plddt, pred_iptm, pred_pae, _ = recv(
+    _, _, _, _, pred_plddt, pred_iptm, pred_pae, _, _, _ = recv(
         theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res)
     assert torch.all(pred_plddt >= 0) and torch.all(pred_plddt <= 1)
     assert torch.all(pred_iptm >= 0) and torch.all(pred_iptm <= 1)
@@ -62,7 +62,7 @@ def test_v11_backbone_plus_bypass_shapes():
     """V11 head (backbone + seq bypass) produces the same shapes."""
     recv = _make_receiver("v11", seq_only=True)
     theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res = _inputs()
-    _, _, _, _, pred_plddt, pred_iptm, pred_pae, _ = recv(
+    _, _, _, _, pred_plddt, pred_iptm, pred_pae, _, _, _ = recv(
         theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res)
     assert pred_plddt.shape == (N, L)
     assert pred_iptm.shape == (N,)
