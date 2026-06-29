@@ -1,280 +1,145 @@
-#!/usr/bin/env python
-"""Interface Scoring — BSA + Shape Complementarity + Electrostatic Complementarity.
+#!/usr/bin/env python3
+"""V3 L3: Interface quality scorer on docked poses (BSA + shape + electrostatics).
 
-Fast local alternative to HDOCK for ranking antibody designs.
-Computes three standard metrics on antibody-epitope complexes.
+Scoring terms (all computable on given coordinates, no refolding):
+  E_contact:  Cb-Cb pairs <=8A (geometry)
+  E_bsa:      Buried Surface Area between chains (geometry)
+  E_elec:     Electrostatic complementarity (all-pairs, distance-weighted)
+  E_hydro:    Hydrophobic matching (all-pairs, distance-weighted)
+  E_shape:    Contact distance uniformity
+  E_composite: Weighted sum (0.25*contact + 0.25*bsa + 0.20*elec + 0.15*hydro + 0.15*shape)
+
+This is the POSE SCORER — L2 (FFT) generates poses, L3 scores them.
+V3_ROOT: NO AF2 refolding. Physics on given coordinates only.
+
+Usage:
+    from modules.interface_scorer import score_pose, three_way_vote
+    result = score_pose('docked_complex.pdb', rec_chain='H', lig_chain='P')
 """
-
-import os
+import sys, os
 import numpy as np
-from Bio.PDB import PDBParser
-import freesasa
+from scipy.spatial import cKDTree
 
-# Standard amino acid properties
-# pKa values for ionizable groups at pH 7.4
-AA_CHARGE = {
-    'A': 0, 'C': 0, 'D': -1, 'E': -1, 'F': 0,
-    'G': 0, 'H': 0.1, 'I': 0, 'K': 1, 'L': 0,
-    'M': 0, 'N': 0, 'P': 0, 'Q': 0, 'R': 1,
-    'S': 0, 'T': 0, 'V': 0, 'W': 0, 'Y': 0,
-}
-
-# Amino acid volumes (Å³) for shape complementarity
-AA_VOLUME = {
-    'A': 88.6, 'C': 108.5, 'D': 111.1, 'E': 138.4, 'F': 189.9,
-    'G': 60.1, 'H': 153.2, 'I': 166.7, 'K': 168.6, 'L': 166.7,
-    'M': 162.9, 'N': 114.1, 'P': 112.7, 'Q': 143.8, 'R': 173.4,
-    'S': 89.0, 'T': 116.1, 'V': 140.0, 'W': 227.8, 'Y': 193.6,
-}
-
-aa3to1 = {'ALA':'A','CYS':'C','ASP':'D','GLU':'E','PHE':'F','GLY':'G','HIS':'H',
-          'ILE':'I','LYS':'K','LEU':'L','MET':'M','ASN':'N','PRO':'P','GLN':'Q',
-          'ARG':'R','SER':'S','THR':'T','VAL':'V','TRP':'W','TYR':'Y'}
-
-INTERFACE_CUTOFF = 5.0  # Å, residues within this distance are "interface"
+CHARGE = {'A':0,'R':1,'N':0,'D':-1,'C':0,'E':-1,'Q':0,'G':0,'H':0,'I':0,
+          'L':0,'K':1,'M':0,'F':0,'P':0,'S':0,'T':0,'W':0,'Y':0,'V':0}
+HYDRO = {'A':1.8,'R':-4.5,'N':-3.5,'D':-3.5,'C':2.5,'E':-3.5,'Q':-3.5,'G':-0.4,
+         'H':-3.2,'I':4.5,'L':3.8,'K':-3.9,'M':1.9,'F':2.8,'P':-1.6,'S':-0.8,
+         'T':-0.7,'W':-0.9,'Y':-1.3,'V':4.2}
+CONTACT_CUT = 8.0; ELEC_CUT = 12.0; HYDRO_CUT = 10.0
 
 
-def _get_ca_atoms(pdb_path, chain_id=None):
-    """Extract CA positions, residue names, and IDs from a PDB."""
-    parser = PDBParser(QUIET=True)
-    structure = parser.get_structure('s', pdb_path)[0]
-
-    positions = []
-    residues = []
-    res_ids = []
-    for chain in structure:
-        if chain_id and chain.id != chain_id:
-            continue
-        for res in chain:
-            if 'CA' not in res:
-                continue
-            rn = res.get_resname().strip()
-            if rn not in aa3to1:
-                continue
-            positions.append(res['CA'].get_coord())
-            residues.append(aa3to1[rn])
-            res_ids.append((chain.id, res.get_id()[1]))
-
-    return np.array(positions), residues, res_ids
+def _get_atoms(pdb_path, chain):
+    from Bio.PDB import PDBParser
+    parser = PDBParser(QUIET=True); s = parser.get_structure('s', pdb_path)
+    coords, resis = [], []
+    for model in s:
+        for c in model:
+            if c.id.strip() != chain: continue
+            for res in c:
+                aa = res.resname.strip()
+                aa1 = {'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C','GLU':'E',
+                       'GLN':'Q','GLY':'G','HIS':'H','ILE':'I','LEU':'L','LYS':'K',
+                       'MET':'M','PHE':'F','PRO':'P','SER':'S','THR':'T','TRP':'W',
+                       'TYR':'Y','VAL':'V'}.get(aa,'X')
+                if 'CB' in res: coords.append(res['CB'].get_coord())
+                elif 'CA' in res: coords.append(res['CA'].get_coord())
+                else: continue
+                resis.append(aa1)
+    return np.array(coords), resis
 
 
-def compute_bsa(complex_pdb, scaffold_chain='A', epitope_chain='B'):
-    """Compute Buried Surface Area at the interface.
-
-    BSA = SASA(complex) - SASA(scaffold_alone) - SASA(epitope_alone)
-    Higher BSA = stronger binding.
-
-    Returns dict with total_bsa, scaffold_bsa, epitope_bsa.
-    """
-    # Complex SASA
-    comp = freesasa.Structure(complex_pdb)
-    comp_result = freesasa.calc(comp)
-    comp_total = comp_result.totalArea()
-
-    ca_pos, residues, res_ids = _get_ca_atoms(complex_pdb)
-    scaffold_mask = np.array([rid[0] == scaffold_chain for rid in res_ids])
-    epitope_mask = np.array([rid[0] == epitope_chain for rid in res_ids])
-
-    scaffold_ca = ca_pos[scaffold_mask]
-    epitope_ca = ca_pos[epitope_mask]
-    scaffold_rids = [res_ids[i] for i, m in enumerate(scaffold_mask) if m]
-    epitope_rids = [res_ids[i] for i, m in enumerate(epitope_mask) if m]
-
-    # Compute inter-chain distances
-    dists = np.linalg.norm(
-        scaffold_ca[:, None, :] - epitope_ca[None, :, :], axis=-1)
-
-    # Find interface residues
-    interface_scaffold = set()
-    interface_epitope = set()
-    for i in range(len(scaffold_ca)):
-        min_dist = dists[i].min()
-        if min_dist < INTERFACE_CUTOFF:
-            interface_scaffold.add(scaffold_rids[i])
-    for j in range(len(epitope_ca)):
-        min_dist = dists[:, j].min()
-        if min_dist < INTERFACE_CUTOFF:
-            interface_epitope.add(epitope_rids[j])
-
-    n_int_scaffold = len(interface_scaffold)
-    n_int_epitope = len(interface_epitope)
-
-    # Estimate BSA from interface residue count × avg residue SASA
-    avg_res_sasa = 120  # Å², typical
-    total_bsa = (n_int_scaffold + n_int_epitope) * avg_res_sasa / 2
-
-    return {
-        'total_bsa': total_bsa,
-        'interface_scaffold_residues': n_int_scaffold,
-        'interface_epitope_residues': n_int_epitope,
-        'min_distance': float(dists.min()),
-        'contact_pairs': int((dists < INTERFACE_CUTOFF).sum()),
-    }
+def _bsa(pdb_path, c1, c2):
+    from Bio.PDB import PDBParser; from Bio.PDB.SASA import ShrakeRupley
+    parser = PDBParser(QUIET=True); s = parser.get_structure('s', pdb_path)
+    sr = ShrakeRupley()
+    sr.compute(s, level='A')
+    all_atoms = list(s.get_atoms())
+    sasa_complex = sum(a.sasa for a in all_atoms)
+    # Chain1 isolated
+    from Bio.PDB import Structure, Model
+    iso = Structure.Structure('iso'); iso_m = Model.Model(0)
+    for c in s[0]: 
+        if c.id.strip()==c1: iso_m.add(c.copy())
+    sr.compute(iso_m, level='A')
+    sasa1 = sum(a.sasa for a in iso_m.get_atoms())
+    # Chain2 isolated
+    iso2 = Structure.Structure('iso2'); iso2_m = Model.Model(0)
+    for c in s[0]:
+        if c.id.strip()==c2: iso2_m.add(c.copy())
+    sr.compute(iso2_m, level='A')
+    sasa2 = sum(a.sasa for a in iso2_m.get_atoms())
+    return max(0.0, (sasa1+sasa2-sasa_complex)/2.0)
 
 
-def compute_shape_complementarity(complex_pdb, scaffold_chain='A', epitope_chain='B'):
-    """Compute Lawrence & Colman shape complementarity.
-
-    Sc = median of (1 / (1 + exp(-S))) where S = f(d1, d2, n1, n2)
-    Simplified: use distance distribution of interface atoms.
-    Range: 0 (no complementarity) to 1 (perfect fit).
-
-    Returns Sc value.
-    """
-    ca_pos, residues, res_ids = _get_ca_atoms(complex_pdb)
-    scaffold_mask = np.array([rid[0] == scaffold_chain for rid in res_ids])
-    epitope_mask = np.array([rid[0] == epitope_chain for rid in res_ids])
-
-    if scaffold_mask.sum() == 0 or epitope_mask.sum() == 0:
-        return {'Sc': 0.0}
-
-    scaffold_ca = ca_pos[scaffold_mask]
-    epitope_ca = ca_pos[epitope_mask]
-
-    dists = np.linalg.norm(
-        scaffold_ca[:, None, :] - epitope_ca[None, :, :], axis=-1)
-
-    # Interface distances (within 2x cutoff to capture shape)
-    interface_dists = dists[(dists < 8.0) & (dists > 0.5)]
-
-    if len(interface_dists) < 5:
-        return {'Sc': 0.0, 'n_interface_pairs': len(interface_dists)}
-
-    # Shape complementarity proxy:
-    # 1. Distance variance (lower = better fitting)
-    # 2. Mean distance close to 3.5Å (optimal VDW contact)
-    dist_mean = float(interface_dists.mean())
-    dist_std = float(interface_dists.std())
-
-    # Sc formula: high when distances cluster around 3-4Å
-    optimal_dist = 3.5
-    dist_score = np.exp(-0.5 * ((interface_dists - optimal_dist) / 1.5) ** 2)
-    sc_raw = float(dist_score.mean())
-
-    # Penalize high variance
-    sc = sc_raw * np.exp(-0.1 * dist_std)
-
-    return {
-        'Sc': round(sc, 4),
-        'interface_pairs': len(interface_dists),
-        'mean_distance': round(dist_mean, 2),
-        'dist_std': round(dist_std, 2),
-    }
-
-
-def compute_electrostatic_complementarity(complex_pdb, scaffold_chain='A',
-                                          epitope_chain='B'):
-    """Estimate electrostatic complementarity at the interface.
-
-    For each interface residue pair within cutoff, compute:
-        EC_ij = -charge_i * charge_j * exp(-d_ij / lambda_D)
-
-    Positive EC = favorable (opposite charges attract)
-    Negative EC = unfavorable (same charges repel)
-
-    Returns EC score and per-chain charge distribution.
-    """
-    ca_pos, residues, res_ids = _get_ca_atoms(complex_pdb)
-    scaffold_mask = np.array([rid[0] == scaffold_chain for rid in res_ids])
-    epitope_mask = np.array([rid[0] == epitope_chain for rid in res_ids])
-
-    scaffold_idx = np.where(scaffold_mask)[0]
-    epitope_idx = np.where(epitope_mask)[0]
-
-    if len(scaffold_idx) == 0 or len(epitope_idx) == 0:
-        return {'EC': 0.0}
-
-    scaffold_ca = ca_pos[scaffold_mask]
-    epitope_ca = ca_pos[epitope_mask]
-    scaffold_seq = [residues[i] for i in scaffold_idx]
-    epitope_seq = [residues[i] for i in epitope_idx]
-
-    # Debye length at physiological ionic strength (150mM) ~8 Å
-    debye_length = 8.0
-
-    dists = np.linalg.norm(
-        scaffold_ca[:, None, :] - epitope_ca[None, :, :], axis=-1)
-
-    # Compute EC only for interface pairs
-    interface_mask = dists < INTERFACE_CUTOFF
-    interf_i, interf_j = np.where(interface_mask)
-
-    if len(interf_i) < 3:
-        return {'EC': 0.0, 'interface_pairs': len(interf_i)}
-
-    ec_sum = 0.0
-    favorable = 0
-    unfavorable = 0
-    for i, j in zip(interf_i, interf_j):
-        qi = AA_CHARGE.get(scaffold_seq[i], 0)
-        qj = AA_CHARGE.get(epitope_seq[j], 0)
-        d = dists[i, j]
-        ec_ij = -qi * qj * np.exp(-d / debye_length)
-        ec_sum += ec_ij
-        if ec_ij > 0.01:
-            favorable += 1
-        elif ec_ij < -0.01:
-            unfavorable += 1
-
-    # Normalize
-    n_pairs = len(interf_i)
-    ec_norm = ec_sum / max(n_pairs, 1)
-
-    # Per-chain charge counts
-    scaff_charge = sum(AA_CHARGE.get(aa, 0) for aa in scaffold_seq)
-    epi_charge = sum(AA_CHARGE.get(aa, 0) for aa in epitope_seq)
-
-    return {
-        'EC': round(ec_norm, 4),
-        'interface_pairs': n_pairs,
-        'favorable_pairs': favorable,
-        'unfavorable_pairs': unfavorable,
-        'scaffold_net_charge': scaff_charge,
-        'epitope_net_charge': epi_charge,
-    }
+def score_pose(pdb_path, rec_chain='H', lig_chain='P', cdr_ranges=None):
+    rec_coords, rec_res = _get_atoms(pdb_path, rec_chain)
+    lig_coords, lig_res = _get_atoms(pdb_path, lig_chain)
+    if len(rec_coords)==0 or len(lig_coords)==0:
+        return {'error':'Empty chain','composite':0}
+    if cdr_ranges:
+        mask = np.zeros(len(rec_coords), dtype=bool)
+        for s,e in cdr_ranges: mask[s-1:e] = True
+        rec_coords = rec_coords[mask]; rec_res = [rec_res[i] for i in range(len(mask)) if mask[i]]
+    n_rec = len(rec_coords)
+    # E_contact
+    tree = cKDTree(lig_coords)
+    dists, _ = tree.query(rec_coords, distance_upper_bound=CONTACT_CUT)
+    contacts = int((dists < CONTACT_CUT).sum())
+    e_contact = contacts/max(n_rec,1)
+    # E_bsa
+    bsa_val = _bsa(pdb_path, rec_chain, lig_chain)
+    e_bsa = min(1.0, bsa_val/500.0)
+    # All-pairs distance matrix
+    all_d = np.linalg.norm(rec_coords[:,None,:]-lig_coords[None,:,:], axis=-1)
+    # E_elec
+    ew = np.maximum(0, 1.0-all_d/ELEC_CUT)
+    e_elec = 0.0; ne = 0
+    for i in range(len(rec_coords)):
+        for j in range(len(lig_coords)):
+            w = ew[i,j]
+            if w<0.01: continue
+            rc = CHARGE.get(rec_res[i],0); lc = CHARGE.get(lig_res[j],0)
+            if rc!=0 and lc!=0: e_elec += w*(-rc*lc); ne+=1
+    e_elec_n = e_elec/max(ne,1)
+    # E_hydro
+    hw = np.maximum(0, 1.0-all_d/HYDRO_CUT)
+    e_hydro = 0.0; nh = 0
+    for i in range(len(rec_coords)):
+        for j in range(len(lig_coords)):
+            w = hw[i,j]
+            if w<0.01: continue
+            rh = HYDRO.get(rec_res[i],0); lh = HYDRO.get(lig_res[j],0)
+            if rh==0 and lh==0: continue
+            nh += 1
+            if rh>0 and lh>0: e_hydro += w*min(rh,lh)/4.5
+            elif rh<0 and lh<0: e_hydro += w*0.3
+    e_hydro_n = e_hydro/max(nh,1)
+    # E_shape
+    cd = dists[dists<CONTACT_CUT]
+    e_shape = 1.0-cd.std()/CONTACT_CUT if len(cd)>1 else 0.0
+    # Composite
+    comp = round(0.25*e_contact+0.25*e_bsa+0.20*max(0,e_elec_n)+0.15*max(0,e_hydro_n)+0.15*e_shape,4)
+    return {'contacts':contacts,'e_contact':round(e_contact,4),'bsa':round(bsa_val,1),
+            'e_bsa':round(e_bsa,4),'e_elec':round(e_elec_n,4),'e_hydro':round(e_hydro_n,4),
+            'e_shape':round(e_shape,4),'composite':comp}
 
 
-def score_complex(complex_pdb, scaffold_chain='A', epitope_chain='B'):
-    """Full interface scoring: BSA + Sc + EC.
-
-    Returns:
-        dict with all metrics and a combined score.
-    """
-    bsa = compute_bsa(complex_pdb, scaffold_chain, epitope_chain)
-    sc = compute_shape_complementarity(complex_pdb, scaffold_chain, epitope_chain)
-    ec = compute_electrostatic_complementarity(complex_pdb, scaffold_chain, epitope_chain)
-
-    # Combined score (normalize each component to [0,1])
-    bsa_norm = min(1.0, bsa['total_bsa'] / 2000.0)  # ~2000Å² = very good BSA
-    sc_norm = sc['Sc']  # Already in [0,1]
-    ec_norm = max(0.0, min(1.0, (ec['EC'] + 0.3) / 0.6))  # Map EC to [0,1]
-
-    combined = 0.4 * bsa_norm + 0.3 * sc_norm + 0.3 * ec_norm
-
-    return {
-        **bsa, **sc, **ec,
-        'combined_interface_score': round(combined, 4),
-        'bsa_norm': round(bsa_norm, 4),
-        'sc_norm': round(sc_norm, 4),
-        'ec_norm': round(ec_norm, 4),
-    }
+def three_way_vote(physical_score, inverse_fold_score=None, single_chain_plddt=None):
+    e1_ok = physical_score > 0.2
+    e2_ok = inverse_fold_score is not None and inverse_fold_score > 0.5
+    e3_ok = single_chain_plddt is not None and single_chain_plddt > 0.4
+    passed = e1_ok and (e2_ok or e3_ok)
+    reason = []
+    if e1_ok: reason.append('E1')
+    if e2_ok: reason.append('E2')
+    if e3_ok: reason.append('E3')
+    if not passed and not e1_ok: reason.append('E1_FAIL')
+    return {'pass':passed,'reason':'+'.join(reason) if reason else 'NONE'}
 
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) > 1:
-        pdb = sys.argv[1]
-    else:
-        pdb = '/tmp/idp_design_6A/complex_5IMK_epitope_A_complex.pdb'
-        if not os.path.exists(pdb):
-            import glob
-            candidates = glob.glob('/tmp/idp_design_*/complex_*.pdb')
-            pdb = candidates[0] if candidates else None
-            if not pdb:
-                print("No complex PDB found")
-                sys.exit(1)
-
-    print(f"Scoring: {pdb}")
-    result = score_complex(pdb)
-    for k, v in result.items():
-        print(f"  {k}: {v}")
+    print("V3 L3 Interface Scorer — 5CSZ sanity")
+    pdb = 'data/anti_abeta_refs/5CSZ.pdb'
+    if os.path.exists(pdb):
+        r = score_pose(pdb, rec_chain='H', lig_chain='D', cdr_ranges=[(26,32),(52,56),(95,102)])
+        for k,v in r.items(): print(f'  {k}: {v}')
