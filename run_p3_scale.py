@@ -199,7 +199,9 @@ def main():
             # Diversity bonus: penalize if many neighbors within 70% identity
             neighbors = sum(1 for u in unique if seq_identity(d['sequence'], u['sequence'])>0.70)
             d['diversity_bonus'] = max(0, 1.0 - neighbors*0.05)
-            d['composite'] = d['diversity_bonus']
+            # Composite: MPNN quality (primary) × diversity bonus
+            # BFN iptm excluded (backbone-dependent, identical for all on same scaffold)
+            d['composite'] = round((1.0 - d['mpnn_score']) * d['diversity_bonus'], 4)
             unique.append(d)
     print(f'  {len(unique)} unique / {len(all_designs)} total')
 
@@ -255,7 +257,7 @@ def main():
             traj = bfn_model.sample(batch, sample_opt={'deterministic': True, 'num_recycles': 1})
         d['bfn_iptm'] = round(float(traj.get('iptm', torch.tensor([0])).mean()), 4)
         d['bfn_plddt'] = round(float(traj.get('plddt', torch.zeros(1))[0].mean()), 4)
-        d['composite'] = round(d['composite'] + 0.3*d['bfn_iptm'] + 0.2*d.get('diversity_bonus',1.0), 4)
+        # BFN scores stored for OC reporting only — NOT used in composite ranking
 
     top100.sort(key=lambda d: d['composite'], reverse=True)
 
