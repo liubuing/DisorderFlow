@@ -35,7 +35,7 @@ def graft_and_dock(d, epitope_pdb):
                 try: s[0][chain][j].resname = AA3.get(cdr[pos], 'GLY')
                 except: pass; pos += 1
     tmp = tempfile.mktemp(suffix='_receptor.pdb')
-    PDBIO().set_structure(s); PDBIO().save(s, file=tmp)
+    io = PDBIO(); io.set_structure(s); io.save(tmp)
 
     # L2: FFT pose generation
     try:
@@ -49,7 +49,11 @@ def graft_and_dock(d, epitope_pdb):
     result = score_pose(pose, chain, 'P', cdr_ranges_tuples)
 
     os.unlink(tmp)
-    if os.path.exists(pose): os.unlink(pose)
+    # Windows: file may be briefly locked (AV/indexer); clean best-effort, never fail.
+    for _f in (pose,):
+        if _f and os.path.exists(_f):
+            try: os.unlink(_f)
+            except OSError: pass
     return result
 
 
@@ -61,10 +65,6 @@ def main():
     print("V3 Pipeline: L2 FFT pose → L3 interface score")
     print("=" * 50)
 
-    with open(args.p3_lib) if os.path.exists(args.p3_lib) else 'idp_design_results/p3_scale_top100_20260629_030111.json' as f:
-        designs = json.load(open(args.p3_lib) if False else open(P3_LIBRARY))
-
-    # Actually load the library properly
     with open(P3_LIBRARY) as f:
         designs = json.load(f)
 
@@ -88,6 +88,23 @@ def main():
     for i, d in enumerate(results[:20]):
         print(f"#{i+1:2d} V3={d['v3_score']:.4f} contacts={d['v3_contacts']} "
               f"vote={d['v3_vote']:8s} {d['epitope'][:12]}+{d['scaffold']}")
+
+    # ── Kendall τ: V3 physical score vs old (MPNN+diversity) composite ──
+    scored_idx = {id(d): i for i, d in enumerate(results)}
+    v3 = [d['v3_score'] for d in results]
+    old = [d.get('composite', 0) for d in results]
+    try:
+        from scipy.stats import kendalltau
+        tau, p = kendalltau(v3, old)
+        print(f"\n=== Agreement: V3 vs old composite ===")
+        print(f"  Kendall tau = {tau:+.4f}  (p={p:.2e})  n={len(v3)}")
+        if abs(tau) < 0.3:
+            print(f"  => LOW agreement: old composite (MPNN+diversity) does NOT reproduce")
+            print(f"     physical interface ranking — confirms old metric was diversity, not quality.")
+        else:
+            print(f"  => Moderate/high agreement: old composite partly reflects physical quality.")
+    except Exception as e:
+        print(f"  Kendall tau computation failed: {e}")
 
     if results:
         ts = time.strftime('%Y%m%d_%H%M%S')
