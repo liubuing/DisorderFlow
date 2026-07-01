@@ -204,9 +204,11 @@ class AntibodyBFN_Core(nn.Module):
         prev_seq_emb = None  # V13
 
         for _ in range(train_recycles):
-            # WAY4 V6: epitope disorder condition for CDR generation.
-            # Mean disorder over antigen chain, broadcast to (N, 1).
-            epi_disorder = batch.get('epitope_disorder', None)
+            # WAY4 V6/V7: epitope disorder condition for CDR generation.
+            # V7 P0-fix-B: prefer per-residue profile (N, L), fall back to scalar (N, 1).
+            epi_disorder = batch.get('epitope_disorder_profile', None)
+            if epi_disorder is None:
+                epi_disorder = batch.get('epitope_disorder', None)
             pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact, pred_contrastive = self.receiver(
                 inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
                 backbone_pos=backbone_pos, prev_conf=prev_plddt, prev_iptm=prev_iptm, prev_pae=prev_pae,

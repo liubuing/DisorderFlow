@@ -350,12 +350,20 @@ class AntibodyBFN_Receiver(nn.Module):
             # Pair Feature Routing: concat(res_feat, pair_aggr_proj, ag_pooled, disorder_cond) → MLP
             pair_aggr_proj = self.pair_proj(pair_aggr)  # (N, L, pair_dim) → (N, L, res_dim)
             ag_expanded = ag_feat_pooled.unsqueeze(1).expand(-1, features.shape[1], -1)
-            # WAY4 V6: disorder-conditioned — epitope disorder profile per CDR residue
-            # epitope_disorder is (N, 1) or None; broadcast to L, project to res_dim
+            # WAY4 V6/V7: disorder-conditioned — epitope disorder profile per CDR residue
+            # epitope_disorder can be:
+            #   - None: no disorder conditioning (fixbb or legacy)
+            #   - (N, 1): scalar mean disorder, broadcast to all residues (V6)
+            #   - (N, L): per-residue disorder profile [0,1] (V7 P0-fix-B)
+            #     Non-antigen positions should be 0; antigen positions have disorder values.
             disorder_cond = epitope_disorder
             if disorder_cond is not None and disorder_cond.dim() == 2:
-                # (N, 1) → (N, L, 1) → project to res_dim
-                disorder_cond = disorder_cond.unsqueeze(1).expand(-1, features.shape[1], -1).float()
+                if disorder_cond.shape[1] == 1:
+                    # V6 scalar: (N, 1) → broadcast to (N, L, 1)
+                    disorder_cond = disorder_cond.unsqueeze(1).expand(-1, features.shape[1], -1).float()
+                else:
+                    # V7 per-residue: (N, L) → (N, L, 1) by unsqueezing last dim
+                    disorder_cond = disorder_cond.unsqueeze(-1).float()
                 disorder_feat = self.disorder_proj(disorder_cond)
             else:
                 disorder_feat = torch.zeros(features.shape[0], features.shape[1], self.res_feat_dim, device=features.device)
