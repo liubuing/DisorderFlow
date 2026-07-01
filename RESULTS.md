@@ -319,3 +319,95 @@ score_pose 区分力塌方的可能根因:
 3. 需 top-K pose + 跨构象取 p25(方案 V3 §3.1 已设计但未启用)。
 
 P0 修复:`score_pose` 对 contacts<5 的 pose 直接判 0,并对每设计取 top-K pose 的中位数,恢复区分力。
+
+---
+
+## 11. V4/V5 度量穷举——结合特异性不可分的收敛证据 (2026-07-01)
+
+> **战略级结论**: 经历 V3→V4→V5 三轮范式转移，四条独立度量路径以同一种根因失败。纯计算在 IDP-scaffold 抗体设计的"结合特异性"度量上已达极限。
+
+### 11.1 四条路径全败收敛表
+
+| 路径 | 晶体可分？ | 生成设计可分？ | 根因 | Commit |
+|------|:--:|:--:|------|--------|
+| **L3 物理打分** | ✅ 5CSZ d=2.545 | ❌ 全同 (0.207) | scaffold backbone 几何主导 | 258ec0c |
+| **L4 ESM-IF (scaffold)** | ✅ sep=+1.76 | ❌ 全同 (-0.957) | 骨架坐标无序列区分力 | c28c97d |
+| **L4 ESM-IF (AF2-folded)** | ❌ sep=-0.006 | ❌ 全同 | 折叠坐标仍被模型先验主导 | f8669b8 |
+| **B2 fold-then-score** | ❌ sep=+0.01 | ⚠️ 可分(unique=7/9) | 测的是 scaffold-fit 非结合 | e3b77e0 |
+
+### 11.2 统一根因
+
+```
+所有度量的可分性都依赖于"抗体-肽相对界面几何"：
+  晶体结构 ✓ 有真实界面几何 → L0/L3/L4 晶体上可分
+  scaffold graft ✗ 肽段位置随机 → 度量被骨架几何主导,归零
+  AF2 folded    ✗ 折叠坐标仍被模型先验主导,无法恢复界面特异性
+  
+结论: 不含"抗体-肽相对界面几何"的度量,结构性地无法区分结合特异性。
+     这不是度量设计的问题——是表征空间本身缺少结合信号维度。
+```
+
+### 11.3 B1 最终结论
+
+B1 (template-conditioned 结构预测) 是唯一含界面几何的路径，但在三个引擎上全部阻塞:
+
+| 引擎 | 阻塞原因 |
+|------|---------|
+| ColabFold | hhsearch 二进制缺失 |
+| Chai-1 | CUDA 内核不兼容 RTX 5060 Blackwell |
+| HDOCK | 仓库已删除,无法编译 |
+
+**B1 状态: NO-GO on current hardware** (commit 7d2d660)
+
+### 11.4 纯计算边界
+
+纯计算在 IDP-scaffold 抗体设计上的能力边界已划定:
+- **可做**: 骨架兼容性排序 (B2)、序列自然度过滤、无序识别 (C)
+- **不可做**: 结合特异性验证 (需 B1 或湿实验)
+- **这是有效结论——不是"项目失败",是界定了纯计算方法学的能力边界**
+
+---
+
+## 12. 可交付资产状态 (2026-07-01)
+
+### 12.1 独立可发表产出
+
+| 资产 | 状态 | 数据 |
+|------|:--:|------|
+| **C: Disorder head CAID 基准** | ✅ | AUC-ROC=1.00, AUC-PR=1.00; ordered(SAbDab μ=0.16) vs disordered(Aβ42 μ=0.93), Δ=+0.77 |
+| **V17i Pair Routing** | ✅ | Δ(complex−fixbb)=+30pp; 首次证明 BFN 编码器能路由抗原信号到序列头 |
+| **V3 L0 物理打分** | ✅ | crystal native vs scrambled 可分 (5CSZ d=2.545); 零二进制纯Python |
+| **纯计算边界界定** | ✅ | L3/L4/B2/V4 四路证伪 + 统一根因 + B1 硬件阻塞 → 可发表 limitation |
+
+### 12.2 设计资产
+
+| 资产 | 状态 | 数据 |
+|------|:--:|------|
+| **A: Template-seeded 变体** | ✅ | 69 variants; 4HIX(2 hotspots)+5CSZ(6 hotspots); Shannon 2.8; 无退化 |
+| **P3 MPNN 设计库** | ✅ | 720 designs; top20 AF2 iptm max 0.188; τ=0.925 vs 物理打分 |
+| **V17i 生成器** | ✅ | 8000 iters; Δ=+30pp; AF2 ceiling 0.121 |
+
+### 12.3 度量工具箱
+
+| 工具 | 角色 | 适用场景 |
+|------|------|---------|
+| contact-count + charge | 晶体结构验证 | L0 闸门, 已知复合物 |
+| BFN V14 置信头 | OC 校准 (ρ>0.4) | 生成设计置信度 |
+| anti-degen filter | 序列质量 | 退化过滤 |
+| MPNN score | 生成质量 | 设计排名 |
+| AF2 single-chain pLDDT | 折叠质量 | 独立折叠验证 |
+| ESM-IF fold-then-score | scaffold-fit | 骨架兼容性 |
+
+---
+
+## 附录: 版本与 commit 索引
+
+| 关键 commit | 内容 |
+|-------------|------|
+| 258ec0c | V3 robust grid-search → geometry-limited |
+| c28c97d | L4 ESM-IF on P3 → generated poses indistinguishable |
+| f8669b8 | V4 AF2-fold → real coords → also fails |
+| 49fbdd0 | Pillar C: CAID AUC=1.00 |
+| 2b80eb9 | Pillar A: 69 template-seeded variants |
+| e3b77e0 | B2 Pillar A validation |
+| 7d2d660 | B1 final: Chai-1 blocked by CUDA (RTX 5060)
