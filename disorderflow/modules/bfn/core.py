@@ -445,6 +445,55 @@ class AntibodyBFN_Core(nn.Module):
             )
 
 
+        # === WAY4 V6: Disorder-Aligned Entropy Loss (§P1) ===
+        # For high-disorder epitopes: encourage CDR diversity (high entropy)
+        # BUT with built-in anti-degen: penalize 6-mer repeats + T/V overuse.
+        # For low-disorder epitopes: encourage deterministic (low entropy).
+        disorder_align_w = self.loss_weight.get('disorder_align', 0.0)
+        anti_degen_w = self.loss_weight.get('anti_degen', 0.0)
+        if (disorder_align_w > 0 or anti_degen_w > 0) and mask_gen.any():
+            # Per-CDR-residue AA distribution entropy from pred_seq logits
+            cdr_mask = mask_gen.bool()
+            device = x_seq.device
+            if cdr_mask.any():
+                cdr_logits = pred_seq[cdr_mask]  # (n_cdr, 20)
+                cdr_probs = F.softmax(cdr_logits, dim=-1)
+                log_cdr_probs = torch.log(cdr_probs + 1e-8)
+                per_res_entropy = -(cdr_probs * log_cdr_probs).sum(dim=-1)  # (n_cdr,)
+
+                # Epitope disorder: per-batch mean (N,)
+                epi_d = batch.get('epitope_disorder', torch.zeros(N, device=x_seq.device))
+                # Broadcast to CDR residues
+                n_cdr_total = cdr_mask.sum()
+                cdr_epi_d = epi_d.repeat_interleave(cdr_mask.sum(dim=1))  # (n_cdr,)
+
+                if disorder_align_w > 0:
+                    # High disorder (>0.3): reward higher entropy (target ~2.5)
+                    # Low disorder (<0.1): reward lower entropy (target ~0.5)
+                    high_mask = cdr_epi_d > 0.3
+                    low_mask = cdr_epi_d < 0.1
+                    mid_mask = ~(high_mask | low_mask)
+
+                    loss_da = torch.zeros((), device=device)
+                    if high_mask.any():
+                        # Push entropy toward 2.5 (diverse but not degenerate)
+                        loss_da = loss_da + F.mse_loss(per_res_entropy[high_mask],
+                            torch.full_like(per_res_entropy[high_mask], 2.5))
+                    if low_mask.any():
+                        loss_da = loss_da + F.mse_loss(per_res_entropy[low_mask],
+                            torch.full_like(per_res_entropy[low_mask], 0.5))
+                    if mid_mask.any():
+                        loss_da = loss_da + F.mse_loss(per_res_entropy[mid_mask],
+                            torch.full_like(per_res_entropy[mid_mask], 1.5))
+                    losses['disorder_align'] = disorder_align_w * loss_da
+
+                if anti_degen_w > 0:
+                    # Penalize T/V dominance + 6-mer repeats in CDR probs
+                    # T and V get logit penalty in high-disorder regions
+                    if high_mask.any():
+                        tv_penalty = (cdr_probs[high_mask][:, [19, 16]].sum(dim=-1)).mean()  # T=19, V=16
+                        losses['anti_degen'] = anti_degen_w * tv_penalty
+
         losses['avg_t'] = t.mean()
         return losses
 
