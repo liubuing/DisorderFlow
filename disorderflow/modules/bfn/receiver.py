@@ -115,8 +115,14 @@ class AntibodyBFN_Receiver(nn.Module):
         if self.pair_routing:
             # Project pair_feat (pair_dim) to res_dim for concat
             self.pair_proj = nn.Linear(pair_feat_dim, res_feat_dim)
-            # MLP: res_feat + pair_aggr_proj + antigen_pooled → logits
-            in_dim = res_feat_dim * 3
+            # WAY4 V6: disorder-conditioned generation (§P1)
+            # disorder_cond: epitope disorder profile (per-residue mean) →
+            # broadcast to CDR residues as condition for pliability
+            self.disorder_proj = nn.Linear(1, res_feat_dim)
+            nn.init.zeros_(self.disorder_proj.weight)
+            nn.init.zeros_(self.disorder_proj.bias)
+            # MLP: res_feat + pair_aggr_proj + antigen_pooled + disorder_cond → logits
+            in_dim = res_feat_dim * 4
             self.head_seq = nn.Sequential(
                 nn.Linear(in_dim, res_feat_dim),
                 nn.LayerNorm(res_feat_dim),
@@ -218,7 +224,8 @@ class AntibodyBFN_Receiver(nn.Module):
 
     def forward(self, theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res,
                 backbone_pos=None, prev_conf=None, prev_iptm=None, prev_pae=None,
-                prev_seq_emb=None, mask_gen=None, mask_antigen=None):
+                prev_seq_emb=None, mask_gen=None, mask_antigen=None,
+                epitope_disorder=None):  # WAY4 V6: disorder-conditioned
         N, L, _ = theta_seq.shape
         device = theta_seq.device
         
@@ -340,10 +347,19 @@ class AntibodyBFN_Receiver(nn.Module):
 
         # 3. Heads
         if self.pair_routing and ag_feat_pooled is not None and pair_aggr is not None:
-            # Pair Feature Routing: concat(res_feat, pair_aggr_proj, ag_pooled) → MLP
+            # Pair Feature Routing: concat(res_feat, pair_aggr_proj, ag_pooled, disorder_cond) → MLP
             pair_aggr_proj = self.pair_proj(pair_aggr)  # (N, L, pair_dim) → (N, L, res_dim)
             ag_expanded = ag_feat_pooled.unsqueeze(1).expand(-1, features.shape[1], -1)
-            seq_input = torch.cat([features, pair_aggr_proj, ag_expanded], dim=-1)
+            # WAY4 V6: disorder-conditioned — epitope disorder profile per CDR residue
+            # epitope_disorder is (N, 1) or None; broadcast to L, project to res_dim
+            disorder_cond = epitope_disorder
+            if disorder_cond is not None and disorder_cond.dim() == 2:
+                # (N, 1) → (N, L, 1) → project to res_dim
+                disorder_cond = disorder_cond.unsqueeze(1).expand(-1, features.shape[1], -1).float()
+                disorder_feat = self.disorder_proj(disorder_cond)
+            else:
+                disorder_feat = torch.zeros(features.shape[0], features.shape[1], self.res_feat_dim, device=features.device)
+            seq_input = torch.cat([features, pair_aggr_proj, ag_expanded, disorder_feat], dim=-1)
             pred_seq = self.head_seq(seq_input)
         elif self.pair_routing:
             pred_seq = self.head_seq_fixbb(features)  # fixbb: pair routing enabled but no antigen
