@@ -3,7 +3,10 @@ import shutil
 import argparse
 import pickle
 import torch
-import torch.utils.tensorboard
+try:
+    import torch.utils.tensorboard
+except ModuleNotFoundError:
+    pass  # tensorboard is optional
 from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
@@ -218,15 +221,17 @@ if __name__ == '__main__':
         # (V8 and before) have incompatible head shapes. We detect this by checking
         # for the old 'pair_proj' key which was replaced by AttentionPAEHead.
         ckpt_state = ckpt['model']
-        has_old_heads = any('pair_proj.' in k for k in ckpt_state.keys())
-        if has_old_heads:
-            old_head_names = ['head_plddt.', 'head_iptm.', 'head_pae.', 'pair_proj.']
-            stripped_keys = []
-            for k in list(ckpt_state.keys()):
-                if any(name in k for name in old_head_names):
-                    stripped_keys.append(k)
-                    ckpt_state.pop(k)
-            logger.info(f'Stripped {len(stripped_keys)} old confidence head weights (new heads randomized)')
+        # V18: always strip architecture-dependent heads when finetuning
+        # head_seq changed shape (768→1024), disorder_proj is new
+        old_head_names = ['head_plddt.', 'head_iptm.', 'head_pae.', 'pair_proj.',
+                          'head_seq.', 'head_seq_fixbb.', 'disorder_proj.', 'head_pos.', 'head_ori.', 'head_ang.']
+        stripped_keys = []
+        for k in list(ckpt_state.keys()):
+            if any(name in k for name in old_head_names):
+                stripped_keys.append(k)
+                ckpt_state.pop(k)
+        if stripped_keys:
+            logger.info(f'Stripped {len(stripped_keys)} old head weights (new heads randomized)')
             for k in stripped_keys[:5]:
                 logger.info(f'  - {k}')
         missing_keys, unexpected_keys = model.load_state_dict(ckpt_state, strict=False)
