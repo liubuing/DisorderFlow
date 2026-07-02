@@ -1,0 +1,29 @@
+[
+  {
+    "scaffold": "5IMK.pdb",
+    "antigen": "abeta42_seed2_42.pdb",
+    "cdr_seq": "GRTFTTRTVTRTTTTTTVVRYTERGTTHDVTRD",
+    "bfn_iptm": 0.3614588677883148,
+    "bfn_plddt": 0.2669059932231903,
+    "strength": 2.0,
+    "seed": 4
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "abeta42_seed2_42.pdb",
+    "cdr_seq": "TTVTTRTVTRTTTTRTVRRTTTTTTVVVTTTTD",
+    "bfn_iptm": 0.3598322868347168,
+    "bfn_plddt": 0.2668890357017517,
+    "strength": 3.0,
+    "seed": 3
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "abeta42_seed0_42.pdb",
+    "cdr_seq": "TTVTTYTVTTTTTTTYTTTTTTTTTVVVTTTTT",
+    "bfn_iptm": 0.3587229251861572,
+    "bfn_plddt": 0.26688843965530396,
+    "strength": 3.0,
+    "seed": 3
+  }
+]

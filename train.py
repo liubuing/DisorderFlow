@@ -120,6 +120,19 @@ if __name__ == '__main__':
     logger.info('Loading dataset...')
     train_dataset = get_dataset(config.dataset.train)
     val_dataset = get_dataset(config.dataset.val)
+
+    # WAY4 V7 P0-fix-B: wrap dataset with per-residue disorder profiles
+    disorder_lookup_path = config.dataset.get('disorder_lookup') if hasattr(config, 'dataset') else None
+    if disorder_lookup_path is not None:
+        from disorderflow.datasets.disorder_augmented import DisorderAugmentedDataset, load_disorder_lookup
+        disorder_lookup = load_disorder_lookup(disorder_lookup_path)
+        # Build ordered ID list matching dataset indices
+        train_ids = getattr(train_dataset, 'ids', getattr(train_dataset, 'all_ids', None))
+        if train_ids is not None:
+            train_dataset = DisorderAugmentedDataset(train_dataset, disorder_lookup, train_ids)
+            logger.info(f'Disorder-augmented: {len(disorder_lookup)} profiles loaded for {len(train_ids)} training samples')
+        else:
+            logger.warning('Disorder lookup provided but cannot get sample IDs — skipping')
     
     # Custom Sampler for CDR-type consistency
     if config.dataset.train.type == 'lmdb_preprocessed':
@@ -261,6 +274,12 @@ if __name__ == '__main__':
             'v12_pae',
             'v12_seq_emb',
             'v13_seq_feedback',  # V13 sequence embedding feedback
+            'head_seq',        # V7+ CDR sequence head (disorder-conditioned)
+            'head_seq_fixbb',  # V7+ fixbb fallback head
+            'disorder_proj',   # V7+ epitope disorder projection
+            'head_pos',        # V7+ position head
+            'head_ori',        # V7+ orientation head
+            'head_ang',        # V7+ angle head
         ]
         # Optionally unfreeze the last N encoder layers (GAEncoder blocks)
         unfreeze_encoder_layers = config.train.get('unfreeze_encoder_layers', 0)

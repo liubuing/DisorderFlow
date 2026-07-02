@@ -1,0 +1,68 @@
+[
+  {
+    "scaffold": "5IMK.pdb",
+    "antigen": "abeta42_seed2_42.pdb",
+    "cdr_seq": "GRTFTTRTVTRTTTTTTVVRYTERGTTHDVTRD",
+    "bfn_iptm": 0.36145779490470886,
+    "bfn_plddt": 0.26691314578056335,
+    "entropy": 2.159639358520508,
+    "seed": 2,
+    "composite": 0.48843839246034615,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_library\\5IMK_top01.pdb"
+  },
+  {
+    "scaffold": "5IMK.pdb",
+    "antigen": "abeta42_seed0_42.pdb",
+    "cdr_seq": "GTTVTTRTVTRTTTTTTVVRYTKRTTTHVVTRD",
+    "bfn_iptm": 0.3611700236797333,
+    "bfn_plddt": 0.26691579818725586,
+    "entropy": 2.186264991760254,
+    "seed": 13,
+    "composite": 0.48836724537611004,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_library\\5IMK_top02.pdb"
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "abeta42_seed2_42.pdb",
+    "cdr_seq": "TTVTTRTVTRTTTTRTVRRTTTTTTVVVTTTTD",
+    "bfn_iptm": 0.3598300516605377,
+    "bfn_plddt": 0.2668724060058594,
+    "entropy": 2.0917673110961914,
+    "seed": 7,
+    "composite": 0.4880192347168923,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_library\\3STB_top03.pdb"
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "abeta42_seed0_42.pdb",
+    "cdr_seq": "TTVTTYTVTTTTTTTYTTTTTTTTTVVVTTTTT",
+    "bfn_iptm": 0.35872161388397217,
+    "bfn_plddt": 0.2668711245059967,
+    "entropy": 2.1304383277893066,
+    "seed": 7,
+    "composite": 0.48774174082279204,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_library\\3STB_top04.pdb"
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "template",
+    "cdr_seq": "GFTFSSYAINSASGTRTARYCARGRGYV",
+    "bfn_iptm": 0.0,
+    "bfn_plddt": 0.0,
+    "entropy": 0.0,
+    "seed": -1,
+    "composite": 0.132,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_library\\3STB_5CSZ.pdb"
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "template",
+    "cdr_seq": "GFTFSSYAVSGSGGSTTYAKDRYSGY",
+    "bfn_iptm": 0.0,
+    "bfn_plddt": 0.0,
+    "entropy": 0.0,
+    "seed": -1,
+    "composite": 0.132,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_library\\3STB_4HIX.pdb"
+  }
+]

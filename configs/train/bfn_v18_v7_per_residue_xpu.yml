@@ -1,0 +1,99 @@
+# BFN V18 V7: WAY4 P0-fix-B — Per-Residue Disorder-Conditioned CDR Generation
+#
+# P0-fix-A: IDP-augmented data subset built (n_flexible=5616, gate=PASS)
+# P0-fix-B: epitope_disorder scalar → per-residue profile (N,L)
+#            receiver.py: accepts (N,L) or (N,1) disorder
+#            core.py: loss uses per-residue profile where available
+#
+# Resume from V18 best.pt (scalar-disorder trained, strict=True — same arch).
+# Freeze backbone — only train head_seq + disorder_proj + confidence heads.
+# Per-residue disorder profiles loaded via disorder_lookup at dataset init.
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    disorder_align: 0.05          # entropy target by epitope disorder
+    anti_degen: 0.02               # T/V overuse penalty in flexible CDRs
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    conf_anticollapse: 0.50
+    huber_beta: 0.1
+    train_recycles: 1
+    mask_aug_prob: 0.2
+    mask_aug_ratio: [0.2, 0.6]
+    label_smoothing: 0.1
+    encoder_dropout: 0.05
+    t_clamp: 0.95
+
+train:
+  loss_weights:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    disorder_align: 0.05
+    anti_degen: 0.02
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    conf_anticollapse: 0.50
+  freeze_backbone: true
+  unfreeze_encoder_layers: 0
+  max_iters: 4000
+  val_freq: 500
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2042
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-5
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 5.e-7
+
+dataset:
+  disorder_lookup: data/sabdab_disorder_lookup.pkl
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

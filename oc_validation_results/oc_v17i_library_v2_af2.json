@@ -1,0 +1,48 @@
+[
+  {
+    "scaffold": "5IMK.pdb",
+    "antigen": "abeta42_seed2_42.pdb",
+    "cdr_seq": "GRTFTTRTVTRTTTTTTVVRYTERGTTHDVTRD",
+    "bfn_iptm": 0.3614588677883148,
+    "bfn_plddt": 0.2669059932231903,
+    "strength": 2.0,
+    "seed": 4,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_v2\\3STB_lib_00.pdb",
+    "af2_iptm": 0.0,
+    "af2_plddt": 0.4097286224365234
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "abeta42_seed2_42.pdb",
+    "cdr_seq": "TTVTTRTVTRTTTTRTVRRTTTTTTVVVTTTTD",
+    "bfn_iptm": 0.3598322868347168,
+    "bfn_plddt": 0.2668890357017517,
+    "strength": 3.0,
+    "seed": 3,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_v2\\3STB_lib_01.pdb",
+    "af2_iptm": 0.0,
+    "af2_plddt": 0.4097286224365234
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "template",
+    "cdr_seq": "GFTFSSYAINSASGTRTARYCARGRGYV",
+    "bfn_iptm": 0,
+    "bfn_plddt": 0,
+    "strength": 0,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_v2\\3STB_lib_02.pdb",
+    "af2_iptm": 0.0,
+    "af2_plddt": 0.4097286224365234
+  },
+  {
+    "scaffold": "3STB.pdb",
+    "antigen": "template",
+    "cdr_seq": "GFTFSSYAVSGSGGSTTYAKDRYSGY",
+    "bfn_iptm": 0,
+    "bfn_plddt": 0,
+    "strength": 0,
+    "grafted_pdb": "oc_validation_results/_complexes_v17i_v2\\3STB_lib_03.pdb",
+    "af2_iptm": 0.0,
+    "af2_plddt": 0.4097286224365234
+  }
+]
