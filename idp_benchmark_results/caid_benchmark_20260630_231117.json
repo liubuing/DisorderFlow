@@ -1,0 +1,12 @@
+{
+  "n_ordered_residues": 15327,
+  "n_disordered_residues": 42,
+  "n_ordered_complexes": 50,
+  "bfn_auc_roc": 1.0,
+  "bfn_auc_pr": 1.0,
+  "af2_auc_roc": 1.0,
+  "bfn_ordered_mean": 0.15797903811160594,
+  "bfn_disordered_mean": 0.9303796887397766,
+  "separation": 0.7724006506281706,
+  "status": "PASS"
+}

@@ -1,0 +1,3 @@
+2026-06-30 20:07:42,402 Running colabfold 1.6.1
+2026-06-30 20:08:47,072 Running on GPU
+2026-06-30 20:08:49,678 Found 8 citations for tools or databases

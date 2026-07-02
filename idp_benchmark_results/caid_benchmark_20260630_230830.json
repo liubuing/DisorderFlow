@@ -1,0 +1,12 @@
+{
+  "n_ordered_residues": 15327,
+  "n_disordered_residues": 42,
+  "n_ordered_complexes": 50,
+  "bfn_auc_roc": 0.5,
+  "bfn_auc_pr": 0.0027327737653718522,
+  "af2_auc_roc": 1.0,
+  "bfn_ordered_mean": 0.5,
+  "bfn_disordered_mean": 0.5,
+  "separation": 0.0,
+  "status": "FAIL"
+}
