@@ -1,0 +1,13 @@
+{
+  "probe": "V11 perturbation gate",
+  "sigmas": [
+    0.0,
+    0.1,
+    0.3,
+    0.5,
+    1.0,
+    2.0,
+    3.0
+  ],
+  "results": {}
+}
