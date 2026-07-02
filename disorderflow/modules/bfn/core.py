@@ -463,24 +463,46 @@ class AntibodyBFN_Core(nn.Module):
                 log_cdr_probs = torch.log(cdr_probs + 1e-8)
                 per_res_entropy = -(cdr_probs * log_cdr_probs).sum(dim=-1)  # (n_cdr,)
 
-                # Epitope disorder: per-batch mean (N,)
-                epi_d = batch.get('epitope_disorder', torch.zeros(N, device=x_seq.device))
-                # Broadcast to CDR residues
-                n_cdr_total = cdr_mask.sum()
-                cdr_epi_d = epi_d.repeat_interleave(cdr_mask.sum(dim=1))  # (n_cdr,)
+                # Epitope disorder: prefer per-residue, fall back to scalar
+                # V7: epitope_disorder_profile has antigen disorder at antigen positions
+                #     (zero at antibody positions). Take mean over antigen for loss.
+                # V6: epitope_disorder is a scalar (N,1) mean over antigen.
+                epi_profile = batch.get('epitope_disorder_profile', None)
+                if epi_profile is not None:
+                    # Per-residue profile: (N, L) — get mean over antigen residues only
+                    mask_ag = batch.get('mask_antigen', None)
+                    if mask_ag is not None and mask_ag.any():
+                        ag_disorder = (epi_profile * mask_ag.float()).sum(dim=1) / mask_ag.sum(dim=1).clamp(min=1)
+                    else:
+                        # No antigen mask: use mean over non-zero positions
+                        nonzero_mask = (epi_profile > 0).float()
+                        ag_disorder = (epi_profile * nonzero_mask).sum(dim=1) / nonzero_mask.sum(dim=1).clamp(min=1)
+                    cdr_epi_d = ag_disorder.repeat_interleave(cdr_mask.sum(dim=1))  # (n_cdr,)
+                else:
+                    # V6 scalar fallback
+                    epi_d = batch.get('epitope_disorder', torch.zeros(N, device=x_seq.device))
+                    if epi_d.dim() == 2:
+                        epi_d = epi_d.squeeze(-1)  # (N,1) -> (N,)
+                    cdr_epi_d = epi_d.repeat_interleave(cdr_mask.sum(dim=1))  # (n_cdr,)
+
+                # V8: quantile-based thresholds (data p90=0.22, absolute >0.3 starves high)
+                # Use top-30% as high, bottom-30% as low, rest as mid
+                if cdr_epi_d.numel() >= 4:
+                    q70 = torch.quantile(cdr_epi_d.float(), 0.70)
+                    q30 = torch.quantile(cdr_epi_d.float(), 0.30)
+                    high_mask = cdr_epi_d >= q70
+                    low_mask = cdr_epi_d <= q30
+                else:
+                    high_mask = cdr_epi_d > 0.2  # fallback: data p90=0.22
+                    low_mask = cdr_epi_d < 0.1
+                mid_mask = ~(high_mask | low_mask)
 
                 if disorder_align_w > 0:
-                    # High disorder (>0.3): reward higher entropy (target ~2.5)
-                    # Low disorder (<0.1): reward lower entropy (target ~0.5)
-                    high_mask = cdr_epi_d > 0.3
-                    low_mask = cdr_epi_d < 0.1
-                    mid_mask = ~(high_mask | low_mask)
-
                     loss_da = torch.zeros((), device=device)
                     if high_mask.any():
-                        # Push entropy toward 2.5 (diverse but not degenerate)
+                        # Push entropy toward 2.7 (log20=3.0, leave room for diversity)
                         loss_da = loss_da + F.mse_loss(per_res_entropy[high_mask],
-                            torch.full_like(per_res_entropy[high_mask], 2.5))
+                            torch.full_like(per_res_entropy[high_mask], 2.7))
                     if low_mask.any():
                         loss_da = loss_da + F.mse_loss(per_res_entropy[low_mask],
                             torch.full_like(per_res_entropy[low_mask], 0.5))
@@ -489,12 +511,23 @@ class AntibodyBFN_Core(nn.Module):
                             torch.full_like(per_res_entropy[mid_mask], 1.5))
                     losses['disorder_align'] = disorder_align_w * loss_da
 
+                    # V8 fix1: diversity loss — penalize top-3 AA probability concentration
+                    # top-3 sum low = residues spread out = real diversity (unique_aa high)
+                    # top-3 sum high = few AAs dominate = fake diversity
+                    diversity_w = self.loss_weight.get('diversity', 0.0)
+                    if diversity_w > 0 and high_mask.any():
+                        cdr_probs_high = cdr_probs[high_mask]  # (n_high, 20)
+                        top3_probs, _ = torch.topk(cdr_probs_high, k=3, dim=-1)
+                        top3_sum = top3_probs.sum(dim=-1)  # (n_high,) lower = more diverse
+                        # Direct mean push: want top3_sum small
+                        losses['diversity'] = diversity_w * top3_sum.mean()
+
                 if anti_degen_w > 0:
-                    # Penalize T/V dominance + 6-mer repeats in CDR probs
-                    # T and V get logit penalty in high-disorder regions
-                    if high_mask.any():
-                        tv_penalty = (cdr_probs[high_mask][:, [19, 16]].sum(dim=-1)).mean()  # T=19, V=16
-                        losses['anti_degen'] = anti_degen_w * tv_penalty
+                    # V8 fix2: penalize ANY single-AA dominance across ALL CDR residues
+                    # max_prob high = one AA dominates = degenerate (not just T/V)
+                    # Applies to all CDR (not just high), catches "RR degenerate" too
+                    max_prob_per_res = cdr_probs.max(dim=-1).values  # (n_cdr,)
+                    losses['anti_degen'] = anti_degen_w * max_prob_per_res.mean()
 
         losses['avg_t'] = t.mean()
         return losses
