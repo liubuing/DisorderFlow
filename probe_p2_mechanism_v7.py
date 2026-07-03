@@ -13,10 +13,12 @@ from collections import defaultdict
 # Config
 V7_CKPT = 'logs/bfn_v18_v7_per_residue_xpu_2026_07_02__00_48_49_v18_v7_run/checkpoints/best.pt'
 V18_CKPT = 'logs/bfn_v18_disorder_cond_xpu_2026_07_01__15_51_01_v18_way4/checkpoints/best.pt'
+V19_CKPT = 'logs/bfn_v19_diversity_xpu_2026_07_02__14_23_57_v19_final/checkpoints/best.pt'
+V20_CKPT = 'logs/bfn_v20_amplify_xpu_2026_07_02__21_32_16_v20_win/checkpoints/best.pt'
 PROFILES = 'data/idp_antigen_subset_v2/per_residue_profiles.pkl'
 LOOKUP = 'data/sabdab_disorder_lookup.pkl'
 OUT_DIR = 'idp_design_results'
-N_SAMPLES = 12
+N_SAMPLES = 10
 N_SEEDS = 3
 AA = 'ARNDCQEGHILKMFPSTWYV'
 
@@ -35,7 +37,8 @@ app = yaml.safe_load(open('app_config.yaml', encoding='utf-8'))
 orig_ckpt = app['models']['bfn']['checkpoint']
 
 models = {}
-for name, ckpt in [('V7_per_residue', V7_CKPT), ('V18_scalar', V18_CKPT)]:
+for name, ckpt in [('V19_per_residue', V19_CKPT), ('V20_per_residue', V20_CKPT),
+                       ('V18_scalar', V18_CKPT)]:
     if not os.path.exists(ckpt):
         continue
     app['models']['bfn']['checkpoint'] = ckpt
@@ -140,20 +143,25 @@ t0 = time.time()
 for label, samples in [('high_flex', test_high), ('low_flex', test_low)]:
     for sid, disorder_arr in samples:
         for mode_name, model in models.items():
-            dm = 'per_residue' if 'per_residue' in mode_name else 'scalar'
-            batch, entry = build_batch(sid, dm, disorder_arr)
-            if batch is None: continue
-            for seed in range(N_SEEDS):
-                r = sample_cdr(model, batch, seed)
-                r['sid'] = sid; r['label'] = label
-                r['mode'] = mode_name; r['seed'] = seed
-                r['ag_disorder_mean'] = float(disorder_arr.mean())
-                r['ag_disorder_max'] = float(disorder_arr.max())
-                all_results.append(r)
-            if 'error' not in all_results[-1]:
-                s = all_results[-1]
-                print("  %s/%s/%s/s%d: ent=%.3f uniq=%d seq=%s"
-                      % (label, sid, mode_name, seed, s['entropy_mean'], s['unique_aa'], s['pred_seq'][:30]))
+            # Determine disorder modes: per_residue/scalar + none (unconditional)
+            if 'per_residue' in mode_name:
+                d_modes = ['per_residue', 'none']
+            else:
+                d_modes = ['scalar', 'none']
+            for dm in d_modes:
+                batch, entry = build_batch(sid, dm, disorder_arr)
+                if batch is None: continue
+                for seed in range(N_SEEDS):
+                    r = sample_cdr(model, batch, seed)
+                    r['sid'] = sid; r['label'] = label
+                    r['mode'] = mode_name; r['disorder_mode'] = dm; r['seed'] = seed
+                    r['ag_disorder_mean'] = float(disorder_arr.mean())
+                    r['ag_disorder_max'] = float(disorder_arr.max())
+                    all_results.append(r)
+                if 'error' not in all_results[-1]:
+                    s = all_results[-1]
+                    print("  %s/%s/%s/%s/s%d: ent=%.3f uniq=%d seq=%s"
+                          % (label, sid, mode_name, dm, seed, s['entropy_mean'], s['unique_aa'], s['pred_seq'][:30]))
 
 env.close()
 elapsed = time.time() - t0
@@ -164,59 +172,87 @@ print("\n" + "=" * 60)
 print("P2 Mechanism Gradient Analysis")
 print("=" * 60)
 
-by_group = defaultdict(list)
+# Split by model and disorder_mode
+by_full = defaultdict(list)
 for r in all_results:
     if 'error' not in r:
-        by_group[(r['mode'], r['label'])].append(r)
+        by_full[(r['mode'], r.get('disorder_mode', ''), r['label'])].append(r)
 
-print("\n%-25s %-12s %4s %8s %8s %8s %6s" % ('Mode', 'Label', 'N', 'Entropy', 'TopAA%', 'UniqAA', '6mer'))
-print("-" * 75)
-for mode_name in models.keys():
+# Also group by (mode, disorder_mode) for Spearman
+by_model_dm = defaultdict(list)
+for r in all_results:
+    if 'error' not in r:
+        by_model_dm[(r['mode'], r.get('disorder_mode', ''))].append(r)
+
+print("\n%-30s %-12s %4s %8s %8s %8s %6s" % ('Mode', 'Label', 'N', 'Entropy', 'TopAA%', 'UniqAA', '6mer'))
+print("-" * 80)
+for (mode_name, dm), results_list in sorted(by_model_dm.items()):
     for label in ['high_flex', 'low_flex']:
-        results = by_group.get((mode_name, label), [])
+        results = [r for r in results_list if r['label'] == label]
         if not results: continue
         e = [r['entropy_mean'] for r in results]
         t = [r['top_aa_pct'] for r in results]
         u = [r['unique_aa'] for r in results]
         n6 = sum(1 for r in results if r.get('has_6mer'))
-        print("%-25s %-12s %4d %8.4f %8.3f %8.1f %5d"
-              % (mode_name, label, len(results), np.mean(e), np.mean(t), np.mean(u), n6))
+        print("%-30s %-12s %4d %8.4f %8.3f %8.1f %5d"
+              % ("%s_%s" % (mode_name, dm), label, len(results), np.mean(e), np.mean(t), np.mean(u), n6))
 
 # Gradient
 print("\n--- Gradient: high_flex - low_flex entropy ---")
-for mode_name in models.keys():
-    hr = by_group.get((mode_name, 'high_flex'), [])
-    lr = by_group.get((mode_name, 'low_flex'), [])
+for (mode_name, dm), results_list in sorted(by_model_dm.items()):
+    hr = [r for r in results_list if r['label'] == 'high_flex']
+    lr = [r for r in results_list if r['label'] == 'low_flex']
     if hr and lr:
         he = np.mean([r['entropy_mean'] for r in hr])
         le = np.mean([r['entropy_mean'] for r in lr])
         delta = he - le
-        print("  %s: high=%.4f low=%.4f delta=%+.4f" % (mode_name, he, le, delta))
+        print("  %s_%s: high=%.4f low=%.4f delta=%+.4f" % (mode_name, dm, he, le, delta))
+
+# ── Spearman: KEY METRICS ──
+print("\n" + "=" * 60)
+print("SPEARMAN CORRELATIONS (THE KEY V12 METRICS)")
+print("=" * 60)
+try:
+    from scipy.stats import spearmanr
+    for (mode_name, dm), results_list in sorted(by_model_dm.items()):
+        vals = [(r['ag_disorder_max'], r['unique_aa'], r['entropy_mean']) for r in results_list]
+        if len(vals) < 10: continue
+        ag = np.array([v[0] for v in vals])
+        ua = np.array([v[1] for v in vals])
+        ent = np.array([v[2] for v in vals])
+        r_ua, p_ua = spearmanr(ag, ua)
+        r_ent, p_ent = spearmanr(ag, ent)
+        print("\n  %s_%s (n=%d):" % (mode_name, dm, len(vals)))
+        print("    unique_aa  vs ag_disorder_max: r=%+.4f  p=%.4f" % (r_ua, p_ua))
+        print("    entropy    vs ag_disorder_max: r=%+.4f  p=%.4f" % (r_ent, p_ent))
+except ImportError:
+    print("  scipy not available, skipping Spearman")
 
 # Mann-Whitney
 print("\n--- Mann-Whitney U test ---")
 try:
     from scipy.stats import mannwhitneyu
-    for mode_name in models.keys():
-        hr = by_group.get((mode_name, 'high_flex'), [])
-        lr = by_group.get((mode_name, 'low_flex'), [])
+    for (mode_name, dm), results_list in sorted(by_model_dm.items()):
+        hr = [r for r in results_list if r['label'] == 'high_flex']
+        lr = [r for r in results_list if r['label'] == 'low_flex']
         if len(hr) >= 3 and len(lr) >= 3:
             he = [r['entropy_mean'] for r in hr]
             le = [r['entropy_mean'] for r in lr]
             stat, p = mannwhitneyu(he, le, alternative='greater')
             sig = '***' if p < 0.001 else '**' if p < 0.01 else '*' if p < 0.05 else 'ns'
-            print("  %s: U=%.1f, p=%.4f %s" % (mode_name, stat, p, sig))
+            print("  %s_%s: U=%.1f, p=%.4f %s" % (mode_name, dm, stat, p, sig))
 except ImportError:
     print("  scipy not available, skipping")
 
 # Save
 os.makedirs(OUT_DIR, exist_ok=True)
 ts = time.strftime('%Y%m%d_%H%M%S')
-out_path = os.path.join(OUT_DIR, 'way4_v7_p2_mechanism_%s.json' % ts)
+out_path = os.path.join(OUT_DIR, 'way4_v12_p2_mechanism_%s.json' % ts)
 with open(out_path, 'w') as f:
     json.dump({
-        'probe': 'WAY4 V7 P2 mechanism gradient',
+        'probe': 'WAY4 V12 P2 mechanism gradient — V20 real-training thesis test',
         'models': list(models.keys()),
+        'disorder_modes': ['per_residue', 'scalar', 'none'],
         'n_samples': len(test_high) + len(test_low),
         'n_seeds': N_SEEDS,
         'n_total': len(all_results),
