@@ -156,6 +156,3 @@ The diversity breakthrough (3× unique_aa, zero 6-mer repeats) is independently 
 
 **Next step**: Wet-lab validation (SPR/BLI) of top V20-generated CDR candidates.
 
----
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
