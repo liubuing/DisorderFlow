@@ -1,0 +1,45 @@
+source: RCSB Protein Data Bank
+download_template: https://files.rcsb.org/download/{pdb}.pdb
+metadata_template: https://data.rcsb.org/rest/v1/core/entry/{pdb}
+reviewed: 2026-07-27
+references:
+  - pdb: 3BAE
+    antibody: WO2
+    sha256: E72A263A0E8BE06F7D3E7F39A5D9719BF73DF1C005336E44EFDAB51080834990
+    panel_role: structural_replication
+  - pdb: 3U0T
+    antibody: Ponezumab
+    sha256: 17B9BCD6B476664AAAE0D1E68FBEE963CD59F55656686017A3BC27B5706FA095
+    panel_role: future_independent_reference
+  - pdb: 4HIX
+    antibody: Bapineuzumab
+    sha256: 2BB5404A3B66741F02E89B899F36982FB33F16F042149E3614435F4748004201
+    panel_role: loro_v1
+  - pdb: 4XXD
+    antibody: Solanezumab
+    sha256: BAEA668286468C5102C61A02E32EFA2BFAB891D1C182B527B9882EC8368EE613
+    panel_role: loro_v1
+  - pdb: 5CSZ
+    antibody: Gantenerumab
+    sha256: BEFDC21EA697332672570469E58DD2D22A6EACF44384DAFAF9E19C1589664E83
+    panel_role: loro_v1
+  - pdb: 5VZY
+    antibody: Crenezumab
+    sha256: 03C79B40A3876CB2DA2B7C27BCD78F11E369D299D8F627C144761F3297B1F953
+    panel_role: loro_v1
+  - pdb: 7BXV
+    antibody: 11A1
+    sha256: 9127A24E5A7017BC6FD44E57B5C609838391B47C9713E0B51E1012072377473C
+    panel_role: future_independent_reference
+
+excluded_misidentified_entries:
+  - pdb: 3UOT
+    reason: MDC1 FHA-domain phosphopeptide complex; not an A-beta antibody
+  - pdb: 6CGZ
+    reason: quorum-quenching lactonase; not an antibody
+  - pdb: 6D9B
+    reason: UDP-galactopyranose mutase; not an antibody
+  - pdb: 6H3R
+    reason: SMAD2-DNA complex; not an antibody
+  - pdb: 7K4V
+    reason: Kemp eliminase; not an antibody

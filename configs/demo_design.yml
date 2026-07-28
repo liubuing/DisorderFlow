@@ -1,0 +1,14 @@
+model:
+  checkpoint: ./logs/bfn_confidence_combined_v6_phase2_2026_05_18__14_05_03/checkpoints/best.pt
+
+sampling:
+  seed: 2026
+  deterministic: true
+  num_steps: 20
+  cdrs:
+    - H_CDR1
+    - H_CDR2
+    - H_CDR3
+    - L_CDR1
+    - L_CDR2
+    - L_CDR3

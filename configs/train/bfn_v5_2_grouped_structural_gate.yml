@@ -1,0 +1,91 @@
+# Bounded end-to-end gate for train.py, validation, and checkpoint serialization.
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      contrastive_order_sensitive: true
+      disorder_condition_scale: 0.22
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    disorder: 1.0
+    grouped_contrastive: 1.0
+    grouped_contrastive_margin: 0.5
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    encoder_dropout: 0.0
+    t_clamp: 0.5
+
+train:
+  loss_weights:
+    grouped_contrastive: 1.0
+  freeze_backbone: true
+  trainable_modules:
+    - contrastive_head
+    - contrastive_cdr_conv
+  max_iters: 3
+  val_freq: 3
+  log_freq: 1
+  batch_size: 13
+  warmup_steps: 1
+  early_stopping_patience: 8
+  seed: 2057
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 4
+    min_lr: 1.e-6
+
+dataset:
+  train: &gate_dataset
+    type: statecontrast_structural
+    records_dir: ./data/statecontrast_factory_v2_1
+    parent_lmdb_path: ./data/statecontrast_structural_v2_1/train_parents.lmdb
+    split: train
+    expected_schema: statecontrast_factory_v2_1
+    max_groups: 4
+    include_operations: &cdr_group
+      - observed_bound
+      - cdr_single_mutation:H1
+      - cdr_single_mutation:H2
+      - cdr_single_mutation:H3
+      - cdr_single_mutation:L1
+      - cdr_single_mutation:L2
+      - cdr_single_mutation:L3
+      - cdr_composition_shuffle:H1
+      - cdr_composition_shuffle:H2
+      - cdr_composition_shuffle:H3
+      - cdr_composition_shuffle:L1
+      - cdr_composition_shuffle:L2
+      - cdr_composition_shuffle:L3
+    transform: &structural_transform
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    <<: *gate_dataset
+    parent_lmdb_path: ./data/statecontrast_structural_v2_1/validation_parents.lmdb
+    split: validation
+    max_groups: 2
+    include_operations: *cdr_group
+    transform: *structural_transform

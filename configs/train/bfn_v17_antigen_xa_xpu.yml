@@ -1,0 +1,94 @@
+# BFN V17: Direction D — antigen cross-attention into CDR seq head (seq_only)
+#
+# probe_antigen_signal_usage proved the antigen signal never reaches head_seq in
+# V15 (complex vs fixbb recovery identical, Δ+0.1pp). V17 adds an antigen→CDR
+# cross-attention block (receiver.py: MultiheadAttention + gated residual on
+# features before head_seq). Residual + gate init -3 (~0.05) preserves V15
+# behavior at start; antigen_xa learns to use the antigen. seq_only (dist/ang=0).
+# Finetune from disorder_head_retrain.pt (A). After training, re-run the antigen
+# probe — expect complex recovery > fixbb (Δ>0 = flaw fixed).
+#
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0                 # V15: generator ON (was 0.0 in V14)
+    dist: 0.0                # stay seq_only (no structure generation)
+    ang: 0.0
+    plddt: 1.0               # keep V14 conf heads; no-op on SAbDab (no labels)
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50      # no-op without scaffold_id grouping (phase3 batch)
+    conf_ranking: 0.15
+    grouped_margin: 0.30     # gated on 'af2_iptm' in batch → 0 on SAbDab
+    conf_anticollapse: 0.50
+    huber_beta: 0.1
+    train_recycles: 1        # ↓ from 2 to save 8GB memory on long complexes
+    mask_aug_prob: 0.2       # mild design-time info dropout (phase3 uses 0.4)
+    mask_aug_ratio: [0.2, 0.6]
+    label_smoothing: 0.1     # help CDR diversity / avoid overconfident 1-hot
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    grouped_margin: 0.30
+    conf_anticollapse: 0.50
+  freeze_backbone: false     # full encoder + seq decoder trainable (generator must learn)
+  unfreeze_encoder_layers: 6
+  max_iters: 2000
+  val_freq: 250
+  log_freq: 10
+  batch_size: 1              # long complexes (L~274, max 345); use --accum_steps 4
+  warmup_steps: 100
+  seed: 2031
+  max_grad_norm: 5.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-5                # V14-unfreeze used 2e-5; 5e-6 barely moved the loss
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 15
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs   # mask all CDRs for co-design
+      - type: merge_chains          # merge Ab + antigen; cross-chain pair feats
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

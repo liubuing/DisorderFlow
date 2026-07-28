@@ -1,0 +1,80 @@
+﻿# Phase 3 + Disorder Head — Restore IDP awareness lost during Phase 3 FT
+#
+# Finetune from Phase 3 v11 Extended checkpoint. Freeze backbone, train heads + top 2 encoder layers.
+# Uses v11 merged dataset (3921 entries, 2366 IDPs with real disorder labels).
+# Key: adds disorder BCE loss back to confidence head training.
+#
+# v1 (failed): unfreeze_encoder_layers=0, idp_sample_weight=2.5 — 6 params random init learned
+#   to predict "disordered everywhere" by iter 1200 (IDP loss 0.41, folded loss 1.36).
+# v2 (current): unfreeze_encoder_layers=2 gives head meaningful features; idp_sample_weight=1.5
+#   reduces class imbalance; max_iters=5000 for convergence.
+#
+# Usage:
+#   python train.py configs/train/bfn_phase3_disorder.yml \
+#       --finetune ./logs/bfn_phase3_v11_extended_2026_05_31__12_09_57/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 2.0
+    iptm: 2.5
+    pae: 0.3
+    disorder: 1.0
+    head_dropout: 0.15
+    encoder_dropout: 0.0
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+
+train:
+  loss_weights:
+    plddt: 2.0
+    iptm: 2.5
+    pae: 0.3
+    disorder: 1.0
+  freeze_backbone: true
+  unfreeze_encoder_layers: 2
+  max_iters: 5000
+  val_freq: 200
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 200
+  seed: 2029
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_train.lmdb
+    max_residues: 250
+    idp_sample_weight: 1.5
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_val.lmdb
+    max_residues: 350

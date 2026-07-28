@@ -1,0 +1,146 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+/dist/
+/build/
+
+# Server runtime
+.server.pid
+server.log
+
+# Large model/data files
+logs/
+checkpoints/
+data/
+alphafold_results/
+batch_results/
+proteinmpnn_output/
+design_8proteins_results/
+
+# Environment
+venv/
+.venv/
+.venv_*/
+venv_*/
+.env
+
+# Temp files
+*.tmp
+*_test.pdb
+*_temp.pdb
+_debug_test.pdb
+_full.pdb
+_test.pdb
+
+# Validation outputs
+confidence_eval_results.json
+validation_results.json
+validation_v2_results.json
+integration_bfn.json
+integration_bfn_result.json
+tau_protein_test_results.json
+
+# Training outputs
+training_output_*.txt
+
+# Reports and docs (keep local only)
+workflow_*_report.*
+ProteinStudio_Project_Guide.docx
+convert_md_to_docx.py
+PROJECT_GUIDE.md
+USER_GUIDE.md
+val_phase6_dummy.pdb
+
+# Claude Code local config
+.claude/
+
+# Build logs (contain local paths)
+conformation_build*.log
+*.log
+
+# AF2 WSL batch files
+.af2_wsl_*.jsonl
+af2_wsl_*.py
+
+# Temp scripts
+_gen_*.py
+
+# Word temp files
+~$*.docx
+
+# Design results (contain user data)
+design_results/
+idp_design_results/
+results/
+batch_results/
+
+# Analysis outputs
+disorder_analysis.txt
+disorder_scores.npy
+*.npy
+
+# Build scripts (contain local paths)
+_launch_build.*
+
+# IDE / Editor
+.idea/
+*.swp
+*.swo
+*~
+
+# Virtual environments
+.cf/
+
+# CASP / competition data
+casp17/
+
+# Logs directory
+日誌/
+日志/
+
+# OS files
+.DS_Store
+Thumbs.db
+test.txt
+
+# Docs with personal info
+docs/send_email.py
+docs/底层原理全解_从零开始.md
+docs/给夏老师的调研报告_课题论证.md
+docs/研究流程_完整版.md
+docs/*.pdf
+
+# Third-party model weights (use scripts/download_assets.py)
+ProteinMPNN/ca_model_weights/
+ProteinMPNN/soluble_model_weights/
+ProteinMPNN/vanilla_model_weights/
+ProteinMPNN/training/
+
+# Third-party binaries and archives
+HDOCKlite-v1.1/
+HDOCKlite.tar.gz
+bin/
+
+# Pip cache / wheels
+tmp_pip/
+
+# Additional result dirs
+hdock_design_results/
+idp_benchmark_results/
+misfolding_results/
+oc_validation_results/
+fold_dock_results/
+way4_s0/
+way4_s0_v2/
+closed_loop_results/
+outputs/
+
+# Pytest / Ruff cache
+.pytest_cache/
+.ruff_cache/
+
+# Docx project docs (local only)
+DisOrderFlow_完整说明书.docx
+WETLAB_VALIDATION_PLAN_V15.docx

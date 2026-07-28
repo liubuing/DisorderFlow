@@ -1,0 +1,69 @@
+# v5.3 phase A: NMR-calibrated rank-only flexibility adaptation.
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      contrastive_order_sensitive: true
+      disorder_condition_scale: 0.22
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    disorder_rank: 1.0
+    disorder_rank_temperature: 1.0
+    disorder_rank_min_gap: 0.05
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    encoder_dropout: 0.05
+    t_clamp: 0.5
+
+train:
+  disorder_supervision: rank_only
+  loss_weights:
+    disorder_rank: 1.0
+  freeze_backbone: true
+  trainable_modules:
+    - head_disorder
+  unfreeze_encoder_layers: 2
+  max_iters: 1000
+  val_freq: 100
+  log_freq: 10
+  batch_size: 1
+  amp_dtype: bfloat16
+  warmup_steps: 100
+  early_stopping_patience: 10
+  seed: 2061
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-5
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 5
+    min_lr: 2.e-7
+
+dataset:
+  train:
+    type: conformation_regression
+    db_path: ./data/confidence_conformation_v5_clustered/confidence_train.lmdb
+    max_residues: 380
+    geometry_mode: reference_backbone
+  val:
+    type: conformation_regression
+    db_path: ./data/confidence_conformation_v5_clustered/confidence_val.lmdb
+    max_residues: 380
+    geometry_mode: reference_backbone
+    random_conformation: false

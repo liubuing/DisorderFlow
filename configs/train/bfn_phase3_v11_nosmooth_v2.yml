@@ -1,0 +1,93 @@
+﻿# BFN Phase 3 — nosmooth v2: Structure-optimized
+#
+# Continues from nosmooth v1 checkpoint, rebalances weights to
+# improve structure metrics (dist, ang) while preserving seq gains.
+#
+# v1 (nosmooth, 5k iter): seq=2.98, dist=192.8, PPL=5.57
+# v2 target:            dist < 150, PPL < 5.5
+#
+# Changes from v1:
+#   seq: 3.0 → 2.0  (reduce seq dominance, seq already good at ~3)
+#   dist: 0.5 → 1.0 (double structure emphasis)
+#   ang: 0.5 → 0.5  (keep same)
+#   max_iters: 5000 → 8000 (dist still converging at 5k)
+#   lr: 5e-6 → 2e-6 (lower LR for fine-tuning continuation)
+#
+# Usage:
+#   python train.py configs/train/bfn_phase3_v11_nosmooth_v2.yml \
+#       --finetune ./logs/bfn_phase3_v11_nosmooth_2026_06_01__15_08_09/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 2.0
+    dist: 1.0
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 2.0
+    dist: 1.0
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+  freeze_backbone: false
+  unfreeze_encoder_layers: 2
+  max_iters: 8000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2030
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-6
+    weight_decay: 5.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 15
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

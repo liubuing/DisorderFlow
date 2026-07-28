@@ -1,0 +1,98 @@
+﻿# BFN Phase 3 — Loss Weight Rebalanced
+#
+# Problem: label_smoothing=0.03 inflates seq loss to ~30 (from ~3 without smoothing).
+#   With seq:2.0, dist:0.5, the effective contributions are seq≈60, dist≈60, ang≈1.5.
+#   This over-emphasizes sequence at the expense of structure quality.
+#
+# Fix:
+#   seq: 3.0 → 1.0  (recognize that seq loss of 30 is a label_smoothing artifact)
+#   dist: 0.5 → 0.8 (emphasize structure recovery)
+#   ang: 0.5 → 0.5 (unchanged)
+#
+# Expected weighted contributions (~val at 15k iter):
+#   seq ≈ 30 × 1.0 = 30  (23%)
+#   dist ≈ 120 × 0.8 = 96 (75%)
+#   ang ≈ 3 × 0.5 = 1.5   (1%)
+#   total ≈ 127.5
+#
+# Compare against v11_extended (seq=2.0, dist=0.5) as baseline.
+#
+# Usage:
+#   python train.py configs/train/bfn_phase3_v11_rebalanced.yml \
+#       --finetune ./logs/bfn_idp_phase2_v11_xpu_2026_05_30__22_40_23/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    dist: 0.8
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+    label_smoothing: 0.03
+
+train:
+  loss_weights:
+    seq: 1.0
+    dist: 0.8
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+  freeze_backbone: false
+  unfreeze_encoder_layers: 2
+  max_iters: 15000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 200
+  seed: 2029
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 5.e-6
+    weight_decay: 5.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

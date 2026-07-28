@@ -1,0 +1,87 @@
+domain: idp_antibody
+name: abeta_position_effect_v3_4ref_loro
+description: Four-antibody A-beta panel with leave-one-reference-out position transfer.
+
+references:
+  - pdb: 4HIX
+    antibody: Bapineuzumab
+    complex_pdb: data/anti_abeta_refs/4HIX.pdb
+    peptide_chain: A
+    peptide_sequence: DAEFRH
+    target_region: [1, 6]
+    heavy_chain: H
+    light_chain: L
+    positive_state: antibody_bound
+    reliability: reliable
+    provenance_verified: true
+    rcsb_title: Crystal structure of a humanised 3D6 Fab bound to amyloid beta peptide
+  - pdb: 5CSZ
+    antibody: Gantenerumab
+    complex_pdb: data/anti_abeta_refs/5CSZ.pdb
+    peptide_chain: E
+    peptide_sequence: DAEFRHDSGY
+    target_region: [1, 10]
+    heavy_chain: A
+    light_chain: B
+    positive_state: antibody_bound
+    reliability: reliable
+    provenance_verified: true
+    rcsb_title: Crystal structure of Gantenerumab Fab fragment in complex with Abeta 1-11
+  - pdb: 4XXD
+    antibody: Solanezumab
+    complex_pdb: data/anti_abeta_refs/4XXD.pdb
+    peptide_chain: F
+    peptide_sequence: KLVFFAEDV
+    target_region: [16, 24]
+    heavy_chain: E
+    light_chain: D
+    positive_state: antibody_bound
+    reliability: reliable
+    provenance_verified: true
+    rcsb_title: Crystal structure of mid-region amyloid beta capture by Solanezumab
+  - pdb: 5VZY
+    antibody: Crenezumab
+    complex_pdb: data/anti_abeta_refs/5VZY.pdb
+    peptide_chain: A
+    peptide_sequence: HHQKLVFFAEDV
+    target_region: [13, 24]
+    heavy_chain: H
+    light_chain: L
+    positive_state: antibody_bound
+    reliability: reliable
+    provenance_verified: true
+    rcsb_title: Crystal structure of Crenezumab Fab in complex with Abeta
+
+negative_states:
+  mode: synthetic_perturbation
+  heldout_seed_offset: 10000
+
+candidate_generation:
+  engine: contact_guided
+  samples_per_ref: 150
+  v4_samples_per_ref: 150
+  max_mutations: 4
+
+statecontrast:
+  seeds: [31, 41, 51, 61, 71]
+  rule_mode: position
+  validation_mode: leave_reference_out
+  min_support: 4
+  min_effect: 0.004
+  min_recurrence: 2
+  required_controls:
+    - parent_only
+    - random_position
+    - shuffled_position
+    - heldout_negative_states
+    - multi_seed_replicates
+    - leave_one_reference_out
+
+claim_gate:
+  has_real_negative_ensembles: false
+  has_wetlab: false
+  minimum_references: 4
+
+fold_sidecheck:
+  enabled: false
+  mode: optional_colabfold

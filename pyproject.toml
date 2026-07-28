@@ -1,0 +1,88 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "disorderflow"
+version = "0.1.0"
+description = "BFN-based fixed-backbone protein/antibody sequence design with IDP-aware confidence and disorder prediction."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE.md"]
+authors = [{ name = "liubuing" }]
+keywords = ["protein-design", "antibody", "bfn", "bayesian-flow-network", "intrinsic-disorder", "alphafold"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "torch>=2.0.0",
+    "numpy",
+    "tqdm",
+    "biopython",
+    "pyyaml",
+    "easydict",
+    "tensorboard",
+    "scipy",
+    "pandas",
+    "lmdb",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "ruff>=0.4.0",
+]
+af2 = [
+    "jax",
+    "jaxlib",
+]
+chem = [
+    "rdkit",
+]
+ui = [
+    "gradio",
+    "fair-esm",
+]
+
+[project.urls]
+Homepage = "https://github.com/liubuing/DisorderFlow"
+
+[tool.setuptools.packages.find]
+include = ["disorderflow*"]
+exclude = ["venv*", "tests*", "data*", "logs*", "results*", "casp17*"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+testpaths = ["tests"]
+markers = [
+    "gpu: requires a GPU/XPU (deselected by default)",
+    "slow: long-running tests (deselected by default)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = [".venv_cuda", "venv_wsl", "venv_colabfold", "casp17", "diffab", "docs", "data", "logs", "results", "ref"]
+
+[tool.ruff.lint]
+# Keep lint permissive for a research codebase — focus on real bugs, not style.
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = [
+    "E501",   # line length handled by formatter
+    "E741",   # ambiguous variable names (common in ML code: l, I)
+    "B008",   # function call in default argument (used in argparse)
+    "F401",   # unused import (too noisy across modules)
+    "F841",   # unused local variable
+    "E722",   # bare except
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["F401", "F811", "E402"]
+"scripts/*" = ["E402"]

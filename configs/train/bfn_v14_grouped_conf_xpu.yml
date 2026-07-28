@@ -1,0 +1,113 @@
+﻿# BFN V14: Grouped Real-AF2 Design-Variant Confidence Training
+#
+# Fixes the stuck 9.47x overconfidence (OC). Root cause (see DIAGNOSIS.md):
+#   - V12 trained on the foundation dataset, whose BFN design variants had
+#     SYNTHETIC AF2 labels (native_iptm × 0.5) → the head learned to be
+#     sequence-invariant. Same backbone, different CDRs → same fake label.
+#   - conf_variance detached pred_iptm → zero gradient (cosmetic loss).
+#
+# V14 changes:
+#   1. Trains on data/confidence_design_variants_v14 (REAL AF2 per design),
+#      built by build_design_variant_dataset.py. batch['aa'] = designed seq.
+#   2. Grouped losses (disorderflow/modules/bfn/core.py):
+#      - conf_variance: gradient-bearing, WITHIN-scaffold std (maximised).
+#      - conf_ranking  : within-scaffold PPL-order pairs only.
+#      - grouped_margin: pairwise margin ranking vs TRUE af2_iptm, within
+#        scaffold — the core supervisory signal.
+#   3. Backbone UNFROZEN (Phase B): probe (probe_conf_collapse.py) proved the
+#      Phase-A freeze caused global constant collapse (val pred ipTM std=1.8e-5).
+#      V12 head was poisoned by synthetic constant labels; unfreezing + a fresh
+#      backbone-geometry ipTM pathway (v14_iptm_bb) + conf_anticollapse hinge
+#      break the collapse basin. lr lowered to 2e-5 to protect structure heads.
+#
+# Usage:
+#   # 1. Build the real-AF2 dataset (GPU, ~1-2 days full; --smoke-test first)
+#   python build_design_variant_dataset.py --smoke-test --device cuda
+#
+#   # 2. Train (CUDA/GPU)
+#   python train.py configs/train/bfn_v14_grouped_conf_xpu.yml \
+#       --finetune logs/bfn_v12_seqconf_xpu_2026_06_20__02_54_40/checkpoints/best.pt \
+#       --device cuda --no_amp
+#
+#   # 3. Measure OC (target: iptm OC ≤ 2x; was 9.47x)
+#   python run_oc_v14_p1.py && python run_oc_v14_p2.py
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50      # gradient-bearing now; within-scaffold std (↑ 0.20→0.50 vs iptm MSE 1.5)
+    conf_ranking: 0.15       # within-scaffold PPL-pair ranking
+    grouped_margin: 0.30     # NEW: margin ranking vs real af2_iptm (core signal)
+    conf_anticollapse: 0.50  # V14-unfreeze: hard hinge penalty when within-group std<0.05
+    huber_beta: 0.1
+    train_recycles: 2        # keep feedback embedding training
+    mask_aug_prob: 0.0
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    grouped_margin: 0.30
+    conf_anticollapse: 0.50
+  freeze_backbone: false     # Phase B (unfreeze): probe proved Phase-A freeze caused constant collapse
+  unfreeze_encoder_layers: 6 # also explicitly unfreeze all 6 encoder blocks (safety)
+  max_iters: 5000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 4              # 4 scaffolds; each groups K variants via scaffold_id
+  warmup_steps: 200
+  seed: 2031
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-5                # ↓ 1e-4→2e-5: unfrozen backbone needs gentler updates
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_design_variants_v14/train_grouped.lmdb
+    max_residues: 256
+  val:
+    type: confidence_regression
+    # V14-unfreeze: grouped val (scaffold-disjoint, K=8 variants/scaffold).
+    # Built by build_v14_grouped_val.py. Replacement for the legacy V11 val
+    # which had NO scaffold grouping → grouped losses were non-computable on
+    # val and best.pt selection was blind to design-discrimination.
+    db_path: ./data/confidence_design_variants_v14/val_grouped.lmdb
+    max_residues: 256

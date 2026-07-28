@@ -1,0 +1,37 @@
+dataset_name: statecontrast_factory_v1
+seed: 20260721
+shard_size: 50000
+
+counterfactuals:
+  operations:
+    - cdr_single_mutation
+    - cdr_composition_shuffle
+    - antigen_composition_shuffle
+
+sources:
+  - name: phase3_v5_1_pair_clustered_train
+    type: phase3_lmdb
+    path: data/phase3_v5_1_pair_clustered/train.lmdb
+    split: train
+    release: v5.1-antigen-centered
+    license: derived from SAbDab/SAbDab2; verify upstream record terms
+    evidence_tier: experimental_structure
+    usage: training
+  - name: phase3_v5_1_pair_clustered_validation
+    type: phase3_lmdb
+    path: data/phase3_v5_1_pair_clustered/val.lmdb
+    split: validation
+    release: v5.1-antigen-centered
+    license: derived from SAbDab/SAbDab2; verify upstream record terms
+    evidence_tier: experimental_structure
+    usage: validation
+
+planned_sources:
+  - name: sabdab2_abag_split
+    status: adapter_pending
+  - name: disprot_caid_excluded
+    status: adapter_pending
+  - name: oas_repertoire_unpaired
+    status: download_and_adapter_pending
+  - name: abeta_multistate_ensembles
+    status: state_annotation_pending

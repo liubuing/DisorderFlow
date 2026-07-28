@@ -1,0 +1,47 @@
+domain: idp_antibody
+name: abeta_position_effect_v1
+description: A-beta N-terminal StateContrast-Ab proof of concept using position-only effect-size guidance.
+
+references:
+  - pdb: 4HIX
+    complex_pdb: data/anti_abeta_refs/4HIX.pdb
+    peptide_chain: A
+    peptide_sequence: DAEFRH
+    positive_state: antibody_bound
+  - pdb: 5CSZ
+    complex_pdb: data/anti_abeta_refs/5CSZ.pdb
+    peptide_chain: E
+    peptide_sequence: DAEFRHDSGY
+    positive_state: antibody_bound
+
+negative_states:
+  mode: synthetic_perturbation
+  heldout_seed_offset: 10000
+
+candidate_generation:
+  engine: contact_guided
+  samples_per_ref: 150
+  v4_samples_per_ref: 150
+  max_mutations: 4
+
+statecontrast:
+  seeds: [31, 41, 51, 61, 71]
+  rule_mode: position
+  min_support: 4
+  min_effect: 0.004
+  min_recurrence: 2
+  required_controls:
+    - parent_only
+    - random_position
+    - shuffled_position
+    - heldout_negative_states
+    - multi_seed_replicates
+
+claim_gate:
+  has_real_negative_ensembles: false
+  has_wetlab: false
+  minimum_references: 2
+
+fold_sidecheck:
+  enabled: false
+  mode: optional_colabfold

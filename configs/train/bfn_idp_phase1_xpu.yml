@@ -1,0 +1,87 @@
+﻿# BFN IDP-Aware Phase 1 — Disorder Detection Head Training
+#
+# Trains the disorder binary classification head alongside confidence heads.
+# Uses entry-level is_idp as placeholder per-residue labels (Phase 2 adds MobiDB).
+#
+# Key features:
+#   1. New disorder BCE head (per-residue binary: ordered=0, disordered=1)
+#   2. Freeze backbone, train confidence + disorder heads
+#   3. IDP-weighted sampling (2.5x) to handle class imbalance
+#   4. Length curriculum for memory stability
+#   5. Cosine warm restarts with linear warmup
+#
+# Usage:
+#   python train.py configs/train/bfn_idp_phase1_xpu.yml \
+#       --finetune ./logs/bfn_confidence_combined_v9_phase1_2026_05_25__17_24_03/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 2.0
+    iptm: 2.5
+    pae: 0.3
+    disorder: 1.0
+    head_dropout: 0.1
+    huber_beta: 0.1
+    train_recycles: 3
+    mask_aug_prob: 0.6
+    mask_aug_ratio: [0.3, 1.0]
+
+train:
+  loss_weights:
+    plddt: 2.0
+    iptm: 2.5
+    pae: 0.3
+    disorder: 1.0
+  freeze_backbone: true
+  unfreeze_encoder_layers: 6
+  max_iters: 50000
+  val_freq: 100
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 2000
+  seed: 2029
+  max_grad_norm: 1.0
+  early_stopping_patience: 50
+  idp_loss_multiplier: 1.5
+  length_curriculum:
+    stages:
+      - [0, 250]
+      - [10000, 350]
+      - [20000, 500]
+  optimizer:
+    type: adam
+    lr: 5.e-5
+    weight_decay: 0.0
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: cosine
+    T_0: 5000
+    T_mult: 2
+    eta_min: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v9/confidence_train.lmdb
+    max_residues: 250
+    idp_sample_weight: 2.5
+    min_af2_plddt: 40.0
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v9/confidence_val.lmdb
+    max_residues: 350

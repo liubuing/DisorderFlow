@@ -1,0 +1,89 @@
+# v5.1 Stage 5: corrective tuning for measurable disorder conditioning and CDR-order discrimination.
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      contrastive_order_sensitive: true
+      disorder_condition_scale: 0.22
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    contrastive: 1.0
+    disorder: 1.0
+    disorder_align: 0.5
+    disorder_align_scale: 0.22
+    disorder_entropy_low: 0.5
+    disorder_entropy_high: 2.7
+    diversity: 0.05
+    anti_degen: 0.02
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    label_smoothing: 0.05
+    encoder_dropout: 0.0
+    t_clamp: 0.95
+
+train:
+  loss_weights:
+    seq: 0.25
+    contrastive: 1.0
+    disorder_align: 1.0
+    diversity: 1.0
+    anti_degen: 1.0
+  freeze_backbone: true
+  trainable_modules:
+    - head_seq
+    - disorder_proj
+    - contrastive_head
+    - contrastive_cdr_conv
+  max_iters: 1500
+  val_freq: 150
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  early_stopping_patience: 8
+  seed: 2055
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 4
+    min_lr: 1.e-6
+
+dataset:
+  disorder_lookup: ./data/sabdab_disorder_lookup.pkl
+  require_disorder_lookup: true
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: true
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor

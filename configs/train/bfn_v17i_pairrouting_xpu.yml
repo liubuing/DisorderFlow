@@ -1,0 +1,103 @@
+# BFN V17i: Direction I — Pair Feature Routing (§3.1a)
+#
+# Plan §6.3: pair_feat (N,L,L,128) encodes all pairwise interactions
+# including CDR-antigen contacts, but NO head reads it for sequence
+# decisions. head_seq = Linear(res_feat) only reads CDR self-features.
+#
+# V17i replaces the simple Linear head_seq with a PairRoutingHead:
+#   seq_input = concat(res_feat, pair_aggr_proj, antigen_pooled)
+# where:
+#   - pair_aggr = mean_{j∈antigen} pair_feat[:, i, j, :] (per-residue)
+#   - pair_aggr_proj = Linear(128→256) projection
+#   - antigen_pooled = mean_{j∈antigen} features[:, j, :]
+# FixBB fallback: simple Linear(res_feat) when no antigen present.
+#
+# Finetune from V17c best.pt (cross-attn out_proj=2.13). The pair_proj
+# and head_seq MLP are randomly initialised; V17c weights loaded via
+# strict=False.
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true         # NEW: enable pair_feat→head_seq routing
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    grouped_margin: 0.30
+    conf_anticollapse: 0.50
+    huber_beta: 0.1
+    train_recycles: 1
+    mask_aug_prob: 0.2
+    mask_aug_ratio: [0.2, 0.6]
+    label_smoothing: 0.1
+    encoder_dropout: 0.05
+    t_clamp: 0.95
+
+train:
+  loss_weights:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    grouped_margin: 0.30
+    conf_anticollapse: 0.50
+  freeze_backbone: false
+  unfreeze_encoder_layers: 6
+  max_iters: 8000               # continue from 4000, train 4000 more
+  val_freq: 200                  # dense checkpoints for faster iteration
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2038
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-5
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 5.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

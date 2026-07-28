@@ -1,0 +1,101 @@
+﻿# BFN Phase 3 — v11 Checkpoint, No Label Smoothing
+#
+# Fixes for v11ext PPL degradation (6.79 vs baseline 4.68):
+#
+#   Cause 1: label_smoothing=0.03 inflates logit magnitude → seq loss ~30
+#     Fix: Remove label_smoothing entirely. BFN's noisy training process
+#     (sender adds noise, receiver denoises) is already a strong regularizer
+#     for sequence prediction — no need to additionally smooth targets.
+#
+#   Cause 2: Inflated seq loss dominates training signal → model neglects seq quality
+#     Fix: Without smoothing, seq loss returns to ~3. With seq=3.0, dist=0.5,
+#     weighted contributions are seq≈9, dist≈60-150 → structure naturally dominant.
+#
+#   Cause 3: 15k iter amplifies the imbalance, PPL degrades from 4.50 (2k) → 6.79 (15k)
+#     Fix: max_iters=5000. BFN dist/ang converge within 3-5k iter on this dataset.
+#     plateau scheduler with patience=20 provides early stopping.
+#
+# Expected vs baseline comparison:
+#   02_baseline_24cmp:    seq~3.1, dist~356, PPL=4.68 (24cmp, no reg, 2k)
+#   04_v11ext_2976cmp:    seq~30,  dist~116, PPL=6.79 (smoothing=0.03, 15k)
+#   07_v11_nosmooth:      seq~3,   dist~120, PPL<5.0  (no smoothing, 5k)
+#
+# Usage:
+#   python train.py configs/train/bfn_phase3_v11_nosmooth.yml \
+#       --finetune ./logs/bfn_idp_phase2_v11_xpu_2026_05_30__22_40_23/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 3.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+    # label_smoothing intentionally removed — BFN noise is sufficient regularization
+
+train:
+  loss_weights:
+    seq: 3.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+  freeze_backbone: false
+  unfreeze_encoder_layers: 2
+  max_iters: 5000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 200
+  seed: 2029
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 5.e-6
+    weight_decay: 5.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

@@ -1,0 +1,91 @@
+﻿# BFN V12: Pure-Sequence Confidence Heads (backbone-free)
+#
+# Phase A: Freeze backbone, train only V12 sequence confidence heads.
+#   - Replaces backbone-dominated pLDDT/ipTM/PAE heads with deep MLPs
+#     that predict confidence from the sequence probability distribution
+#     probs_seq (N, L, 20) — bypassing the IPA encoder entirely.
+#   - Adds self-supervised losses: variance (reward >0 std across designs)
+#     and ranking (PPL order should match confidence order).
+#
+# Phase B (future): Unfreeze backbone, full co-design + V12 confidence.
+#
+# Usage:
+#   python train.py configs/train/bfn_v12_seqconf_xpu.yml \
+#       --finetune ./logs/bfn_v11_seqconf_xpu_2026_06_19__23_01_18/checkpoints/best.pt \
+#       --device cuda --no_amp
+#
+# Checkpoint compatibility:
+#   strict=False handles old backbone confidence head keys gracefully.
+#   V12 heads (v12_plddt/v12_iptm/v12_pae/v12_seq_emb) are random-init.
+#   All other weights (encoder, structure, disorder) load normally.
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.30     # ↑ 6x from 0.05 — push harder on diversity
+    conf_ranking: 0.10      # ↑ 5x from 0.02 — enforce PPL ordering
+    huber_beta: 0.1
+    train_recycles: 2       # Enable feedback embedding training
+    mask_aug_prob: 0.0     # V13: disabled to save VRAM with train_recycles=2
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.05
+    conf_ranking: 0.02
+  freeze_backbone: true      # Phase A: only train V12 confidence heads
+  max_iters: 3000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 2              # 1000 backbones: more contrast pairs in batch
+  warmup_steps: 100
+  seed: 2031
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 1.e-4                # Lower LR — fine-tuning trained V12 heads
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_foundation_v2/train.lmdb
+    max_residues: 256
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_val.lmdb
+    max_residues: 256

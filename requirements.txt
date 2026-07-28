@@ -1,0 +1,17 @@
+# Core dependencies
+torch>=2.0.0
+numpy
+tqdm
+biopython
+pyyaml
+easydict
+tensorboard
+scipy
+pandas
+lmdb
+
+# Web UI
+gradio>=4.0
+
+# ESM-IF (optional, for sequence scoring)
+fair-esm

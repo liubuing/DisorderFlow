@@ -1,0 +1,81 @@
+# BFN Direction 3: Conformational Robustness Training — CUDA
+#
+# Trains the disorder head to learn physical uncertainty from AF2
+# multi-conformation ensembles instead of database binary labels.
+#
+# NOTE: Requires building multi-conformation data first:
+#   python scripts/build/build_conformation_dataset.py --n_seeds 5 --max_idp 10 --device cuda
+# Data dir: data/confidence_conformation_v5_clustered/
+#
+# Usage (finetune from best phase2/3 checkpoint):
+#   python train.py configs/train/bfn_conformation_cuda.yml \
+#       --finetune ./logs/<phase2_dir>/checkpoints/best.pt \
+#       --device cuda
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 1.0
+    huber_beta: 0.1
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 1.0
+  freeze_backbone: true
+  max_iters: 3000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2031
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 1.e-5
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: conformation_regression
+    db_path: ./data/confidence_conformation_v5_clustered/confidence_train.lmdb
+    max_residues: 350
+  val:
+    type: conformation_regression
+    db_path: ./data/confidence_conformation_v5_clustered/confidence_val.lmdb
+    max_residues: 350

@@ -1,0 +1,67 @@
+domain: idp_antibody
+name: abeta_position_effect_v2_3ref
+description: A-beta StateContrast-Ab proof of concept with 4HIX, 5CSZ, and non-N-terminal 7BXV reference.
+
+references:
+  - pdb: 4HIX
+    complex_pdb: data/anti_abeta_refs/4HIX.pdb
+    peptide_chain: A
+    peptide_sequence: DAEFRH
+    target_region: [1, 6]
+    positive_state: antibody_bound
+    heavy_chain: H
+    light_chain: L
+    reliability: reliable
+    provenance_verified: true
+  - pdb: 5CSZ
+    complex_pdb: data/anti_abeta_refs/5CSZ.pdb
+    peptide_chain: E
+    peptide_sequence: DAEFRHDSGY
+    target_region: [1, 10]
+    positive_state: antibody_bound
+    heavy_chain: A
+    light_chain: B
+    reliability: reliable
+    provenance_verified: true
+  - pdb: 7BXV
+    complex_pdb: data/anti_abeta_refs/7BXV.pdb
+    peptide_chain: A
+    peptide_sequence: YEVHH
+    target_region: [10, 14]
+    positive_state: antibody_bound
+    heavy_chain: H
+    light_chain: L
+    reliability: reliable
+    provenance_verified: true
+
+negative_states:
+  mode: synthetic_perturbation
+  heldout_seed_offset: 10000
+
+candidate_generation:
+  engine: contact_guided
+  samples_per_ref: 150
+  v4_samples_per_ref: 150
+  max_mutations: 4
+
+statecontrast:
+  seeds: [31, 41, 51, 61, 71]
+  rule_mode: position
+  min_support: 4
+  min_effect: 0.004
+  min_recurrence: 2
+  required_controls:
+    - parent_only
+    - random_position
+    - shuffled_position
+    - heldout_negative_states
+    - multi_seed_replicates
+
+claim_gate:
+  has_real_negative_ensembles: false
+  has_wetlab: false
+  minimum_references: 3
+
+fold_sidecheck:
+  enabled: false
+  mode: optional_colabfold

@@ -1,0 +1,71 @@
+dataset:
+  train:
+    db_path: ./data/confidence_merged_v9/confidence_train.lmdb
+    idp_sample_weight: 2.5
+    max_residues: 250
+    min_af2_plddt: 40.0
+    type: confidence_regression
+  val:
+    db_path: ./data/confidence_merged_v9/confidence_val.lmdb
+    max_residues: 350
+    type: confidence_regression
+model:
+  diffusion:
+    beta: 1.0
+    eps_net_opt:
+      num_layers: 6
+    num_steps: 20
+    schedule: cosine
+  loss_weight:
+    head_dropout: 0.1
+    huber_beta: 0.1
+    iptm: 2.5
+    mask_aug_prob: 0.6
+    mask_aug_ratio:
+    - 0.3
+    - 1.0
+    pae: 0.3
+    plddt: 2.0
+    train_recycles: 3
+  ot_opt:
+    num_iters: 5
+  pair_feat_dim: 128
+  res_feat_dim: 256
+  train_sequence: true
+  train_structure: true
+  type: antibody_bfn
+train:
+  batch_size: 1
+  early_stopping_patience: 50
+  freeze_backbone: true
+  idp_loss_multiplier: 2.0
+  length_curriculum:
+    stages:
+    - - 0
+      - 250
+    - - 10000
+      - 350
+    - - 20000
+      - 500
+  log_freq: 20
+  loss_weights:
+    iptm: 2.5
+    pae: 0.3
+    plddt: 2.0
+  max_grad_norm: 1.0
+  max_iters: 50000
+  optimizer:
+    beta1: 0.9
+    beta2: 0.999
+    lr: 5.0e-05
+    type: adam
+    weight_decay: 0.0
+  scheduler:
+    T_0: 5000
+    T_mult: 2
+    eta_min: 1.0e-06
+    type: cosine
+  seed: 2029
+  unfreeze_encoder_layers: 6
+  val_freq: 100
+  warmup_steps: 2000

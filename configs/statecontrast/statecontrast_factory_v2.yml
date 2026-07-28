@@ -1,0 +1,26 @@
+schema_version: statecontrast_factory_v2_1
+dataset_name: statecontrast_factory_v2_1_sabdab2_imgt6
+seed: 20260721
+shard_size: 50000
+
+counterfactuals:
+  operations:
+    - cdr_single_mutation_each
+    - cdr_composition_shuffle_each
+    - antigen_composition_shuffle
+
+sources:
+  - name: sabdab2_v0_1_0_abag_official_train
+    type: sabdab2_abag_tar
+    path: data/sabdab2_current/splits.tar.gz
+    member: splits_final/abag_split.csv
+    release: SAbDab2-v0.1.0-zenodo-20083995
+    license: CC BY 4.0
+    evidence_tier: experimental_structure
+    usage: training
+    require_all_six_cdrs: true
+    allowed_antigen_types:
+      - PROTEIN
+      - PEPTIDE
+    validation_fraction: 0.1
+    split_seed: 20260721

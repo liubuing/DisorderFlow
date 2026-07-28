@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [master, feature/*]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package (dev extras)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Lint with ruff
+        # The legacy research tree still has style debt. These rules cover
+        # syntax and undefined-name failures and must block every merge.
+        run: ruff check tests/ disorderflow/ modules/ app.py --select E9,F63,F7,F82
+
+      - name: Run CPU-only tests
+        env:
+          BFN_TEST_NO_GPU: "1"
+        run: pytest tests/ -q -m "not gpu and not slow"

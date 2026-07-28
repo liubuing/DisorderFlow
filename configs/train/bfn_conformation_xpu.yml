@@ -1,0 +1,89 @@
+﻿# BFN Direction 3: Conformational Robustness Training
+#
+# Trains the disorder head to learn physical uncertainty from AF2
+# multi-conformation ensembles instead of database binary labels.
+#
+# Key changes from standard Phase 3:
+#   - Uses conformation_regression dataset (multi-conformation sampling)
+#   - Disorder loss: Huber(probs, continuous_RMSF) instead of BCE(logits, binary)
+#   - Fixed number of conformations per IDP (default: 5)
+#   - Freezes backbone, trains only confidence heads (Phase A: verify signal)
+#
+# Phase A (this config): freeze_backbone, train confidence heads only
+#   - Verify RMSF prediction quality before full joint training
+#   - Expected: disorder loss < 0.3 (Huber), Pearson r > 0.7 vs AF2 RMSF
+#
+# Phase B (future): unfreeze backbone, full co-design + conformation
+#
+# Usage:
+#   python train.py configs/train/bfn_conformation_xpu.yml \
+#       --finetune ./logs/bfn_phase3_v11_nosmooth_v2_2026_06_01__16_08_58/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 1.0
+    huber_beta: 0.1
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 1.0
+  freeze_backbone: true
+  max_iters: 3000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2031
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 1.e-5
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: conformation_regression
+    db_path: ./data/confidence_conformation_v4/confidence_train.lmdb
+    max_residues: 350
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_val.lmdb
+    max_residues: 350

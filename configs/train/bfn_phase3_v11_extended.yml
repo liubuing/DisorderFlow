@@ -1,0 +1,88 @@
+﻿# BFN Phase 3 — v11 Checkpoint + Extended Training
+#
+# Key differences from bfn_phase3_ablation_optimized.yml:
+#   1. Finetune from v11 checkpoint (IDP disorder ~1.73) instead of v10 (~3.5)
+#   2. max_iters: 10000 (was 2000) — dist loss still declining, needed more iters
+#   3. seq loss weight: 2.0 (was 3.0) — label_smoothing=0.03 makes seq ~30
+#
+# Uses expanded Phase 3 dataset (SAbDab + original).
+#
+# Usage:
+#   python train.py configs/train/bfn_phase3_v11_extended.yml \
+#       --finetune ./logs/bfn_idp_phase2_v11_xpu_2026_05_30__22_40_23/checkpoints/best.pt \
+#       --device cuda --no_amp
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 2.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+    label_smoothing: 0.03
+
+train:
+  loss_weights:
+    seq: 2.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+  freeze_backbone: false
+  unfreeze_encoder_layers: 2
+  max_iters: 15000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 200
+  seed: 2029
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 5.e-6
+    weight_decay: 5.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_expanded/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

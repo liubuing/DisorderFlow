@@ -1,0 +1,102 @@
+# BFN V17g: NaN-safe continuation from V17c best.pt
+#
+# V17c+d achieved val loss 93.68→92.38 (only direction breaking 93 barrier)
+# but collapsed to NaN at step 2001. Root cause analysis:
+#   1. lr=5e-4 (25× V15 baseline 2e-5) — too aggressive for cross-attn
+#   2. BFN at high t→1 feeds near-uniform noisy embeddings into cross-attn
+#      → QK^T extreme values → softmax saturation → grad explosion
+#   3. No pre-norm on MHA inputs (fixed in receiver.py)
+#
+# V17g fixes:
+#   - lr=2e-5 (stable, same as V14-unfreeze)
+#   - pre-LayerNorm + feature clamping in receiver.py cross-attn path
+#   - NaN guard: zero out NaN xa_out before residual add
+#   - max_grad_norm=1.0 (extra safety on top of existing 5.0)
+#   - t_clamp=0.95 (cap BFN t to avoid extreme noise regime)
+#
+# Resume from V17c best.pt (val 92.38 at step 1500, out_proj=2.13).
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    grouped_margin: 0.30
+    conf_anticollapse: 0.50
+    huber_beta: 0.1
+    train_recycles: 1
+    mask_aug_prob: 0.2
+    mask_aug_ratio: [0.2, 0.6]
+    label_smoothing: 0.1
+    encoder_dropout: 0.05
+    t_clamp: 0.95               # NEW: cap BFN t to avoid extreme noise
+
+train:
+  loss_weights:
+    seq: 1.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    conf_variance: 0.50
+    conf_ranking: 0.15
+    grouped_margin: 0.30
+    conf_anticollapse: 0.50
+  freeze_backbone: false
+  unfreeze_encoder_layers: 6
+  max_iters: 3000               # 1500→4500 total (including V17c)
+  val_freq: 500
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 0               # already warm from V17c
+  seed: 2036
+  max_grad_norm: 1.0            # tight clip for cross-attn stability
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 2.e-5                   # back to V15 stable level (was 5e-4 in V17c)
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20                # longer patience with lower lr
+    min_lr: 5.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

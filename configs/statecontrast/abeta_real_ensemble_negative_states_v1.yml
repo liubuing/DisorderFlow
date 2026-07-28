@@ -1,0 +1,80 @@
+domain: idp_antibody
+name: abeta_real_ensemble_negative_states_v1
+description: A-beta geometry inventory; state-specific contact scoring remains blocked without antibody poses.
+
+references:
+  - pdb: 4HIX
+    complex_pdb: data/anti_abeta_refs/4HIX.pdb
+    peptide_chain: A
+    peptide_sequence: DAEFRH
+    target_region: [1, 6]
+    positive_state: antibody_bound
+  - pdb: 5CSZ
+    complex_pdb: data/anti_abeta_refs/5CSZ.pdb
+    peptide_chain: E
+    peptide_sequence: DAEFRHDSGY
+    target_region: [1, 10]
+    positive_state: antibody_bound
+  - pdb: 7BXV
+    complex_pdb: data/anti_abeta_refs/7BXV.pdb
+    peptide_chain: A
+    peptide_sequence: YEVHH
+    target_region: [10, 14]
+    positive_state: antibody_bound
+
+negative_states:
+  mode: structure_ensemble
+  heldout_seed_offset: 10000
+  ensembles:
+    - name: abeta42_fibril_2NAO
+      pdb: data/misfolding_targets/2NAO.pdb
+      chain: A
+      state_type: fibril_like
+      notes: Local A-beta fibril structure already present; requires contact-state adapter before scoring.
+    - name: abeta42_model1_2NAO
+      pdb: data/misfolding_targets/2NAO_model1_A_1-42.pdb
+      chain: A
+      state_type: fibril_model1
+      notes: Single-chain extracted model available locally.
+    - name: abeta42_fibril_5KK3
+      pdb: data/abeta_ensembles/5KK3.pdb
+      chain: A
+      state_type: fibril_like
+      notes: Cryo-EM A-beta42 fibril; must not be labeled as an oligomer.
+    - name: abeta42_fibril_7Q4M
+      pdb: data/abeta_ensembles/7Q4M.pdb
+      chain: A
+      state_type: fibril_like
+      notes: Brain-derived A-beta42 fibril polymorph geometry.
+
+candidate_generation:
+  engine: contact_guided
+  samples_per_ref: 150
+  v4_samples_per_ref: 150
+  max_mutations: 4
+
+statecontrast:
+  seeds: [31, 41, 51, 61, 71]
+  rule_mode: position
+  min_support: 4
+  min_effect: 0.004
+  min_recurrence: 2
+  required_controls:
+    - parent_only
+    - random_position
+    - shuffled_position
+    - heldout_negative_states
+    - multi_seed_replicates
+
+claim_gate:
+  has_real_negative_ensembles: false
+  has_real_state_geometry: true
+  has_antibody_pose_on_negative_states: false
+  has_real_monomer_state: false
+  has_real_oligomer_state: false
+  has_wetlab: false
+  minimum_references: 3
+
+fold_sidecheck:
+  enabled: false
+  mode: optional_colabfold

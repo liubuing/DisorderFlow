@@ -1,0 +1,107 @@
+# BFN V16: CDR Co-Design (direction B — sequence + CDR-loop structure generation)
+#
+# The folding ceiling (AF2 pLDDT ~0.26, ipTM <0.1) survived A (disorder head)
+# and C (multi-scaffold): the generator designs CDRs that wreck the VHH
+# framework fold on a FIXED backbone. Direction B frees the CDR loop
+# CONFORMATION to be generated jointly with its sequence — framework stays
+# fixed (mask_gen mixing in sample()), only CDR residues get predicted structure.
+#
+# Mechanism (verified, no code change): setting dist>0 → has_structure_loss=True
+# → seq_only=False (core.py:96-104). The receiver then calls head_pos/head_ori
+# (receiver.py:346-349, currently UNTRAINED in V15 — random init), and the
+# training forward computes dist+ang structure losses (core.py:254-289).
+# sample() generates CDR structure via the not-seq_only branch (core.py:476-552).
+#
+# Risk: head_pos/head_ori are random in V15 → dist loss ~680 initially. Use
+# phase3's conservative recipe (dist:0.5, seq:3.0, lr:5e-6, warmup:200) so the
+# well-trained encoder/confidence heads aren't destabilized while structure
+# heads learn from scratch.
+#
+# Finetune from V15 best.pt (or the disorder-retrained head for IDP awareness).
+# 8GB: phase3 ran batch 1 + --no_amp + train_recycles:2; we keep AMP (drop
+# --no_amp) + accum_steps 4 which is lighter, train_recycles:1 for safety.
+#
+# Usage:
+#   python train.py configs/train/bfn_v16_codesign_xpu.yml \
+#       --finetune logs/disorder_head_retrain.pt \
+#       --device cuda --accum_steps 4
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 3.0                 # sequence recovery (phase3 recipe)
+    dist: 0.5                # V16: structure on → seq_only=False (was 0.0)
+    ang: 0.5                 # CDR sidechain torsion recovery
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+    huber_beta: 0.1
+    train_recycles: 1        # memory safety on 8GB (phase3 used 2)
+    mask_aug_prob: 0.4       # phase3 co-design augmentation
+    mask_aug_ratio: [0.2, 0.8]
+    label_smoothing: 0.1
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 3.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    disorder: 0.3
+  freeze_backbone: false     # full encoder + seq/structure heads trainable
+  unfreeze_encoder_layers: 6
+  max_iters: 3000
+  val_freq: 200
+  log_freq: 10
+  batch_size: 1              # co-design structures; use --accum_steps 4
+  warmup_steps: 200          # long warmup: protect V15 parts while head_pos/ori learn
+  seed: 2031
+  max_grad_norm: 100.0       # raised from 1.0: dist loss gradient ~hundreds (untrained
+                             # structure head) — global clip at 1.0 starved it to a halt
+                             # (dist stayed 250-500, no descent). Allow large grad so the
+                             # structure head can actually learn; V15 heads still move
+                             # gently thanks to lr 5e-6.
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 5.e-6                # phase3 LR (gentle; untrained structure heads)
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 15
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs   # co-design: mask all CDRs (seq + structure)
+      - type: merge_chains          # Ab + antigen; cross-chain pair feats
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

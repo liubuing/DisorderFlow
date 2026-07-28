@@ -1,0 +1,91 @@
+﻿# BFN V11 — Sequence-Aware Confidence Bypass
+#
+# Problem: FixBB confidence heads (pLDDT/ipTM/PAE) give IDENTICAL outputs
+# for all designs on the same backbone (std=0.0000), because the IPA encoder
+# washes out sequence-level differences.
+#
+# Fix: Add small sequence-derived bypass heads (entropy + max_prob per residue)
+# that produce design-specific confidence adjustments added to backbone baselines.
+# New heads: head_plddt_seq (65 params), head_iptm_seq (35 params),
+#            head_pae_seq (287 params) = 387 trainable params total.
+#
+# Training strategy:
+#   - Finetune from bfn_idp_combined_cuda (best validation metrics)
+#   - Freeze ALL backbone + original confidence heads
+#   - Only train the 3 new seq_conf bypass heads
+#   - High LR (1e-3) since tiny heads, short training (2000 iters)
+#   - Same V11 dataset with disorder labels
+#
+# Target: reduce overconfidence ratio (BFN/AF2) from 3.7x/13.7x toward 1.0x
+#
+# Usage:
+#   python train.py configs/train/bfn_v11_seqconf_xpu.yml \
+#       --finetune ./logs/bfn_idp_combined_cuda_2026_06_02__13_48_09/checkpoints/best.pt \
+#       --device cuda
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    plddt: 2.0
+    iptm: 3.0
+    pae: 0.3
+    disorder: 1.0
+    huber_beta: 0.1
+    head_dropout: 0.15
+    encoder_dropout: 0.0  # encoder frozen, no dropout needed
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+
+train:
+  loss_weights:
+    plddt: 2.0
+    iptm: 3.0
+    pae: 0.3
+    disorder: 1.0
+  freeze_backbone: true
+  unfreeze_encoder_layers: 0
+  max_iters: 2000
+  val_freq: 200
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 100
+  seed: 2042
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  early_stopping_patience: 15
+  optimizer:
+    type: adamw
+    lr: 1.e-3
+    weight_decay: 1.0e-5
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_train.lmdb
+    max_residues: 250
+    idp_sample_weight: 1.5
+    min_af2_plddt: 40.0
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_merged_v11/confidence_val.lmdb
+    max_residues: 350
