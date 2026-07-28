@@ -110,12 +110,39 @@ def setup_checkpoints():
     # Primary design checkpoint
     best_pt = ckpt_dir / "best.pt"
     download_file(
-        "https://huggingface.co/YueHuLab/disorderflow/resolve/main/best.pt",
+        "https://huggingface.co/datasets/liubuing/disorderflow/resolve/main/data/pretrained_candidates/AntibodyDesignBFN_best.pt",
         best_pt,
         "BFN design checkpoint (best.pt)",
     )
     print("  [ok] Checkpoints ready")
     print(f"  NOTE: Update app_config.yaml -> models.bfn.checkpoint to: {best_pt.relative_to(ROOT)}")
+
+
+def setup_data():
+    """Download full training datasets from Hugging Face (~220GB)."""
+    print("\n=== Training Datasets (Hugging Face, ~220GB) ===")
+    data_dir = ROOT / "data"
+
+    if data_dir.exists() and any(data_dir.iterdir()):
+        print("  [skip] data/ directory already has content")
+        print("  To re-download, remove data/ first or use hf CLI directly:")
+        print("    hf download liubuing/disorderflow --repo-type dataset --include 'data/*' --local-dir .")
+        return
+
+    try:
+        from huggingface_hub import snapshot_download
+        print("  [download] liubuing/disorderflow (dataset) -> data/")
+        print("  This may take several hours for ~220GB ...")
+        snapshot_download(
+            repo_id="liubuing/disorderflow",
+            repo_type="dataset",
+            allow_patterns="data/**",
+            local_dir=str(ROOT),
+        )
+        print("  [ok] Datasets ready")
+    except ImportError:
+        print("  [error] huggingface_hub not installed. Run: pip install huggingface_hub")
+        print("  Then: hf download liubuing/disorderflow --repo-type dataset --include 'data/*' --local-dir .")
 
 
 def main():
@@ -124,6 +151,7 @@ def main():
     parser.add_argument("--mpnn", action="store_true", help="Download ProteinMPNN")
     parser.add_argument("--hdock", action="store_true", help="Download HDOCKlite")
     parser.add_argument("--checkpoints", action="store_true", help="Download BFN checkpoints")
+    parser.add_argument("--data", action="store_true", help="Download full training datasets (~220GB)")
     args = parser.parse_args()
 
     if not any(vars(args).values()):
@@ -138,6 +166,8 @@ def main():
         setup_hdock()
     if args.all or args.checkpoints:
         setup_checkpoints()
+    if args.all or args.data:
+        setup_data()
 
     print("\n=== All done ===")
 

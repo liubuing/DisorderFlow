@@ -79,7 +79,7 @@ explicit chain list is recommended for auditable antigen-aware experiments.
 | V5 Phase 5 | 1,149 proteins | 0.0521 | 0.957 | 0.817 | context-only ipTM |
 | **V6 Phase 2** | **2,032 proteins** | **0.0494** | **0.950** | **0.825** | 3-layer pLDDT + context-only ipTM, 55.6% trainable |
 
-The V6 Phase 2 model checkpoint is available on Hugging Face: [YueHuLab/disorderflow](https://huggingface.co/YueHuLab/disorderflow/)
+The V6 Phase 2 model checkpoint is available on Hugging Face: [liubuing/disorderflow](https://huggingface.co/liubuing/disorderflow/)
 
 Set `DISORDERFLOW_CHECKPOINT` to the downloaded checkpoint path, or update
 `models.bfn.checkpoint` in `app_config.yaml`. The repository does not bundle BFN
@@ -149,6 +149,33 @@ The release gates select iteration `700.pt`, rather than the validation-loss
 `best.pt`, as the authoritative V5.3 checkpoint. See
 [`docs/V5_3_RELEASE_MANIFEST.md`](docs/V5_3_RELEASE_MANIFEST.md) for its checksum,
 selection rule, gate results, and scientific claim boundary.
+
+## Datasets
+
+All training and evaluation datasets are hosted on Hugging Face: [liubuing/disorderflow](https://huggingface.co/datasets/liubuing/disorderflow)
+
+```bash
+# Download all datasets (~220GB)
+pip install huggingface_hub
+python scripts/download_assets.py --all
+
+# Or download manually with hf CLI
+hf download liubuing/disorderflow --repo-type dataset --local-dir ./hf_data
+```
+
+Key dataset directories:
+
+| Directory | Size | Description |
+|-----------|------|-------------|
+| `confidence_design_variants_v14` | ~98 GB | Grouped design variants for V14 confidence training |
+| `confidence_conformation_v5` | ~65 GB | Conformation ensemble dataset (V5) |
+| `confidence_unified_v2` | ~20 GB | Unified confidence dataset (V2) |
+| `confidence_idp_unified` | ~10 GB | IDP-specific confidence data |
+| `statecontrast_structural_v2_1` | ~8 GB | StateContrast structural ranking pairs |
+| `processed` | ~1.5 GB | Processed structures (LMDB) |
+| `sabdab2_current` | ~850 MB | SAbDab2 antibody database snapshot |
+| `disprot_current` | ~31 MB | DisProt disorder annotations |
+| `misfolding_targets` | ~6 MB | Disease target PDBs (Aβ, α-syn, etc.) |
 
 ## Management CLI
 
