@@ -1,0 +1,51 @@
+{
+  "target": "tau_5MP3",
+  "complex_pdb": "data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb",
+  "chains": {
+    "A": 219,
+    "B": 218,
+    "C": 9
+  },
+  "designs": [
+    {
+      "sample": 9,
+      "score": 0.9
+    },
+    {
+      "sample": 5,
+      "score": 0.9858
+    },
+    {
+      "sample": 6,
+      "score": 0.9963
+    },
+    {
+      "sample": 7,
+      "score": 1.0081
+    },
+    {
+      "sample": 4,
+      "score": 1.0089
+    },
+    {
+      "sample": 1,
+      "score": 1.0916
+    },
+    {
+      "sample": 3,
+      "score": 1.0995
+    },
+    {
+      "sample": 8,
+      "score": 1.3505
+    },
+    {
+      "sample": 2,
+      "score": 1.6456
+    },
+    {
+      "sample": 10,
+      "score": 1.6993
+    }
+  ]
+}

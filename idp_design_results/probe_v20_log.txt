@@ -1,0 +1,72 @@
+============================================================
+WAY4 V7 P0-fix-B: Per-Residue Disorder Profile Probe
+============================================================
+Model loaded
+Profiles loaded: 5H, 398M, 521L
+SAbDab lookup: 800 entries
+
+--- Running probe: per-residue vs scalar vs none ---
+  high_local_flex/7v5k/per_residue: ent=0.888
+  high_local_flex/7v5k/scalar: ent=1.101
+  high_local_flex/7v5k/none: ent=0.905
+  high_local_flex/4kjq/per_residue: ent=0.975
+  high_local_flex/4kjq/scalar: ent=0.934
+  high_local_flex/4kjq/none: ent=0.900
+  high_local_flex/4kk9/per_residue: ent=0.903
+  high_local_flex/4kk9/scalar: ent=0.921
+  high_local_flex/4kk9/none: ent=0.930
+  low_flex/6osv/per_residue: ent=0.903
+  low_flex/6osv/scalar: ent=0.953
+  low_flex/6osv/none: ent=1.025
+  low_flex/2yc1/per_residue: ent=1.063
+  low_flex/2yc1/scalar: ent=0.966
+  low_flex/2yc1/none: ent=1.092
+  low_flex/6was/per_residue: ent=0.996
+  low_flex/6was/scalar: ent=0.989
+  low_flex/6was/none: ent=1.121
+  mid_flex/7th3/per_residue: ent=0.921
+  mid_flex/7th3/scalar: ent=0.927
+  mid_flex/7th3/none: ent=0.958
+  mid_flex/9lqu/per_residue: ent=0.936
+  mid_flex/9lqu/scalar: ent=0.854
+  mid_flex/9lqu/none: ent=0.832
+  mid_flex/7a0v/per_residue: ent=0.970
+  mid_flex/7a0v/scalar: ent=0.986
+  mid_flex/7a0v/none: ent=0.957
+
+============================================================
+Analysis: Per-Residue vs Scalar Disorder Conditioning
+============================================================
+
+per_residue (9 samples):
+  Entropy:  0.9505 +/- 0.0527
+  Top AA%:  0.220 +/- 0.055
+  6mer repeats: 0/9
+    [high_local_flex] 7v5k: WVVRAPDIWAVNVYNMSCNVYMQHAMKCIGVAASSIFSQW
+    [high_local_flex] 4kjq: CMAWIFAQIVTISSSWTWMSSSYMSFTWTRKTSMHPYGVG
+    [high_local_flex] 4kk9: VVRAPIVVQVQVYVCNWYWAWIFAQIVTISSSWTWMSSSY
+
+scalar (9 samples):
+  Entropy:  0.9591 +/- 0.0633
+  Top AA%:  0.187 +/- 0.046
+  6mer repeats: 0/9
+    [high_local_flex] 7v5k: WVVRAPDIWAVNVYNMSCNVYFTCMAWIFSNQHVSISSWW
+    [high_local_flex] 4kjq: DYGQDGKMTSSTGKVTTSIHMAWIFSQIVTISSSWTWMSS
+    [high_local_flex] 4kk9: AIVVRAPIVVQVQVYVCNWYCMAWIFSNIVTISSSWWWMS
+
+none (9 samples):
+  Entropy:  0.9690 +/- 0.0887
+  Top AA%:  0.195 +/- 0.050
+  6mer repeats: 0/9
+    [high_local_flex] 7v5k: DYGQQGKMNPQTAKVAHHCAWVVRAPDIWAVNVYNMSCNV
+    [high_local_flex] 4kjq: VVRAPNVVQVQVYVCNWYMAWIFSSIVTISSSWTWMSSSY
+    [high_local_flex] 4kk9: GQDGKMTSSTGKVTMSIHHGVVRAPNVVQVQVYVCNWYQA
+
+--- Entropy-Disorder Gradient Check ---
+  Per-residue: entropy vs ag_disorder_max r = -0.503
+  Per-residue entropy:  0.9505 +/- 0.0527
+  Scalar entropy:       0.9591 +/- 0.0633
+  No-disorder entropy:  0.9690 +/- 0.0887
+
+Saved: idp_design_results/way4_v7_p0fixb_probe_20260703_220733.json
+P0-fix-B probe complete.

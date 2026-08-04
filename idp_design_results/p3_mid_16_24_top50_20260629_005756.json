@@ -1,0 +1,3865 @@
+{
+  "top": [
+    {
+      "sequence": "PVLVESGGGTVPEGGGVKLSYKASGEPLSDFAVAWYRQAPGQPREFVASINKSGGTWYAPAVAGRFRISVDYASNTAFLEMSDLRPEDSATYYGALVRNSPAVPGEVPESSVEAWGQGTELTVTA/MMGPPPPP",
+      "mpnn_score": 0.8792,
+      "sample": 40,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2974,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PHLSESGGGTVPAGGGVRLTATATGSPLSDYAVSWFRQAPGKPLEFVASINKSGQTYYAPEVAGRFQISRDDANNTSYLDMADLRPADSATYYTGLDSNSPETPGEIPLSSVQSWGQGTPVTVTE/MMPPPPPP",
+      "mpnn_score": 0.8832,
+      "sample": 62,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2968,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLVESGGGTVPAGGGVLLSHKATGEPLSNYAVGWYRQAPGQPREFVASINRQGKTWYAPSVRGRFRISRNDAQNTAYLEMADLVPADSAVYYSVAVPSSPETPGPIKEEDVAAWGQGTELVVTA/MMGPPPLL",
+      "mpnn_score": 0.9005,
+      "sample": 71,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2944,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLEESGGGTVPAGGGVRLSAKASGESLSNYAVAWYKQAPNQPLQFVSYINRSGKTYYAPEVKGRFTISRDDSNNTVYLEMANLVPADSATYYHALQAVSPSTPQQVQPSDVDAWGQGTPLTVTS/GPPPPPPL",
+      "mpnn_score": 0.9111,
+      "sample": 423,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.293,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTFPQGGGATLTWQASGKPLSDYAVAWYRQAPGKPRQFVASINKDGKTHYAPDVAGRFRISKDDSNNTATLEMAALRPEDSATYYSAAAKKSPKTPGEIPETEVDAWGQGTELVVTE/GPGPPPPR",
+      "mpnn_score": 0.912,
+      "sample": 203,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2928,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IQLTESGGGTVAAGGAVRLSAEATGEPLSDYAVAWYRQAPGEPRKWVAAINKAGNTWYHPDVKGRFTISVDYSQNTAYLDMADLRPADSAVYYFAADKNSPETPGEIPEEDIDAWGQGTPLTVTS/APPPPAAA",
+      "mpnn_score": 0.9174,
+      "sample": 455,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2921,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MRLTESGGGTVAAGGGATLSWSASGEPLSDYAVSWWRQAPNAPRRWVSSINKAGATWYAPSVSGRWTISRDPAANTATLSMANLIPEDSATYYGAASRTSPATPGAIPEESVDTWGQGTPLTVTS/GPAPPPPP",
+      "mpnn_score": 0.9218,
+      "sample": 450,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2915,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTVPAGGGVRLSWQASGSPLSDFAVSWWRQAPNAPREFVASVNKSGQTWYAPKVEGRFRISRDDETNTVFLEMADLQPEDSATYYGAASSTSPATPGEIPESEVDAWGQGTQLVVTD/GPPPPAPL",
+      "mpnn_score": 0.923,
+      "sample": 283,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2913,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVAAGGGVTLSATASGAPLKDFAVAWYRQAPGQPRTFVAAINKSGKTWYAPEVKGRFTISRDEASNTVHLAMGSLRPEDSATYYAAAYATSPGEVGRFDEAEVAAWGQGTELTVTE/GPPPPPLL",
+      "mpnn_score": 0.924,
+      "sample": 449,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2912,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVEAGGGVTLSVTASGEPLSNYAMSWYRQAPGKARQFVASINQTGATWYNDDVKGRFTISKDDANNTVYLDMANLKPEDSATYYAAASTNSPTTPGEIADSSVAAWGQGTDLTVTD/GGGSSPLL",
+      "mpnn_score": 0.9248,
+      "sample": 278,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2911,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VQLTESGGGTVPAGGGVTLTSTASGDSLSNYAVSWYRQAPGQPAQFVASINQSGQTYYAPSVQGRFTIKKDDSSNTSTLDMADLRPEDSATYYSGAYSNSPSVPGEIKEDEVSSWGQGTPLTVTD/GPGPPPPP",
+      "mpnn_score": 0.9251,
+      "sample": 466,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2911,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITLTESGGGTVPAGGGVRLTAKASGKPLSDYAVAWFRQAPGKPRQFVAAINKSGKTYYAPEVKGRYRISRNDAENTSYLDMASLVPADSATYYEAAQAESPATVGPIPPSKVDSWGAGTPLTVTE/LPPPPPPQ",
+      "mpnn_score": 0.9249,
+      "sample": 483,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2911,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "AKLVESGGGTVPAGGGVLLTAKASGAPLKDYAVSWWRQAPQQPREFVASVNQQGATWYHPSVDGRFTISVDYANNTSTLAMGELRPEDSAVYYMALSSDSPSTPGPIPEETVDAWGQGTPLTVTA/APPPPPLL",
+      "mpnn_score": 0.9333,
+      "sample": 104,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.29,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGVLLSATASGEPLSNFAVSWFRQAPNQPRQFVASINKDGKTWYAPSVAGRFTISRDDANNTAYLEMSDLRPIDSATYYSALVAPSPATPGQVPEKDVAAWGNGTKLVVTE/APPPTPPP",
+      "mpnn_score": 0.9349,
+      "sample": 344,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2897,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLEESGGGTVPEGGGVTLSDKASGESISEYAVSWYRQAPGQPRKFVASINKSGKTWYHPDVEGRFMISKDDSKNTSYLTMANLQPEDSAVYYSGLYSNSPSTPKEYPESNIAAWGQGTPLTVTA/GPAPPPEE",
+      "mpnn_score": 0.9362,
+      "sample": 210,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2896,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PELEESGGGTVPAGGGALLSRVATGAPLSDFAAAWYRQAPGQPRQFVSAINRQGKTWYAADVAGRFKISRDSANNTVFLEMANLQPEDSATYYGALKANSPETPGAIAPADVVAWGQGTPLVVTS/APPPPPPL",
+      "mpnn_score": 0.9365,
+      "sample": 269,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2895,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGVVAAGGSLTLSKKASGEPLSDYAVSWWRQAPGKPKEFVASINQSGKTYYAAAVKGRYTISRDDSNNTSYLDMANLTPADSATYYGAADKNSPETPGEIDEKNVAAWGEGTDVTVTS/GSGPPPPP",
+      "mpnn_score": 0.9395,
+      "sample": 352,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2891,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PELTESGGGTVPEGGSVRLSQTVSGEALSNYAVAWYRQAPGQPRQFVAYINRSGATWYAPAVRGRFKISRDDSRNTSYLDMSDLVPADSATYYGALSSTSPAVPGPVPEQDVVAWGQGTPLTVTA/GPMMMPRR",
+      "mpnn_score": 0.9415,
+      "sample": 24,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2889,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PNLTESGGGTFPAGGSVTLSAKASGLPLSSYAVSWYRQAPGQPREWVASINTSGSTWYAPDVSGRFTISADPTNNTAYLSMDSLVPSDSATYYMGLYPTSPSTPGPHPESSVAAWGQGTPVTVTE/GGGPPPPP",
+      "mpnn_score": 0.943,
+      "sample": 110,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2887,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLTESGGGTVPEGGGVTLSARASGSPLSDYAVSWYRQAPGQPREFVASINQSGATYYADSVKGRFTISKDNSKNTSYLDMADLRPEDSAVYYYGADETSPSTPGERPEEDLASWGQGTELTVTA/ARPAAPVV",
+      "mpnn_score": 0.9425,
+      "sample": 159,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2887,
+      "bfn_iptm": 0.3375,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLRESGGGTVAAGGGVTLSNQVSGDPLSDYAASWYRQAPGQPRQFVAAINKSGKSYYAPSVQGRFTISKDYSKNTVFLDMADLQPADSAVYYFGLYESSPETPSEVPEEDIAAWGEGTPLTVTD/APGPPPPP",
+      "mpnn_score": 0.9447,
+      "sample": 389,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2884,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLRESGGGTVPEGGGITLTLSASGAPLSDYAVSWFRQAPGQPLQFVASINKSGATWYAPDVAGRYTISRDDSRNTVTLTMADLRPADSATYYGGLWSSSPSTPGSVPLENVDAWGQGVLVRVTS/GGGPPPPK",
+      "mpnn_score": 0.9484,
+      "sample": 267,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.288,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PILTESGGGTVPAGGGVTLTFTASGDALSNYAVAWYRQAPGQPLEFVAAINKSGATYYHPAVEGRFTISKDDSNNTATLQMSNLKPEDSATYYQALYTNSPATPGAIPEQDVAAWGQGTPLTVTE/SSGIIEPL",
+      "mpnn_score": 0.9483,
+      "sample": 426,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.288,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLTESGGGTFPAGGGVTLTIQASGEALSNYAVAWYRQAPGQAPQFVASINKAGATYYAPAVQGRFTISRDDANNTTTLNMADLKPEDSAIYYGGADGNSPATPGPFDEKDIVAWGQGVSVTVTD/GPPPAPPP",
+      "mpnn_score": 0.9484,
+      "sample": 470,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.288,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTVPAGGGVTLSQAASGTSLSNYAVAWYSQRPGAPLEFIASINKSGQTYYAPRVAGRYTISTDPSNNTAYLHMGQLRPEDSATYYGAAVPHSPETPGPIPLSSVAAWGQGTELRVTD/GPPPPPLP",
+      "mpnn_score": 0.9498,
+      "sample": 500,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2878,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLSESGGGTVPAGGGVTLSATASGSDLSDYAVSWYRQAPGKPLQFVASINQSGDTYYAPSVKGRFKISRDDSNNTAYLSMSNLQPEDSATYYMAANPNSPSTPGQVAPITVSAWGQGTPLTVTE/GPAEPPPP",
+      "mpnn_score": 0.9503,
+      "sample": 474,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2877,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLTESGGGTVPQGGGVTLTGKAGGKPLKDYAVAWYRQAPGHPLEFVASINKQGKTYYAPKVKGRWKISVDPANNTSTLDMANLQPEDSATYYEAAYSKSPETPGEIEPAEVDAWGQGTPLTVTE/GPGGPPPR",
+      "mpnn_score": 0.9509,
+      "sample": 379,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2876,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VALSESGGGTVPDGGGVRLSITASGQPLSNYAVSWYKQAPGLPRQFVASINKSGNTWYAPEVAGRFRISRNDSNNTAFLDMADLRPEDSAVYYGAAHSSSPTTPQQINEKDVVSWGQGTNLVVTA/APGPPPPP",
+      "mpnn_score": 0.9534,
+      "sample": 394,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2873,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLTESGGGTFPAGGGLRLSNKASGAPLSDYAVGWYRQAPGQPLQFVANINRSGLTYYAPAVAGRFRISRDPANNTVYLDMAALRPDDSAVYYAALNANSPSSPRNIPQSDVVAWGQGTQVTVTA/LAAPPTPP",
+      "mpnn_score": 0.9542,
+      "sample": 355,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2872,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLLESGGGTVPAGGGLTLSAQASGEPLSDYAVSWYRQAPGQPMRFVASINRDGKTYYAPEVAGRYTISVDYSRNTATLKMADLVPADSATYYMGLSSYSPKTAGQVEPSQIDAWGQGTPVTVTA/GPPPPPPV",
+      "mpnn_score": 0.9573,
+      "sample": 371,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2868,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IKLKESGGGTVPAGGGVLLSSKASGEPLSNYAVSWFKQAPGQPRQFVASVNKSGKTWYASNVAGRFTISRDDSANTSYLNMANLQPEDSATYYSAASSTSPASPGEIPESSVTAWGQGTPLTVTT/GPAGPPNN",
+      "mpnn_score": 0.9576,
+      "sample": 451,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2867,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITLTESGGGVVPAGGGARLSIAASGDPISNYAMAWYRQAPGTEREFVSAINQQGKTWYASDVAGRFRISRDDANNTVFLDMGDLRPEDSATYYGAAKATSPATPGSFAEQDIAAWGTGTPLTVTE/SPPPTPPA",
+      "mpnn_score": 0.9625,
+      "sample": 55,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2861,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLTESGGGTFPEGGGVLLSTKVSGEPLSNYAVAWYRQAQGQPRQFVASITKSGNTYYNPRVEGRFQISRDDANNTSYLQMSDLRPEDSAVYYSGLVSNSPAEPGEIPFSDITAFGQGTELIVTA/GPGPPPEE",
+      "mpnn_score": 0.9633,
+      "sample": 226,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.286,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVPAGGGATLSGAASGASLSDFAVSWWRQAPGQPQQFVASINKSGATWYASGVAGRWTISKDNINNTAFLTMADLVPEDSATYYVGASSSSPSTPGRIAPSSIASWGQGTPLTVTA/AARPAAPP",
+      "mpnn_score": 0.9654,
+      "sample": 223,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2857,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLEESGGGVVPAGGGVVLSAAASGAPLSDYAVSWFRQAPGAPLRWVASINRAGQTWYNAAVQGRFVISTDPANNTAYLHMANLQPADSAVYYFGLSAASPASPGRIEASTISAWGQGTPLTVTS/GPPPPPAA",
+      "mpnn_score": 0.966,
+      "sample": 356,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2857,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IKLTESGGGTVPEGGGATLKSVASGEPLSNYAVSWYRQAPGKKRKFVASINKAGNTWYASDVAGRYKISKDDKNNTSYLEMSDLKPSDSATYYHAASKTSPDTPGEIKESDVDAWGQGTKLTVTS/APGSSTAR",
+      "mpnn_score": 0.9658,
+      "sample": 402,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2857,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PVLKESGGGTFPAGGGLRLSATVSGEPLSNYAAAWYRQAPGQPRTFVSSINRTGKTYYHPDVEGRFHISKDPARNTVYLDMANLRPDDSATYFFGLYANSPETPGEFPESDAVAWGQGTEVQVTE/LPPEPPPT",
+      "mpnn_score": 0.9664,
+      "sample": 359,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2856,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITLTESGGGTVPEGGGVTLSYVASGDALSNYAVSWYRQAPNQPRKFVASINKAGKTWYAPEVKGRFQISVDDSNNTVTLTMSQLKPEDSATYYAAARANSREKPSQIPESEVDAWGQGTELTVTK/GGGPAPPP",
+      "mpnn_score": 0.9675,
+      "sample": 52,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2855,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTVTESGGGTVPEGGGVTLTATVSGAPLKDFAVSWYRQAPEKPREFVASINRAGHTYYHPSVAGRFKISRDDSNNTATLEMADLRPEDSATYYWALSANSPESPQDIEESQVVAWGEGTELRVTA/GPPPPPLS",
+      "mpnn_score": 0.9679,
+      "sample": 165,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2854,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IALTESGGGTVAAGGGVLLSGKASGDRLSDYAVSWWRQAPGKPRQWVSSINRKGATWYAPDVKGRFTISRDDANNTSYLEMADLQPEDSAVYYIGAYANSPETPKQVEESEVVAWGQGVELTVTE/PPRPPPPP",
+      "mpnn_score": 0.968,
+      "sample": 293,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2854,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLVESGGGTVAAGGGVTLSAAASGDPLENYAVAWYKQAPGEPEKFVASINKSGKTWYNDSFKGRFTISVDYANNTSYLDMANLKPEDSATYYRAAVASSPATPTEYAKQDVAAWGQGTELVVTE/GPDPDPPR",
+      "mpnn_score": 0.9691,
+      "sample": 73,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2853,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.267,
+      "bfn_disorder": 0.267
+    },
+    {
+      "sequence": "MRLSESGGGTVPAGGGVLLSATASGSPLSDYAVSWWRQAPGAPQQFVASVNQSGSTWYASSVRGRFSISRDDSRNTSYLRMGKLVPADSATYYWAADEWSPDTPGQVPPERVVAWGQGTDLTVTA/APPPPPSS",
+      "mpnn_score": 0.9704,
+      "sample": 91,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2851,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTVEAGGGLRLTAKASGDNLSDYAVAWYRQAPGQPRQFVASINKAGSTYYAAAVKGRYYISVDYSNNTSYLDMADLQPYDSATYYAAASRSSPATPGAIASSTVASWGQGTEVIVTA/AVVPPPRR",
+      "mpnn_score": 0.9717,
+      "sample": 462,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2849,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PKIEESGGGTVPEGGGVLLQAKVSGEPLKDYAVSWYRQAPGQPREFVSSINRKGATYYAPRVEGRFVISRDDAKNTATLAMSQLIPADSAVYYHALDSTSPDTPREIPFETVTSWGQGTPLTVTA/GPGPPPPA",
+      "mpnn_score": 0.9728,
+      "sample": 390,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2848,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVPAGGGVRLTSKASGEPLSSFAVSWFRQAPGQPLQFVASINRTGNTYYAPSVEGRFHISRDDANNTVYLDMASLQPSDSAVYYSAAQATSPSTPGEVAERDVSAWGQGTPVTVTS/SMEPPAPK",
+      "mpnn_score": 0.9732,
+      "sample": 169,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2847,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ISLTESGGGTVAAGGGVTLTSKASGEPLSDFAASWYRQAPGQPLEFVAYINRQGKTWYAPSVAGRFSISRDDANNTTTLAMGALRPEDSATYYSGLSKSSPESPGQVPSSSISAWGQGTQVTVTE/GPGAPPPP",
+      "mpnn_score": 0.9743,
+      "sample": 10,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2846,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLSESGGGTVPAGGGTLLSAKASGEPLSNYAVSWFRQAPGQPRQFVASINKSGSTYYAPEVQGRYSISRDDANNTSSLKMAQLVPADSATYYYALSSNSPATPGPVKPEDVAAFGGGTALTVTA/APGPSPPS",
+      "mpnn_score": 0.9748,
+      "sample": 33,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2845,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITIKESGGGTVPAGGGVTLTGKASGDPLSDFAVSWYRQAPGEPTQFVASINRAGQTWYAPAVQGRFTISTSTANNTSTLAMARLKPEDSATYFAAAQKTSPATPGEFSLDSVSAWGQGTPLTVTE/PPPPPPAP",
+      "mpnn_score": 0.9747,
+      "sample": 127,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2845,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLLESGGGTVPEGGGVTLSGQASGAPLSDYAVSWYRQAPGQPLQFVASINKNGKTYYHPDVEGRFRISRVDANNTASLDMSDLVPADSAVYYIGLYSTSPETPGQFPPEDVAEWGQGTPLTVTA/APPPPPNN",
+      "mpnn_score": 0.9749,
+      "sample": 128,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2845,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VELKESGGGTVPEGGGVLLKDQASGENLSDYAVAWYRQAPGAPLRFVAAANKAGNTWYAPDVAGRYKISVDNANNTSYLEMADLVPRDSATYYSAAVANSPATVGEFPAAEVDAWGQGTNLTVTT/FPVPPEPL",
+      "mpnn_score": 0.9757,
+      "sample": 198,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2844,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    }
+  ],
+  "all": [
+    {
+      "sequence": "PVLVESGGGTVPEGGGVKLSYKASGEPLSDFAVAWYRQAPGQPREFVASINKSGGTWYAPAVAGRFRISVDYASNTAFLEMSDLRPEDSATYYGALVRNSPAVPGEVPESSVEAWGQGTELTVTA/MMGPPPPP",
+      "mpnn_score": 0.8792,
+      "sample": 40,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2974,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PHLSESGGGTVPAGGGVRLTATATGSPLSDYAVSWFRQAPGKPLEFVASINKSGQTYYAPEVAGRFQISRDDANNTSYLDMADLRPADSATYYTGLDSNSPETPGEIPLSSVQSWGQGTPVTVTE/MMPPPPPP",
+      "mpnn_score": 0.8832,
+      "sample": 62,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2968,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLVESGGGTVPAGGGVLLSHKATGEPLSNYAVGWYRQAPGQPREFVASINRQGKTWYAPSVRGRFRISRNDAQNTAYLEMADLVPADSAVYYSVAVPSSPETPGPIKEEDVAAWGQGTELVVTA/MMGPPPLL",
+      "mpnn_score": 0.9005,
+      "sample": 71,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2944,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLEESGGGTVPAGGGVRLSAKASGESLSNYAVAWYKQAPNQPLQFVSYINRSGKTYYAPEVKGRFTISRDDSNNTVYLEMANLVPADSATYYHALQAVSPSTPQQVQPSDVDAWGQGTPLTVTS/GPPPPPPL",
+      "mpnn_score": 0.9111,
+      "sample": 423,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.293,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTFPQGGGATLTWQASGKPLSDYAVAWYRQAPGKPRQFVASINKDGKTHYAPDVAGRFRISKDDSNNTATLEMAALRPEDSATYYSAAAKKSPKTPGEIPETEVDAWGQGTELVVTE/GPGPPPPR",
+      "mpnn_score": 0.912,
+      "sample": 203,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2928,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IQLTESGGGTVAAGGAVRLSAEATGEPLSDYAVAWYRQAPGEPRKWVAAINKAGNTWYHPDVKGRFTISVDYSQNTAYLDMADLRPADSAVYYFAADKNSPETPGEIPEEDIDAWGQGTPLTVTS/APPPPAAA",
+      "mpnn_score": 0.9174,
+      "sample": 455,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2921,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MRLTESGGGTVAAGGGATLSWSASGEPLSDYAVSWWRQAPNAPRRWVSSINKAGATWYAPSVSGRWTISRDPAANTATLSMANLIPEDSATYYGAASRTSPATPGAIPEESVDTWGQGTPLTVTS/GPAPPPPP",
+      "mpnn_score": 0.9218,
+      "sample": 450,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2915,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTVPAGGGVRLSWQASGSPLSDFAVSWWRQAPNAPREFVASVNKSGQTWYAPKVEGRFRISRDDETNTVFLEMADLQPEDSATYYGAASSTSPATPGEIPESEVDAWGQGTQLVVTD/GPPPPAPL",
+      "mpnn_score": 0.923,
+      "sample": 283,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2913,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVAAGGGVTLSATASGAPLKDFAVAWYRQAPGQPRTFVAAINKSGKTWYAPEVKGRFTISRDEASNTVHLAMGSLRPEDSATYYAAAYATSPGEVGRFDEAEVAAWGQGTELTVTE/GPPPPPLL",
+      "mpnn_score": 0.924,
+      "sample": 449,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2912,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVEAGGGVTLSVTASGEPLSNYAMSWYRQAPGKARQFVASINQTGATWYNDDVKGRFTISKDDANNTVYLDMANLKPEDSATYYAAASTNSPTTPGEIADSSVAAWGQGTDLTVTD/GGGSSPLL",
+      "mpnn_score": 0.9248,
+      "sample": 278,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2911,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VQLTESGGGTVPAGGGVTLTSTASGDSLSNYAVSWYRQAPGQPAQFVASINQSGQTYYAPSVQGRFTIKKDDSSNTSTLDMADLRPEDSATYYSGAYSNSPSVPGEIKEDEVSSWGQGTPLTVTD/GPGPPPPP",
+      "mpnn_score": 0.9251,
+      "sample": 466,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2911,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITLTESGGGTVPAGGGVRLTAKASGKPLSDYAVAWFRQAPGKPRQFVAAINKSGKTYYAPEVKGRYRISRNDAENTSYLDMASLVPADSATYYEAAQAESPATVGPIPPSKVDSWGAGTPLTVTE/LPPPPPPQ",
+      "mpnn_score": 0.9249,
+      "sample": 483,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2911,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "AKLVESGGGTVPAGGGVLLTAKASGAPLKDYAVSWWRQAPQQPREFVASVNQQGATWYHPSVDGRFTISVDYANNTSTLAMGELRPEDSAVYYMALSSDSPSTPGPIPEETVDAWGQGTPLTVTA/APPPPPLL",
+      "mpnn_score": 0.9333,
+      "sample": 104,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.29,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGVLLSATASGEPLSNFAVSWFRQAPNQPRQFVASINKDGKTWYAPSVAGRFTISRDDANNTAYLEMSDLRPIDSATYYSALVAPSPATPGQVPEKDVAAWGNGTKLVVTE/APPPTPPP",
+      "mpnn_score": 0.9349,
+      "sample": 344,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2897,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLEESGGGTVPEGGGVTLSDKASGESISEYAVSWYRQAPGQPRKFVASINKSGKTWYHPDVEGRFMISKDDSKNTSYLTMANLQPEDSAVYYSGLYSNSPSTPKEYPESNIAAWGQGTPLTVTA/GPAPPPEE",
+      "mpnn_score": 0.9362,
+      "sample": 210,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2896,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PELEESGGGTVPAGGGALLSRVATGAPLSDFAAAWYRQAPGQPRQFVSAINRQGKTWYAADVAGRFKISRDSANNTVFLEMANLQPEDSATYYGALKANSPETPGAIAPADVVAWGQGTPLVVTS/APPPPPPL",
+      "mpnn_score": 0.9365,
+      "sample": 269,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2895,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGVVAAGGSLTLSKKASGEPLSDYAVSWWRQAPGKPKEFVASINQSGKTYYAAAVKGRYTISRDDSNNTSYLDMANLTPADSATYYGAADKNSPETPGEIDEKNVAAWGEGTDVTVTS/GSGPPPPP",
+      "mpnn_score": 0.9395,
+      "sample": 352,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2891,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PELTESGGGTVPEGGSVRLSQTVSGEALSNYAVAWYRQAPGQPRQFVAYINRSGATWYAPAVRGRFKISRDDSRNTSYLDMSDLVPADSATYYGALSSTSPAVPGPVPEQDVVAWGQGTPLTVTA/GPMMMPRR",
+      "mpnn_score": 0.9415,
+      "sample": 24,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2889,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PNLTESGGGTFPAGGSVTLSAKASGLPLSSYAVSWYRQAPGQPREWVASINTSGSTWYAPDVSGRFTISADPTNNTAYLSMDSLVPSDSATYYMGLYPTSPSTPGPHPESSVAAWGQGTPVTVTE/GGGPPPPP",
+      "mpnn_score": 0.943,
+      "sample": 110,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2887,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLTESGGGTVPEGGGVTLSARASGSPLSDYAVSWYRQAPGQPREFVASINQSGATYYADSVKGRFTISKDNSKNTSYLDMADLRPEDSAVYYYGADETSPSTPGERPEEDLASWGQGTELTVTA/ARPAAPVV",
+      "mpnn_score": 0.9425,
+      "sample": 159,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2887,
+      "bfn_iptm": 0.3375,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLRESGGGTVAAGGGVTLSNQVSGDPLSDYAASWYRQAPGQPRQFVAAINKSGKSYYAPSVQGRFTISKDYSKNTVFLDMADLQPADSAVYYFGLYESSPETPSEVPEEDIAAWGEGTPLTVTD/APGPPPPP",
+      "mpnn_score": 0.9447,
+      "sample": 389,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2884,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLRESGGGTVPEGGGITLTLSASGAPLSDYAVSWFRQAPGQPLQFVASINKSGATWYAPDVAGRYTISRDDSRNTVTLTMADLRPADSATYYGGLWSSSPSTPGSVPLENVDAWGQGVLVRVTS/GGGPPPPK",
+      "mpnn_score": 0.9484,
+      "sample": 267,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.288,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PILTESGGGTVPAGGGVTLTFTASGDALSNYAVAWYRQAPGQPLEFVAAINKSGATYYHPAVEGRFTISKDDSNNTATLQMSNLKPEDSATYYQALYTNSPATPGAIPEQDVAAWGQGTPLTVTE/SSGIIEPL",
+      "mpnn_score": 0.9483,
+      "sample": 426,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.288,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLTESGGGTFPAGGGVTLTIQASGEALSNYAVAWYRQAPGQAPQFVASINKAGATYYAPAVQGRFTISRDDANNTTTLNMADLKPEDSAIYYGGADGNSPATPGPFDEKDIVAWGQGVSVTVTD/GPPPAPPP",
+      "mpnn_score": 0.9484,
+      "sample": 470,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.288,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTVPAGGGVTLSQAASGTSLSNYAVAWYSQRPGAPLEFIASINKSGQTYYAPRVAGRYTISTDPSNNTAYLHMGQLRPEDSATYYGAAVPHSPETPGPIPLSSVAAWGQGTELRVTD/GPPPPPLP",
+      "mpnn_score": 0.9498,
+      "sample": 500,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2878,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLSESGGGTVPAGGGVTLSATASGSDLSDYAVSWYRQAPGKPLQFVASINQSGDTYYAPSVKGRFKISRDDSNNTAYLSMSNLQPEDSATYYMAANPNSPSTPGQVAPITVSAWGQGTPLTVTE/GPAEPPPP",
+      "mpnn_score": 0.9503,
+      "sample": 474,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2877,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLTESGGGTVPQGGGVTLTGKAGGKPLKDYAVAWYRQAPGHPLEFVASINKQGKTYYAPKVKGRWKISVDPANNTSTLDMANLQPEDSATYYEAAYSKSPETPGEIEPAEVDAWGQGTPLTVTE/GPGGPPPR",
+      "mpnn_score": 0.9509,
+      "sample": 379,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2876,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VALSESGGGTVPDGGGVRLSITASGQPLSNYAVSWYKQAPGLPRQFVASINKSGNTWYAPEVAGRFRISRNDSNNTAFLDMADLRPEDSAVYYGAAHSSSPTTPQQINEKDVVSWGQGTNLVVTA/APGPPPPP",
+      "mpnn_score": 0.9534,
+      "sample": 394,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2873,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLTESGGGTFPAGGGLRLSNKASGAPLSDYAVGWYRQAPGQPLQFVANINRSGLTYYAPAVAGRFRISRDPANNTVYLDMAALRPDDSAVYYAALNANSPSSPRNIPQSDVVAWGQGTQVTVTA/LAAPPTPP",
+      "mpnn_score": 0.9542,
+      "sample": 355,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2872,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLLESGGGTVPAGGGLTLSAQASGEPLSDYAVSWYRQAPGQPMRFVASINRDGKTYYAPEVAGRYTISVDYSRNTATLKMADLVPADSATYYMGLSSYSPKTAGQVEPSQIDAWGQGTPVTVTA/GPPPPPPV",
+      "mpnn_score": 0.9573,
+      "sample": 371,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2868,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IKLKESGGGTVPAGGGVLLSSKASGEPLSNYAVSWFKQAPGQPRQFVASVNKSGKTWYASNVAGRFTISRDDSANTSYLNMANLQPEDSATYYSAASSTSPASPGEIPESSVTAWGQGTPLTVTT/GPAGPPNN",
+      "mpnn_score": 0.9576,
+      "sample": 451,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2867,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITLTESGGGVVPAGGGARLSIAASGDPISNYAMAWYRQAPGTEREFVSAINQQGKTWYASDVAGRFRISRDDANNTVFLDMGDLRPEDSATYYGAAKATSPATPGSFAEQDIAAWGTGTPLTVTE/SPPPTPPA",
+      "mpnn_score": 0.9625,
+      "sample": 55,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2861,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLTESGGGTFPEGGGVLLSTKVSGEPLSNYAVAWYRQAQGQPRQFVASITKSGNTYYNPRVEGRFQISRDDANNTSYLQMSDLRPEDSAVYYSGLVSNSPAEPGEIPFSDITAFGQGTELIVTA/GPGPPPEE",
+      "mpnn_score": 0.9633,
+      "sample": 226,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.286,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVPAGGGATLSGAASGASLSDFAVSWWRQAPGQPQQFVASINKSGATWYASGVAGRWTISKDNINNTAFLTMADLVPEDSATYYVGASSSSPSTPGRIAPSSIASWGQGTPLTVTA/AARPAAPP",
+      "mpnn_score": 0.9654,
+      "sample": 223,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2857,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLEESGGGVVPAGGGVVLSAAASGAPLSDYAVSWFRQAPGAPLRWVASINRAGQTWYNAAVQGRFVISTDPANNTAYLHMANLQPADSAVYYFGLSAASPASPGRIEASTISAWGQGTPLTVTS/GPPPPPAA",
+      "mpnn_score": 0.966,
+      "sample": 356,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2857,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IKLTESGGGTVPEGGGATLKSVASGEPLSNYAVSWYRQAPGKKRKFVASINKAGNTWYASDVAGRYKISKDDKNNTSYLEMSDLKPSDSATYYHAASKTSPDTPGEIKESDVDAWGQGTKLTVTS/APGSSTAR",
+      "mpnn_score": 0.9658,
+      "sample": 402,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2857,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PVLKESGGGTFPAGGGLRLSATVSGEPLSNYAAAWYRQAPGQPRTFVSSINRTGKTYYHPDVEGRFHISKDPARNTVYLDMANLRPDDSATYFFGLYANSPETPGEFPESDAVAWGQGTEVQVTE/LPPEPPPT",
+      "mpnn_score": 0.9664,
+      "sample": 359,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2856,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITLTESGGGTVPEGGGVTLSYVASGDALSNYAVSWYRQAPNQPRKFVASINKAGKTWYAPEVKGRFQISVDDSNNTVTLTMSQLKPEDSATYYAAARANSREKPSQIPESEVDAWGQGTELTVTK/GGGPAPPP",
+      "mpnn_score": 0.9675,
+      "sample": 52,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2855,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTVTESGGGTVPEGGGVTLTATVSGAPLKDFAVSWYRQAPEKPREFVASINRAGHTYYHPSVAGRFKISRDDSNNTATLEMADLRPEDSATYYWALSANSPESPQDIEESQVVAWGEGTELRVTA/GPPPPPLS",
+      "mpnn_score": 0.9679,
+      "sample": 165,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2854,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "IALTESGGGTVAAGGGVLLSGKASGDRLSDYAVSWWRQAPGKPRQWVSSINRKGATWYAPDVKGRFTISRDDANNTSYLEMADLQPEDSAVYYIGAYANSPETPKQVEESEVVAWGQGVELTVTE/PPRPPPPP",
+      "mpnn_score": 0.968,
+      "sample": 293,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2854,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLVESGGGTVAAGGGVTLSAAASGDPLENYAVAWYKQAPGEPEKFVASINKSGKTWYNDSFKGRFTISVDYANNTSYLDMANLKPEDSATYYRAAVASSPATPTEYAKQDVAAWGQGTELVVTE/GPDPDPPR",
+      "mpnn_score": 0.9691,
+      "sample": 73,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2853,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.267,
+      "bfn_disorder": 0.267
+    },
+    {
+      "sequence": "MRLSESGGGTVPAGGGVLLSATASGSPLSDYAVSWWRQAPGAPQQFVASVNQSGSTWYASSVRGRFSISRDDSRNTSYLRMGKLVPADSATYYWAADEWSPDTPGQVPPERVVAWGQGTDLTVTA/APPPPPSS",
+      "mpnn_score": 0.9704,
+      "sample": 91,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2851,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MSLTESGGGTVEAGGGLRLTAKASGDNLSDYAVAWYRQAPGQPRQFVASINKAGSTYYAAAVKGRYYISVDYSNNTSYLDMADLQPYDSATYYAAASRSSPATPGAIASSTVASWGQGTEVIVTA/AVVPPPRR",
+      "mpnn_score": 0.9717,
+      "sample": 462,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2849,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PKIEESGGGTVPEGGGVLLQAKVSGEPLKDYAVSWYRQAPGQPREFVSSINRKGATYYAPRVEGRFVISRDDAKNTATLAMSQLIPADSAVYYHALDSTSPDTPREIPFETVTSWGQGTPLTVTA/GPGPPPPA",
+      "mpnn_score": 0.9728,
+      "sample": 390,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2848,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "MTLTESGGGTVPAGGGVRLTSKASGEPLSSFAVSWFRQAPGQPLQFVASINRTGNTYYAPSVEGRFHISRDDANNTVYLDMASLQPSDSAVYYSAAQATSPSTPGEVAERDVSAWGQGTPVTVTS/SMEPPAPK",
+      "mpnn_score": 0.9732,
+      "sample": 169,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2847,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ISLTESGGGTVAAGGGVTLTSKASGEPLSDFAASWYRQAPGQPLEFVAYINRQGKTWYAPSVAGRFSISRDDANNTTTLAMGALRPEDSATYYSGLSKSSPESPGQVPSSSISAWGQGTQVTVTE/GPGAPPPP",
+      "mpnn_score": 0.9743,
+      "sample": 10,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2846,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PSLSESGGGTVPAGGGTLLSAKASGEPLSNYAVSWFRQAPGQPRQFVASINKSGSTYYAPEVQGRYSISRDDANNTSSLKMAQLVPADSATYYYALSSNSPATPGPVKPEDVAAFGGGTALTVTA/APGPSPPS",
+      "mpnn_score": 0.9748,
+      "sample": 33,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2845,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "ITIKESGGGTVPAGGGVTLTGKASGDPLSDFAVSWYRQAPGEPTQFVASINRAGQTWYAPAVQGRFTISTSTANNTSTLAMARLKPEDSATYFAAAQKTSPATPGEFSLDSVSAWGQGTPLTVTE/PPPPPPAP",
+      "mpnn_score": 0.9747,
+      "sample": 127,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2845,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "PTLLESGGGTVPEGGGVTLSGQASGAPLSDYAVSWYRQAPGQPLQFVASINKNGKTYYHPDVEGRFRISRVDANNTASLDMSDLVPADSAVYYIGLYSTSPETPGQFPPEDVAEWGQGTPLTVTA/APPPPPNN",
+      "mpnn_score": 0.9749,
+      "sample": 128,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2845,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VELKESGGGTVPEGGGVLLKDQASGENLSDYAVAWYRQAPGAPLRFVAAANKAGNTWYAPDVAGRYKISVDNANNTSYLEMADLVPRDSATYYSAAVANSPATVGEFPAAEVDAWGQGTNLTVTT/FPVPPEPL",
+      "mpnn_score": 0.9757,
+      "sample": 198,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2844,
+      "bfn_iptm": 0.3376,
+      "bfn_plddt": 0.2669,
+      "bfn_disorder": 0.2669
+    },
+    {
+      "sequence": "VTLVESGGGVVPAGGGITLSATASGAALADYAVGWYRQAEGQPRQFVASIDKLGNTYYSPAVKGRFKISKDDSNNTSTLEMGNLKPADSATYYKVAYANSPATPQEIKDTDVDAWGQGTPLTVTD/FPPPPAGG",
+      "mpnn_score": 0.9761,
+      "sample": 224,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2844
+    },
+    {
+      "sequence": "MTLTESGGGTVPAGSGVTLTAAASGSPLSDYAVSWYRQAPGAPKAFIASINKKGVTWYAPAVAGRFRISRDDSNNTSTLDMAGLVPADSATYYHGAYSGSPETAGEIAESDYQAWGQGTPLTVTE/GPPPPPPL",
+      "mpnn_score": 0.9763,
+      "sample": 391,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2843
+    },
+    {
+      "sequence": "ATLTESGGGTVPAGGGVTLSAQVSGEDLKNFAVAWYRQAPGKPIRFVASVNRAGKTWYHPDVKGRYKISVDWANNTATLTMSDLRPEDSAVYYNGLVASSPEVPGEIRLEDVEAWGQGTPLTVTS/AVGPPPPF",
+      "mpnn_score": 0.9772,
+      "sample": 493,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2842
+    },
+    {
+      "sequence": "ITLVESGGGTVPAGGGVTLTYTASGEDISNFAVAWYRQAPGAPLQFVSSINKEGKTWYHPDVEGRFTISKDDSKNTSYLDMAQLKPADSATYYGGAVSKSPTTPREVPLSDVVAWGQGTHLEVTE/MMGPPPPP",
+      "mpnn_score": 0.9793,
+      "sample": 396,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2839
+    },
+    {
+      "sequence": "PTITESGGGVVPEGGGVLLSSKVSGAPLANYAVSWYRQAPGQARQFVASINTSGNTWYASAVQGRFTISRDDANNTAFLQMANLKPQDSATYYSALHSNSPATAGPIPWSEVVAFGQGTPLTVTS/MPEPPPAR",
+      "mpnn_score": 0.9793,
+      "sample": 496,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2839
+    },
+    {
+      "sequence": "PTITESGGGTVPAGGGATLTSTVSGDPLSDYAVAWYRQAPGQPMEFVASINKQGKTYYAPEVKGRFKISVNNDKQTATLSMKDLLPADSATYYSGLVANSPATPKEFAMEDFVAFGQGTPLTVTA/APGPPPSS",
+      "mpnn_score": 0.9803,
+      "sample": 66,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2838
+    },
+    {
+      "sequence": "MTLEESGGGTVPEGGGVRLSAQASGEPLKDYAVAWYRQAPGEPMEFVAAINKTGKTYYHPDVEGRYTISKDYANNTVYLDMANLEPEDSATYYAGAYADSPEIEGEIELEDVQAWGQGTPLVVTA/AAAPPPPP",
+      "mpnn_score": 0.9808,
+      "sample": 126,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2838
+    },
+    {
+      "sequence": "IQLEESGGGVVPAGGGVTLTFAASGSPLSDYAVSWFRQADGEPLRWVASINRKGATYYHPAVAGRFRISKDDSSNTSTLEMADLQPADSAVYYAGAYSNSPEKPGRFPLSEVAAWGQGTPLTVTA/GPGSAAPP",
+      "mpnn_score": 0.9808,
+      "sample": 284,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2838
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGVQLSETASGDPLSNYAYSWFRQAPGQPQQFVASINKSGATWYHPDVAGRFTISKNDAKNTSFLKMADLKPEDSATYYGGLYANSPAIPGQREQANAVAWGQGTQLTVTE/APGPPPPA",
+      "mpnn_score": 0.9806,
+      "sample": 438,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2838
+    },
+    {
+      "sequence": "MQLVESGGGVVPAGGGVTLTETASGESLSDYAVSWYRQAPGQPMQFVANINKSGNTYYAPEVEGRFKISRDDANNTVTLDMSALQPADSATYYSAARTQSLSVPGSYRLEDVSAWGQGTPLTVTE/MPAPPPPP",
+      "mpnn_score": 0.981,
+      "sample": 220,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2837
+    },
+    {
+      "sequence": "ISLEESGGGTVPEGGGVTLSNKASGAALSNYAVSWWRQAVGQPRTFVASVNKAGNTYYHPAVSGRYTISVSNANNTATLTMADLKPEDSATYYGGAYASSPATPGEMQASDASAWGQGTPLTVTA/AAGPPSSS",
+      "mpnn_score": 0.9812,
+      "sample": 280,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2837
+    },
+    {
+      "sequence": "PQLVESGGGAVPEGGGVTLSWQASGTPLSDFAVSWYRQAPGAPREFLASINRTGATYYHPAVAGRFVISRDDANNTAYLTMADLRPEDSAVYYSALSEWSLPTPGAVPDDEVAAWGQGTPLTVTA/APPPPPVV",
+      "mpnn_score": 0.9824,
+      "sample": 357,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2836
+    },
+    {
+      "sequence": "IKLEESGGGTVPEGGGVKLSHQASGEPLSNYSVAWYRQAPGQPRQFVASINKDGKTYYAPEVKGRFEISKDPENNTAYLAMADLKPEDSATYYSAAYSKSQATPGEVPESDVSSWGQGVELTVTS/LEAPPPSS",
+      "mpnn_score": 0.983,
+      "sample": 115,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2835
+    },
+    {
+      "sequence": "PQLVESGGGVVPAGGGVTLSSKAYGEPLSDYAVAWFKQAPGAPEEFVSAINKAGKTYYHPSVKGRFSISRNDAENTVTLTMGNLVPADSATYYVGLYANSPATPGSFPRSDIVAWGQGTPLTVVE/GPPPPPPL",
+      "mpnn_score": 0.9828,
+      "sample": 418,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2835
+    },
+    {
+      "sequence": "ITLAESGGGVVPAGGGVLLSAAATGDALSSYAMAWYRQAPGQPRQFVAAINKSGKTWYAPSVAGRFRISRADANNTVTLEMADLTPADSATYYAAAFTESPATPGELPESKADAWGQGTGLTVTE/PPAPPPPL",
+      "mpnn_score": 0.9838,
+      "sample": 114,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2834
+    },
+    {
+      "sequence": "PTLQESGGGTVPAGGGITLSVAASGEPLSNYAVSWFRQAPGQPMQFIASITREGVTYYAPEVQGRFTISRNDANNTAYLNMSNLQPADSATYYGGLYSDSPSTPQAIPESGVEAWGQGTKVTVTE/GPPPPPPA",
+      "mpnn_score": 0.9837,
+      "sample": 374,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2834
+    },
+    {
+      "sequence": "PTLTESGGGTVPEGGSILLSERASGSPLSDYAVSWYRQAPGQPMQFVAAINKAGATYYHPHVQGRFWISRDDANNTAYLAMANLRPEDSATYYSGASRTSPSTPGEVEPDTLEAWGQGTPLTVTA/GPPPPPPE",
+      "mpnn_score": 0.9842,
+      "sample": 135,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2833
+    },
+    {
+      "sequence": "PVITESGGGTVPAGGGATLTATASGDDLANYAVSWYRQAPGEPLKFVSSINKSGNTYYAPEVSGRFKISKNDANNTSTLDLSDLRPEDSATYYYGLYADSPSTPRSIDLSKVSAWGQGTKLEVTT/GPSKKPKK",
+      "mpnn_score": 0.9842,
+      "sample": 253,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2833
+    },
+    {
+      "sequence": "IKLVESGGGTVPAGSGLTLSVTATGQPLSDYAVSWYRQAPGKPLEWVASINRSGKTWYAPDVKGRFKISSDFSNNTSYLEMANLRPEDSATYYGAASRSSPATPGPIPPSEVVAWGQGTPVQVTD/APPPPPPL",
+      "mpnn_score": 0.9858,
+      "sample": 102,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2831
+    },
+    {
+      "sequence": "ASLSESGGGTVAEGGGVRLSNKASGDKLADYAVGWYKQAPGQPLRFVAAINKAGNTYYAPEVRGRFRISKDDANNTAYLEMSELRPRDSAVYYSVLSKTSPETVGEIPQSTIAAWGQGTPLTVTR/MMSSPPPP",
+      "mpnn_score": 0.9859,
+      "sample": 431,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2831
+    },
+    {
+      "sequence": "INLVESGGGTVPAGGGARLSAKASGEPLGDYAVSWFRQAEGQPRQWVASINQNGATWYATSVQGRFSISRDVSQNTSYLDMAALVPEDSAVYYQGAYASSPPTPGSVSESDVQSWGQGTVLTVTD/GPGPPPPP",
+      "mpnn_score": 0.987,
+      "sample": 99,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.283
+    },
+    {
+      "sequence": "VTLKESGGGTVPAGGGVTLSQVASGMPLADYAVAWYKQAPGQPEEFVASINTAGNTWYAEEVKGRFKISKNDSDNTATLTMGDLKPEDSATYYFAAVSHSPVTPREIEKGDVDAWGQGTPLTVTE/GPPPPPPN",
+      "mpnn_score": 0.9867,
+      "sample": 124,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.283
+    },
+    {
+      "sequence": "PSLSESGGGTVPAGGGVTLSAQQSGAPLDNYAVAWYRQAPGQEEQFVASINTSGATYYAPSVAGRFTISRDDQANTTYLEMNNLQPEDSAVYYEAAVPTSPANPGEVEPEDVAAWGQGTPLTVTE/GPGPPPPP",
+      "mpnn_score": 0.987,
+      "sample": 153,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.283
+    },
+    {
+      "sequence": "ASLTESGGGTVPAGGGATLSSQASGDPLSNYAVSWWRQAPGTPHQFVASINKSGNTYYHPDVAGRYSISRNDSDNTSYLSMADLQPADSATYFHGLYKDSPATPGEIEEQKVSAWGQGTPLTVTA/APPPPPPI",
+      "mpnn_score": 0.9873,
+      "sample": 80,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2829
+    },
+    {
+      "sequence": "PTLTESGGGTVKAGGGVRLSAKASGQPLSDFAVSWYKQAPGKPRQFVASINKSGRTFYAPEVEGRWHISKDFANNTAYLDMGDLRPEDSATYYFALNQQSPSTPGPISEETVAAWGQGTWLEVTE/ALPPPPPP",
+      "mpnn_score": 0.9873,
+      "sample": 206,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2829
+    },
+    {
+      "sequence": "MNLTESGGGVVPAGGGVTLTAAASGEPLSDFAVAWYRQAHGSPRQFIASINQSGQTYYAPAVEGRWHISRENANNTATLEMSDLRPEDSATYYFAAVSSSPSTPGPVPESEVDAWGQGTLLEVTD/DPPPPEPP",
+      "mpnn_score": 0.9878,
+      "sample": 321,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2829
+    },
+    {
+      "sequence": "PTLVESGGGTVPAGSGVRLSGTVTGQSLSDYEMSWYKQAAGKPLEFVASINRSGKTYYHPSVQGRFVISRDPARNTVYLDMSDLKPEDTATYYVAASSSSPATPGEIAKSSVDAWGQGTPLTVTE/PPGPPPPP",
+      "mpnn_score": 0.9876,
+      "sample": 349,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2829
+    },
+    {
+      "sequence": "PNLTESGGGTVPAGGGVTLTSTVSGSKLSNFAVGWYRQAPGEPTQFVASINQKGATYYAPEYAGRFRISRDDSHNTSTLDMADLRPADSAVYYEALDSNSPKVPGSIPLSNVDAWGQGTELVVTE/GPPPPAPP",
+      "mpnn_score": 0.9879,
+      "sample": 411,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2829
+    },
+    {
+      "sequence": "INLTESGGGTVPAGGGVTLSAQATGSSLGNYAVSWYRQAPGQPRAFVASINVSGATHYASSVAGRFTISRDDANNTSTLGMAHLQPSDSAVYYXGASATSPSTPASVPLSSLSAWGQGTQLTVTE/GPPPPPFF",
+      "mpnn_score": 0.9881,
+      "sample": 6,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2828
+    },
+    {
+      "sequence": "PKLTESGGGTVPAGGGVLLSARASGEPLSDFAVSWYRQAPGQPRRFVAAINKSGKTWYAPEVRGRYVISVDYSNNTSFLQMADLRPQDSATYFQGLYSSSPDTPGPYPEEKIVAWGQGTPLTVTE/GPLPLKPL",
+      "mpnn_score": 0.9887,
+      "sample": 234,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2828
+    },
+    {
+      "sequence": "MTLTESGGGTVPEGGGVLLSNTASGQALSNFAVSWYRQAPGKPLEFVASINKSGETYYAPDVAGRWTISVNYANNTSFLRMARLRPADSAVYYSGANITSPATPGSIPKSTLAAWGQGTTLTVTR/PPGVPPIL",
+      "mpnn_score": 0.9881,
+      "sample": 383,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2828
+    },
+    {
+      "sequence": "ITLTESGGGVVPAGGGVLLTSQASGEPLSDYAVAWYRQAPGQPRQFVASINQSGKTWYAASVAGRFYISKDNANNTARLEMSDLVPADSATYYSGAVAISPSTPGSIAFSDVVAWGQGVPLTVTE/SMMMVVPR",
+      "mpnn_score": 0.9883,
+      "sample": 410,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2828
+    },
+    {
+      "sequence": "IVLTESGGGTVPAGGGVRLSAKASGESLENYAVSWYRQAPDQPVEFVASINTSGKTYYHPAVEGRFDISKDPSNNTAYLDMGDLRPEDSATYYMAAVSTSPKEPREVPLSDVQAWGQGTPLTVTE/APPSHHGG",
+      "mpnn_score": 0.9888,
+      "sample": 420,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2827
+    },
+    {
+      "sequence": "PAIVESGGGTVPAGGGVTLKAVVSGQPLSEFAASWYRQAPGKPEQFVASINRSGSTYYHPDVEGRFKISRDDANNTVYLDMAHLMPGDSATYYHGLDAESPETPGPIPKEDLVAWGQGTELTVTH/GPEPPPPL",
+      "mpnn_score": 0.9901,
+      "sample": 222,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2826
+    },
+    {
+      "sequence": "IKLTESGGGVFNEGGGVELTAKASGDSLANYAVSWFRQAPGQPRKFVASINKSGATYYAPEYEGRFKISKDDTNNTAYLKMAELRPEDSAVYYFAANASSPATPTQVAESDIVAWGQGTELTVTA/GPGPPPPA",
+      "mpnn_score": 0.9901,
+      "sample": 333,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2826
+    },
+    {
+      "sequence": "PVLKESGGGEVPEGGGVRLSKRVTGEPIKDFAVSWYRQRPGQPRQFVSSINRQGKTYYAPSVRGRFRISRDDENNTSYLDMGDLRPEDSAVYYGALSAQSPEKPGEVKPEDVVAWGNGTPLSVSS/GPSSPPPP",
+      "mpnn_score": 0.9901,
+      "sample": 497,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2826
+    },
+    {
+      "sequence": "MLLRESGGGTVPAGGGVTLSARASGEPLKDFAVAWYRQAPGQPRQFVASINKAGQTYYSPAVEGRFVISRDDARNTSYLTMGNLQPQDSATYYEAAYSTSPETPGEIKEEDVESWGQGTPVTVTS/GPVPPPFE",
+      "mpnn_score": 0.9915,
+      "sample": 18,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2824
+    },
+    {
+      "sequence": "VTLTESGGGTVPAGGGLTLTISATGDSLSNFAVSWYRQAPGEPTRWVATINRSGKTYYHPDYIGRFRISRNDANNTVTLDMGDLRPADSATYYGGVSAASPATPGERPLSELVAWGQGTEVRVTD/APPPPPSS",
+      "mpnn_score": 0.9918,
+      "sample": 41,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2824
+    },
+    {
+      "sequence": "IRLTESGGGIVPEGGGVTLTEVASGNPLSNYTVSWWRQAPGAPRKFVSSINKTGKTYYAKDVEGRFSISVDYSSNTATLTMANLKKEDSATYYSAAVATSPSTPQEVAESDVSAWGQGTKVTVTE/GPPPPPLL",
+      "mpnn_score": 0.9918,
+      "sample": 274,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2824
+    },
+    {
+      "sequence": "IKLVESGGGLVPAGGGVRLSSKASGLSLSDYAMSWYRQAPGQPRNFVAYINKAGKTYYHPDVKGRFKISVDFSNNTVYLEMGDLRPEDSATYYVAAQSKSPIVPTEIPEAEVDAWGQGTQLRVTD/APPPPPPL",
+      "mpnn_score": 0.9924,
+      "sample": 20,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2823
+    },
+    {
+      "sequence": "VTLKESGGGTVPAGGGVRLATQATGAPLSDYAVAWYRQAPGEPREFVASINKSGKTYYHPAVEGRFVISKDPASNTPYLDMGQLQPEDSATYYSAAVTSSPSEPREYPFSEVAAWGEGTPLRVTE/GRPPPPTT",
+      "mpnn_score": 0.9919,
+      "sample": 64,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2823
+    },
+    {
+      "sequence": "PTLTESGGGTFPAGGGVLLSVVASGEPLSDFAVGWYRQAPGQERLFVASINRSGNTWYHPEVQGRFSISRDDSNNTAFLSMSKLQPQDSATYYAAAYASSPPVPREIPETEVVAWGQGTNVTVTE/LPGPPPPP",
+      "mpnn_score": 0.9926,
+      "sample": 370,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2823
+    },
+    {
+      "sequence": "IKLSESGGGTVPAGGGATLSAVASGDALSDYAVAWYRQAPGQPRKFVASVTKSGRTYYAPEVEGRYTISKDDTNNTSYLLMDNLKPEDSAVYYRAAVSQSPAEPREFPEEEVDAWGQGTPLTVTE/APNDPLLA",
+      "mpnn_score": 0.9936,
+      "sample": 11,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2821
+    },
+    {
+      "sequence": "PTLVESGGGTVPAGGGALLSAKATGEALSDYAVAWFRQAPGAPMQFVAAINKDGKTWYADGVKGRYTISRDPANNTAYLEMGNLVPDDSATYYMALDTDSPEQPREIAPTDIAAWGQGTPLIVTE/PPPPSPEE",
+      "mpnn_score": 0.9941,
+      "sample": 74,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2821
+    },
+    {
+      "sequence": "ITLVESGGGTVPAGGGVTLTNTASGEPLSDFAVAWYKQAPGKPRQFVAAINRQGKTYYAPDVEGRFTISVDPAHNTSYLVMADLKPEDSAIYYSAAYSSSPQTPREYQEDEVAAWGQGTPLRVTE/AHPPPEPP",
+      "mpnn_score": 0.9938,
+      "sample": 173,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2821
+    },
+    {
+      "sequence": "MTLTESGGGTVPAGGGVLLTISATGSPLSNYAVAWYRQAPGQPLQFVASINKSGNTWYAEDVAGRFEISRNPASNTVTLEMADLQPRDSAVYYGAAVAISPSSPGPFPVSLVDAWGQGTPLVVTE/APLLPDSL",
+      "mpnn_score": 0.9947,
+      "sample": 1,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.282
+    },
+    {
+      "sequence": "IGLTESGGGTVPQGGGVKLSAKATGAALSDYAVSWYRQAPGKPQTFISSINKEGKTYYDKAVKGRYSISRDDKNNTSFLDMADLKPEDSATYYPGATATSPATPGLVPLSDVASWGQGTALTVTD/GPKKPLAA",
+      "mpnn_score": 0.9948,
+      "sample": 188,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.282
+    },
+    {
+      "sequence": "VTLTESGGGTVPAGGGALLTATASGEALSDYAVSWWRKASGQPEQFVAAITKSGSTYYAPDVAGRFRISKAPGENTSTLSMGNLTPADSATYYEGADASSPSTPGQFPKASLAAWGQGTPLTVTD/GPPPPPPF",
+      "mpnn_score": 0.9961,
+      "sample": 22,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2818
+    },
+    {
+      "sequence": "PTLVESGGGTVPAGGGLLLSDQVSGSPLSNYAVSWYRQAPGQPAQFISAVNKAGNTWYHPEYEGRFRISVDHSNNTSYLEMADLRPEDSATYYSGLSENSPSTPRQIEQSELSAWGQGTPVTVTS/GPRSSPPL",
+      "mpnn_score": 0.996,
+      "sample": 39,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2818
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGDGVTLTTTQSGEPLSDYAVSWYRQAADEPLEFVASINKQGKTWYHPAVKGRFTISRNPAQNTSTLSMDNLVPADSAVYYSGLYKTSPATPGSFDLSDVSAWGQGTTLTVTT/AVGPPDLL",
+      "mpnn_score": 0.9959,
+      "sample": 444,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2818
+    },
+    {
+      "sequence": "MALTESGGGTVPAGGGATLTHEASGAPLSDFAVAWYKQAPNQPRQFVAHINKAGKTWYSPAVKGRFTISVDYANNTATLTMANLQPEDSAVYYSAAYSESPETPQEMKPQDVDAWGQGTVLTVTA/GGGPKKKK",
+      "mpnn_score": 0.9971,
+      "sample": 200,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2817
+    },
+    {
+      "sequence": "ITLVESGGGTVPAGGGRRLTWKASGANLSDYAVSWFRQAPGKPLQWVASINKSGDTYYAEEVKGRFRISKDDANQTSYLDMAELRPEDSATYYSAANENSPSIPGQVPQSDVSAWGQGTKLTVTE/AYYPPPPP",
+      "mpnn_score": 0.9979,
+      "sample": 67,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2816
+    },
+    {
+      "sequence": "MTLLESGGGTVPAGGGVTLTSKASGNPLSSYAVSWYRQAAGAATQFVASINVAGSTYYASQISGRYTISKDPENNTVTLVMGNLQPADSATYYSGAYSSSPSSPQAFPKSEASAWGQGTQLTVTA/APPPPPPA",
+      "mpnn_score": 0.998,
+      "sample": 214,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2816
+    },
+    {
+      "sequence": "PALVESGGGTVPQGGGWLLTVQASGEPLANYAVAWFAQAPGQDRKFLASINKSGATWYAPEVAGRWTISRNDANNTSTLSMADLRPADSATYYAGLAATSPTTPQQVKEEDVVAWGQGTPLTVTA/SPPPPPEE",
+      "mpnn_score": 0.9982,
+      "sample": 331,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2816
+    },
+    {
+      "sequence": "IRLEESGGGTFPAGGGVTLSWRASGQSLSDFAVSWFRQAPGKPKQFVASINRQGATWYAPEVRGRFRISRDFANNTAYLDMASLRPEDSAVYYGAAHSTSPATPRELPEENVSAWGQGTPVTVTD/SPPPPPAK",
+      "mpnn_score": 0.9989,
+      "sample": 337,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2815
+    },
+    {
+      "sequence": "MNLVESGGGTVPAGGGAELSXTASGSDLSNYAVSWYRQAPGKPREWVASINKSGNTWYAPAVAGRFSISRNPANNTATLSMAALQPEDSATYYSGAWSSSPSTPGQVPLSEVDAWGQGTALEVRA/PPAPPPPP",
+      "mpnn_score": 0.9986,
+      "sample": 446,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2815
+    },
+    {
+      "sequence": "VTLSESGGGVVPAGGGVTLTSTASGSALSSFAVSWWKQAPGQPQQWVASINKSGKTYYADAVKGRFTISKNNANNTATLSMGNLRPFDSATYYSAAVASSPSVPGPNQKSTAAAWGQGTPLTVTD/APPPPPDP",
+      "mpnn_score": 0.9986,
+      "sample": 461,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2815
+    },
+    {
+      "sequence": "PHLTESGGGTVPAGGGVRLSAAVTGEPLSDYAVAWYRQAQGEPREFVASINKSGRTWYAPSIAGRFTISRDDSKNTVYLDMAQLRPADSATYYAAAYRNSPPEPGEMELSDVVAWGQGVQLTVTE/MPAPPPPP",
+      "mpnn_score": 0.9988,
+      "sample": 463,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2815
+    },
+    {
+      "sequence": "TTLTESGGGVVPEGGGATLTLKASGAALSDYAVAWYRQAPGQPSRFVASINKAGATYYAPDVEGRYAISRDVANNTSTLAMGQLRPADSAVYYGGAFAQSPATPGPIAFEEVAAWGQGTRLVVTA/GPLPPPVV",
+      "mpnn_score": 0.9998,
+      "sample": 491,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2814
+    },
+    {
+      "sequence": "IDLTESGGGTVAAGGGITLSSKASGESLSDYAVAWFKQAPGAARQFVAYINKAGDTWYNPDVAGRYTISRDPGANTSYLYMASLRPSDSATYYQGAYATSPSTPGSMPESDVVAWGQGTEVTVTE/APPPPPVV",
+      "mpnn_score": 1.0004,
+      "sample": 12,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2813
+    },
+    {
+      "sequence": "PKLTESGGGTVAAGGGTTLTAVASGEPLSDFAVSWYRQAPHKPREFVASINKAGNTYYSPSIEGRWTISVDYSNNTSTLTMANLRPEDSATYYVGLYEKSPSTPGEYPESDVKAWGQGTDLTVTE/GPGPPPVG",
+      "mpnn_score": 1.0007,
+      "sample": 23,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2812
+    },
+    {
+      "sequence": "PSLVESGGGVVPEGGGVVLSNSATGAPLSSFAVSWFRQAPGEPLQWVASVNRSGATAYAPSVSGRFEISVDYEKNTVTLAMADLRPADSAVYYYAADSTSPATPGEIPEAAVSAWGQGTPLTVTA/GPGPPPPA",
+      "mpnn_score": 1.0012,
+      "sample": 89,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2812
+    },
+    {
+      "sequence": "PSLVESGGGTVPEGSGVLLSAKASGEPLKDFAASWYRQAEGEPEEFVASINRDGNTYYAPAVEGRYRISRDPAHNTVTLEMANLRPEDSATYYFGLHANSPSTPGEIPLSSVVAWGQGTRLTVTS/IPGPPPPF",
+      "mpnn_score": 1.0007,
+      "sample": 317,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2812
+    },
+    {
+      "sequence": "MSLEESGGGVVPEGGGVTLTVRASGAPLSDFAVSWFRQAPGKPTRFVAYINKAGKTFYNDEVKGRFTISKDYANNTVTLDMDRLVPSDSATYYAGADSASPATPGAVALSDVDAWGQGTELVVTA/APGDDAPP",
+      "mpnn_score": 1.0024,
+      "sample": 13,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.281
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGVTLKAQASGEPLSDYAAAWYRQAPGKAQRFVASITQTGKTYYADRVKGRFKISKNDAQNTVTLAMDSLRPEDSATYYVGLYRTSPSTPGEFAPSMVDAWGQGTPLTVTE/MPGPPPLP",
+      "mpnn_score": 1.0023,
+      "sample": 193,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.281
+    },
+    {
+      "sequence": "INLTESGGGSVPAGGGVTLTAVASGEPLQNYAVAWYRQAPGEPRQFVASINESGKTYYASSVEGRFTISKNYSNNTSTLQMADLVPSDSAVYYWGAYSSSPSTPTEYAESDLDAWGQGTPLTVTQ/HPPPPPPF",
+      "mpnn_score": 1.0032,
+      "sample": 281,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2809
+    },
+    {
+      "sequence": "PGLTESGGGRVPAGGGVTLTFKVTGEPLSNYAVAWYRQKPGQPREFVASINREGSSWYHPSVRGRFTISKDDANNTATLSMGDLRPRDSATYYGALVRSSPPIPGEVRERDVAAWGQGTRVEVTE/MMPPPPPP",
+      "mpnn_score": 1.0046,
+      "sample": 17,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2808
+    },
+    {
+      "sequence": "PSLSESGGGTVEAGGGATLSSQASGDPLSNYAVSWFRQAPGVEEQFVASINKAGATYYASSVSGRFKISRDDANNTAFLLMDHLKPKDSATYYSALSSSSPATPGQVPKSDVSAWGQGTKLTVVN/GPGPPPPP",
+      "mpnn_score": 1.0045,
+      "sample": 119,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2808
+    },
+    {
+      "sequence": "ATITESGGGTVRAGGGVLLSATVSGAALSNYAVSWFRQAPGKPQAFIASIDKTGNTWYSPDVAGRFVISKNDASNTSTLKMARLRPADSATYYSGLYSNSPETPREFKPDEADAWGQGTRLVVTA/GGGPPPPP",
+      "mpnn_score": 1.0041,
+      "sample": 125,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2808
+    },
+    {
+      "sequence": "ITLTESGGGTFPEGGGALLSATASGDSLSNFAVAWYRQAPFAPEQFVAAINKSGNTYYAPEVKGRFTISRDDANNTTTLSMGDLRPEDSAVYYKAAYATSPSTPGAIPLSGVSAMGQGVALTVTA/MTPPPPES",
+      "mpnn_score": 1.0049,
+      "sample": 227,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2807
+    },
+    {
+      "sequence": "PIITESGGGVFPAGGGAELSSQFSGDPISDYAVSWWRQAPGKPLVFVSSINKRGNTYYAPEVAGRFKISKDDSQNTAFLQMADLQPADSATYYSGASQNSPETPGEIQPQDIAAWGQGTPLTVTE/APGPPLPP",
+      "mpnn_score": 1.0049,
+      "sample": 315,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2807
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGVTLTNKASGDSLSNYAVSWYRQAPGQPLEFVASINKAGNTFYHPSVAGRYKISVDYSNNTATLDMGNLRHEDSATYYVAASSSSPATPSSIPKSSVSAWGQGTQLVVTE/GPPRPPPS",
+      "mpnn_score": 1.0048,
+      "sample": 442,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2807
+    },
+    {
+      "sequence": "PFLLESGGGTVPAGGGALLQTKASGLPLSDYAVAWFRQAPGQPREWVASVNKSGKTYYHSDVKGRFTISVDYSNNTAYLDMAELQPEDSATYYSALLSKSPEKPGKIEESEVEAWGQGTQLTVTE/LPPPPPSS",
+      "mpnn_score": 1.0062,
+      "sample": 90,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2806
+    },
+    {
+      "sequence": "PAITESGGGVVAEGGGLTLSAKVSGNPLSDYAAAWYRQAPGQPIRFIAAINKQGKTFYAEEVKGRFSISKDPSKQTTYLHMANLKPQDTAVYYNALVATSPSTPGKFALSDVDAWGQGTPVTVTT/MMKKPPPP",
+      "mpnn_score": 1.006,
+      "sample": 215,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2806
+    },
+    {
+      "sequence": "AKLTESGGGTIPEGGGATLSEQASGDPLSNYAVSWYRQAPNQPREFVSSVNKGGKTYYAAAVKGRYQISVDYENNTAYLTMSNLRPADSATYYGGLYATSPETPGEYLPENIDSWGQGTPLVVTS/GPGPPSLP",
+      "mpnn_score": 1.0055,
+      "sample": 216,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2806
+    },
+    {
+      "sequence": "ITITESGGGVVAAGGGVTLRSTASGSPLANYAVSWYRQAPGQPLIFVSYINKSGKTWYHPEVKGRFTISKNVSNNTVTLRMADLRPADSATYFSAADPNSPATPSEIPPSNVSAWGQGTPLEVTE/APAPPPQQ",
+      "mpnn_score": 1.0058,
+      "sample": 419,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2806
+    },
+    {
+      "sequence": "INLTESGGGTVAAGGGLTLSTTASGSPLSQYAVSWYRQAPNQPLKFVASINQSGQTWYSWDVKGRYTISKDPSNNTAYLNMADLKPEDSAVYYSGATSNSPANPGAVELSDVTAWGQGTPVTVTE/APPAAPAP",
+      "mpnn_score": 1.0068,
+      "sample": 257,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2805
+    },
+    {
+      "sequence": "MTLTESGGGTVPEGGGVTLSGKASGENLKDYAVSWYRQAPGRKQEFVAAINREGKTWYHPKVEGRFEISKDLANNTVFLTMADLRPSDSATYYFGANKYSPDTPTEVDASDVDAWGQGTDLTVTA/GPAPPPAA",
+      "mpnn_score": 1.0067,
+      "sample": 343,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2805
+    },
+    {
+      "sequence": "IGLKESGGGTVPAGGGVTLTEQATGDALSNYAVSWWRQAPGEPMEYVASINKAGNTYYNPAVEGRFKISTDDSNNTATLEMASLRPEDSATYYGAAKSTSPSTVGQFDPHDVDAWGQGTQVTVTE/GPGPPPEE",
+      "mpnn_score": 1.0075,
+      "sample": 152,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2804
+    },
+    {
+      "sequence": "MQLSESGGGTVKKGGGIKLSFQASGEPLSDFRVSWYKQAPNEPMKFVASINQNGKTYYSDEVKGRFTISKDNSRNTSYLDMDKLKPEDSAVYYSGAEKESPEKEGEVPLDKIAAFGQGTQLTVTE/MKKKKPPP",
+      "mpnn_score": 1.0079,
+      "sample": 15,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2803
+    },
+    {
+      "sequence": "VTLSESGGGTVPAGGGVTLSDAATGRPLSDFSVAWYRQAPQQPLQFVAAINKDGQTYYHPEVQGRYHISKDDAKNTATLDMSSLRPEDSAIYYSAAYPNSPATPREVTPTEVAAWGEGTPLTVTE/GPPPPEEE",
+      "mpnn_score": 1.0087,
+      "sample": 79,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2803
+    },
+    {
+      "sequence": "ATLTESGGGTVPEGSGVTLSGSASGDPLSSYAVSWYRQAPGKAKQWVASINKQGKTWYSPAVKGRFTISKNDANNTSYMDMSNLKPEDSATYYIGLFSNSPETPGEIPESSVDSWGQGTQLTVTA/PPGTTPLL",
+      "mpnn_score": 1.008,
+      "sample": 120,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2803
+    },
+    {
+      "sequence": "PSLTESGGGTVEQGGGVTLSLTASGESLSSYAVAWYKQAPGKPFEFVAYINQAGKTFYHPEVKGRYSISRNDATNTATLAMADLVPEDSATYYGALMPTSPEKPGEMKKDEVAAWGQGTKLVVTS/GPAPPPPP",
+      "mpnn_score": 1.0084,
+      "sample": 314,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2803
+    },
+    {
+      "sequence": "PNLTESGGGTVPAGGGVTLSAVVTGESLSNYAVAWFRQAPGQPMTFVAAINRSGKTWYHPDVEGRFWISRDDANNTSYLDMANLRPEDTAVYYKALNSSSPSTPGQIVPTEISAWGQGVQLTVTE/GPGMPLPP",
+      "mpnn_score": 1.0093,
+      "sample": 163,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2802
+    },
+    {
+      "sequence": "PNLTESGGGTVPAGGGVTLSFKATGKPLSEYAVSWYKQAPGSPMKFVASINKSGLTYQAAEVKGRFKISKDDAKNTSYLEMSDLRPEDSAVYYSALDANSPATPQEIPKANVQSWGQGTQLVVTE/GPSPPPPS",
+      "mpnn_score": 1.0096,
+      "sample": 236,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2801
+    },
+    {
+      "sequence": "PKLTESGGGTVPAGGGVDLSAAASGEALANYAVAWYRQAPNQPMTFVAAIDKSGRTWYHPAVRGRFHISRNDSLNTATLAMAKLRPADSATYYQALVANSPSIPTEYPPSEVDAWGQGTPLTVTA/GPTPPPPL",
+      "mpnn_score": 1.0098,
+      "sample": 259,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2801
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGVTLTVTVSGAPLSDYAVSWFRQAEGQPMKFVASINRSGATYYAPEVKGRFRISRNDAKNTVTLNMSSLRPSDSATYYGALNPSSPAVPGEWEPQNVAAWGQGTDLTVTA/GPGPPPDD",
+      "mpnn_score": 1.01,
+      "sample": 382,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2801
+    },
+    {
+      "sequence": "PNLVESGGGTVPAGGGVTLTRKASGEALSDYAVAWYKQAPNQPEKFVASINKAGQTFYAPEVQGRFHISTNPAQNTSYLQMADLVPDDSAVYYSALYADSPATPQAFEPSRISAWGQGTQLTVTE/MMSPPPNN",
+      "mpnn_score": 1.011,
+      "sample": 88,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.28
+    },
+    {
+      "sequence": "ITLTESGGGTFPAGGGVTLTRQASGSPLSNYQVSWYRQAEGRPREFVASINRSGQTWYHPSVKGRFTISVNPANSTATLLMSDLKPEDSATYYGAASANSPQTPMQVPESNVVAWGQGTPVSVTE/GPPPPPPA",
+      "mpnn_score": 1.0107,
+      "sample": 116,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.28
+    },
+    {
+      "sequence": "ITLKESGGGTVPAGGGATLSAQASGAALSNYAVAWYRQRPGEPREFVAAINRAGKTYYHPDVSGRFTISVDKALNTSTLTMAHLRPRDSAVYYPAAYANSPTTVSAFPAEDAVAWGQGTPLTVTE/PPPPPPAA",
+      "mpnn_score": 1.0105,
+      "sample": 261,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.28
+    },
+    {
+      "sequence": "MELKESGGGTVPAGGGVTLQAVATGEPLSDYAVSWWRQAAGQPRVFVAHINRKGETWYHPDVEGRFTISRDDADNTAYLSMGDLRPSDSATYYVAAFKGSPETPGEAPFSDAASFGQGTLLTVTA/GPPPPPAA",
+      "mpnn_score": 1.0112,
+      "sample": 35,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2799
+    },
+    {
+      "sequence": "PVLTESGGGTVPAGGGVTLSXKVSGESLSNYSVSWYRQAPNQPMEFVASANKAGKTYYADSVKGRYTISVNYSNNTATLQMANLQPKDSATYYSALRNTSPSTPGEIEPSEVLAWGQGTKLTVTE/LPPPPKPE",
+      "mpnn_score": 1.0119,
+      "sample": 480,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2799
+    },
+    {
+      "sequence": "PTLTESGGGTVPSGGSTTLSSKASGAPLSDYAVSWYRQAPGQEKEFVASIDRTGNTYYHPSVEGRFKISRNDANNTSTLDMDSLTPADSATYYYGLSSNSPQSPGELPESEIDAWGQGTTLTVTS/GSGGGGAA",
+      "mpnn_score": 1.0123,
+      "sample": 244,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2798
+    },
+    {
+      "sequence": "ITLTESGGGTYPAGGGLRLQSKASGEPLSDFRVSWWREAPDAPLTFVASINKAGETYYHPDVEGRFKISRDDANNTAYLTMSDLRPEDSAVYYQGAEPESPVTVGEVPEEKLAAWGQGTPVTVTS/APGPPPER",
+      "mpnn_score": 1.0121,
+      "sample": 251,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2798
+    },
+    {
+      "sequence": "INLTESGGGVVPEGSGTKLSGTATGEPLSDYAVSWYRQAPDKPLEFVASINKNGKTYYAPSVKGRFKISRDDANNTVYLDMARLRPEDSAIYYIGASQSSPQNPREILPSEISAWGQGTPLTVTS/GAGPPPPP",
+      "mpnn_score": 1.0133,
+      "sample": 433,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2797
+    },
+    {
+      "sequence": "MTLVESGGGTVPEGGGALLSMTASGDPLSQYAVAWYRQAPGQPRQFVSSINKAGKTYYAPAVQGRFQISKDVARNTSYLEMANLRPEDSAVYYGAAYPHSPETPGEMQPEFVASWGQGTQLIVTA/GILPPPPP",
+      "mpnn_score": 1.0136,
+      "sample": 175,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2796
+    },
+    {
+      "sequence": "PALTESGGGTVPEGGGVTLTATASGDALSNYAVSWYRQAPGDPMKFVASITQSGKTWYAPEVAGRFTISKDYANNTATLSMANLRPEDSAVYYSGLHANSPETPTKFQLESIASWGQGVPLTVTA/MPGTTSLL",
+      "mpnn_score": 1.0137,
+      "sample": 401,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2796
+    },
+    {
+      "sequence": "MALTESGGGTVPAGGGATLSHRASGLPLKDYAVSWFRQAPGKPEQFVATINKSGKTFYHPAVEGRYTISVDYEKNTAYLDMSNLRPEDTAVYYAGLDKESPETPQERKPEDLASWGQGTPLTVTE/APPPSPID",
+      "mpnn_score": 1.0146,
+      "sample": 265,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2795
+    },
+    {
+      "sequence": "ITLTESGGGTVPAGSGVTLSEKASGDSLADYAVSWYRQAPGQFRKFVASINKAGATWYHPEVEGRYRISKDDSSNTASLSMSNLQPEDSATYYGAASPNSPTTPSQVSPEDVAAWGQGTQLTVVE/LPGPPPPW",
+      "mpnn_score": 1.0149,
+      "sample": 276,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2795
+    },
+    {
+      "sequence": "PTLVESGGGEVREGGGIRLSAKATGEPLSDYAVSWYRQAPGKPRKFVASINKDGKTYYHPAVEGRFTISKDDAANTVFLDMARLRPEDSAVYYMGLSSSSPETPTEFKESDVAAWGQGTPLKVTA/APDPPPTP",
+      "mpnn_score": 1.0148,
+      "sample": 304,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2795
+    },
+    {
+      "sequence": "MTLTESGGGVVPAGGGVTLTAQASGAPLSDFAVSWYRQAPSSPEEWVASVNKQGKTYYAPSVTGRFSISRNDASNTSTLDMGQLVPADSATYYWAAVKDSPETPGAYALGNVAAWGQGTQLVVTT/GPPPPPSS",
+      "mpnn_score": 1.0153,
+      "sample": 187,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2794
+    },
+    {
+      "sequence": "PTLTESGGGSRPAGGGATLSGQASGASLSSYAVSWYRQAPGQPEKWVASINQSGKTWYHPDVEGRYRISKNDANNTSTLEMDNLTPADSAVYYFALVSTSPATPGQVAARDVTAWGQGTPLTVTD/GPGGGAPA",
+      "mpnn_score": 1.0163,
+      "sample": 77,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2793
+    },
+    {
+      "sequence": "AKLTVSGGGTVPAGGGVLLSAKVSGSPLSDYAVSWYRQAAGSPMGFVAAINKSGKTYYSPDVAGRFSISRDESNNTSYLAIADLQPADSATYYPALVSNSPTTPQEYPQQDVDAWGQGTLLTVTA/APKKKKSS",
+      "mpnn_score": 1.016,
+      "sample": 147,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2793
+    },
+    {
+      "sequence": "MVLSESGGGTVPAGGGATLKSQASGAPLSDYAVAWYKQAPGKPMQFVASVNKSGETWYAPSVRGRFRISVDHANNTAYLDMSKLLPEDSATYYSAASSASPAVEGEIPRSQVSAWGQGTKLEVTE/GPLPPPDK",
+      "mpnn_score": 1.0166,
+      "sample": 202,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2793
+    },
+    {
+      "sequence": "PTLTESGGGNVPAGGGTRLSYTASGSNLSDYAVSWWRQKTGQPMQFVASINRDGNTYYASDVEGRFTISRNDANNTSFLDMGALVPEDSATYYAALYSSSPITPGEFEPSGAAAWGQGTQLTVTE/APPPPPPF",
+      "mpnn_score": 1.018,
+      "sample": 75,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2791
+    },
+    {
+      "sequence": "PELRESGGGTVPAGGGALLEAQASGAPLQDYAVSWFKQAPGKPMMFVSSINRSGKTYYAPEVKGRFKISKDFSQNTATLEMAELRPEDSAVYYDGLSAKSPETPGEVPPSDIEAWGQGTPLVVTE/PPPPPPTE",
+      "mpnn_score": 1.0183,
+      "sample": 164,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2791
+    },
+    {
+      "sequence": "MTITESGGGTVAAGGGITLSAQASGAPLADYAVAWFRQAANQPRQFVAAVNRSGQTFYAPGVAGRFTISVDYSQNTSTLNMADLQPEDSATYYLGADRSSPAVPGEVPEADVASWGQGTTLTVTE/GGSSVPPT",
+      "mpnn_score": 1.0177,
+      "sample": 189,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2791
+    },
+    {
+      "sequence": "PTLIESGGGTVPAGGGVRLSARASGSPLSNYQVSWYKQAPGKPKEFVASINREGKTYYAPEVEGRFTISRDDANNTSYLDMSNLKPSDSATYYKAAWSSSPATPQAVPEADVDAWGQGTKLVVTD/LPGDAPSP",
+      "mpnn_score": 1.0178,
+      "sample": 273,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2791
+    },
+    {
+      "sequence": "PVLEESGGGTRPEGGGATLTSKVTGEPLSDYSVSWFKQAPGKPREFVASINKDGGTYYAKSVKGRFTISVDESNNTATLEMANLKPSDSATYYSGLHKYSPEIPGEVPEEDVAAWGQGTQLIVTS/GPKKPPPP",
+      "mpnn_score": 1.018,
+      "sample": 404,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2791
+    },
+    {
+      "sequence": "IELEESGGGTVPAGGGVLLSSEASGAPISDYAVAWYRQAPDQPREFVASINRAGATWYHPRVQGRYQISTDPSKNTSYLNMGQLRPEDSAMYYDAASPNSPSTPGRVEESSVAAWGGGTSLTVTE/GPPPKPPP",
+      "mpnn_score": 1.0188,
+      "sample": 69,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.279
+    },
+    {
+      "sequence": "PTLVESGGGTVPAGAGVRLSIKASGRPLSDYAVSWYRQAPGQPRQFVASANREGQTYYHPDVEGRFHISVDPEHNTAYLDMAALQPADSAVYYGALHANSPSEPGKVDFADVVAYGQGTPLTVTA/RPGRPPDD",
+      "mpnn_score": 1.0195,
+      "sample": 332,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2789
+    },
+    {
+      "sequence": "TTIRESGGGTVPAGGGVTLSGKFSGSPLSSYAVAWYKQRPGQPMEFISSINKEGKTWYADSVKGRFTISRDAANNTSTLKMGQLRPEDSAVYYVAADASSPATPGEIPLSSVSSWGQGTQLRVTE/PPEPPPPP",
+      "mpnn_score": 1.0199,
+      "sample": 454,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2789
+    },
+    {
+      "sequence": "PSLSESGGGTVAAGGGVTLSAKASGDALSNYAVSWYRQAPGQPMQFVARITKKGATYYAPKVKGRFRISKDPSKNTATLVMGDLQPEDSATYYFGLDAESPAQPGPVPPSEITAWGQGTQLTVTS/GPPPPLPL",
+      "mpnn_score": 1.0206,
+      "sample": 186,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2788
+    },
+    {
+      "sequence": "PHLTESGGGTVPAGGGATLSAQVSGAPISDYAVAWYKQAANKPRQFVASINKSGQTYYAPEFTGRFTISRDDANNTAVLNMANLRPEDSATYYKALAQDSPATPGEVDEKDVAAWGQGVQLTVTE/SPAPQQEE",
+      "mpnn_score": 1.0207,
+      "sample": 434,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2788
+    },
+    {
+      "sequence": "MRLVESGGGTVPAGGGVRLSRAVSGQPLKDFAVAWFRQAPGEKRQFVASINKSGKTFYHPAVEGRFRISRDDSNNTTYLDMNELRPEDSATYYGAASSYSPETPGEISEEKVSEWGQGTPLVVTE/APGPPPPL",
+      "mpnn_score": 1.0222,
+      "sample": 384,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2786
+    },
+    {
+      "sequence": "ATITESGGGVVPAGGGVTLTGKVSGEPISKYAVAWYRQAPGEPTKFVAAKNQAGNTYYHPEVEGRYSISVDPANNTVTLSMNDLRPEDSATYYFALVRSSPVTPGRYEPSEVDAWGQGTELTVTE/PPGPPPLL",
+      "mpnn_score": 1.023,
+      "sample": 3,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "IDLRESGGGTVPEGGGVTLSAKASGQPLENFAVSWFRQAPGNPTTFVASINKSGKTYYAEEVKGRFKISKDNAENTAYLQMSNLKPADSAVYFHAAVSNSPETPTAIPLDEVTAWGQGTPLNVTS/GPAPPPPP",
+      "mpnn_score": 1.0227,
+      "sample": 48,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "PTLVESGGGTVAAGGGVRLSEKASGDNLSDYAVAWYRQAPGAPMQFVASINKSGATWYAPSVEGRYTISINNAANTAYLLMASLVPADSATYYSGLRKKSPSTPGEFPESEFSAWGQGTTLTVTA/GPAAPPEH",
+      "mpnn_score": 1.0226,
+      "sample": 230,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "PTLVESGGGTVPEGGGATLSASASGDSLSNYAVAWYRQADGQPQQFVAAITKAGATYYSTSVKGRYTISRDPSRNTAYLNMANLKPEDSATYYMAASSNSPDKPGEIKQEEVTAWGQGTKLTVTK/GPPPPPNR",
+      "mpnn_score": 1.0226,
+      "sample": 316,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "LKLSESGGGTVPQGGGVTLKALAAGEPLSDFAVAWYRQAPGAPMEWVASINRAGRTHYAEAVKGRFRISRDDANNTATLAMADLRPQDSATYYDAAFRSSPSTPGPVPQEEVAAWGQGTRLTVTA/APSPPPPW",
+      "mpnn_score": 1.0226,
+      "sample": 376,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "VTLVESGGGTVAAGGGVKLSWKATGDDLKDYAVSWWRQAPSQPAQWVASVDKSGNTYYAPQVAGRYKISVDYSNQTAYLTMSSLQPEDTATYYGAAQATSPATPGEVPAQEVVAWGQGTPLTVTE/MAGPPGPL",
+      "mpnn_score": 1.0226,
+      "sample": 393,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "PTLVESGGGTVPAGGGVTLSDNVTGSPLSSYAVAWYRQAPGQPRQFVASANRRGNTYYAESVKGRFRISVDFSTNTSFLDMSDLQPADSAVYYSALDPSSPRIPQEIPESTVAAWGQGTPLVVTE/SSEPPHPP",
+      "mpnn_score": 1.0231,
+      "sample": 403,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2785
+    },
+    {
+      "sequence": "PELVESGGGTVAAGGSVNLSVKMHGEPLSNFAVSWYRQAPNQARQFVAYINQSGKTYYAPEVEGRFSISVDYSQNTSYLSMANLVPADSATYYAAAMSNSPSVPGEMAESDVVAWGQGTTLTVTD/GKARPPPP",
+      "mpnn_score": 1.0239,
+      "sample": 28,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2784
+    },
+    {
+      "sequence": "PELTESGGGVVPAGGGATLSFKATGKPLSDYAVSWWRQAPGEPLEFVASINKAGDTWYHPKIEGRWTISTNPANNTATLELADLVPEDSAVYYKGLREKSPATPQQVQPEDLEAWGQGTQLTVTE/APAPPPPP",
+      "mpnn_score": 1.0248,
+      "sample": 478,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2783
+    },
+    {
+      "sequence": "MKLQESGGGTVPAGGGVRLSYAASGEPLSDYAVSWYRQAPGQPRTWIAQVNKEGKTWYHPDVKGRFKISVNPEKNTATLDMANLQPSDSAVYYGAADAESPTQPQQVPESQVNAWGQGTSLVVTD/APPPPLEE",
+      "mpnn_score": 1.0246,
+      "sample": 490,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2783
+    },
+    {
+      "sequence": "ITLTESGGGTVPAGGGTTLSQAASGEPLADYAVAWYKQAPGKPQTFVAYINQTGQTYYHPDVAGRFIISKDVSNNTATLQMSDLKPSDSATYYAAADSESPTTPGKIELSDVDTWGQGTQLTVTA/APGKKPLR",
+      "mpnn_score": 1.0255,
+      "sample": 21,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2782
+    },
+    {
+      "sequence": "IALSESGGGTVPAGSGVTLSYTASGDALSNYAVSWYRQAPGQPRQFVAYINQAGATFYAEDVKGRYKISKDFSRNTVTLTMGNLKPEDSALYYVGADSNSPATPGPRAEHDIASWGQGTLLTVTE/ALPSPPPS",
+      "mpnn_score": 1.0251,
+      "sample": 151,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2782
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGVLLTGVASGSPLSDYAVSWYRQAPNQPVKFVSYINKSGKTWYSPDVEGRWKISKNNAQNTVTLSMADLRPKDSAVYYKGLDADSPATPRERPLNSVAAWGQGTPLIVTS/GPGHSPPA",
+      "mpnn_score": 1.0254,
+      "sample": 414,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2782
+    },
+    {
+      "sequence": "IRLVESGGGTVPAGGGVKLLRTASGEPLSDYAVSWWRQAPGQERQFVASVNREGKTYYDEAVRGRFQISRDDTNNTATLWMSDLQPEDSATYYGGAHPYSPATPTSFPLSEVAAWGQGTPLTVTE/APGPPPPS",
+      "mpnn_score": 1.026,
+      "sample": 5,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2781
+    },
+    {
+      "sequence": "MKLTESGGGTFPAGGGVLLTDTASGLPLSDYAVAWYKQAPDEDLTFVASITRAGKTYYAPEVKGRYKISVDHSNNTSYLAMGDLRPEDSATYYSAAVADSPSTPSEFEEEDVDAWGQGTEVTVTA/KPPPPKPP",
+      "mpnn_score": 1.0264,
+      "sample": 409,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2781
+    },
+    {
+      "sequence": "PELTESGGGTVPAGGGAELQAQATGEPLSSFAVSWYRQAPGQPEEFVARVNKSGKTFYAPAVAGRYRISVDFENNTAYLAMSDLRPADSATYRPAADLDSPETPEWTPLSDVAALGQGTPLTVTE/APWPPPPP",
+      "mpnn_score": 1.0265,
+      "sample": 435,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2781
+    },
+    {
+      "sequence": "ITLTESGGGTVPAGGGVTLSDLASGENLSDYAVSWFKQAPNQALKWVASIDKAGNTYYHPDVAGRFTISRDNANNTSTLQMAQLTPADSATYYSAANKDSPAVPMEIQPETVESWGQGTPLTVTQ/GFDLPPAP",
+      "mpnn_score": 1.028,
+      "sample": 32,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2779
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGVTLSFTRSGSPLSDYDVSWFRQAPGQPKVFVSSINKEGETYYHPDVEGRFTISVDYSDNTAYLEMASLQPEDSAVYYSGLNGKSPLTPSEIPEEDLLSWGQGTTLVVTS/APGPPPPP",
+      "mpnn_score": 1.0278,
+      "sample": 108,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2779
+    },
+    {
+      "sequence": "PTLVESGGGTFEKGGGVLLSWKASGEPLHNYAAAWYRQKPGEPRQFVASINKTGQTYYHPEVKGRFKISKDYSKNTVYLSMSNLQPSDSATYYGALSTTSPSTPTAIPESSVAAWGQGTAVTVTE/FFGPPPEE",
+      "mpnn_score": 1.0282,
+      "sample": 339,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2779
+    },
+    {
+      "sequence": "ATLLESGGGTVAAGGGTTLSEKVSGEPLSDYAVSWYRQAPNKPLEFVAYINKSGNTYYHPDVAGRFTISKDDTKNTTFLDMSNLTPADSATYYSALYASSPATPGKYHPADVLAWGQGTDLTVTD/APTSAPEE",
+      "mpnn_score": 1.0284,
+      "sample": 422,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2778
+    },
+    {
+      "sequence": "IRLTESGGGVVPEGGGVLLSSQASGSALSDYAVSWYRQAPGQPMQFVASINQRGATWYHPDVEGRFFISVDFSNNTAYLNMANLRPEDSATYYHAATRNSPAVPGPVPPEEVDAWGQGTSLTVTA/SSIAAPPR",
+      "mpnn_score": 1.0298,
+      "sample": 326,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2777
+    },
+    {
+      "sequence": "AELTESGGGTVPAGGGVLLTANASGLPLSNYAVAWYRQAPGEPRQFVASINRTGKTWYANAVKGRFKISVNFANNTATLAMSQLQPEDSAVYYKGALSNSPATPREYPEAEIDAWGQGTLLTVSE/APSPPPPL",
+      "mpnn_score": 1.0291,
+      "sample": 341,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2777
+    },
+    {
+      "sequence": "PIIRESGGGTVAAGGGVLLSPKVSGAPLKNFAVAWFRQAPGQPRQFVAYINQKGKTWYHPDVAGRFHISRDDSKNTSFLEMANLQPRDSAVYYAGLVAWSPTTPGAVPESQIVAWGQGTALTVTE/APSPGILL",
+      "mpnn_score": 1.0292,
+      "sample": 482,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2777
+    },
+    {
+      "sequence": "VSLVESGGGVVPAGGGVSLTAKASGEPLSNYAVAWYRQAPGQPTRFVASVNQSGFSYYSPAVQGRFHISVDHANNTSTLDMADLRPEDSAVLYPAAVPSSPVTPGEFQPADVAAWGQGTPLTVES/GPPKPPEE",
+      "mpnn_score": 1.0302,
+      "sample": 4,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2776
+    },
+    {
+      "sequence": "MGLSESGGGTVAAGGGARLSAVASGDPLSSYAVSWFRQAPGEPEEFVASINQSGATWYAASVAGRFSISVDPSRQTAYLDMADLRPEDSATYYNAADALSPAVPGPVHAQTVSSWGQGVRLTVTE/ARRSPPPE",
+      "mpnn_score": 1.0314,
+      "sample": 367,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2775
+    },
+    {
+      "sequence": "PTLTESGGGTFPAGGSALLTAVASGRPISDYAVAWYRQAPGQPMEFVSSIDISGNTWYSPRVEGRFQISRNPSNNTVTLQMSDLQPEDSAVYYLALSLSSPSTPGAIAPEDVSAWGQGTQLVVTA/GFAPPPAA",
+      "mpnn_score": 1.0316,
+      "sample": 136,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2774
+    },
+    {
+      "sequence": "VSLTESGGGTFPAGSGIRLTAKASGAPLSDFAVSWFRQAPGQPMEFVAYINKSGKTYYADSVKGRFKISRDYSSNTSTLEMANLLPEDSATYYTGAISNSPSQPTSAPPSSISAWSQGTPVTVTE/LPSAPPLF",
+      "mpnn_score": 1.033,
+      "sample": 346,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2773
+    },
+    {
+      "sequence": "ISLRESGGGTVAAGGGVQLSWTASGSPLKNYAVSWWRQAPGQEREFVSSVNRSGKTWYHPGVEGRFEISVDYSNNTSYLSMADLQPEDSATYFSAASENSPLVPKEIPASEVSAWGQGTPLVVTS/LPATPPPR",
+      "mpnn_score": 1.0332,
+      "sample": 392,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2773
+    },
+    {
+      "sequence": "VRLTESGGGVVNAGGGVTLSQKASGAPLSDFAVSWYRQAEGKAKEFVSSINKSGATYYHASVKGRFSISKDDANNTAYLNMADLRPEDSAVYYGGASSFSPTTPTEIEESEIDSWGQGVSLTVTS/GPPPEPLL",
+      "mpnn_score": 1.0335,
+      "sample": 211,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2772
+    },
+    {
+      "sequence": "VSLRESGGGVVPAGSGLLLTTVASGDFLSSYAVSWYRQASGQPRQFVASINRSGSTWYAPDVAGRFLISKDDSRNTVYLSLSNLTPADTATYYTAADSSSPATPGPIPEATVSAWGQGTPLTVTS/APGPPPPP",
+      "mpnn_score": 1.0347,
+      "sample": 219,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2771
+    },
+    {
+      "sequence": "MKLTESGGGTVPRGAGALLKSVASGEPLSDFAVAWYRQAPGAPRQFVASINRTGQTWYHPDVQGRWTISRDDSKNTSYLRMGELQPADSATYYMAAYRNSPLVPGSFPQSSVAAWGQGTQLVVTE/LPPPPPPG",
+      "mpnn_score": 1.0346,
+      "sample": 405,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2771
+    },
+    {
+      "sequence": "MGLVESGGGVVPSGGGVRLAAAASGEPLSSFAVSWYRQAPGKPREFVASINTAGNTYYNPKVQGRFRISVDPSKNTAYLDMANLKPSDSATYYWAASRQSPSTPRQVPEADVSSWGQGTPLTVTE/APPRLPLP",
+      "mpnn_score": 1.0355,
+      "sample": 85,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.277
+    },
+    {
+      "sequence": "VSLTESGGGTVAAGGGLTLSSLASGRPLSDFAVAWYRQAPNQPEQFVAYINKAGKTHYAPSVQGRFQISRNDSNNTATLTMADLQPEDSAVYYSAAYEYSPATPGPYAPSSVSVWGQGTHLTVTS/APAPPKPS",
+      "mpnn_score": 1.0361,
+      "sample": 2,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2769
+    },
+    {
+      "sequence": "MNLAESGGGEVPAGGGLLLSFQASGEPLENFAVAWWRQAPGAEREFVAAINRQGETYYHPAVEGRFKISRNPADNTVTLQMGNLRPEDSAVYYAAAYEESPAIPGPIAPETVASWGQGTPVTVTS/APPPEPPR",
+      "mpnn_score": 1.0364,
+      "sample": 477,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2769
+    },
+    {
+      "sequence": "PGLTESGGGTVAAGSGATLAATASGESLRNYAASWFRQAPGAPRRWVASINQQGNTWYATDVSGRFTISVDHSNNTVFLDMGDLKPEDSATYYVGLSRNSPTTPGPVPESNLAAWGNGTALTVTE/GPPPPPVV",
+      "mpnn_score": 1.0368,
+      "sample": 31,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2768
+    },
+    {
+      "sequence": "PALTESGGGTVPAGGGVTLSATASGQPLSDYAVSWFRQAAGKPEEFVAAINTSGKTYYHPAVKGRFVISRDDAQNTSYLSMNNLVPADSATYYAGLHSASPEEPRLIKREDLDAWGQGTDLTVTE/GGGGPPPP",
+      "mpnn_score": 1.0369,
+      "sample": 458,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2768
+    },
+    {
+      "sequence": "VRLKESGGGTVPAGAGALLSGEASGEPLSNYAMSWFRQAPGQPMEFVSHINKDGKTYYAPDVKGRFKISVDYTQNTSYLAMADLRPEDSATYYVAANSVSPATPGKVDESDVTSWGQGTPLVVTA/VPRPPPPP",
+      "mpnn_score": 1.0379,
+      "sample": 29,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2767
+    },
+    {
+      "sequence": "MGLNESGGGTVPEGGGMTLSWKATGKPLGDYAVSWYRQAPNQPMEWVASINRSGNTWYNDQVKGRWSISRDDVNNTVTLTMGNLVPEDSAIYYGAAAATSPATPGEIPLEDVDAWGQGTPLTVTK/APPPPQQQ",
+      "mpnn_score": 1.038,
+      "sample": 68,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2767
+    },
+    {
+      "sequence": "ITLTEAGGGTVLAGGGLTLTNRASGAPLSDYAVSWYRQAPGQPRQWVASVNRAGNTWYAPQVAGRFTISVDYARNTARLHMARLTPADSAVYYSGATADSPDTPGQVAPSAVVSWGQGTAVTVTS/GAAPEPPP",
+      "mpnn_score": 1.0377,
+      "sample": 106,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2767
+    },
+    {
+      "sequence": "MILSESGGGTVPAGGGVQLSAKASSMPLSLYAVSWFRQAPGKPREFVASINRQGKTYYSPKVAGRYTISKDDSNNTAYLAMANLVPEDSAVYYHGAEPDSPEVPREVPEEEIASWGQGTSLTVTS/GPKKPPPL",
+      "mpnn_score": 1.0378,
+      "sample": 312,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2767
+    },
+    {
+      "sequence": "MNIVESGGGTVPAGGGLTLTPLASGEPLKDFAVSWWRQAPNQPREFIASVNKSGKTYYAPRVAGRWTISVDYGKNTATLKMADLVPEDSAVYYAVASAESPASPGEIPEEKVAAWGQGTPVTVTE/AGGGGPAS",
+      "mpnn_score": 1.0394,
+      "sample": 486,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2765
+    },
+    {
+      "sequence": "IGLSESGGGTVPTGGGTRLSAKASGAPLDQYAVAWYRQAPGRPMQFVASINQSGKTYYSPEVQGRYKISKNDAANTAYLDLSNLVPSDSATYYLAAVSHSPETPGEIPQSQVNAWGQGTQLTVTQ/PPFPPPPP",
+      "mpnn_score": 1.0404,
+      "sample": 158,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2764
+    },
+    {
+      "sequence": "PALLEAGGGTFPAGGGAVLTAEASGQPLSSYAASWYRQAPGAPREFVAAVNRSGRTWYAPSVAGRFHISRDDARNTVTLHMSDLRPEDSATYYVGLYPSSWATPGERAPEGAAAWGQGTPLTVRS/GPAAAQPP",
+      "mpnn_score": 1.0402,
+      "sample": 243,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2764
+    },
+    {
+      "sequence": "IELTESGGGTVPEGGGVTLTKAASGSPLSNYAVSWYRQKPNQPLEWVASINRSGRTYYNPHVQGRFTISKDDSRNTSTLTMSDLRPEDSATYYGAASSYSPEVPGRVKLEDVDAWGNGTPLVVTR/APGKKPPE",
+      "mpnn_score": 1.04,
+      "sample": 252,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2764
+    },
+    {
+      "sequence": "MTLKESGGGTVAAGGGITLSEKASGQALSDYAVAWYRQAPGEPTEFVAYINKAGETYYAPAVAGRFTISVDFSKNTAYLTMANLRPEDSATYYSAAQGNSPGVPGRVAPENVAAWGDGTTVTVTE/GPRPPPFL",
+      "mpnn_score": 1.04,
+      "sample": 305,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2764
+    },
+    {
+      "sequence": "PSVTESGGGTVPAGGGALLSXTVSGSDLSQYAVSWFRQAPGQSRQFVAYVNKTGKTYYHPDVKGRFTISKDETNNTSKLQMADLRPEDSAVYYSALSKSSPLTPGEVPESEISAWGQGTPLTVTE/AAGPPPPE",
+      "mpnn_score": 1.0415,
+      "sample": 82,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2763
+    },
+    {
+      "sequence": "MTLQEAGGGTVPAGGGLTLTATATGAALSSYAVSWYRQAAGEPQEFVSSINTAGNTYYAPSVEGRYTISKDSSNNTAYLVMADLRPEDSATYYDGAFSVSPATPGAVPPADVVAWGQGTPVTVTE/MAAPPPPT",
+      "mpnn_score": 1.0415,
+      "sample": 385,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2763
+    },
+    {
+      "sequence": "PHLTESGGGTVPAGGGATLAAQMSGEPLSDFAVGWYKQAPGQPIQFVASINKQGKTWYSPAVEGRFRISVDYSQNTAYLSMGNLRPEDSATYYEALYSHSPANPDEFHPSDVASWGQGVQLRVTE/APPPPPKK",
+      "mpnn_score": 1.0422,
+      "sample": 154,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2762
+    },
+    {
+      "sequence": "IKLTESGGGTVPAGGGVTLAMKAEGEPLEDYAVAWYRQAPGQPPRFVAAINKEGNTWYHPEVEGRFHISVDFANNTSTLEMSALRPEDSAVYYGAAEAYSPQTPGEVPASDVVAWGQGTPLRVTE/GPKPPLPF",
+      "mpnn_score": 1.0429,
+      "sample": 472,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2761
+    },
+    {
+      "sequence": "VTLTESGGGTVPEGGGLTLSAKASGLSLSDYAVSWFKQAPGKPMQWVSSINRSGKTYYHPEVEGRWLISRDDSKNTATLNLAHLRPEDSATYYWGASAYSPTTPGEIPLSEVASWGQGTPLVVTA/GPAPPIAS",
+      "mpnn_score": 1.0436,
+      "sample": 87,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.276
+    },
+    {
+      "sequence": "TSLTESGGGTVPEGGGVTLSAKASGKPLSDYRVSWWKQKEGKPLTFVSSINKNGSTYYAPEVQGRFTISRNAANNTSYLNMSDLRPEDSAVYYKGASLTSPASEGQVAPSSLSAWGQGTPLTVTS/ASSPPPLL",
+      "mpnn_score": 1.0439,
+      "sample": 98,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.276
+    },
+    {
+      "sequence": "PSLSESGGGVVPAGGGITLAKAFSGDSLSAYAVSWYKQAPGEPRQYVASINKSGATHYAPEVQGRFSISKDDASNTAYLVMADLRPEDSATYYGGAYRQSPAVPGAVKESSVSSWGQGTPLTVTE/GPQPAPPP",
+      "mpnn_score": 1.0432,
+      "sample": 122,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.276
+    },
+    {
+      "sequence": "ITLEESGGGTVPKGGGVRLSWKASGEPLKDFAVAWYKQAPNQPTEFVASINKSGQTYYHPSVKGRYVISKDDAFNTTYLSMGNLEPADSATYYGAAVASSPSVPGQVEESQVSAWGQGTEFTVTE/APPLPPPP",
+      "mpnn_score": 1.0444,
+      "sample": 113,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2759
+    },
+    {
+      "sequence": "PTLTESGGGVVPEGGGVTLTFSVSGEPLSSYAVSWFRQAANEPEKFVASINRAGGTYYAPEVKGRYEISVDFSNNTATLNMSNLRPADSATYYSAAVLRSPPTPGKIAQADVAAWGQGTELTVTA/APLPPPAA",
+      "mpnn_score": 1.0443,
+      "sample": 279,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2759
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGVTLTYKVSGKPIENYEVAWYRQAPGKPMKFVASINQQGKTYYAAEVRGRFVISKDPNQNTAHLSMGELRPEDSATYYSAAKSDSPSVPGAVAPSDVDAWGQGTALTVTE/GPVRPPAA",
+      "mpnn_score": 1.0441,
+      "sample": 424,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2759
+    },
+    {
+      "sequence": "AKLVESGGGTVPEGGGVTLSSRMSGSPLSDYAVAWYRQAPGEPLEFVAAINRKGNTYYSPDVLGRFEISVDYASNTSTLKMAELVPEDSATYYMAAQADSPDTPRKVDRKDVSAWGQGTPLTVTA/LAGPPPPP",
+      "mpnn_score": 1.0444,
+      "sample": 432,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2759
+    },
+    {
+      "sequence": "IGLSESGGGTVAAGGGVTLSAKATGASLSNYRVSWYRQAPGEPRQFVSTINQTGATWYNEKVKGRYTISKDDSSNTATLNMSDLKPEDSATYYLGAESSSPATPGEVPTSSLSAWGGGTNLTVTD/PFPLPPLL",
+      "mpnn_score": 1.0449,
+      "sample": 310,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2758
+    },
+    {
+      "sequence": "MNLKESGGGTVPEGGGATLSSKASGEPLSNYAVSWWRQAPGKPMQFVASINRNGKTYYHPDVAGRFQISVDFEQNTSTLTMGDLRPEDSAIYYTGASRNSPSTPTEVHPQDLSAWGDGTPLVVTA/MMVVPLSS",
+      "mpnn_score": 1.0464,
+      "sample": 362,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2757
+    },
+    {
+      "sequence": "PTITESGGGVVPEGGGVTLSGKASGQALSNYQAAFYRQAPGQPMEFVASINQSGNTYYNSRVKGRYQISKDNSQNTVYLTMNALEPKDSATYYEALVSTSPSTPGEVPLSSVDSFGQGTPLTVTS/GGGGPPPG",
+      "mpnn_score": 1.0472,
+      "sample": 137,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2756
+    },
+    {
+      "sequence": "PVLTESGGGTVPEGGGVTLTSQASGQPLADFAVAWYRQAEGKPRQFVAEINKEGKTYYSEKVKGRFTISRDPANNTSTLTMANLVPEDSATYYSGLYEESPATPRESSSENRSAWGQGTKLTVTS/GPKKPVPE",
+      "mpnn_score": 1.0472,
+      "sample": 325,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2756
+    },
+    {
+      "sequence": "ATLAESGGGTVPQGGGARLTSVASGAPLSDFAVAWYRQAPGEPLQFVASVNKDGKTWYHPDVKGRYVISVDHANNTAYLSMSNLKPEDSATYYSALVATSPEVPGEYPKSQISSWGQGTKLVVTE/MVKKEPDD",
+      "mpnn_score": 1.0475,
+      "sample": 228,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2755
+    },
+    {
+      "sequence": "PSLTESGGGTVPAGGGALLTMKASGEPLSDYAVAWYRQAPGKPREFVASITRTGSTYYSPAVKGRFLISRNDAEQTSFLAMSDLRPEDTAVYYGGLVKTSPSVPGEVLPEHVAAWGQGTPLTVTE/MMMKPAPR",
+      "mpnn_score": 1.0487,
+      "sample": 232,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2754
+    },
+    {
+      "sequence": "MQLYESGGGTVPEGGGVDLSFKASGEPLSDYAVSWYRQAPGQKEVFVASINQAGDTWYHPEVAGRFHISRDDSHNTSYLQMDALEPADSATYYAAADAASPGLPGEIAKSDVAAWGQGTPLVVTA/GPGPPPPP",
+      "mpnn_score": 1.0494,
+      "sample": 338,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2753
+    },
+    {
+      "sequence": "PKLTESGGGTVPAGSGATLSKQASGEKLADFAVSWFRQAPGQPMRFIASINKSGKTWYHPDVAGRYTISVDWSNNTATLSMGELVPADSATYYVGLSTVSPETPREILPADVSAWGQGTSLVVTE/AAEPPPPP",
+      "mpnn_score": 1.0499,
+      "sample": 54,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2752
+    },
+    {
+      "sequence": "PALTESGGGTVPAGGGVTLTWKASGLPLSDYAVAWYRQAPGAPVEFVASINRKGKTWYHPAVAGKFVISRDDSSNTSTLTMSSLQPRYSATYYSALVATSPETPQKVELADVSAWGQGTQLQVTA/AGVPPVPE",
+      "mpnn_score": 1.0503,
+      "sample": 400,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2752
+    },
+    {
+      "sequence": "PTLTESGGGTVPQGGGVTLTAQASGEPLSDFAVSWFRQAPGQPTRFIAYIDRSGKTYYADEVKGRFKISVNPESNTASLDMSSLLPEDSATYYKAASAASPETPGPVEPGEVAAWGQGTPLTVTS/LLGPLPLA",
+      "mpnn_score": 1.05,
+      "sample": 413,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2752
+    },
+    {
+      "sequence": "AKLVESGGGTVAEGGGVVLSATASGEPLKDYAVSWYRQAPGQPMQWVASINKTGKTFYADEVAGRYTISKDYERNTAYLTMADLRPADSATYYWALSKNSPTTPGEINQEDVSSWGQGTPVAVTR/AAARDPVV",
+      "mpnn_score": 1.0502,
+      "sample": 479,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2752
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGTTLSSKASGAPLKDYAVSWYRQAEGQPRSFVASINKTGATYYAKEVEGRFHISRDDANNTASLDMSNLVPEDSAVYYFGAYSLSPIVPTEVPENLVAAWGQGTPLTVTE/FKGPPPPS",
+      "mpnn_score": 1.0511,
+      "sample": 139,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2751
+    },
+    {
+      "sequence": "MLLTESGGGTFPAGGGLLLTQTASGKPLSDYAVSWFRQAPGQPKAFVASINRSGQTYYAPEVQGRFRISRDDQKNTATLEMSALRPDDSAIYYGATSSTSPSTPGEVEPKLVDSWGQGTEVRVTA/PPGEPPPP",
+      "mpnn_score": 1.0519,
+      "sample": 44,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.275
+    },
+    {
+      "sequence": "AKLTESGGGTVPAGGGVTLSMTASGQPLSDYQVAWYRQAPGAPMQFVASINQKGQTYYSPAVSGRYIISVDYSKNTTYLYMSQLLPADSATYYGALYPRSPETPQEVQPEDIAAWGQGTNLTVTA/APGPPPNL",
+      "mpnn_score": 1.0523,
+      "sample": 107,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.275
+    },
+    {
+      "sequence": "ATLVESGGGTVPAGGGVRLARRATGAALSDYAVFWSRQAPGADTKFIAYINKAGNTYYADAVKGRFQISVDNSNNTSYLDMSALKPEDSALYYGGLDATSPATPTERALSNVSAWGQGTKLTVQD/GPAPPPLL",
+      "mpnn_score": 1.0523,
+      "sample": 270,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.275
+    },
+    {
+      "sequence": "ITITESGGGSVEAGGGVKLSGVASGQPLSDYAVSWYKQAPGQPTEFVAHINKAGNTYYAPSVEGRYEISVDYANNTSFLHMANLMPQDSATYYVAASAFSPSSPGNIPASSVSSWGQGTTLTVTT/MMMMPPPR",
+      "mpnn_score": 1.0523,
+      "sample": 334,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.275
+    },
+    {
+      "sequence": "MKIKESGGGTVPAGGGVHLSAQASGEPLSNYAVSWYRQAPGKPLQFVAHINQQGQTYYAEDVEGRFEISRDDSKNTAELDMAALRPADSATYFPGLNPYSPATPGPIPQSQLAAWGQGTWLRVTT/GPAPPPPR",
+      "mpnn_score": 1.0528,
+      "sample": 42,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2749
+    },
+    {
+      "sequence": "IQLTESGGGTVPAGGGATLTSTATGQPLSDYAVSWFRQAPNQPRQFVASVNKAGDTYYDASVKGRFKISVDYSQNTFTLDMSQLRPEDSATYFSTANPNSPSTPGPISFSDVYSEGQGTPLTVTE/GSSPPKPP",
+      "mpnn_score": 1.0533,
+      "sample": 38,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2748
+    },
+    {
+      "sequence": "PTLVESGGGTVPEGGGVRLSVTMSGEPLSNYAVAWYRQAPGQPEQFIAAINRDGSTYYHPEVEGRFTISRDDDSNTAFLNMSNLRPADSATYYAAAVPGSPATPQEVPKNQVSAWGQGTNLTVTS/GPGPRPPP",
+      "mpnn_score": 1.0537,
+      "sample": 94,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2748
+    },
+    {
+      "sequence": "ITLTESGGGTVPEGGGATLSATATGAPLQNYAVSWYRQAPGAPTRFVASINKSGNTYYDPAVEGRYTISRDPANNTTTLTMADLRPEDSAVYYSGATSTSPSTPTERPRSQFDSWGQGTPLTVTS/MMGPNPPR",
+      "mpnn_score": 1.0542,
+      "sample": 19,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2747
+    },
+    {
+      "sequence": "VTLVESGGGTVPEGGGLELTXQASGEPLSSYAVSWYRQAPGSPQEFVASINKSGSTYYAPKFEGRFKISRDPSNNTSYLEMSDLRPEDSATYYSGAYSSSPSTPGEIVLSNVSAWGQGVRVVVTE/LPGPPPGG",
+      "mpnn_score": 1.0545,
+      "sample": 162,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2747
+    },
+    {
+      "sequence": "MKLSESGGGTVPAGGGTTLTYRASGLPLSDFAVAWYRQAPNQPTQFVSYIDKSGNTYYANSVKGRFQISKDPSRNTSTLVMANLKPEDSATYYAAAYPNSPATPHEYNQADAAAWGQGTPLTVTK/APGKKKVV",
+      "mpnn_score": 1.0548,
+      "sample": 421,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2747
+    },
+    {
+      "sequence": "PTLTESGGGTVAAGSGVTLSFQMAGEALSNYAVAWFSQKPGAAEQFVAQINKSGQTWYAPAVAGRWTISKDDSANTSYLTMSNLTPADSATYYAALYAESPATPGEMQRSRVVAWGEGTQLTVTE/SSSSAALL",
+      "mpnn_score": 1.0556,
+      "sample": 118,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2746
+    },
+    {
+      "sequence": "VELTESGGGTVPEGGGVTLTFMASGSLLSNYAVSWYRQAPGQAREFVAAINQQGETWYAPSVEGRFEISRDPSSNTATLSMSNLRPSDSATYYGAAYPMSPVVPGEYPESRVAAWGQGTPVSVTA/APGPVVAA",
+      "mpnn_score": 1.0551,
+      "sample": 288,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2746
+    },
+    {
+      "sequence": "PDLVESGGGTVDAGGGVKLTGKASGSALSDYAVSWYRQAPGKPREFVASINRSGNTYYHPSVKGRFQISVDYSKNTAYLNMSNLVTADSATYYVAAYSNSPITEGRREEADVVAWGQGTQLTVTA/GGGDPPPK",
+      "mpnn_score": 1.0552,
+      "sample": 290,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2746
+    },
+    {
+      "sequence": "ATLVESGGGTVPAGGGVRLSVTMSGQPLSDFAVSWFRQAPGEPRQFIAAINRNGDTWYHDDVQGRFEISRDDSQNTSYLDMADLLPEDSAVYYAAAHSNSPVVPGPVPESSVDAWGQGTPVTVTE/MPEPTPFP",
+      "mpnn_score": 1.0554,
+      "sample": 407,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2746
+    },
+    {
+      "sequence": "MTLTESGGGTVAEGSGLTLTFTASGAALSNYAVGWYRQAPGQPRRFVATINRSGNTYYHPEVKGRFKISKDDANQTSYLEIADLMPEDSATYYGVAVATSPSTPMEFPESPIAAWGQGTQVTVTA/GPPPPKLL",
+      "mpnn_score": 1.0558,
+      "sample": 179,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2745
+    },
+    {
+      "sequence": "MGLTESGGGTVPAGGGLLLTAKATGSPLSSFAVSWYRQAPGQPRKFVASVNTEGKTWYHSDVEGRFHISKDPAKNTVTLQMANLQPKDSATYYLGATAKSPETPGKVEEADISAWGQGTQVIVTS/ALFAPPKK",
+      "mpnn_score": 1.0558,
+      "sample": 292,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2745
+    },
+    {
+      "sequence": "PTLQESGGGVVAAGGGARLAAQRSGKPLSDFMASWYRQAPGQPMQWVASINKNGKTWYHPDVAGRFKISRDDANNTVYLEMSRLRPRDSATYYEGLTSDSPSKPGQVEPERVSAWGQGTQLTVTD/GPGAPPPL",
+      "mpnn_score": 1.0567,
+      "sample": 61,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2744
+    },
+    {
+      "sequence": "ATLKESGGGTVPAGGGVTLTNQASGSSLSDYAAXWYRQAEGRPLSFVSSINKSGYTWYAPEVAGRFTISKDEANNTVTLTMADLRPADSATYYSALQSYSPSTPGEIPAKDVSSWGEGVPLTVTE/GPGPPPPP",
+      "mpnn_score": 1.0574,
+      "sample": 248,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2744
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGVTLTAKASGEPLSNFNVSWYKQAPNSPRSFVSSINKDGLTYYSPLVEGRFTISRNDSKNTATLNMADLRPEDSATYYFGLSRSSPAVPREVHPEDVVAWGQGTXLTVTA/GPGPPPPP",
+      "mpnn_score": 1.0588,
+      "sample": 76,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2742
+    },
+    {
+      "sequence": "ITLTESGGGVVPEGGGLTLTVTATGEPLSNYAVSWFRQAPGEPLTFIASVDRSGNTYYAPEVLGRYAISVDYSNNTATLEMSDLKPEDSATYYGAAYSNSPATPGEMPPSNVTAWGQGVALTVTA/GPRIIEPP",
+      "mpnn_score": 1.0589,
+      "sample": 328,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2742
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGTRLSAQASGEPLSDYAVAWYKQAPGQPIIWVSSINKSGKTQYNPEVKGRFKISKDDAHNTSFLDMSDLQPKDSATYFLALYANSPENPGRFEQTGVSAWGQGTDLTVTE/SYGSPPEE",
+      "mpnn_score": 1.0595,
+      "sample": 397,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2741
+    },
+    {
+      "sequence": "ISLTESGGGTVPAGGGRTLTQQASGAPLASFTVAWYRQAPGETTEWVASINRSGNTYYNSRVAGRFTISVNYSENTATLDMGNLRPTDSAVYYGGAVSTSPASPSRINLSDVVAWGQGTPLTVTA/APPPPPPN",
+      "mpnn_score": 1.0608,
+      "sample": 27,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.274
+    },
+    {
+      "sequence": "PALTESGGGTVPAGGGVLLSDKVSGEPISDFAVAWFRQAPNQAEQFVASINKNGLTWYHPSVEGRYTISMNPSNNTAYLTMADLRPEDSATYYSALDSNSPATPGSIPVDNVEAWGQGTPLVVTD/APTKKKRK",
+      "mpnn_score": 1.0603,
+      "sample": 300,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.274
+    },
+    {
+      "sequence": "PKLEESGGGTVPEGGSTRLSATVSGAPLSDYAVAWFRQAAGQPRQFIAAINKQGATYYAPSVAGRFRISRNPPDNTAYLDMADLRPEDSATYYYALSPISPAQPGAIPEEDVAAWGQGTELKVTA/GGGPRRAS",
+      "mpnn_score": 1.0609,
+      "sample": 197,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2739
+    },
+    {
+      "sequence": "MRLRESGGGTVPEGGGVRLSVKASGEPLSDYAVSWYRQAPGQDQAFVASINKSGKTYYSPDVKGRFRISRDDQNNTAYLDMANLEPQDSATYYSGAQAKSPETPGEVPQSEMVAWGQGTPLTVTD/YSSSSKPE",
+      "mpnn_score": 1.0612,
+      "sample": 381,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2739
+    },
+    {
+      "sequence": "INLTESGGGTVKEGGGVLLSNKASGEPLSNFAVSWFRQAPGEKRQFVASITQSGKTWYHPQVEGRFKISKDDSNNTSYLTMANLRPEDSAVYYSAANSYSPSTPKAIEWENVKAWGEGTELTVVV/AAAVPPLL",
+      "mpnn_score": 1.062,
+      "sample": 65,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2738
+    },
+    {
+      "sequence": "ASLAESGGGTVAAGGGVLLSVKATGEPLSDYAVAWYRQAPGQAQEFVASVNRSGATYYADSVKGRYEISRDPSTNTSFLAMADLRPRDSAVYYVALTRNSPDIPGKIDPNSVDSWGQGTPLTVTE/GPSPPPPQ",
+      "mpnn_score": 1.0624,
+      "sample": 195,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2738
+    },
+    {
+      "sequence": "PTITESGGGTVPAGGGLTLTPVVSGEPLSDFAVAWYRQAPAKPIQFVAYINEAGNTYYHPAVQGRFKISTDPSNNTSTLSMANLVPEDSATYYVVLSSHSPLIPREVPKSEVASWGQGTTLTVTT/GPVPPPPP",
+      "mpnn_score": 1.0623,
+      "sample": 218,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2738
+    },
+    {
+      "sequence": "MLLTESGGGTVQAGGGVRLAGAASGLPLSDYAMSWYRQAPGQPMQFVASINQAGATYYHPEVKGRFHISKDNARNTSYLEMDDLVPSDSAVYYVAAVKTSPKTPREFPKSQVSAWGQGTPVTVTD/AGGEPPPA",
+      "mpnn_score": 1.0626,
+      "sample": 406,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2737
+    },
+    {
+      "sequence": "MTITESGGGTVPAGGGVTLSAKASGANLSDFAVAWYRQAGGAPRKFVASINKSGKTWYDPDVKGRFSISRNDANNTAYLSMARLQPKDSAVYYMAAYSQSEATPGKVEETNVASWGQGTTLVVTK/MMASPPPA",
+      "mpnn_score": 1.0636,
+      "sample": 335,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2736
+    },
+    {
+      "sequence": "PTLTESGGGVVPAGGGATLTWSASGAPLSNYAAAWYRQAPGQPMEFVAAINRDGKTYYNPEVEGRYVISKNFSLNTVTLEMADLQPKDSARYYGGLYSSSPAVPSEIPLADVSAWGQGTDLTVTA/APTTTPLP",
+      "mpnn_score": 1.0648,
+      "sample": 81,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2735
+    },
+    {
+      "sequence": "PELTESGGGIVPEGGGVRLSWAQSGQPLSNFAVAWYRQAEGQETEFIASINKAGKTYYSPDVAGRYSISVNYSNNTSYLDMADLKPADSATYYSGAVSTSPPVPGEIPLEDVSAWGQGTQLIVTA/MMKRPPPR",
+      "mpnn_score": 1.0664,
+      "sample": 353,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2733
+    },
+    {
+      "sequence": "ATITESGGGTVPAGGGVTLSPRVSGEPLGDFAVAWYKQAPNEPLEFVASITRSGATYYDPAVKGRFTISRDTVNNTSYLHMSDLTPDDSATYYAALSANSPTTPGSIKPEDVTAWGGGTELKVTE/MMMPPPPL",
+      "mpnn_score": 1.0672,
+      "sample": 141,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2732
+    },
+    {
+      "sequence": "IILTESGGGTVPQGGGVTLSQQSSGENLSNFAVSWYRQAPGQPRQFVAYINQAGNTYYHPEVAGRFLISKNNATQTATLSMANLRPEDSATYYSGAFDESPITPGEQPYSSIKAWGQGTQLVVTE/APPPPPPL",
+      "mpnn_score": 1.068,
+      "sample": 190,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2731
+    },
+    {
+      "sequence": "PELTESGGGVVPQGGGITLSNQVSGKPLSDYQVSWYKQAPGKPRTFVGSINKSGATYYAADVQGRFTISADFSQNTSYLQMDDLQPEDTATYYSGLSSSSPVTAGEVKDQDVDSWGQGTPLTVTE/GPGKPPAA",
+      "mpnn_score": 1.0695,
+      "sample": 318,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2729
+    },
+    {
+      "sequence": "IRLTESGGGTVPAGGGALLKATATGEALSDFAVSWWRQAPGQPMKFVSSINKSGRTYYAPEVKGRFLISVDHSKNTAFLNMADLKPKDSAVYYFGAYAKSPRTPGPYELKDAVAWGQGTQLTVTE/GAAPPPGP",
+      "mpnn_score": 1.0715,
+      "sample": 8,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2727
+    },
+    {
+      "sequence": "MKLTESGGGTVAEGGGVTLTAKASGSSLSDYAVAWYKQAPGKPTEFVASATKSGATDYAPAVKGRFRISVDNAKQTATLDMGNLTPDDTATYYWAASAKSPLHPGPINRSDVESWYQGTPLTVTK/GPPPPPPA",
+      "mpnn_score": 1.0728,
+      "sample": 59,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2726
+    },
+    {
+      "sequence": "PLLTESGGGTFPEGGGVRLSKQASALPLSEYAVSWFRQAPGKSREFVASINRSGKTYYHSAVSGRFQISRDDSENTSYLDMANLVPADSAVYYSGLSSESPSTPSDVKEENIVAWGQGTPLTVTT/GSSSPPTT",
+      "mpnn_score": 1.073,
+      "sample": 72,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2725
+    },
+    {
+      "sequence": "ITLRESGGGTVDAGGGVTLTATAAGDSLSNFAVAWYRQALGKPREFVASINKSGNTYYAPSVKGRYRISKDDANNTSTLTMSTLRPEDTAVYYAAAYADSPTTPRQYDFKDVVALGQGTKLTVTE/GPSSMTGG",
+      "mpnn_score": 1.0735,
+      "sample": 111,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2725
+    },
+    {
+      "sequence": "IRLHESGGGTVPEGAGIVLRGVARGEPLSDYAVSWYRQAPGKPTEFVASINKQGQTYYSAKVEGRYTISTDTRNNTAYLNMANLKPEDTATYYIAAVANSPVTPGEFNPEDVDSWGQGTPLTVTD/APPIPPPP",
+      "mpnn_score": 1.0746,
+      "sample": 37,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2723
+    },
+    {
+      "sequence": "PTLIESGGGTVPSGGGVELSXQVSGSPLSNYAVAWYRQAPGQPMQFIAAINKSGKTWYAESVKGRFTISTDYSKNTAKLYMGNLRPEDTATYYGVLKSSSPTTPGAVAESEVAAWGQGTRLVVTD/SPPFPPAE",
+      "mpnn_score": 1.075,
+      "sample": 485,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2723
+    },
+    {
+      "sequence": "MKLKESGGGSVPEGGGVTLTVTASGEALSNYAVSWYKQAPGKEIQFVASVNRSGNTYYASEVNGRFTISVDYSNNTSTLDMGNLKPEDSAVYYGAAFSSSPENPGEFLLXAADAWGEGTELTVTA/APPPPPAA",
+      "mpnn_score": 1.0768,
+      "sample": 380,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2721
+    },
+    {
+      "sequence": "VNLTESGGGTVPQGSGIELSGKAQGDPLSNYAVGWYRQAPGQPRQFIASINRDGDTYYAEKVKGRYKISKDDSQNTVYLYMANLKPEDTAVYYFAAKSSSPSTPQEILESSVTAWGQGTEVIVTE/GPPPPLTT",
+      "mpnn_score": 1.077,
+      "sample": 415,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2721
+    },
+    {
+      "sequence": "PQLSESGGGTVREGGGVTLSASVSGDPLSNYAVSWYRQAPSQPLEFVANITKSGATWYAPGVAGRFTISKNDANNTAALAMANLKPEDSATYYFGLDPTSSPVAGEVPLSTVASWGQGTKLVVTN/MMGTVPAN",
+      "mpnn_score": 1.0775,
+      "sample": 36,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.272
+    },
+    {
+      "sequence": "PTLTESGGGTVPAGGGIKLTDHVSGESLSDYAVSWYKQAPGEPLRFVASINKSGQTFYSSDVKGRFKISKDDSNNTANLTMSNLKPEDSATYFSGLYSSSPAVPTEIPYHAVVSWGQGTPLTVTS/FDTPPPLL",
+      "mpnn_score": 1.0789,
+      "sample": 213,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2718
+    },
+    {
+      "sequence": "VRLVESGGGTVPAGSGVRLSDTASGKPLAEFAVSWWRQAPEQPMVFVASINKTGATYYHPDVKGRFSISRDDSANTSFLDMAELQPRDSATYYSGAYPTSPASPGRRSPDQAAAWGQGTPLRVVQ/LPAPPAPA",
+      "mpnn_score": 1.0792,
+      "sample": 494,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2718
+    },
+    {
+      "sequence": "PILKEWGGGTVPSGGSVTLGAQAYGKPLKDFAVSWYRQAPGKPRAFLASINKSGKTWYAPAVEGRFTISRDDAKNTAYLTMDDLVPEDSAVYYQGLYSQSPKTPQEYPEQLVDAWGEGTPLTVVE/GGGKGPLL",
+      "mpnn_score": 1.0814,
+      "sample": 157,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2716
+    },
+    {
+      "sequence": "ITLTESGGGTKPAGSGVLLSAKASGDPLSDYQVSWWKQAPGQPLEFIASINKSGNTYYHPSVKGRYNISKDDARNTSYLAMSNLVPQDSAIYYAGADRRSPGKPGEVPLRNVAAWGQGTPLTVTD/APGTKKFQ",
+      "mpnn_score": 1.0823,
+      "sample": 16,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2715
+    },
+    {
+      "sequence": "ISLTESGGGTVPEGGGITLSIKASGEALSDYAVSWFRQAPGKPESFIASINKSGKTYYHPEVQGRFKISRDFSNNTSYLTMSNLKPDDSATYYGAARAISPETPTEIKKSDVTAWGQGVNLKVSK/SMSPGPPP",
+      "mpnn_score": 1.0821,
+      "sample": 428,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2715
+    },
+    {
+      "sequence": "ISLTESGGGAVPEGGGVTLTEVASGEPLSDYAVSWFRRAPGSPEEFVAYINKAGSTWYAPSVAGRFSITKDFAHNTATLTMGNLRPADSATYFAAASALSPAVPGEIPIELVSAFGQGTLLTVTS/LSPPGPPP",
+      "mpnn_score": 1.0845,
+      "sample": 459,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2712
+    },
+    {
+      "sequence": "MTLTESGGGTVAEGGGVLLKRQAGGDNLSNFAVSWYRQRPGKPQKFVASITKSGKTYYAPEVKGRFKISKDDANNTAFLEMGYLKPDDSAVYYGVASSVSPSSPGQVKAADVAAWGQGTSLEVSS/GPPKPPAL",
+      "mpnn_score": 1.0851,
+      "sample": 185,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2711
+    },
+    {
+      "sequence": "PELKESGGGKFPAGGGVLLTFEMSGDPLSDFAVSWWRQAPGQPRKFVSSINRAGQTYYSADVKGRFRISRDEANNTVTLEMADLKPEDSAMYYGGAYAASPATPGEYPENEVSAWGQGTKVVVTE/LPPPPLEE",
+      "mpnn_score": 1.0865,
+      "sample": 254,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.271
+    },
+    {
+      "sequence": "PTIVESGGGTVAAGGGAHLEAKASGDPLSNYAVAWYRQAPGQPLEFVASINKNGRTYYHPDVEGRFKISRDYARNTSYLNMSDLQPQDSAVYYLALWAESPDSPGPKPVEDVVAWGQGTPLTVTE/MPSPAAPP",
+      "mpnn_score": 1.0879,
+      "sample": 161,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2708
+    },
+    {
+      "sequence": "PRLEESGGGTVLEGGGALLSSRVSGEEIKNYAVSWYKQAPGQPLKFVASINRTGNTYYAPEVDGRYKISKNDSLNTAFLEMADLVPADSATYYYALRKNSPSIPREIPRTEVSSWGQGTPLTVTA/GPSPPPSG",
+      "mpnn_score": 1.0876,
+      "sample": 487,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2708
+    },
+    {
+      "sequence": "PTLVESGGGTVKAGGGALLSARASGRPLSEYAVSWYRQAPGQPMQFVASINRQGRTWYAPEVTGRYEISREADRNTAYLKMGNLRPEDSATYYPGLDPRSWPEPQEIREEDLAAWGQGTPLTVTE/LRTPPALL",
+      "mpnn_score": 1.09,
+      "sample": 255,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2706
+    },
+    {
+      "sequence": "ITLTESGGGVFPAGAGALLTMNASGEPLSDFAVSWYRQAPGKPLEFVASINRNGETYYSSRVRGRFRISVDYEKNTSYLEMGELLPEDSATYYGGAYSNSPRIPGRIKPEDVVAWGQGTPLVVTE/GPPQQEPA",
+      "mpnn_score": 1.0894,
+      "sample": 299,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2706
+    },
+    {
+      "sequence": "PQLTESGGGTVPKGGGVSLTKKKSGSPLSNYAVAWYRQAPNQPRVFVAAINKEGKTYYSPAVKGRFYISKDDKNNTSTLEMSDLEPEDSAVYYHALYEVSPKEPGEFPEQHIVAWGQGTAVTVTE/GPRPPPDD",
+      "mpnn_score": 1.0913,
+      "sample": 145,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2704
+    },
+    {
+      "sequence": "ATIVESGGGTVPEGGGVTLSGQVSGEPLSNYAVGWFRQAPNQDEQWVAHINKDGRTYYASSVEGRFTISKDDSQNTATLAMGNLQKRDSATYYQALYAHSPAIPGNPEPSQVDAWGQGTPLTVTE/GPTYPPAL",
+      "mpnn_score": 1.0914,
+      "sample": 233,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2704
+    },
+    {
+      "sequence": "LTLTESGGGTVPAGGSLELSATASGTPLEDYAVSWYRQAPGQPRTFVASINREGKTFYAPEYEGRFHISRDDADNTARLLMSELRPADSATYYFAAYLKSPAVPSEYPISDVASFGQGTDVRVTE/GGAPPPPK",
+      "mpnn_score": 1.092,
+      "sample": 360,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2703
+    },
+    {
+      "sequence": "ASLKESGGGTVPAGGGARLQXQQSGAPLSNYAVAWFRQAPGQPKEFVAAITKSGRTYYHPAVQGRFQISVNHSSNTTFLSMSSLVPADSATYFGAASANSPETPGRIEESSIDAWGEGTPLVVTA/APAPPRPP",
+      "mpnn_score": 1.0953,
+      "sample": 142,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.27
+    },
+    {
+      "sequence": "VTLTESGGGTVAAGGGARLSDQASGDELRQYAMSWYRQAPNEPRQFVASINQQGRTFYAPEFEGRFTISRNYANNTVYLDMANLVPADSAVYYSGADKLSPSLPGEIQPHDVIAWGQGTPLTVTD/MLGPPPPL",
+      "mpnn_score": 1.0956,
+      "sample": 177,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2699
+    },
+    {
+      "sequence": "VTLKESGGGSFPEGSGVLLTAEASGEPLSDYAVSWYRQAPGQPVQFVASINQTGETYYAKDIEGRYRISKDDENNTSTLQMADLKPEDSATYYVAASKKSPKTPTALKPEDVSAWGQGTVVQVTA/SPPPPPDL",
+      "mpnn_score": 1.096,
+      "sample": 311,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2699
+    },
+    {
+      "sequence": "ITLTESGGGTVAHGGGVLLSDTASGQPLSNYAVAWYRQAEGQPRKFIAYINRQGKTFYAPEVKGRFQISVDYANNTSYLEMSNLVPADTAVYYSVADSQSPATPTEVPEGTVTSWGQGTEVVVTE/HMGAIHTT",
+      "mpnn_score": 1.0959,
+      "sample": 323,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2699
+    },
+    {
+      "sequence": "PELVESGGGTIAAGGGLTLTQKVSGEPLSSFAVAWYRQAPGQPMRFVSYINRAGQTYESPEVAGRYKISKDDAKNTATLDMANLVPEDSAVYYGALVALSPETPGPYPLEDVEAWGQGTRVTVTD/LLAELLPN",
+      "mpnn_score": 1.0957,
+      "sample": 388,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2699
+    },
+    {
+      "sequence": "TKLVESGGGTFPAGGGALLSAKASGDPLADYAVGWYRQAPKKPMEFVASIDRAGRTYYAPSVRGRFMISKDDAQNTVYLAMSDLVPRDSATYYFVADKSSPAVPGQVELSSVAAFGDGTKVTVTV/LLPAPPPP",
+      "mpnn_score": 1.0968,
+      "sample": 208,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2698
+    },
+    {
+      "sequence": "PKLEESGGGTVPAGGGVLLSAKASGDPLSNYAVSWYRQAPGKPMQFVASINRRGDTYYAKEVEGRFKISKNDSENTAYLEMAKLKPEDSAVYYMALNARSPGIATEMAIDDVVAWGEGTPLTVTE/MLGGEPRF",
+      "mpnn_score": 1.1003,
+      "sample": 229,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2694
+    },
+    {
+      "sequence": "PQLWESGGGVVPEGGGVLLSATQSGDPLSNFAVAWFRQAPGKPRKFMAAINQDGSTYYHPSVEGRFQISKDDTNNTSYLAMADLRPEDSAIYYWALSRTSPVSVGPIAPETVAAWGQGTKLTVTA/MMGERPLL",
+      "mpnn_score": 1.0999,
+      "sample": 452,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2694
+    },
+    {
+      "sequence": "INLQESGGGTFPAGADITLSAKASGDALSNYAVSWFRQAPGAPMKWVASITKEGKTWYAPDVEGRYVISVDNSSNTASLTMAHLQPEDSAVYYHAADADSPTTPTAIEENQVSAWGLGTDVIVTE/GGPPPPPA",
+      "mpnn_score": 1.1009,
+      "sample": 377,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2693
+    },
+    {
+      "sequence": "VQLIESGGGTVPAGGGVQLSALAQGAPLQNYAVSWYRQAPGRPPRFVAYVNQQGATYYAPEVEGRFRISRDDSNNTSYLDMADLRPEDSAVYYTGAFLTSPAIPGEAKVDDASAWGQGTELRVLE/GHSSPPPA",
+      "mpnn_score": 1.1051,
+      "sample": 350,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2689
+    },
+    {
+      "sequence": "MTLTESGGGTVAQGGGVVLSRRASGEPLKNFAVSWYRQAPGQPMKFVASINKSGKTYYHPDVRGRFTISKSDGNNTVTLSMADLLPEDTAVYYGGARRNSPETPGEIPVSDLDAWGQGVPLTVVA/AVMKPPWK",
+      "mpnn_score": 1.105,
+      "sample": 363,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2689
+    },
+    {
+      "sequence": "MTLEESGGGTVPAGGGAKLSAKASGKPLSNYRVSWYRQAEYSPREFVASINKQGKTYQAPAIAGRFKISKNDDENTFFLEMSDLTPADSATYYPAADESSPATEGEILESDIAAWGQGTPLTVTD/GPGPPPPF",
+      "mpnn_score": 1.1048,
+      "sample": 365,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2689
+    },
+    {
+      "sequence": "PQLRESGGGTVPAGGGLKLQKSTSGEPISEYAVSWWRQAPNQPLEWVSSINKNGQTWYAPAVKGRFQISVDRSQNTAYLYMSDLQPGDSATYYSALVKNSPSTPGQISFENVAAWGQGTPVTVTS/MMMKPPLL",
+      "mpnn_score": 1.1056,
+      "sample": 242,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2688
+    },
+    {
+      "sequence": "ISLVESGGGTVAAGGGVTLSSTASGESLSDYAVSWYKQAENTPRQFVSSINKAGNTWYHPDVAGRFRISKDDRSNTAYLEMADLVPRDSAVYYXAAAPQSPEKPESMREEDIAAWGQGTPLTVTA/GPPPPPGA",
+      "mpnn_score": 1.106,
+      "sample": 286,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2688
+    },
+    {
+      "sequence": "PQLVESGGGEVPAGGGVRLSLSQSGENLSNFAVAWYRQAPGQPRSFVASINRSGETWYAPSVQGRFQISVDWSQNTSYLSMADLRPEDSATYYGGLRRSSRLVPSEVPEHEVESWGQGTPLRVTA/WGGPPPRP",
+      "mpnn_score": 1.1072,
+      "sample": 30,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2686
+    },
+    {
+      "sequence": "MTLTESGGGTVPEGGGALLSINAGGASLSDFAVSWFRQAPSQPPLFVSSINKEGKTYYAPQVEGRFVISKHWAENTAYLDMASLRPEDSATYYGAASSYSPSIPSEIKEADVAAWGQGTQLVVTA/APSPPPPD",
+      "mpnn_score": 1.1083,
+      "sample": 178,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2685
+    },
+    {
+      "sequence": "PTLTESGGGTVPKGGGLTLKYTVSGDALSDYAWSWYRQAPGEALEFVSSITRDGRTWYHPKVKGRFVISRNDAQNTSTLQMAALRPEDSAVYYGGLVSDSPASPHEFPVSKLDAWGQGTQKTVTA/LLGPPPPR",
+      "mpnn_score": 1.1117,
+      "sample": 495,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2681
+    },
+    {
+      "sequence": "IDLSESGGGIIPAGGGALLSVQATGDQLSNYAVSWYKQAEGKPLQYVASINRGGKTYYNPAVSGRFVISKDDSNNTAYLTMADLRVEDSATYYAGADTTSPSTPGQVQPSDLAAWGQGTPLTVTE/MPPIPPPQ",
+      "mpnn_score": 1.1123,
+      "sample": 123,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.268
+    },
+    {
+      "sequence": "ASLHESGGGTVPQGGGVRLTHTASGSSLSNFAVSWYRQAPGQPEQFVASVNRSGSTFYAPEVSGRFTISRDDSRNTQFLNMADLTPADSAVYYSGLWSQSPSSPGQIARSSISAWGQGTPLTVTE/VGGPAAPI",
+      "mpnn_score": 1.1179,
+      "sample": 347,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2674
+    },
+    {
+      "sequence": "MFLTESGGGTVPEGGGVLLSERASGEPLSDFAVSWFKQAQGKETEFVASITKSGKTYYSDKVKGRFRISVDYSKNTVYLYMAQLKPENSATYYAAAVSTSPEEPGEFLPERVTAWGQGTLLTVTT/GESPQQPP",
+      "mpnn_score": 1.1201,
+      "sample": 443,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2672
+    },
+    {
+      "sequence": "MKLEESGGGTVEAGGAVTLSALASGEPLENYAVSWYRQASNKPKQFVSSINKNGNTYHAPEVRGRFVISKDYANNTAYLDMANLTPSDSAIYYLAAYENSPPVPREYPEEEVAAWGQGTELVVTE/GPAPPPKG",
+      "mpnn_score": 1.1206,
+      "sample": 43,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2671
+    },
+    {
+      "sequence": "VTLTESGGGTVKEGGGVLLSQLASGAPLSDYAVSWWRQAEGQPPKFVASINKTGKTWYDPDVKGRYTISKDYSNNTVFLYMDELKPEDSAVYYGGAHSYSPEKPQEIKEEDLIAWGQGTRVTVTS/VPGKPPPP",
+      "mpnn_score": 1.1229,
+      "sample": 83,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2669
+    },
+    {
+      "sequence": "ATIIESGGGTVPAGGGAKLTXVASGEPLENYAVSWYRQAPNQPMEFVSSINKQGNTWYSPAVEGRFEISRDHSKNTSFLRMAALQPEDSATYYSGLIPDSPAVPGPYLPETVAAWGQGTPLTVTD/MMAPPGPP",
+      "mpnn_score": 1.1237,
+      "sample": 307,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2668
+    },
+    {
+      "sequence": "PTLVETGGGTVPAGGGLRLSSAMGGEPMRDYAVAWYRQAPGKPRQFVDSVNKAGATWKDPAVAGRFKISVDYEKNTSYLDMADLRPEDSSTYYXALSSSSPSTPGQVLGSTVSAWGQGTSVTVTD/MPGPPPPP",
+      "mpnn_score": 1.1282,
+      "sample": 191,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2663
+    },
+    {
+      "sequence": "VHLVESGGGTVPAGGGVVLSVDASGEPLSNFSVSWFKQAPGNPVKFVSAINRTGQTYYAPEVKGRYYISVDYAQNTAYLSMADLKPEDSATYYAGAYRNSPEVPGEHDPSSVAAWGQGTNLTVTD/APPPPPPK",
+      "mpnn_score": 1.1277,
+      "sample": 489,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2663
+    },
+    {
+      "sequence": "PILTESGGGNVPEGGGLTLSITASGSPLSNYSVSWYRQAEGQPMEFVASINQSGATFYASSVKGRFTISRMNANNTAYLTMSNLTPEDSATYFGGLHPNSPSVPSEIEISNIEAWGQGTTVQVTA/LPHPPPPP",
+      "mpnn_score": 1.1288,
+      "sample": 105,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2662
+    },
+    {
+      "sequence": "IKLTESGGGTVPAGSGIRLSAKASGEPLSDYRVSWYKQAPGMDASWIASITRSGKTYYDSSVAGRFYISKDFANNTSYLDMGNLQPGDSATYFDGADSNSPDNAGRVEVSNIVAWGQGTPVTVTA/VPPPEPSS",
+      "mpnn_score": 1.1298,
+      "sample": 26,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2661
+    },
+    {
+      "sequence": "PTLTESGGGTVAAGGGVTLTEQTTGSPLSQYAVSWYRQASGQPTRFVASITKDGSTYYAPEVSGRYTISKDYTKNTATLTMANLVPTDSATYYSALDXTSPATARQVPRSEVSAWGQGTSLTVTT/AALLPPPI",
+      "mpnn_score": 1.1302,
+      "sample": 453,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2661
+    },
+    {
+      "sequence": "PNLEESGGGTVPAGGGVLLTSNASGEPLSDFEVSWFRQAPGQPTRFIASINKDGKTHYHPEVKGRFAISKDFSRNTVALAMALLQPSDSATYYDGAYEKSPETPGEVKESEVSAWGQGVELRVTD/APGGMMAP",
+      "mpnn_score": 1.1343,
+      "sample": 245,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2656
+    },
+    {
+      "sequence": "PKLVESGGGTVPEGGGAHLSAKAEGMPLSDFAVSWFRQAPGKPMEFVASINKKGETYYYPAVKGRFTISRDFSSQTSYLDMDSLKPEDSAIYYRGLVKSSPETESKVDLESVEAWGEGVALTVTA/MMGMPPQQ",
+      "mpnn_score": 1.1397,
+      "sample": 263,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.265
+    },
+    {
+      "sequence": "MTLTESGGGVVPEGGGVLLTGKASGLPLSDYAVAWYRQAPNNPMQFVSMINKEGNTYYNSEVAGRFVISKSDSQNTSSLNMALLRVYDSATYYVAAYSNSPSNPKEFPFSEVDAWGQGTLLVVTS/MMMSPPPA",
+      "mpnn_score": 1.1399,
+      "sample": 475,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.265
+    },
+    {
+      "sequence": "INLVESGGGRVEAGGGVTLSATASGESLSDFAVSWYRQAPGQPERFVASINKSGSTWYAPEVSGRFLISRNVTDNTSFLNMSNLKPEDSATYYVGAATSSPTTPGKVPRSQMAAWGQGTNLVVTE/GFSFTTPP",
+      "mpnn_score": 1.1417,
+      "sample": 132,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2648
+    },
+    {
+      "sequence": "PSIQESGGGEVPKGGGVLLRAVVSGEPLSDYATAWYRQAPGEEMQWVASINRQGRTYYHEEVKGRFRISRDDANNTSFLMMANLQPWDSATYFGALYATSPMTPSRYLPSDAVAWGQGTELVVTE/GPPLEPPL",
+      "mpnn_score": 1.1418,
+      "sample": 262,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2648
+    },
+    {
+      "sequence": "VTLTESGGGVVAEGGGALLSQAASGDALSGYAVSWYRQAPGQGMQFVAAVNQQGNTYYNPAVKGRYRISVNYSENTAYLSMGSLTPADSAVYYGGAVPNSPEQPREYPLDEVSSWGQGTWLEVTA/APPVPPPR",
+      "mpnn_score": 1.1412,
+      "sample": 296,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2648
+    },
+    {
+      "sequence": "PTLNESGGGTYPAGGGLTLSSSASGLPLSNYAVSWYRQAPGQAYQFVAAINKSGNTYYSSSVQGRFTISKNDENNTSTLNMDSLRPEDSAVYYXAAVNSSPTTPQKFQQSNVNAWGQGTEVKVTD/GGGPGGPA",
+      "mpnn_score": 1.1436,
+      "sample": 209,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2646
+    },
+    {
+      "sequence": "PLLRESGGGVFPAGSGARLSARISGAPLADFAVAWYRQAPGAPRNFVASINRAGRTWYDSAVRGRWKISRNDAANTAYLLMDSLQPADSATYYFALRANSPLTPGAVNETDVVAWGQGTDLTVTS/MKLKPPKK",
+      "mpnn_score": 1.1438,
+      "sample": 240,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2646
+    },
+    {
+      "sequence": "PTLRESGGGTVYAGGGVRLSSQASGAPLSDYAVAWYRQAPGSEMQFVAAINKNGDTWYAPGVEGRYHISRDDSQNTSFLEMNNLVPSDSARYYMGLSPHSPTTPGKVEEADLAAWGQGTSLVVVS/GPLPPPYL",
+      "mpnn_score": 1.147,
+      "sample": 398,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2642
+    },
+    {
+      "sequence": "PSISESGGGTFPAGGGATLSGKASGSSLSNYATGWYRQAPDMPQQFVASINRAGQTYYAPEVQGRFTISRNDSSNTSTLEMSSLQPEDSATYFXILESASPATPGAIAASAVSAWGQGTPLTVTA/GGGPLSYR",
+      "mpnn_score": 1.1495,
+      "sample": 330,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2639
+    },
+    {
+      "sequence": "TTLIESGGGTFAAGSGATLTGRASGQALSNFAVAWYRQAPNQPLQFVAAINKAGDTYYASSVSGRYKISVNYAENTSTLSMNGLQTADSATYYXAAYKNSPSTPTELEKSDVFAWGQGTPLTVVA/GPGPPPPP",
+      "mpnn_score": 1.1515,
+      "sample": 457,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2637
+    },
+    {
+      "sequence": "PTLVESGGGTVTAGGGALLSSQASGESLSNYAVAWYRQAQGQPMQFVASVNKSGATYYHPSVDGRFTISVDNSKNTSFLGMSNLKPEDSAVYYFGLVPNSPTIPQEFPQSLVHSWGQGTPLSVLN/GGGGGLPE",
+      "mpnn_score": 1.1589,
+      "sample": 375,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2629
+    },
+    {
+      "sequence": "PNLTESGGGTFAEGGGLTLTXSRTGDPLSDYAVSWYRQAPGHPIEFVASINKSGKTYYHPSVEGRFNISKDDSNNTATLTMANLTPADSATYYGADYATSPKEPQKFPQSEVISWGQGTPVTVTL/GPLFPPPT",
+      "mpnn_score": 1.1599,
+      "sample": 133,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2628
+    },
+    {
+      "sequence": "PTVTESGGGTIPAGGGAKLSGKVGGLNLSDFAVSWYKQAKGKPRSWVASINAQGSTYYAPSVAGRFEISRDVANNTSYLTMSSLQPEDSADYYXSLSSNSPATPSSIPLSSVVSFGQGTQLTVTT/GPGPPLSS",
+      "mpnn_score": 1.1628,
+      "sample": 140,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2625
+    },
+    {
+      "sequence": "MTLHESGGGTVPAGGGVTLSHQAHGKDLSDYAVSWYRQAPGQPMVWLASITKTGPTYYHPDVTGRFKISRQDGENTSYLTMSSLVPADSATYYSAAVATSAAVPGEYQVSDVVSWGQGTNLTVTE/APGAAPPS",
+      "mpnn_score": 1.1665,
+      "sample": 34,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2621
+    },
+    {
+      "sequence": "MALVESGGGTVPAGAGVTLQSQASGMPLSDYAVAWYKQAPGKPREFVAYINQSGNSYYSSSVSGRFKISRDPENNTAFLSMSNLRPEDTAVYYXGAAPVSQDTPGPVPFNKLSAEGQGTPLTVTE/LPSETPQA",
+      "mpnn_score": 1.1973,
+      "sample": 199,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2589
+    },
+    {
+      "sequence": "MDLTESGGGLVEQGGGALLSTRASGAPLSDYEVSWWRQAQGQPRTWVASTNRQGKTWYASSVKGKFRISRDDEQNTSYLQMANLRPSDSAVYYSGAYSKSPLNPREVSLNQVDSWGQGTPLEVSV/GPPPPVAE",
+      "mpnn_score": 1.2103,
+      "sample": 63,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2575
+    },
+    {
+      "sequence": "SSITESGGGTVPAGSGILLTGVRSGDPLSNWAVSWYRQAPGQPEQFVSYINRNGNTYYAPSVAGRFQISRNDAENTSSLSMANLAPEDSAVYYXGLDLSSPATPGQIKTSTVSAYGQGTPLVVTE/YLPPPPPL",
+      "mpnn_score": 1.2148,
+      "sample": 361,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2571
+    },
+    {
+      "sequence": "IQLLESGGGIVNSGGSTTXNQAGSGEKLSDYAVSWFRQAPGQPTKFVSSINKSGKTYYADEVKGRYSISKDDSLQTVTLSMSNLVPSDSATYYFGAVSTSPATPSEVPLSNVAAWGQGTQLTVVS/GPSGGPVV",
+      "mpnn_score": 1.2159,
+      "sample": 150,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.257
+    },
+    {
+      "sequence": "VGLKENGGGTVPAGGGVTLTNQATGEALSEYAVSWFRQAPGQPMKWVASINRSGDTWYDEEFFGRFTITKDVENNTSTLKMANLRPEDSAVYYQGQTKNSPATPREIPLNEIAAWGQGTPLVVTE/GTPPPTPS",
+      "mpnn_score": 1.216,
+      "sample": 324,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.257
+    },
+    {
+      "sequence": "ATLMESGGGTVPAGGGTTLTSTSSGSSLKDFAVGWYAQKPNEPRKFISAINKSGKTYYHPEVKGRFTISVNYSKNTSTLSMSNLQPEDSATYFXVLSSVSPSSPQEIQESDVSSWGDGTALKVTT/MPRPQPPE",
+      "mpnn_score": 1.2197,
+      "sample": 322,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2566
+    },
+    {
+      "sequence": "NLLVESGGGSVAEGGGARLSSTSSGTPLSDYSVSWYRQAPGAEESFLASINQSGNTYYSPSVFGRFQISRDDATNTSFLDMAYLRPADSATYYXAASRTSPKTPTSIDRSTVSSWGQGTPLVVTE/LPAAAAAA",
+      "mpnn_score": 1.2279,
+      "sample": 156,
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.12,
+      "composite": 0.2558
+    },
+    {
+      "cdr": "GFTFSNYRSGGGYCVRYDHY",
+      "antibody": "solanezumab (3D6)",
+      "target": "KLVFFAED",
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.16,
+      "composite": 0.0307,
+      "sequence": "GFTFSNYRSGGGYCVRYDHY",
+      "mpnn_score": 0,
+      "sample": -1
+    },
+    {
+      "cdr": "GFTFSSYAISGSGGSTYYADSVKG",
+      "antibody": "gantenerumab",
+      "target": "DAEFRHDSGY",
+      "contacts": 5,
+      "density": 0.25,
+      "mean_distance": 13.16,
+      "composite": 0.0307,
+      "sequence": "GFTFSSYAISGSGGSTYYADSVKG",
+      "mpnn_score": 0,
+      "sample": -1
+    }
+  ],
+  "config": {
+    "epitope": "mid_16_24",
+    "samples": 500,
+    "top": 50,
+    "temperature": 0.5,
+    "seed": 42
+  }
+}

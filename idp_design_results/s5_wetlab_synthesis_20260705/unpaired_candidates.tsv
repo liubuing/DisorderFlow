@@ -1,0 +1,4 @@
+rank	source	source_type	reason
+7	Anti-αSyn Fab	PDB 6H1F	Framework VH or VL is None (source=6H1F)
+13	Anti-tau Fab	PDB 6CBV	Framework VH or VL is None (source=6CBV)
+14	Anti-αSyn scFv	PDB 4BKL	Framework VH or VL is None (source=4BKL)

@@ -1,0 +1,42 @@
+{
+  "native_h3": "VRYDHYSGSSDY",
+  "scaffold": "4HIX (humanized 3D6)",
+  "epitope": "Abeta DAEFRH (6 residues)",
+  "native_triplet": {
+    "contacts": 9,
+    "density": 0.9,
+    "mean_distance": 8.11,
+    "cdr_len": 10,
+    "epi_len": 6,
+    "bfn_iptm": null,
+    "bfn_reliable": true,
+    "composite": 0.4134
+  },
+  "designs": [
+    {
+      "sample": 9,
+      "h3": "LYDSSKGSESY",
+      "mpnn_score": 1.03
+    },
+    {
+      "sample": 3,
+      "h3": "LYDQSKGSESY",
+      "mpnn_score": 1.1356
+    },
+    {
+      "sample": 13,
+      "h3": "LYDASKDSESY",
+      "mpnn_score": 1.1646
+    },
+    {
+      "sample": 14,
+      "h3": "LYDSSKDAPSH",
+      "mpnn_score": 1.1926
+    },
+    {
+      "sample": 20,
+      "h3": "LYDSSVGSESY",
+      "mpnn_score": 1.1932
+    }
+  ]
+}

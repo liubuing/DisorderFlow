@@ -1,0 +1,106 @@
+============================================================
+WAY4 V7 P2: Mechanism Gradient Probe
+============================================================
+  Loaded V19_per_residue
+  Loaded V20_per_residue
+  Loaded V18_scalar
+  Profiles: 804 antigens
+  Test: 9 high-flex, 10 low-flex
+
+Running 19 samples x 3 models x 3 seeds = ~171 generations...
+  high_flex/9ub6/V19_per_residue/per_residue/s2: ent=2.964 uniq=6 seq=QSQVTSSSQNWVTTNNNSSNQQSTNTTTTT
+  high_flex/9ub6/V19_per_residue/none/s2: ent=2.971 uniq=6 seq=QQSQVTSSNTNW
+  high_flex/9ub6/V20_per_residue/per_residue/s2: ent=1.028 uniq=9 seq=TAWVVRKWPYTNVY
+  high_flex/9ub6/V20_per_residue/none/s2: ent=0.968 uniq=12 seq=WAKGKSSNQQSTNTAWVVRNWPYTNVYQ
+  high_flex/9ub6/V18_scalar/scalar/s2: ent=2.966 uniq=5 seq=QSQVTSSNTNNTTNTNSSNQQTTTTTSNTV
+  high_flex/9ub6/V18_scalar/none/s2: ent=2.966 uniq=6 seq=TQSQVTSSSTNWVTTNNNSSNQQSTTTTTT
+  high_flex/8jqs/V19_per_residue/per_residue/s2: ent=2.958 uniq=5 seq=QVSVTSVVNQVNSVTQSSSTVQTVSQVSNT
+  high_flex/8jqs/V19_per_residue/none/s2: ent=2.963 uniq=5 seq=QNNVTQSSSTVVSTSVVNSTNTTQTTQQTV
+  high_flex/8jqs/V20_per_residue/per_residue/s2: ent=0.963 uniq=17 seq=QVSCTSVYGQYGQIGVMQNSKTPVSGVVRA
+  high_flex/8jqs/V20_per_residue/none/s2: ent=1.111 uniq=16 seq=GQKGVMQNSKTPRSQNAGTFHVACYVANAA
+  high_flex/8jqs/V18_scalar/scalar/s2: ent=2.960 uniq=6 seq=QVSVTSVVPQVTNSVTQSSSTVVQTVSTVS
+  high_flex/8jqs/V18_scalar/none/s2: ent=2.961 uniq=6 seq=QVSYTSVVQQNTVTQSSSTVTTTSTVSNTN
+  high_flex/9ydp/V19_per_residue/per_residue/s2: ent=2.955 uniq=4 seq=SQTSTSVTQSTTQ
+  high_flex/9ydp/V19_per_residue/none/s2: ent=2.961 uniq=6 seq=SQVTVSSVVPTVTVSTTSTSVTQSTTSTTV
+  high_flex/9ydp/V20_per_residue/per_residue/s2: ent=0.778 uniq=12 seq=CTCSKVHLKYWSQASGSVTQSW
+  high_flex/9ydp/V20_per_residue/none/s2: ent=0.699 uniq=12 seq=SQASGSVTQSWMCTPNRCNWTSTTVAV
+  high_flex/9ydp/V18_scalar/scalar/s2: ent=2.957 uniq=4 seq=TSQTSTSVTQST
+  high_flex/9ydp/V18_scalar/none/s2: ent=2.964 uniq=7 seq=VTVSSVTETVTNTSTTSTSVTQSTTQTTTV
+  high_flex/8g73/V19_per_residue/per_residue/s2: ent=2.970 uniq=3 seq=QQQTSSTTSTQTTTTTSTTTSTSTTTTTT
+  high_flex/8g73/V19_per_residue/none/s2: ent=2.971 uniq=5 seq=TTQSQSQNSTQTQTTTTTTTSTSTTVT
+  high_flex/8g73/V20_per_residue/per_residue/s2: ent=1.352 uniq=9 seq=WAAGSSNQSTDV
+  high_flex/8g73/V20_per_residue/none/s2: ent=0.929 uniq=11 seq=AWVVRVATNHSHNVYQF
+  high_flex/8g73/V18_scalar/scalar/s2: ent=2.972 uniq=3 seq=TTTTTTTSTSTTVT
+  high_flex/8g73/V18_scalar/none/s2: ent=2.971 uniq=4 seq=TSQSTVSTSTQQTTSTSSTTSTTTTTTTTT
+  high_flex/5wi9/V19_per_residue/per_residue/s2: ent=2.965 uniq=5 seq=TQTSSQSQSTSSTTTTTSSSSTTTTQSTTT
+  high_flex/5wi9/V19_per_residue/none/s2: ent=2.959 uniq=6 seq=VTTTNVVSQSSTVVTLSTTQTVVSQVNVTT
+  high_flex/5wi9/V20_per_residue/per_residue/s2: ent=1.119 uniq=17 seq=YWAWGYVKQSKHVVANSWVFFHMQHAMPII
+  high_flex/5wi9/V20_per_residue/none/s2: ent=0.815 uniq=18 seq=DYWAWGYVKQSKHVVAKSWHAWVVRAPNPA
+  high_flex/5wi9/V18_scalar/scalar/s2: ent=2.965 uniq=5 seq=VTTTSVVSQSSTVVTSSTTTTSSQTTSSSS
+  high_flex/5wi9/V18_scalar/none/s2: ent=2.964 uniq=6 seq=VTTTNVVSQSSTVVTLSTTVVTTTTQTQTN
+  high_flex/9wsx/V19_per_residue/per_residue/s2: ent=2.966 uniq=5 seq=QQQSTVTTSSSSTVQVTTQQTSQSSQTTQT
+  high_flex/9wsx/V19_per_residue/none/s2: ent=2.965 uniq=5 seq=QQQSTVTQSSSSTVQVTQSTQTSQTTQTTV
+  high_flex/9wsx/V20_per_residue/per_residue/s2: ent=1.572 uniq=16 seq=IWNIFSANTAWVVRAPSPQFHKFWCMAWIF
+  high_flex/9wsx/V20_per_residue/none/s2: ent=1.258 uniq=16 seq=AMQAQIAYWASGSSAVQVTATRSSIDMQSQ
+  high_flex/9wsx/V18_scalar/scalar/s2: ent=2.963 uniq=5 seq=QQQQSTVTQSNSSTVQVTTTTSSSQTQTTQ
+  high_flex/9wsx/V18_scalar/none/s2: ent=2.969 uniq=6 seq=QTSTQTSSQTTTTTTTVSTQTSTSTTTQTS
+  high_flex/4xp1/V19_per_residue/per_residue/s2: ent=2.960 uniq=6 seq=NVVTTVNSSQQVVNVVSNTTSQQSTTTPSV
+  high_flex/4xp1/V19_per_residue/none/s2: ent=2.962 uniq=6 seq=VTTVTTVSSSQQVVNVVSSTTQQVVSQVQV
+  high_flex/4xp1/V20_per_residue/per_residue/s2: ent=0.882 uniq=18 seq=DYWADGSSQQPVKVVSNTWQASMHIYGVSW
+  high_flex/4xp1/V20_per_residue/none/s2: ent=0.893 uniq=19 seq=PIDYWADGSSQQPVNVVSNMWTNTAIVVRA
+  high_flex/4xp1/V18_scalar/scalar/s2: ent=2.965 uniq=6 seq=QQVVSTVQTTVVVQVTVVQTTSQQSTTTPQ
+  high_flex/4xp1/V18_scalar/none/s2: ent=2.969 uniq=7 seq=QQTTSQNQTTVTEQNSTPTTTTQTSSSPTT
+  high_flex/1kxv/V19_per_residue/per_residue/s2: ent=2.960 uniq=5 seq=VSTTSNVVQNTQSTNTTV
+  high_flex/1kxv/V19_per_residue/none/s2: ent=2.966 uniq=6 seq=QSQSTSSTVNWSSQNSTNQTTTVTNS
+  high_flex/1kxv/V20_per_residue/per_residue/s2: ent=1.114 uniq=12 seq=QGKNNQTTTVTNSVRHWSIPVQITQSTINW
+  high_flex/1kxv/V20_per_residue/none/s2: ent=1.095 uniq=8 seq=QKTISTVKLSY
+  high_flex/1kxv/V18_scalar/scalar/s2: ent=2.962 uniq=5 seq=QSTSSTVNTSVVTTSNVVQNTQSTNTT
+  high_flex/1kxv/V18_scalar/none/s2: ent=2.965 uniq=6 seq=TSQSTSSTVNQSVVNLTNQTTTVTNSVSTT
+  high_flex/2i60/V19_per_residue/per_residue/s2: ent=2.967 uniq=5 seq=VTTTTTSSQTTSQSSTTTTTSSSSTTTTTS
+  high_flex/2i60/V19_per_residue/none/s2: ent=2.964 uniq=7 seq=VVSTQTVVQTTNTQVVNNLQSQTTTTSSSS
+  high_flex/2i60/V20_per_residue/per_residue/s2: ent=1.067 uniq=16 seq=GQPGKMNNKTAEVAMEIHQPVPSAQWVDQD
+  high_flex/2i60/V20_per_residue/none/s2: ent=1.057 uniq=18 seq=YGQPGKMNNNTAEVAMEIHQPFAMPIIGVQ
+  high_flex/2i60/V18_scalar/scalar/s2: ent=2.964 uniq=7 seq=TNSTQTVVQTTNTQTVLLTTQTSSTQTSQS
+  high_flex/2i60/V18_scalar/none/s2: ent=2.963 uniq=7 seq=VQQVNNTNNTTTVVTTESTQVNSTQTVVQT
+  low_flex/9g4g/V19_per_residue/per_residue/s2: ent=2.956 uniq=4 seq=SSQTSTSVTSSTTT
+  low_flex/9g4g/V19_per_residue/none/s2: ent=2.961 uniq=5 seq=TTSQTVTQQNVTSQTSTSVTSST
+  low_flex/9g4g/V20_per_residue/per_residue/s2: ent=1.073 uniq=15 seq=SQCAIAKVALQYCPSQNSTKVANSWHQTST
+  low_flex/9g4g/V20_per_residue/none/s2: ent=1.216 uniq=10 seq=CAIAKVALQYCPF
+  low_flex/9g4g/V18_scalar/scalar/s2: ent=2.963 uniq=6 seq=TTSQTVQQQNVTTSQTSTSVTLSTT
+  low_flex/9g4g/V18_scalar/none/s2: ent=2.956 uniq=5 seq=SQTTSTTVQQQNVTTSSTTSTSVTSSTTQT
+  low_flex/5u6a/V19_per_residue/per_residue/s2: ent=2.962 uniq=5 seq=VVTTNNTTTSQVTVVQSSTTQTTTSSQTTS
+  low_flex/5u6a/V19_per_residue/none/s2: ent=2.961 uniq=5 seq=VTTNSTTTSQVTNVQSSTTTTSSQSTSSSS
+  low_flex/5u6a/V20_per_residue/per_residue/s2: ent=0.860 uniq=19 seq=AIVVRSPYQQKQCVAINVYQFQIFSSQIVS
+  low_flex/5u6a/V20_per_residue/none/s2: ent=0.902 uniq=17 seq=IVVRRPVQQNQPPAINVYQFIFSSQIVSIS
+  low_flex/5u6a/V18_scalar/scalar/s2: ent=2.962 uniq=5 seq=TTSSQSTSTSSTTTTTSSSQTTTTQQTTTT
+  low_flex/5u6a/V18_scalar/none/s2: ent=2.961 uniq=4 seq=TTSSQTTSTSSTTTTTSSSQTTTTQTTTTT
+  low_flex/5tfw/V19_per_residue/per_residue/s2: ent=2.962 uniq=5 seq=VTQVTTQTQVQVSTSTQTTTTTTTTTSSQT
+  low_flex/5tfw/V19_per_residue/none/s2: ent=2.963 uniq=5 seq=TTTTTSSQTQSSSSTTTTQSSSQTTTTQQQ
+  low_flex/5tfw/V20_per_residue/per_residue/s2: ent=0.844 uniq=15 seq=YWQPGTQTQHQYSTKVAAMWHQMAWIFSSQ
+  low_flex/5tfw/V20_per_residue/none/s2: ent=0.990 uniq=15 seq=RAPWQFVVIPYSQVWMQHHHAMKIICVQHK
+  low_flex/5tfw/V18_scalar/scalar/s2: ent=2.963 uniq=5 seq=STTTQTSSQTQSTSSTTTTTSSSQTTTTQS
+  low_flex/5tfw/V18_scalar/none/s2: ent=2.960 uniq=5 seq=SQVTQVVVNVVSQVTTQVTVTTTQTSSQST
+  low_flex/8rp8/V19_per_residue/per_residue/s2: ent=2.957 uniq=6 seq=QQQTVTSQNSQSQQSTVVTLTTTQQTTSTV
+  low_flex/8rp8/V19_per_residue/none/s2: ent=2.959 uniq=5 seq=QQTQTTTSQVSVQTVTVVTTTTQTTTSTVT
+  low_flex/8rp8/V20_per_residue/per_residue/s2: ent=0.869 uniq=17 seq=FQIDYWSAGSQSQQSTVVANMQHAMHIIGV
+  low_flex/8rp8/V20_per_residue/none/s2: ent=0.880 uniq=18 seq=IDYWSAGSQSQQSTVVANSDNTAWVVRADS
+  low_flex/8rp8/V18_scalar/scalar/s2: ent=2.963 uniq=3 seq=TTQTSSQTQSQSSTTTTTSSSQTTTTQQTQ
+  low_flex/8rp8/V18_scalar/none/s2: ent=2.957 uniq=5 seq=QTVTSQNSQSQQSTVVTQQTQTTTTQVSVQ
+  low_flex/6b9y/V19_per_residue/per_residue/s2: ent=2.963 uniq=6 seq=TQTVTSSTPQTSQSTQQTTPQTTTTSSQTT
+  low_flex/6b9y/V19_per_residue/none/s2: ent=2.963 uniq=6 seq=SVVTTNSTTTSQVTNVQSSTTQTVTSSTPQ
+  low_flex/6b9y/V20_per_residue/per_residue/s2: ent=0.936 uniq=19 seq=IDYWAPGVTTKQVTPVANSWHQIFSSQIVS
+  low_flex/6b9y/V20_per_residue/none/s2: ent=0.969 uniq=18 seq=YWAPGVTTNQVTPVANSWHQTAGVVRRPYQ
+  low_flex/6b9y/V18_scalar/scalar/s2: ent=2.964 uniq=6 seq=VVTTNNTTTSQVTNVQSSTTQTVTTSTTQT
+  low_flex/6b9y/V18_scalar/none/s2: ent=2.964 uniq=6 seq=VTTNNTTTSQVTNVQSSTTTTVTSSTTQTT
+  low_flex/8g4p/V19_per_residue/per_residue/s2: ent=2.962 uniq=5 seq=QTVTTNNSQSNTSTVVTNSTTTTTTSSTTT
+  low_flex/8g4p/V19_per_residue/none/s2: ent=2.961 uniq=5 seq=VTTNNSQSNTSTVVTNSTQTSQQTTSQVQT
+  low_flex/8g4p/V20_per_residue/per_residue/s2: ent=0.970 uniq=19 seq=IDYWAGGSQSKFSTVVAKSWHQAIVVRAFA
+  low_flex/8g4p/V20_per_residue/none/s2: ent=0.991 uniq=18 seq=DYWAGGSQSKFSTVVANSWKMAIIGVNASP
+  low_flex/8g4p/V18_scalar/scalar/s2: ent=2.963 uniq=6 seq=TVTTSNSQSNTSTVTTNSTTTSTTTQVQTT
+  low_flex/8g4p/V18_scalar/none/s2: ent=2.962 uniq=6 seq=VTTNNSQSNTSTVVTNSTQTQTTTQVQTTS
+  low_flex/6u55/V19_per_residue/per_residue/s2: ent=2.949 uniq=5 seq=TNNTSQQTTVSNVVSSTVSSTVNVNVVTT
+  low_flex/6u55/V19_per_residue/none/s2: ent=2.950 uniq=6 seq=TVTSTVVQWTNNTTQQTTVSQTVVSNTVSS
+  low_flex/6u55/V20_per_residue/per_residue/s2: ent=1.015 uniq=16 seq=QCTISHVQWKGATQQTTESWVVRKAVSSAV
+  low_flex/6u55/V20_per_residue/none/s2: ent=0.921 uniq=13 seq=QCTISDVQWQYVVRKAVSSAVNCNVY
+  low_flex/6u55/V18_scalar/scalar/s2: ent=2.950 uniq=5 seq=TVTSSVVQTQVVVSSTVSSTVNVNVVTT
+  low_flex/6u55/V18_scalar/none/s2: ent=2.952 uniq=6 seq=TVTSTVVQWQTTNNTTQQTTVSVVSSTVSS

@@ -1,0 +1,92 @@
+[
+  {
+    "sequence": "AYDVAKGDLVLLCDKCAQAIFSDRDVRRTTTSF",
+    "ppl": 19.114105224609375,
+    "entropy": 2.817486047744751,
+    "plddt": 0.9579351544380188,
+    "iptm": 0.7656528949737549,
+    "pae": 0.12442713230848312,
+    "composite": 0.7877653283675511
+  },
+  {
+    "sequence": "PYELRAFPLAIMMTTHRDYSVQAVRATSAYDCG",
+    "ppl": 21.108095169067383,
+    "entropy": 2.8206872940063477,
+    "plddt": 0.9590040445327759,
+    "iptm": 0.7699923515319824,
+    "pae": 0.11958695203065872,
+    "composite": 0.7874506625334423
+  },
+  {
+    "sequence": "HNMRIRALYVLYNCYAQYCPVLFVMEFKYLADS",
+    "ppl": 21.287656784057617,
+    "entropy": 2.816851854324341,
+    "plddt": 0.9587218761444092,
+    "iptm": 0.7701944708824158,
+    "pae": 0.12249819189310074,
+    "composite": 0.7873991485834122
+  },
+  {
+    "sequence": "AWFSQKLDLHGDWLIDIFMYGQMGRQQQFGYQA",
+    "ppl": 20.61385154724121,
+    "entropy": 2.8129446506500244,
+    "plddt": 0.9578691720962524,
+    "iptm": 0.7677509188652039,
+    "pae": 0.1256100833415985,
+    "composite": 0.7871347747246425
+  },
+  {
+    "sequence": "FWCMCNFGHLKETFEPAVQLGRCNFNSYVYGNI",
+    "ppl": 21.584247589111328,
+    "entropy": 2.819096565246582,
+    "plddt": 0.9582577347755432,
+    "iptm": 0.7693263292312622,
+    "pae": 0.12396305799484253,
+    "composite": 0.7866078491608302
+  },
+  {
+    "sequence": "ADTNNYRRAADDNIVAWYKTCVNQQTFARECKE",
+    "ppl": 20.81708335876465,
+    "entropy": 2.817966938018799,
+    "plddt": 0.9583355784416199,
+    "iptm": 0.7651598453521729,
+    "pae": 0.12259645015001297,
+    "composite": 0.7859738591909408
+  },
+  {
+    "sequence": "CFYRNDDTLNSWGWNIIEEFHGCPCSKLGWELY",
+    "ppl": 21.69337272644043,
+    "entropy": 2.814804792404175,
+    "plddt": 0.9585529565811157,
+    "iptm": 0.7670202255249023,
+    "pae": 0.12384383380413055,
+    "composite": 0.7859084522724151
+  },
+  {
+    "sequence": "GMSNHFMFGYEEAGHGFWGSDQIDHTDKWDNNG",
+    "ppl": 22.54778289794922,
+    "entropy": 2.813208818435669,
+    "plddt": 0.9573112726211548,
+    "iptm": 0.7694548964500427,
+    "pae": 0.1264798492193222,
+    "composite": 0.7856489550669988
+  },
+  {
+    "sequence": "DKFQPNARSHWCLWDSWYEVKNIQPFWGGTPDG",
+    "ppl": 23.880325317382812,
+    "entropy": 2.821244716644287,
+    "plddt": 0.9579301476478577,
+    "iptm": 0.7718384265899658,
+    "pae": 0.1254817247390747,
+    "composite": 0.7850375036795935
+  },
+  {
+    "sequence": "CGMCEMQMFSAVSSVLIYDEQLGVQLIIIHWCD",
+    "ppl": 22.727115631103516,
+    "entropy": 2.813382863998413,
+    "plddt": 0.9578844308853149,
+    "iptm": 0.7677940726280212,
+    "pae": 0.12412358075380325,
+    "composite": 0.7850258220434189
+  }
+]

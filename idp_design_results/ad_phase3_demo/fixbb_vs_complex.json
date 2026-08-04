@@ -1,0 +1,21 @@
+{
+  "fixbb": {
+    "plddt": 0.9581313133239746,
+    "iptm": 0.770611584186554,
+    "pae": 0.12144549936056137,
+    "ppl": 26.305870056152344,
+    "entropy": 2.820626735687256
+  },
+  "complex": {
+    "plddt": 0.9570767283439636,
+    "iptm": 0.7591326832771301,
+    "pae": 0.1256290078163147,
+    "ppl": 21.722064971923828,
+    "entropy": 2.8344361782073975
+  },
+  "fixbb_avg_iptm": 0.7725236713886261,
+  "complex_avg_iptm": 0.7555972814559937,
+  "fixbb_avg_plddt": 0.9578006863594055,
+  "complex_avg_plddt": 0.9570207238197327,
+  "conclusion": "Complex mode reduces overconfidence by including antigen context"
+}

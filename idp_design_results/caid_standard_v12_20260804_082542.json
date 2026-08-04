@@ -1,0 +1,14 @@
+{
+  "benchmark": "V12 CAID Standard \u2014 Multi-IDP Balanced",
+  "model": "V20 (head_seq unfrozen)",
+  "n_ordered_residues": 27688,
+  "n_disordered_residues": 207,
+  "n_ordered_complexes": 80,
+  "n_disordered_antigens": 18,
+  "class_balance": 0.0074206847105215985,
+  "auc_roc": 0.46983537750531457,
+  "auc_pr": 0.007254319235296328,
+  "ordered_mean": 0.15517151901001697,
+  "disordered_mean": 0.14419101112058774,
+  "separation": -0.010980507889429225
+}

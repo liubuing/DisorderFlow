@@ -1,0 +1,2 @@
+2026-05-29 16:15:21,069 Running colabfold 1.6.1
+2026-05-29 16:15:21,081 WARNING: no GPU detected, will be using CPU

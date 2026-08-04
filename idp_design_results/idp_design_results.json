@@ -1,0 +1,370 @@
+{
+  "target_pdb": "data/misfolding_targets/2NAO_model1_A_1-42.pdb",
+  "scaffold_pdb": "data/misfolding_targets/5IMK.pdb",
+  "disorder_threshold": 0.3,
+  "num_segments": 1,
+  "num_samples": 2,
+  "ordered_segments": [
+    {
+      "start": 13,
+      "end": 25,
+      "length": 12,
+      "total_span": 13,
+      "mean_disorder": 0.20582332977881798,
+      "min_disorder": 0.06670212745666504,
+      "max_disorder": 0.41369080543518066
+    }
+  ],
+  "ranked_designs": [
+    {
+      "sequence": "DDASAERPDLKDLKWLWSQNWLYTITGDRPTDV",
+      "ppl": 71.25084686279297,
+      "entropy": 2.1031956672668457,
+      "plddt": 0.9636389017105103,
+      "iptm": 0.8553569316864014,
+      "pae": 0.09434164315462112,
+      "composite_score": 0.7762058010647693,
+      "sample_idx": 0,
+      "segment_start": 13,
+      "segment_end": 25,
+      "segment_mean_disorder": 0.20582332977881798,
+      "epitope_mode": "extracted",
+      "af2_success": false,
+      "full_ab_seq": "RPILEVPESVTGPWKGDVNLPCTYDDDASAERPLVKWLVQRGSDPVTIFLDLKDLKWLQQAKYQGRLHVSHKVPGDVSLQLSTLEMDDRSHYTCEVWSQNWLYTITGDRPTDVLRVQKXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "full_ab_mutations": [
+        [
+          26,
+          "P",
+          "D"
+        ],
+        [
+          27,
+          "L",
+          "D"
+        ],
+        [
+          28,
+          "Q",
+          "A"
+        ],
+        [
+          29,
+          "G",
+          "S"
+        ],
+        [
+          30,
+          "Y",
+          "A"
+        ],
+        [
+          31,
+          "T",
+          "E"
+        ],
+        [
+          32,
+          "Q",
+          "R"
+        ],
+        [
+          33,
+          "V",
+          "P"
+        ],
+        [
+          51,
+          "R",
+          "D"
+        ],
+        [
+          52,
+          "D",
+          "L"
+        ],
+        [
+          53,
+          "S",
+          "K"
+        ],
+        [
+          54,
+          "S",
+          "D"
+        ],
+        [
+          55,
+          "G",
+          "L"
+        ],
+        [
+          56,
+          "D",
+          "K"
+        ],
+        [
+          57,
+          "H",
+          "W"
+        ],
+        [
+          58,
+          "I",
+          "L"
+        ],
+        [
+          97,
+          "T",
+          "W"
+        ],
+        [
+          98,
+          "W",
+          "S"
+        ],
+        [
+          100,
+          "T",
+          "N"
+        ],
+        [
+          101,
+          "P",
+          "W"
+        ],
+        [
+          102,
+          "D",
+          "L"
+        ],
+        [
+          103,
+          "G",
+          "Y"
+        ],
+        [
+          104,
+          "N",
+          "T"
+        ],
+        [
+          105,
+          "Q",
+          "I"
+        ],
+        [
+          106,
+          "V",
+          "T"
+        ],
+        [
+          107,
+          "V",
+          "G"
+        ],
+        [
+          108,
+          "R",
+          "D"
+        ],
+        [
+          109,
+          "D",
+          "R"
+        ],
+        [
+          110,
+          "K",
+          "P"
+        ],
+        [
+          111,
+          "I",
+          "T"
+        ],
+        [
+          112,
+          "T",
+          "D"
+        ],
+        [
+          113,
+          "E",
+          "V"
+        ]
+      ],
+      "rank": 1,
+      "quality_label": "HIGH"
+    },
+    {
+      "sequence": "GLPWDVQRKTGDGMSQDAPCQLFPRQAICQNEM",
+      "ppl": 87.86067199707031,
+      "entropy": 2.103195905685425,
+      "plddt": 0.9636390209197998,
+      "iptm": 0.8553569316864014,
+      "pae": 0.09434164315462112,
+      "composite_score": 0.75959599977235,
+      "sample_idx": 1,
+      "segment_start": 13,
+      "segment_end": 25,
+      "segment_mean_disorder": 0.20582332977881798,
+      "epitope_mode": "extracted",
+      "af2_success": false,
+      "full_ab_seq": "RPILEVPESVTGPWKGDVNLPCTYDGLPWDVQRLVKWLVQRGSDPVTIFLKTGDGMSQQQAKYQGRLHVSHKVPGDVSLQLSTLEMDDRSHYTCEVDAPCQLFPRQAICQNEMLRVQKXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "full_ab_mutations": [
+        [
+          26,
+          "P",
+          "G"
+        ],
+        [
+          28,
+          "Q",
+          "P"
+        ],
+        [
+          29,
+          "G",
+          "W"
+        ],
+        [
+          30,
+          "Y",
+          "D"
+        ],
+        [
+          31,
+          "T",
+          "V"
+        ],
+        [
+          33,
+          "V",
+          "R"
+        ],
+        [
+          51,
+          "R",
+          "K"
+        ],
+        [
+          52,
+          "D",
+          "T"
+        ],
+        [
+          53,
+          "S",
+          "G"
+        ],
+        [
+          54,
+          "S",
+          "D"
+        ],
+        [
+          56,
+          "D",
+          "M"
+        ],
+        [
+          57,
+          "H",
+          "S"
+        ],
+        [
+          58,
+          "I",
+          "Q"
+        ],
+        [
+          97,
+          "T",
+          "D"
+        ],
+        [
+          98,
+          "W",
+          "A"
+        ],
+        [
+          99,
+          "Q",
+          "P"
+        ],
+        [
+          100,
+          "T",
+          "C"
+        ],
+        [
+          101,
+          "P",
+          "Q"
+        ],
+        [
+          102,
+          "D",
+          "L"
+        ],
+        [
+          103,
+          "G",
+          "F"
+        ],
+        [
+          104,
+          "N",
+          "P"
+        ],
+        [
+          105,
+          "Q",
+          "R"
+        ],
+        [
+          106,
+          "V",
+          "Q"
+        ],
+        [
+          107,
+          "V",
+          "A"
+        ],
+        [
+          108,
+          "R",
+          "I"
+        ],
+        [
+          109,
+          "D",
+          "C"
+        ],
+        [
+          110,
+          "K",
+          "Q"
+        ],
+        [
+          111,
+          "I",
+          "N"
+        ],
+        [
+          112,
+          "T",
+          "E"
+        ],
+        [
+          113,
+          "E",
+          "M"
+        ]
+      ],
+      "rank": 2,
+      "quality_label": "HIGH"
+    }
+  ]
+}

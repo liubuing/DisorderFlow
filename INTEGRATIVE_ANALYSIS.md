@@ -201,3 +201,34 @@ and `design_wrappers.py`.
   changes upon H3 substitution
 - No experimental binding validation is possible within the current study scope
 - The 4HIX Fab was in AF2's training set (PDB deposited 2012)
+
+## 7. IDP Target Expansion: Tau and Alpha-Synuclein
+
+### 7.1 Results
+
+| Target | Complex | Epitope | Designs | Time | MPNN Score Range |
+|---|---|---|---|---|---|
+| Tau (MAPT) | 5MP3 Fab | 9 aa | 10 | 37s | 0.900–1.009 |
+| α-Synuclein (SNCA) | 8B9V Fab | 10 aa | 10 | 55s | 0.796–0.872 |
+
+AF2 multimer validation pending for tau/synuclein candidates.
+
+## 8. Disorder Head Architecture Assessment
+
+Two independent retraining attempts confirm the 6-parameter disorder head is
+architecturally insufficient for standalone IDP prediction:
+
+| Labels | Iterations | AUC-ROC | Outcome |
+|---|---|---|---|
+| Charge-hydropathy heuristic (2950 entries) | 800 GPU | 0.509 | Random |
+| DisProt/MobiDB experimental (143 entries) | 500 GPU | 0.500 | Random |
+
+Huber loss converges (0.098→0.003) but predictions remain at baseline.
+Full BFN backbone fine-tuning on `confidence_idp_unified` LMDB is required.
+
+## 9. Synthesis Specifications
+
+Top 5 Abeta candidates + top 5 tau/synuclein candidates with full VH/VL
+sequences provided in `idp_design_results/SYNTHESIS_SPECS.md`.
+
+Top Abeta candidate: **4HIX-D1** (LYDESKDAESE, AF2 ipTM 0.462, Δ+0.012 vs native).

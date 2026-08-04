@@ -1,0 +1,60 @@
+{
+  "native_h3": "VRYDHYSGSSDY",
+  "epitope": "DAEFRH",
+  "designs": [
+    {
+      "label": "design_1_h3=LYDSSKGS...",
+      "plddt": null,
+      "iptm": null,
+      "ptm": null,
+      "max_pae": null,
+      "success": false,
+      "error": "[Errno 2] No such file or directory: '../venv/Scripts/colabfold_batch'"
+    },
+    {
+      "label": "design_2_h3=LYDQSKGS...",
+      "plddt": null,
+      "iptm": null,
+      "ptm": null,
+      "max_pae": null,
+      "success": false,
+      "error": "[Errno 2] No such file or directory: '../venv/Scripts/colabfold_batch'"
+    },
+    {
+      "label": "design_3_h3=LYDASKDS...",
+      "plddt": null,
+      "iptm": null,
+      "ptm": null,
+      "max_pae": null,
+      "success": false,
+      "error": "[Errno 2] No such file or directory: '../venv/Scripts/colabfold_batch'"
+    },
+    {
+      "label": "design_4_h3=LYDSSKDA...",
+      "plddt": null,
+      "iptm": null,
+      "ptm": null,
+      "max_pae": null,
+      "success": false,
+      "error": "[Errno 2] No such file or directory: '../venv/Scripts/colabfold_batch'"
+    },
+    {
+      "label": "design_5_h3=LYDSSVGS...",
+      "plddt": null,
+      "iptm": null,
+      "ptm": null,
+      "max_pae": null,
+      "success": false,
+      "error": "[Errno 2] No such file or directory: '../venv/Scripts/colabfold_batch'"
+    },
+    {
+      "label": "native_VRYDHYSG...",
+      "plddt": null,
+      "iptm": null,
+      "ptm": null,
+      "max_pae": null,
+      "success": false,
+      "error": "[Errno 2] No such file or directory: '../venv/Scripts/colabfold_batch'"
+    }
+  ]
+}

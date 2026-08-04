@@ -1,0 +1,12 @@
+{
+  "plan": "WETLAB_VALIDATION_PLAN_V15",
+  "step": "S0 sequence completion",
+  "date": "20260705_223632",
+  "total_candidates": 25,
+  "completed": 25,
+  "unpaired": 0,
+  "scfv_format": "VH-(G4S)3-VL-HHHHHH",
+  "signal_peptide": "MGWSCIILFLVATATGVHS",
+  "codon_host": "E.coli K12",
+  "note": "For literature antibodies, framework VH/VL from closest PDB used. CDR-H3 sequences are from candidate data (literature/patent origin). Manual verification of CDR-H3 grafting recommended before synthesis."
+}
