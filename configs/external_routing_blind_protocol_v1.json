@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_external_blind_profile_generation",
+  "predictor": {
+    "package": "metapredict",
+    "package_version": "3.0.2",
+    "model_version": "V3",
+    "device": "cpu",
+    "normalized": true,
+    "invalid_sequence_action": "fail"
+  },
+  "model_selection": {
+    "initialization_checkpoint": "logs/v5_1_corrective/train/bfn_v5_1_stage5_corrective_2026_07_21__07_19_10_corrective/checkpoints/best.pt",
+    "initialization_scope": "prior Stage 5 saw 804 lookup IDs; all represented homology groups are forced into the new training split",
+    "training_split": "phase3_v5_1_routing_train_dev_v2/train (2867)",
+    "development_split": "phase3_v5_1_routing_train_dev_v2/dev (85 prior-stage-unseen)",
+    "checkpoint_metric": "disorder_mismatch_rank_gap",
+    "seed": 2093,
+    "legacy_validation_allowed": false,
+    "external_blind_allowed": false
+  },
+  "post_freeze_evaluation_order": [
+    "development_full",
+    "legacy_validation_full",
+    "external_blind_baseline_full",
+    "external_blind_candidate_full"
+  ],
+  "external_blind": {
+    "dataset": "SAbDab2 abag official test, 717 processed complexes",
+    "independence": "PDB, antigen and CDR-H3 isolated; VH/VL not isolated",
+    "attempts_per_checkpoint": 1,
+    "subsampling_forbidden": true,
+    "checkpoint_selection_forbidden": true,
+    "candidate_gates": {
+      "factual_minus_mismatched_nll_mean_at_most": -0.01,
+      "factual_minus_mismatched_nll_ci95_upper_below": 0.0,
+      "factual_minus_shuffled_nll_mean_at_most": -0.005,
+      "factual_minus_shuffled_nll_ci95_upper_below": 0.0,
+      "shuffled_mean_abs_logit_change_at_least": 0.01,
+      "shuffled_argmax_hamming_at_least": 0.01,
+      "factual_nll_degradation_vs_baseline_at_most": 0.05
+    }
+  },
+  "failure_policy": "A failed blind gate is reported as failure. No tuning against this blind set is permitted."
+}

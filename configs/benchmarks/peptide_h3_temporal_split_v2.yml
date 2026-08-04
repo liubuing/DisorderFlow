@@ -1,0 +1,42 @@
+schema_version: 2
+status: frozen_after_v1_structural_count_failure_before_v2_preprocessing
+purpose: proteinmpnn_post_training_flexible_peptide_h3_benchmark
+supersedes: peptide_h3_temporal_split_v1 final had only seven structural complexes
+source:
+  archive: data/sabdab2_current/splits.tar.gz
+  official_csv_member: splits_final/abag_split.csv
+proteinmpnn_training_cutoff_exclusive: '2021-08-02'
+temporal_final_cutoff_inclusive: '2023-01-01'
+exclude_scored_results:
+  - results/publication/h3_epitope_delta_dev_v1/results.json
+  - results/publication/h3_ecls_adaptation_v1/results.json
+eligibility:
+  minimum_antigen_length: 5
+  maximum_antigen_length: 50
+  require_peptide_antigen_type: true
+  exclude_protein_antigen_type: true
+  minimum_h3_length: 4
+  maximum_h3_length: 30
+  heavy_atom_contact_cutoff_angstrom: 4.5
+  minimum_contacting_h3_positions: 1
+homology_isolation:
+  vh_sequence:
+    source_axis: vh_sequence_exact
+    minimum_identity: 0.9
+    minimum_coverage: 0.9
+  vl_sequence:
+    source_axis: vl_sequence_exact
+    minimum_identity: 0.9
+    minimum_coverage: 0.9
+  cdr_h3_sequence:
+    source_axis: cdr_h3_sequence_exact
+    minimum_identity: 0.8
+    minimum_coverage: 0.8
+  antigen_sequence:
+    source_axis: antigen_sequence_exact
+    minimum_identity: 0.7
+    minimum_coverage: 0.8
+policy:
+  conflict_action: exclude_from_later_split
+  final_model_forward: forbidden
+  profile_generation: forbidden

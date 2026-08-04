@@ -55,7 +55,7 @@ def annotate_homology_clusters(entries, field_thresholds, coverage=0.8,
 
 
 def grouped_train_val_split(entries, val_ratio=0.1, seed=2022,
-                            cluster_fields=(), fixed_val_ids=()):
+                            cluster_fields=(), fixed_val_ids=(), fixed_train_ids=()):
     """Split connected homology groups without allowing any group across splits."""
     parent = list(range(len(entries)))
 
@@ -86,12 +86,24 @@ def grouped_train_val_split(entries, val_ratio=0.1, seed=2022,
         groups.setdefault(find(index), []).append(index)
 
     fixed = {str(value).casefold() for value in fixed_val_ids}
+    fixed_train = {str(value).casefold() for value in fixed_train_ids}
     val_roots = {
         root for root, indices in groups.items()
         if any(str(entries[index].get('pdb_id', entries[index].get('id', ''))).casefold()
                in fixed for index in indices)
     }
-    candidates = [root for root in groups if root not in val_roots]
+    train_roots = {
+        root for root, indices in groups.items()
+        if any(str(entries[index].get('id', entries[index].get('pdb_id', ''))).casefold()
+               in fixed_train for index in indices)
+    }
+    conflict = val_roots & train_roots
+    if conflict:
+        raise ValueError(f'{len(conflict)} groups are fixed to both train and validation')
+    candidates = [
+        root for root in groups
+        if root not in val_roots and root not in train_roots
+    ]
     random.Random(seed).shuffle(candidates)
     candidates.sort(key=lambda root: len(groups[root]))
     target = max(len(val_roots), round(len(entries) * val_ratio))

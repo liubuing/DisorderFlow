@@ -1,0 +1,19 @@
+schema_version: 1
+status: frozen_before_first_development_run
+purpose: develop_epitope_conditioned_h3_likelihood_metric
+split_audit: data/peptide_h3_publication_split_v4/audit.json
+development_lmdb: data/sabdab2_abag_project_split_v2/dev.lmdb
+proteinmpnn:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  model_name: v_48_020
+  seed: 2261
+shuffle_trials: 200
+development_gates:
+  minimum_median_native_delta_percentile: 0.7
+  minimum_fraction_delta_percentile_at_least_0_8: 0.5
+  require_delta_median_above_complex_median: true
+policy:
+  final_model_forward: forbidden
+  candidate_scores_are_repeated_measures: true
+  inference_unit: biological_complex

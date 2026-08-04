@@ -1,0 +1,24 @@
+{
+  "schema_version": 3,
+  "status": "frozen_before_project_final_profile_generation",
+  "supersedes": "v2 development candidate failed before final evaluation",
+  "training_config": "configs/train/bfn_v5_1_stage5_metapredict_position_v3.yml",
+  "training_seed": 2131,
+  "development_boundary": "728 adaptation / 187 project-dev",
+  "final_boundary": {
+    "n": 230,
+    "ids_sha256": "5905a1e3e4311bd218497cce958dc6eea40457abab8f98cac1224ac7e2a7b068",
+    "status": "sealed",
+    "attempts_per_checkpoint": 1
+  },
+  "candidate_gates": {
+    "factual_minus_mismatched_nll_mean_at_most": -0.005,
+    "factual_minus_mismatched_nll_ci95_upper_below": 0.0,
+    "factual_minus_shuffled_nll_mean_at_most": -0.005,
+    "factual_minus_shuffled_nll_ci95_upper_below": 0.0,
+    "shuffled_mean_abs_logit_change_at_least": 0.01,
+    "shuffled_argmax_hamming_at_least": 0.005,
+    "factual_nll_degradation_vs_baseline_at_most": 0.05
+  },
+  "failure_policy": "A failed 230-case final gate is terminal for this dataset; no retuning or repeat evaluation is permitted."
+}

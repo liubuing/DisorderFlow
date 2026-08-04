@@ -1,0 +1,49 @@
+schema_version: 4
+status: development_split_audit_with_official_h3_coordinate_mapping
+supersedes: peptide_h3_publication_split_v3 approximate geometry-window H3 labels
+source:
+  archive: data/sabdab2_current/splits.tar.gz
+  official_csv_member: splits_final/abag_split.csv
+  adaptation_lmdb: data/sabdab2_abag_project_split_v2/adaptation.lmdb
+  development_lmdb: data/sabdab2_abag_project_split_v2/dev.lmdb
+  sealed_final_lmdb: data/sabdab2_abag_project_split_v2/final.lmdb
+eligibility:
+  minimum_antigen_length: 5
+  maximum_antigen_length: 50
+  require_peptide_antigen_type: true
+  exclude_protein_antigen_type: true
+  minimum_h3_length: 4
+  maximum_h3_length: 30
+  heavy_atom_contact_cutoff_angstrom: 4.5
+  minimum_contacting_h3_positions: 1
+isolation_axes:
+  - pdb_id
+  - official_ab_cluster
+  - official_cdrh3_cluster
+  - official_antigen_cluster
+  - vh_sequence_exact
+  - vl_sequence_exact
+  - cdr_h3_sequence_exact
+  - antigen_sequence_exact
+homology_isolation:
+  vh_sequence:
+    source_axis: vh_sequence_exact
+    minimum_identity: 0.9
+    minimum_coverage: 0.9
+  vl_sequence:
+    source_axis: vl_sequence_exact
+    minimum_identity: 0.9
+    minimum_coverage: 0.9
+  cdr_h3_sequence:
+    source_axis: cdr_h3_sequence_exact
+    minimum_identity: 0.8
+    minimum_coverage: 0.8
+  antigen_sequence:
+    source_axis: antigen_sequence_exact
+    minimum_identity: 0.7
+    minimum_coverage: 0.8
+policy:
+  conflict_action: exclude_from_later_split
+  final_model_forward: forbidden
+  profile_generation: forbidden
+  note: Official SAbDab2 CDRH3 is exactly aligned to resolved heavy-chain coordinates.

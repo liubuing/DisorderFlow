@@ -1,0 +1,13 @@
+schema_version: 1
+status: frozen_before_first_run
+purpose: inverse_folding_scorer_diagnostic_not_binding_validation
+reference_config: configs/benchmarks/peptide_h3_sanity_v2.yml
+proteinmpnn:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  model_name: v_48_020
+  seed: 2231
+shuffle_trials: 200
+diagnostic_gates:
+  minimum_native_shuffle_percentile: 0.8
+  required_reference_pass_fraction: 0.75

@@ -1,0 +1,115 @@
+# Disorder-Aware Training V2 — Full Fix Integration
+#
+# Integrates all 4 fixes for the disorder design pipeline:
+#   Fix 1: Experimental labels (B-factors / MobiDB / RMSF) — no circular dependency
+#   Fix 2: disorder_label injected via DisorderAugmentedDataset — head loss fires
+#   Fix 3: Focal-weighted loss (gamma=4) + balanced oversampling (boost=5)
+#   Fix 4: Ablation-ready (run scripts/ablation_disorder_conditioning.py after training)
+#
+# Prerequisites:
+#   1. Run: python scripts/build/build_disorder_lookup_experimental.py
+#   2. Verify: data/sabdab_disorder_lookup_experimental.pkl exists
+#
+# Usage:
+#   python train.py configs/train/bfn_disorder_v2_fixed.yml \
+#       --finetune ./logs/disorder_head_retrain.pt \
+#       --device cuda --no_amp \
+#       --disorder-lookup data/sabdab_disorder_lookup_experimental.pkl
+#
+# After training, validate conditioning:
+#   python scripts/ablation_disorder_conditioning.py \
+#       --checkpoint <new_checkpoint_path> --n-samples 30
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      disorder_condition_scale: 1.0
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    # Core design losses (reduced to make room for disorder)
+    seq: 1.0
+    plddt: 1.5
+    iptm: 2.0
+    pae: 0.2
+    # Disorder losses (Fix 3: focal weighting)
+    disorder: 1.5
+    disorder_focal_gamma: 4.0      # disordered residues get up to 5x weight
+    disorder_rank: 0.5
+    disorder_rank_temperature: 1.0
+    disorder_rank_min_gap: 0.05
+    # Conditioning alignment
+    disorder_align: 0.08
+    disorder_align_scale: 1.0
+    # Regularization
+    diversity: 0.02
+    anti_degen: 0.02
+    head_dropout: 0.15
+    encoder_dropout: 0.0
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+
+train:
+  loss_weights:
+    seq: 1.0
+    plddt: 1.5
+    iptm: 2.0
+    pae: 0.2
+    disorder: 1.5
+    disorder_rank: 0.5
+  freeze_backbone: true
+  unfreeze_encoder_layers: 2       # let encoder adapt to disorder signal
+  max_iters: 8000
+  val_freq: 200
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 300
+  seed: 2030
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 8.e-5                      # slightly lower for stability
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 25
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/train.lmdb
+    max_residues: 250
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+    # Fix 3: balanced oversampling (configured in code via DisorderBalancedSampler)
+    disorder_balance_boost: 5.0
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab_phase3_processed/val.lmdb
+    max_residues: 350
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  # Fix 1 + Fix 2: experimental disorder lookup
+  # Feeds BOTH epitope_disorder_profile (conditioning) AND disorder_label (head loss)
+  disorder_lookup: data/sabdab_disorder_lookup_experimental.pkl

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "engineering_opencl_smoke_before_v3_protocol",
+  "chains": {
+    "antibody": ["H", "L"],
+    "peptide": "P"
+  },
+  "sampling": {
+    "platform": "OpenCL",
+    "ph": 7.4,
+    "temperature_kelvin": 300.0,
+    "friction_per_ps": 1.0,
+    "timestep_fs": 2.0,
+    "minimization_tolerance_kj_mol_nm": 10.0,
+    "minimization_iterations": 500,
+    "snapshot_minimization_iterations": 250,
+    "equilibration_steps": 100,
+    "production_steps": 250,
+    "antibody_heavy_atom_restraint": 5000.0,
+    "peptide_backbone_restraint": 25.0,
+    "contact_cutoff_angstrom": 4.5,
+    "seeds": [2903],
+    "quality_control": {
+      "max_antibody_rmsd": 0.5,
+      "min_peptide_rmsd": 0.05,
+      "max_peptide_rmsd": 3.0,
+      "min_contact_retention": 0.5
+    }
+  }
+}

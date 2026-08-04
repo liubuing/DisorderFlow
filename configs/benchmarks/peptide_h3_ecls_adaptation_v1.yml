@@ -1,0 +1,25 @@
+schema_version: 1
+status: frozen_after_small_development_discovery_before_cluster_confirmation_run
+purpose: confirm_epitope_conditioned_likelihood_shift_on_exposed_adaptation_data
+split_audit: data/peptide_h3_publication_split_v4/audit.json
+benchmark_split: adaptation
+lmdb: data/sabdab2_abag_project_split_v2/adaptation.lmdb
+inference_axis: official_antigen_cluster
+sampling:
+  one_record_per_inference_unit: true
+proteinmpnn:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  model_name: v_48_020
+  seed: 2281
+shuffle_trials: 200
+statistics:
+  bootstrap_trials: 10000
+development_gates:
+  minimum_median_ecls_advantage: 0.1
+  minimum_fraction_positive_ecls_advantage: 0.7
+  require_ecls_mean_ci95_lower_above_zero: true
+policy:
+  data_classification: exposed_adaptation_confirmation_not_final
+  final_model_forward: forbidden
+  inference_unit: official_antigen_cluster

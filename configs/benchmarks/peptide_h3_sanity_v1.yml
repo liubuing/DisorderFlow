@@ -1,0 +1,44 @@
+schema_version: 1
+status: frozen_before_first_run
+purpose: scorer_implementation_diagnostic_not_binding_validation
+contact_cutoff_angstrom: 4.5
+sidechain_cutoff_angstrom: 5.0
+shuffle_trials: 200
+seed: 2211
+references:
+  - pdb: 4HIX
+    antibody: Bapineuzumab
+    path: data/anti_abeta_refs/4HIX.pdb
+    sha256: 2BB5404A3B66741F02E89B899F36982FB33F16F042149E3614435F4748004201
+    heavy_chain: H
+    light_chain: L
+    peptide_chain: A
+    expected_h3_sequence: VRYDHYSGSSDY
+    expected_peptide_sequence: DAEFRH
+  - pdb: 5CSZ
+    antibody: Gantenerumab
+    path: data/anti_abeta_refs/5CSZ.pdb
+    sha256: BEFDC21EA697332672570469E58DD2D22A6EACF44384DAFAF9E19C1589664E83
+    heavy_chain: A
+    light_chain: B
+    peptide_chain: E
+    expected_h3_sequence: ARGKGYVRYFDV
+    expected_peptide_sequence: DAEFRHDSGY
+  - pdb: 4XXD
+    antibody: Solanezumab
+    path: data/anti_abeta_refs/4XXD.pdb
+    sha256: BAEA668286468C5102C61A02E32EFA2BFAB891D1C182B527B9882EC8368EE613
+    heavy_chain: E
+    light_chain: D
+    peptide_chain: F
+    expected_h3_sequence: ASGDY
+    expected_peptide_sequence: KLVFFAEDV
+  - pdb: 5VZY
+    antibody: Crenezumab
+    path: data/anti_abeta_refs/5VZY.pdb
+    sha256: 03C79B40A3876CB2DA2B7C27BCD78F11E369D299D8F627C144761F3297B1F953
+    heavy_chain: H
+    light_chain: L
+    peptide_chain: A
+    expected_h3_sequence: ASGDY
+    expected_peptide_sequence: HHQKLVFFAEDV

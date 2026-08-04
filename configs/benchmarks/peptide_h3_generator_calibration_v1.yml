@@ -1,0 +1,29 @@
+schema_version: 1
+status: frozen_after_mpnn_adaptation_and_before_reusable_analysis_artifact
+purpose: generator_aware_calibration_of_complex_minus_lambda_times_apo_nll
+adaptation_results: results/publication/h3_candidate_reranking_adaptation_mpnn_v1/results.json
+development_results: results/publication/h3_candidate_reranking_dev_v1/results.json
+score:
+  name: generator_calibrated_likelihood_contrast
+  formula: complex_nll - lambda * apo_nll
+  lower_is_better: true
+calibration:
+  proteinmpnn:
+    source: adaptation
+    lambda_grid_start: 0.0
+    lambda_grid_stop: 3.0
+    lambda_grid_step: 0.05
+    selection_rule: smallest_lambda_with_mean_nnr_at_least_0.95_and_top1_at_least_0.90
+    minimum_mean_nnr: 0.95
+    minimum_top1_fraction: 0.90
+  bfn:
+    lambda: 1.0
+    source: frozen_ecls_no_generator_specific_adaptation_pool
+  esm_if:
+    lambda: 1.0
+    source: frozen_ecls_no_generator_specific_adaptation_pool
+statistics:
+  inference_unit: official_antigen_cluster
+  bootstrap_trials: 10000
+  bootstrap_seed: 2521
+claim_boundary: retrospective_native_spike_retrieval_not_binding_or_novel_candidate_quality

@@ -49,6 +49,7 @@ class AntibodyBFN_Receiver(nn.Module):
             num_layers = opt.pop('num_layers')
         # Pop receiver-level options before passing to GAEncoder
         opt.pop('pair_routing', None)
+        opt.pop('direct_position_routing', None)
         opt.pop('contrastive_order_sensitive', None)
         opt.pop('disorder_condition_scale', None)
         self.encoder = GAEncoder(res_feat_dim, pair_feat_dim, num_layers, ga_block_opt=opt, dropout=encoder_dropout)
@@ -119,6 +120,7 @@ class AntibodyBFN_Receiver(nn.Module):
         # where pair_aggr aggregates pair_feat over the antigen dimension
         # and is projected from pair_dim to res_dim.
         self.pair_routing = encoder_opt.get('pair_routing', False)
+        self.direct_position_routing = encoder_opt.get('direct_position_routing', False)
 
         # Output Heads
         if self.pair_routing:
@@ -130,6 +132,20 @@ class AntibodyBFN_Receiver(nn.Module):
             self.disorder_proj = nn.Linear(1, res_feat_dim)
             nn.init.zeros_(self.disorder_proj.weight)
             nn.init.zeros_(self.disorder_proj.bias)
+            # Position-sensitive routing couples antigen residue j's disorder
+            # value to the CDR-antigen pair feature (i, j). This preserves the
+            # profile ordering that global mean pooling necessarily discards.
+            self.disorder_pair_norm = nn.LayerNorm(pair_feat_dim)
+            self.disorder_route_score = nn.Linear(pair_feat_dim, 1)
+            self.disorder_pair_value = nn.Linear(pair_feat_dim, res_feat_dim)
+            self.disorder_value = nn.Sequential(
+                nn.Linear(2, res_feat_dim),
+                nn.Tanh(),
+            )
+            if self.direct_position_routing:
+                self.disorder_position_head = nn.Linear(res_feat_dim, num_classes)
+                nn.init.zeros_(self.disorder_position_head.weight)
+                nn.init.zeros_(self.disorder_position_head.bias)
             # MLP: res_feat + pair_aggr_proj + antigen_pooled + disorder_cond → logits
             in_dim = res_feat_dim * 4
             self.head_seq = nn.Sequential(
@@ -365,13 +381,15 @@ class AntibodyBFN_Receiver(nn.Module):
             # Pair Feature Routing: concat(res_feat, pair_aggr_proj, ag_pooled, disorder_cond) → MLP
             pair_aggr_proj = self.pair_proj(pair_aggr)  # (N, L, pair_dim) → (N, L, res_dim)
             ag_expanded = ag_feat_pooled.unsqueeze(1).expand(-1, features.shape[1], -1)
-            # WAY4 V6/V7: disorder-conditioned — epitope disorder profile per CDR residue
+            # Global mean preserves checkpoint compatibility; position context
+            # carries the residue-level signal needed for profile specificity.
             # epitope_disorder can be:
             #   - None: no disorder conditioning (fixbb or legacy)
             #   - (N, 1): scalar mean disorder, broadcast to all residues (V6)
             #   - (N, L): per-residue disorder profile [0,1] (V7 P0-fix-B)
             #     Non-antigen positions should be 0; antigen positions have disorder values.
             disorder_cond = epitope_disorder
+            position_disorder_feat = None
             if disorder_cond is not None and disorder_cond.dim() == 2:
                 if disorder_cond.shape[1] == 1:
                     # V6 scalar: (N, 1) → broadcast to (N, L, 1)
@@ -389,10 +407,17 @@ class AntibodyBFN_Receiver(nn.Module):
                     pooled = (pooled / max(self.disorder_condition_scale, 1e-6)).clamp(0.0, 1.0)
                     disorder_cond = pooled.unsqueeze(1).expand(-1, features.shape[1], -1)
                 disorder_feat = self.disorder_proj(disorder_cond)
+                if epitope_disorder.shape[1] != 1:
+                    position_disorder_feat = self._position_disorder_context(
+                        pair_feat, epitope_disorder, mask_antigen)
+                    if not self.direct_position_routing:
+                        disorder_feat = disorder_feat + position_disorder_feat
             else:
                 disorder_feat = torch.zeros(features.shape[0], features.shape[1], self.res_feat_dim, device=features.device)
             seq_input = torch.cat([features, pair_aggr_proj, ag_expanded, disorder_feat], dim=-1)
             pred_seq = self.head_seq(seq_input)
+            if self.direct_position_routing and position_disorder_feat is not None:
+                pred_seq = pred_seq + self.disorder_position_head(position_disorder_feat)
         elif self.pair_routing:
             pred_seq = self.head_seq_fixbb(features)  # fixbb: pair routing enabled but no antigen
         else:
@@ -520,3 +545,24 @@ class AntibodyBFN_Receiver(nn.Module):
                 pred_pae = torch.sigmoid(pae_backbone + pae_seq)
 
         return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact, pred_contrastive
+
+    def _position_disorder_context(self, pair_feat, profile, mask_antigen):
+        """Route residue-level antigen disorder through CDR-antigen pair features."""
+        length = pair_feat.shape[1]
+        profile = profile[:, :length].float().clamp(0.0, 1.0)
+        if mask_antigen is None:
+            antigen_mask = profile.ne(0)
+        else:
+            antigen_mask = mask_antigen[:, :length].bool()
+        pair = self.disorder_pair_norm(pair_feat[:, :length, :length])
+        route_logits = self.disorder_route_score(pair).squeeze(-1)
+        route_logits = route_logits.masked_fill(~antigen_mask.unsqueeze(1), -1e4)
+        route = torch.softmax(route_logits, dim=2) * antigen_mask.unsqueeze(1)
+        route = route / route.sum(dim=2, keepdim=True).clamp(min=1e-8)
+        pair_value = torch.tanh(self.disorder_pair_value(pair))
+        profile_mean = ((profile * antigen_mask).sum(dim=1, keepdim=True)
+                        / antigen_mask.sum(dim=1, keepdim=True).clamp(min=1))
+        centered_profile = (profile - profile_mean) * antigen_mask
+        profile_value = self.disorder_value(
+            torch.stack((centered_profile, centered_profile.square()), dim=-1)).unsqueeze(1)
+        return (route.unsqueeze(-1) * pair_value * profile_value).sum(dim=2)

@@ -21,6 +21,7 @@ from state_contact_scorer import (  # noqa: E402
     generate_contact_guided_variants,
     score_contact_guided_variants,
 )
+from disorderflow.utils.protein.constants import ChothiaCDRRange  # noqa: E402
 
 
 def parse_args():
@@ -32,7 +33,21 @@ def parse_args():
     parser.add_argument("--max-mutations", type=int, default=4)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--contact-cutoff", type=float, default=8.0)
+    parser.add_argument("--reference", choices=["4HIX", "5CSZ"], help="Restrict generation to one reference")
+    parser.add_argument("--cdr", choices=["H3"], help="Restrict mutations to a Chothia CDR")
     return parser.parse_args()
+
+
+def allowed_paratope_positions(contact_map, cdr):
+    if cdr is None:
+        return None
+    if cdr != "H3":
+        raise ValueError(f"Unsupported CDR restriction: {cdr}")
+    start, end = ChothiaCDRRange.H3
+    return [
+        index for index, residue in enumerate(contact_map["paratope_residues"])
+        if residue["chain"] in ("H", "A") and start <= int(residue["resid"]) <= end
+    ]
 
 
 def main():
@@ -43,16 +58,24 @@ def main():
         refs = (yaml.safe_load(f) or {}).get("abeta_references", [])
     if not refs:
         raise SystemExit(f"No references in {args.whitelist}")
+    if args.reference:
+        refs = [ref for ref in refs if ref["pdb"].upper() == args.reference]
+        if not refs:
+            raise SystemExit(f"Reference {args.reference} is not present in {args.whitelist}")
 
     all_rows = []
     details = []
     for ref_idx, ref in enumerate(refs):
         cmap = extract_contact_map(ref["path"], cutoff=args.contact_cutoff, peptide_chain=ref.get("peptide_chain"))
+        allowed_positions = allowed_paratope_positions(cmap, args.cdr)
+        if args.cdr and not allowed_positions:
+            raise SystemExit(f"{ref['pdb']} has no contact-map residues in Chothia {args.cdr}")
         variants = generate_contact_guided_variants(
             cmap,
             n=args.samples_per_ref,
             max_mutations=args.max_mutations,
             seed=args.seed + ref_idx,
+            allowed_positions=allowed_positions,
         )
         ranked = score_contact_guided_variants(cmap, variants)
         for r in ranked:
@@ -67,6 +90,13 @@ def main():
             "contact_map": {
                 **{k: v for k, v in cmap.items() if k != "contacts"},
                 "contacts": [asdict(c) for c in cmap["contacts"]],
+            },
+            "design_contract": {
+                "cdr": args.cdr,
+                "numbering": "Chothia",
+                "requested_max_mutations": args.max_mutations,
+                "allowed_paratope_positions_zero_based": allowed_positions,
+                "effective_max_mutations": min(args.max_mutations, len(allowed_positions)) if allowed_positions else args.max_mutations,
             },
             "ranked": ranked,
         })

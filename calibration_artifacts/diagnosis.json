@@ -1,0 +1,9 @@
+{
+  "pred_plddt_std": 0.00017794714084728893,
+  "pred_iptm_std": 0.000994669239708331,
+  "true_plddt_std": 0.02923933214385993,
+  "true_iptm_std": 0.013723107481248812,
+  "spearman_plddt": 0.10554029304029304,
+  "spearman_iptm": -0.3474358974358974,
+  "n_designs": 64
+}

@@ -1,0 +1,44 @@
+schema_version: 1
+status: frozen_after_seven_cluster_cross_generator_pilot
+purpose: confirm_ecls_correction_of_proteinmpnn_self_generation_bias
+split_audit: data/peptide_h3_publication_split_v4/audit.json
+benchmark_split: adaptation
+lmdb: data/sabdab2_abag_project_split_v2/adaptation.lmdb
+inference_axis: official_antigen_cluster
+selection:
+  one_record_per_inference_unit: true
+  n_records: 46
+  ids_sha256: 0476bf11439119fac10d35300d428d9fa0e7926006bddbb60fa687fa94a616eb
+generation:
+  seeds: [2411, 2423, 2437]
+  candidates_per_seed: 8
+  preserve_native_h3_length: true
+  native_spike: true
+  bfn:
+    enabled: false
+    checkpoint: data/pretrained_candidates/AntibodyDesignBFN_best.pt
+    stochastic: true
+  proteinmpnn:
+    enabled: true
+    script: ProteinMPNN/protein_mpnn_run.py
+    weights: ProteinMPNN/vanilla_model_weights
+    model_name: v_48_020
+    temperature: 0.1
+  esm_if:
+    enabled: false
+    model: esm_if1_gvp4_t16_142M_UR50
+    temperature: 0.1
+    context: multichain_coordinates_without_context_sequences
+ecls:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  model_name: v_48_020
+  seed: 2281
+  precomputed_work_dir: results/publication/h3_ecls_adaptation_v1/work
+statistics:
+  bootstrap_trials: 10000
+development_gates:
+  minimum_mean_nnr_gain_over_complex_nll: 0.20
+  minimum_generators_with_positive_mean_gain: 1
+  require_gain_ci95_lower_above_zero: true
+claim_boundary: proteinmpnn_native_spike_retrieval_not_novel_candidate_binding

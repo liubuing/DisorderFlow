@@ -55,10 +55,24 @@ def validate_sequences(
         list of dicts: [{sequence, plddt, ptm, iptm, max_pae, pdb_path, success, error?}, ...]
     """
     af_cfg = _load_af_config()
-    venv_path = af_cfg.get('af2', {}).get('venv', str(PROJECT_DIR / 'venv'))
-    colabfold_exe = str(Path(venv_path) / 'Scripts' / 'colabfold_batch.exe')
-    if not os.path.exists(colabfold_exe):
-        colabfold_exe = str(Path(venv_path) / 'Scripts' / 'colabfold_batch')
+    venv_candidates = [
+        str(PROJECT_DIR / 'venv_wsl' / 'bin' / 'colabfold_batch'),
+        str(PROJECT_DIR / 'venv' / 'bin' / 'colabfold_batch'),
+        str(PROJECT_DIR / 'venv' / 'Scripts' / 'colabfold_batch.exe'),
+        str(PROJECT_DIR / 'venv' / 'Scripts' / 'colabfold_batch'),
+        'colabfold_batch',
+    ]
+    colabfold_exe = None
+    for candidate in venv_candidates:
+        if os.path.exists(candidate) or (candidate == 'colabfold_batch'):
+            import shutil
+            found = shutil.which(candidate)
+            if found:
+                colabfold_exe = found
+                break
+    if colabfold_exe is None:
+        raise FileNotFoundError(
+            f"colabfold_batch not found. Tried: {venv_candidates}")
 
     base_dir = Path(output_dir or af_cfg.get('output_dir', 'alphafold_results'))
     base_dir.mkdir(exist_ok=True)

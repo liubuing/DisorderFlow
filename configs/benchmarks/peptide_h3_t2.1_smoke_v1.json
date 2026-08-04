@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "status": "frozen_t2.1_smoke_test",
+  "description": "Minimal smoke test: run T2.1 with 1 record to verify end-to-end",
+  "smoke_pdb": "HDOCKlite-v1.1/4HIX_receptor.pdb",
+  "smoke_ligand": "HDOCKlite-v1.1/4HIX_ligand_native.pdb",
+  "smoke_record_id": "smoke_4hix",
+  "expected_min_torsion_scale": 0,
+  "expected_arms": ["supplied_contacts", "all_contacts", "random_restraints", "null_structural"]
+}

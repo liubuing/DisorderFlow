@@ -71,23 +71,18 @@ def main():
         except Exception:
             pass  # Pattern may already be set
 
-    # Upload
+    # Upload using upload_large_folder (designed for large datasets)
     print(f"[upload] Source: {DATA_DIR}")
     print(f"[upload] This will take a long time for ~220GB of data.")
-    print(f"[upload] Progress will be shown below. Ctrl+C to pause (resumable).\n")
+    print(f"[upload] Using upload_large_folder with auto-resume and batching.\n")
 
     start = time.time()
     try:
-        api.upload_folder(
+        api.upload_large_folder(
             folder_path=str(DATA_DIR),
-            path_in_repo="data",
             repo_id=REPO_ID,
             repo_type=REPO_TYPE,
         )
-    except KeyboardInterrupt:
-        elapsed = time.time() - start
-        print(f"\n[paused] Interrupted after {elapsed/60:.1f} min. Re-run to resume.")
-        sys.exit(0)
     except Exception as e:
         elapsed = time.time() - start
         print(f"\n[error] {e}")

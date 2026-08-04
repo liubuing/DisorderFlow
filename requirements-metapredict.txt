@@ -1,0 +1,4 @@
+# Isolated Linux/WSL environment for cached profile generation.
+--extra-index-url https://download.pytorch.org/whl/cpu
+metapredict==3.0.2
+torch==2.5.1+cpu

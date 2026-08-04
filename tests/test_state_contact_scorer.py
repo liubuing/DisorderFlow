@@ -77,3 +77,25 @@ def test_contact_guided_variants_are_rankable():
     assert len(ranked) == 5
     assert ranked[0]["rank"] == 1
     assert "candidate_score" in ranked[0]
+
+
+def test_contact_guided_variants_respect_allowed_positions():
+    cmap = _toy_contact_map()
+    variants = generate_contact_guided_variants(
+        cmap, n=5, max_mutations=8, seed=3, allowed_positions=[1]
+    )
+    assert len(variants) == 5
+    assert all(v["n_mutations"] == 1 for v in variants)
+    assert all(v["sequence"][0] == "D" and v["sequence"][2] == "W" for v in variants)
+
+
+def test_contact_guided_variants_reject_invalid_constraints():
+    cmap = _toy_contact_map()
+    import pytest
+
+    with pytest.raises(ValueError, match="at least one position"):
+        generate_contact_guided_variants(cmap, allowed_positions=[])
+    with pytest.raises(ValueError, match="out-of-range"):
+        generate_contact_guided_variants(cmap, allowed_positions=[3])
+    with pytest.raises(ValueError, match="max_mutations"):
+        generate_contact_guided_variants(cmap, max_mutations=0)

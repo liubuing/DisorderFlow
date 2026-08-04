@@ -228,15 +228,13 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
             None includes every non-design chain (Complex mode); [] includes
             no additional chains (FixBB mode).
         device: torch device
-        disorder_guided: if True, scale the CDR sampling noise per-residue by the
-            disorder head's prediction (residues it reads as disordered get more
-            entropy → pliable CDRs; ordered framework-facing residues get less).
-            Requires a checkpoint with a trained disorder head. See task-A.
+        disorder_guided: exploratory whole-CDR temperature control using an
+            externally supplied epitope disorder profile. The model disorder
+            head is unsupported for inference and is never used as fallback.
         disorder_guided_strength: 0..1+ pliability scaling strength.
 
     Returns:
-        list of dicts, each with: sequence, ppl, entropy, plddt, iptm, pae,
-        and optionally disorder_score if model has disorder head.
+        list of dicts, each with: sequence, ppl, entropy, plddt, iptm, pae.
     """
     from disorderflow.utils.misc import seed_all
 
@@ -256,7 +254,7 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
     sample_opt = {
         'deterministic': not stochastic,
         'num_recycles': 3,
-        'return_disorder': True,
+        'return_disorder': False,
     }
     if epitope_disorder_profile is not None:
         mask_antigen = model.bfn._mask_antigen(batch, batch['generate_flag'].bool())
@@ -275,11 +273,13 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
         pliability[batch['generate_flag'].bool()] = profile_values.mean()
         sample_opt['disorder_pliability'] = pliability
     if disorder_guided:
+        if epitope_disorder_profile is None:
+            raise ValueError(
+                'disorder_guided requires epitope_disorder_profile; '
+                'the model disorder head is unsupported for inference')
         sample_opt['disorder_guided'] = True
         sample_opt['disorder_guided_strength'] = disorder_guided_strength
     results_list = []
-
-    _has_disorder = has_disorder_head(model)
 
     for i in range(num_samples):
         if sampling_seed is not None:
@@ -310,12 +310,6 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
             'plddt': plddt_val, 'plddt_std': plddt_std,
             'iptm': iptm_val, 'pae': pae_val,
         }
-
-        if _has_disorder:
-            disorder = traj.get('disorder')
-            if disorder is not None:
-                d_val = disorder[0][gen_mask].mean().item()
-                result['disorder_score'] = d_val
 
         contact = traj.get('contact')
         if contact is not None:

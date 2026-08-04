@@ -22,6 +22,14 @@ from disorderflow.modules.common.ot_align import LieOTAlign
 from disorderflow.utils.protein.constants import Fragment
 
 
+def sequence_cross_entropy_20(logits, targets, label_smoothing=0.0):
+    """Per-residue CE over the 20 valid amino-acid classes only."""
+    return F.cross_entropy(
+        logits[..., :20].float().reshape(-1, 20), targets.flatten(),
+        reduction='none', ignore_index=-100, label_smoothing=label_smoothing,
+    ).reshape(targets.shape)
+
+
 class AntibodyBFN_Core(nn.Module):
     def __init__(self, res_feat_dim, pair_feat_dim, num_steps, eps_net_opt={}, position_mean=[0.0, 0.0, 0.0], position_scale=[10.0], loss_weight={}, ot_opt={}, beta=1.0, schedule='linear'):
         super().__init__()
@@ -256,10 +264,38 @@ class AntibodyBFN_Core(nn.Module):
         # the encoder and eliminates the spurious NaNs.
         x_seq_target[x_seq_target >= 20] = -100
         with torch.autocast(device_type=x_seq.device.type, enabled=False):
-            pred_seq_f32 = pred_seq.float()
-            loss_seq = F.cross_entropy(pred_seq_f32.reshape(-1, self.num_classes), x_seq_target.flatten(), reduction='none', ignore_index=-100, label_smoothing=self.loss_weight.get('label_smoothing', 0.0))
-        loss_seq = loss_seq.reshape(N, -1)
+            loss_seq = sequence_cross_entropy_20(
+                pred_seq, x_seq_target,
+                label_smoothing=self.loss_weight.get('label_smoothing', 0.0))
         losses['seq'] = (loss_seq * mask_gen * weights).sum() / (mask_gen.sum() + 1e-8)
+
+        # Directly teach profile specificity. A mismatched antigen profile must
+        # assign lower likelihood to the native CDR than the factual profile.
+        factual_nll = (loss_seq * mask_gen).sum(dim=1) / mask_gen.sum(dim=1).clamp(min=1)
+        for loss_name, profile_key in (
+                ('disorder_position_rank', 'epitope_disorder_shuffled_profile'),
+                ('disorder_mismatch_rank', 'epitope_disorder_mismatched_profile')):
+            rank_w = self.loss_weight.get(loss_name, 0.0)
+            negative_profile = batch.get(profile_key)
+            if rank_w <= 0 or negative_profile is None or not mask_gen.any():
+                continue
+            negative_output = self.receiver(
+                inp_seq, inp_pos, inp_ori, inp_ang, t, pair_feat, mask_res,
+                backbone_pos=backbone_pos, prev_conf=None, prev_iptm=None,
+                prev_pae=None, prev_seq_emb=None, mask_gen=mask_gen,
+                mask_antigen=batch.get('mask_antigen'),
+                epitope_disorder=negative_profile,
+            )
+            negative_ce = sequence_cross_entropy_20(
+                negative_output[0], x_seq_target,
+                label_smoothing=self.loss_weight.get('label_smoothing', 0.0))
+            negative_nll = ((negative_ce * mask_gen).sum(dim=1)
+                            / mask_gen.sum(dim=1).clamp(min=1))
+            margin = float(self.loss_weight.get(f'{loss_name}_margin', 0.05))
+            gap = factual_nll - negative_nll
+            losses[loss_name] = rank_w * (
+                margin + gap).clamp(min=0).mean()
+            losses[f'{loss_name}_gap'] = gap.mean().detach()
 
         # === Direction F: Contact prediction auxiliary loss ===
         # BCE: does each CDR residue contact ANY antigen residue (<8Å Cβ-Cβ)?
@@ -391,7 +427,10 @@ class AntibodyBFN_Core(nn.Module):
             loss_pae = huber_pae(pred_pae, pae_target)
             losses['pae'] = (loss_pae * mask_pair).sum() / (mask_pair.sum() + 1e-8)
 
-        # === Disorder Loss (Huber on continuous RMSF labels) ===
+        # === Disorder Loss (Focal-weighted Huber on continuous RMSF labels) ===
+        # Addresses severe class imbalance: ~0.74% of residues are disordered.
+        # Focal weighting: w_i = 1 + gamma * target_i, so disordered residues
+        # (target~0.5-1.0) get up to (1+gamma)x the weight of ordered ones.
         if 'disorder_label' in batch and 'disorder' in self.loss_weight and self.loss_weight['disorder'] > 0:
             disorder_target = batch['disorder_label'].float()  # (N, L) continuous [0, 1]
             if disorder_target.dim() == 1:
@@ -404,8 +443,13 @@ class AntibodyBFN_Core(nn.Module):
             mask_disorder = mask_res[:, :pred_len]
             disorder_prob = torch.sigmoid(pred_disorder)
             huber = nn.SmoothL1Loss(reduction='none', beta=0.1)
-            loss_disorder = (huber(disorder_prob, disorder_target) * mask_disorder).sum()
-            losses['disorder'] = loss_disorder / (mask_disorder.sum() + 1e-8)
+            per_residue_loss = huber(disorder_prob, disorder_target)
+
+            # Focal reweighting: boost disordered residues
+            focal_gamma = float(self.loss_weight.get('disorder_focal_gamma', 4.0))
+            focal_weight = 1.0 + focal_gamma * disorder_target.detach()
+            weighted_loss = per_residue_loss * focal_weight * mask_disorder
+            losses['disorder'] = weighted_loss.sum() / (mask_disorder.sum() + 1e-8)
 
         # Rank-only supervision is permitted when calibration supports relative
         # within-protein flexibility but not absolute RMSF magnitudes.

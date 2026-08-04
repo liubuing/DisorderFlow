@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a training-disjoint SAbDab2 abag external test set."""
+"""Prepare a reference-disjoint subset from an official SAbDab2 abag split."""
 
 import argparse
 import csv
@@ -91,6 +91,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive", default="data/sabdab2_current/splits.tar.gz")
     parser.add_argument("--train-lmdb", default="data/phase3_v5_1_pair_clustered/train.lmdb")
+    parser.add_argument("--reference-lmdb", action="append", default=[],
+                        help="Repeatable LMDB excluded on all homology axes")
+    parser.add_argument("--source-split", choices=("train", "test"), default="test")
     parser.add_argument("--output-dir", default="data/sabdab2_abag_external")
     parser.add_argument("--mmseqs", default="mmseqs")
     parser.add_argument("--threads", type=int, default=8)
@@ -112,7 +115,7 @@ def main():
     candidates = []
     for row in rows:
         agtypes = row.get("agtypes", "").upper()
-        if row.get("ab_ag_split") != "test" or row.get("holo") != "True":
+        if row.get("ab_ag_split") != args.source_split or row.get("holo") != "True":
             continue
         if not any(kind in agtypes for kind in ("PROTEIN", "PEPTIDE")):
             continue
@@ -126,7 +129,15 @@ def main():
         if item["antigen_sequence"] and item["vh_sequence"] and item["cdr_h3_sequence"]:
             candidates.append(item)
 
-    training = load_training_records(train_lmdb)
+    reference_paths = [Path(value) for value in args.reference_lmdb] or [train_lmdb]
+    training = []
+    for reference_path in reference_paths:
+        training.extend(load_training_records(reference_path))
+    deduplicated = {}
+    for record in training:
+        key = str(record.get('official_instance') or record.get('id') or record.get('pdb_id'))
+        deduplicated.setdefault(key, record)
+    training = list(deduplicated.values())
     training_pdbs = {
         pdb_code(record.get("pdb_id", record.get("id", ""))) for record in training
     }
@@ -136,8 +147,8 @@ def main():
     with tempfile.TemporaryDirectory(prefix="sabdab2_audit_") as tmp:
         tmp_dir = Path(tmp)
         for axis, (field, threshold) in AXES.items():
-            query = tmp_dir / f"test_{axis}.fasta"
-            target = tmp_dir / f"train_{axis}.fasta"
+            query = tmp_dir / f"query_{axis}.fasta"
+            target = tmp_dir / f"reference_{axis}.fasta"
             result = tmp_dir / f"hits_{axis}.tsv"
             work = tmp_dir / f"work_{axis}"
             write_fasta(query, candidates, field, "instance")
@@ -199,9 +210,9 @@ def main():
     failed_counts = Counter(axis for row in audit_rows for axis in row["failed_axes"])
     report = {
         "source": str(archive),
-        "source_split": "splits_final/abag_split.csv:ab_ag_split=test",
+        "source_split": f"splits_final/abag_split.csv:ab_ag_split={args.source_split}",
         "selection": "holo protein/peptide antigen with VH, CDR-H3 and antigen sequence",
-        "training_lmdb": str(train_lmdb),
+        "reference_lmdbs": [str(path) for path in reference_paths],
         "thresholds": {
             axis: {"minimum_identity": threshold, "coverage": 0.8, "coverage_mode": 0}
             for axis, (_, threshold) in AXES.items()

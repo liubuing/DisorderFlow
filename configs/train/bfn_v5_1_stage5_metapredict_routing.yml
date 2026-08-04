@@ -1,0 +1,102 @@
+# Pre-registered external-profile routing run. Model selection uses only the
+# internal dev split carved from the original training set. The legacy 328-case
+# validation and SAbDab2 external set are excluded from training and selection.
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      contrastive_order_sensitive: true
+      disorder_condition_scale: 1.0
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    disorder_align: 0.5
+    disorder_align_scale: 1.0
+    disorder_entropy_low: 0.5
+    disorder_entropy_high: 2.7
+    diversity: 0.05
+    anti_degen: 0.02
+    disorder_mismatch_rank: 1.0
+    disorder_mismatch_margin: 0.05
+    disorder_position_rank: 1.0
+    disorder_position_rank_margin: 0.03
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    label_smoothing: 0.05
+    encoder_dropout: 0.0
+    head_dropout: 0.0
+    t_clamp: 0.95
+
+train:
+  loss_weights:
+    seq: 0.25
+    disorder_align: 1.0
+    diversity: 1.0
+    anti_degen: 1.0
+    disorder_mismatch_rank: 1.0
+    disorder_position_rank: 1.0
+  freeze_backbone: true
+  trainable_modules:
+    - head_seq
+    - disorder_proj
+    - disorder_pair_norm
+    - disorder_route_score
+    - disorder_pair_value
+    - disorder_value
+  max_iters: 1500
+  val_freq: 150
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  early_stopping_patience: 8
+  checkpoint_selection_metric: disorder_mismatch_rank_gap
+  seed: 2093
+  validation_seed: 2097
+  max_grad_norm: 1.0
+  ema_decay: 0.99
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 4
+    min_lr: 1.e-6
+
+dataset:
+  disorder_lookup_train: ./data/phase3_v5_1_routing_train_dev_v2/disorder_profile_train_metapredict_v3.pkl
+  disorder_lookup_train_split: train
+  disorder_lookup_val: ./data/phase3_v5_1_routing_train_dev_v2/disorder_profile_dev_metapredict_v3.pkl
+  disorder_lookup_val_split: dev
+  require_disorder_lookup: true
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_routing_train_dev_v2/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: true
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_routing_train_dev_v2/dev.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor

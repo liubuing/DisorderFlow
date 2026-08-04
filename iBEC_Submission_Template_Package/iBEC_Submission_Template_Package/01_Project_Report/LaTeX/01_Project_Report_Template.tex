@@ -1,0 +1,167 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{amssymb}
+
+\setmainfont{Times New Roman}
+\definecolor{headingblack}{HTML}{000000}
+\definecolor{lightgray}{HTML}{F2F4F7}
+\hypersetup{colorlinks=true, linkcolor=headingblack, urlcolor=headingblack, citecolor=headingblack}
+\titleformat{\section}{\Large\bfseries\color{headingblack}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries\color{headingblack}}{\thesubsection}{0.8em}{}
+\setlist[itemize]{leftmargin=1.4em}
+\setlist[enumerate]{leftmargin=1.6em}
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancyhf{}
+\lhead{iBEC International Bioinformatics Engineering Competition}
+\rhead{Project Report}
+\cfoot{\thepage}
+
+\newcommand{\placeholder}[1]{[#1]}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Project Report Template}\\[0.5em]
+{\large Primary language: English. Chinese explanations may be added only where necessary.}\\[1.5em]
+\end{center}
+
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.24\textwidth}X}
+\toprule
+Team ID & \placeholder{Assigned by the organizing committee}\\
+Project Title & \placeholder{Full project title}\\
+Team Name & \placeholder{Team name}\\
+Institution & \placeholder{Institution / school / organization}\\
+Team Members & \placeholder{Names and roles}\\
+Track / Category & \placeholder{If applicable}\\
+Date & \placeholder{YYYY-MM-DD}\\
+\bottomrule
+\end{tabularx}
+
+\section*{Executive Summary}
+\placeholder{150--250 words. State the biological or bioinformatics problem, the proposed solution, the most important result, and the expected value.}
+
+\section{Project Background and Problem Definition}
+\placeholder{Explain the scientific, engineering, clinical, industrial, or educational context. Define the pain point and why it matters.}
+\begin{itemize}
+  \item Background evidence and current limitations.
+  \item Target users, use cases, or scenarios.
+  \item Core research or engineering question.
+\end{itemize}
+
+\section{Objectives and Scope}
+\begin{enumerate}
+  \item Primary objective: \placeholder{What the project must achieve}.
+  \item Secondary objectives: \placeholder{Optional supporting goals}.
+  \item Scope boundary: \placeholder{What is not claimed or not evaluated}.
+\end{enumerate}
+
+\section{Technical Route}
+\placeholder{Describe the overall workflow from data input to analysis, model, platform, validation, and output.}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}X X X}
+\toprule
+\textbf{Stage} & \textbf{Input} & \textbf{Method / Tool} & \textbf{Output}\\
+\midrule
+Data acquisition & \placeholder{Datasets} & \placeholder{Sources / preprocessing} & \placeholder{Cleaned input}\\
+Analysis / modeling & \placeholder{Features} & \placeholder{Algorithms / pipelines} & \placeholder{Predictions / metrics}\\
+Validation & \placeholder{Benchmarks} & \placeholder{Evaluation design} & \placeholder{Evidence}\\
+Deployment / delivery & \placeholder{User input} & \placeholder{Platform / interface} & \placeholder{Result view}\\
+\bottomrule
+\end{tabularx}
+\caption{Recommended technical route summary.}
+\end{table}
+
+\section{Methods and Implementation}
+\begin{itemize}
+  \item Data sources and preprocessing steps, including inclusion/exclusion criteria.
+  \item Model, algorithm, statistical method, database, or platform architecture.
+  \item Software environment, dependencies, major parameters, and reproducibility notes.
+  \item Validation design, baselines, evaluation metrics, and uncertainty handling.
+\end{itemize}
+
+\section{Engineering Workflow and Productization}
+\placeholder{Describe the engineering process that turns the idea into a usable, testable, and maintainable system or workflow.}
+\begin{itemize}
+  \item Requirement analysis: \placeholder{Target users, input/output needs, usage scenario, and success criteria}.
+  \item Workflow design: \placeholder{Data flow, model flow, software modules, interface, and dependencies}.
+  \item Implementation process: \placeholder{Version control, task division, coding standards, and integration steps}.
+  \item Testing and iteration: \placeholder{Unit tests, benchmark tests, usability checks, error handling, and revision records}.
+  \item Deployment and maintenance: \placeholder{Repository, demo platform, container, documentation, update plan, and user support}.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}X X X}
+\toprule
+\textbf{Process Stage} & \textbf{Key Activities} & \textbf{Evidence to Provide} & \textbf{Deliverable}\\
+\midrule
+Requirements & \placeholder{User/scenario analysis} & \placeholder{Need statement / user story} & \placeholder{Functional scope}\\
+Design & \placeholder{Architecture and workflow} & \placeholder{Diagram / module list} & \placeholder{Technical design}\\
+Build & \placeholder{Implementation and integration} & \placeholder{Repository / commit log} & \placeholder{Prototype / pipeline}\\
+Validate & \placeholder{Testing and evaluation} & \placeholder{Metrics / test record} & \placeholder{Validated result}\\
+Deliver & \placeholder{Deployment and documentation} & \placeholder{Demo / README / container} & \placeholder{Usable release}\\
+\bottomrule
+\end{tabularx}
+\caption{Recommended engineering process summary.}
+\end{table}
+
+\section{Innovation Points}
+\placeholder{Explain what is new compared with existing methods, workflows, datasets, tools, or applications. Avoid unsupported claims.}
+
+\section{Results and Evidence}
+\placeholder{Present key results with figures, tables, screenshots, or quantitative metrics. Each figure should have a clear caption and interpretation.}
+\begin{itemize}
+  \item Result 1: \placeholder{Metric / observation} and its meaning.
+  \item Result 2: \placeholder{Comparison / validation} and its meaning.
+  \item Result 3: \placeholder{Prototype / use case} and its meaning.
+\end{itemize}
+
+\section{Application Value and Future Work}
+\placeholder{Describe who can use the work, how it can be adopted, expected impact, limitations, and next-step development.}
+
+\section{Ethics, Safety, and Data Compliance}
+\begin{itemize}
+  \item Data privacy and licensing: \placeholder{Describe permissions and anonymization}.
+  \item Biological safety or clinical limitations: \placeholder{If applicable}.
+  \item Responsible use and bias considerations: \placeholder{If applicable}.
+\end{itemize}
+
+\section{Published Outcomes}
+\placeholder{List outputs produced by this team or this project, such as published papers, preprints, patents, software releases, datasets, websites, awards, or media reports. If there are no published outcomes yet, write ``None''. Do not list external literature here.}
+
+\section{References}
+\placeholder{List external sources cited in this report, including papers, datasets, software, model cards, repositories, and web resources. References support claims but are not the team's own published outcomes.}
+
+\section{Submission Checklist}
+\begin{tabularx}{\textwidth}{p{0.08\textwidth}X X}
+\toprule
+\textbf{Check} & \textbf{Item} & \textbf{Notes}\\
+\midrule
+$\square$ & The report is mainly written in English. & \placeholder{Notes}\\
+$\square$ & Team ID is included on the title page and matches the submitted file names. & \placeholder{Notes}\\
+$\square$ & All figures and tables are numbered and explained. & \placeholder{Notes}\\
+$\square$ & Data sources, code availability, and software environment are documented. & \placeholder{Notes}\\
+$\square$ & Engineering workflow, testing evidence, and deployment or delivery status are described. & \placeholder{Notes}\\
+$\square$ & Published outcomes are separated from external references. & \placeholder{Notes}\\
+$\square$ & Claims match the technical abstract and supplementary materials. & \placeholder{Notes}\\
+$\square$ & The final submitted file is exported as PDF. & \placeholder{Notes}\\
+\bottomrule
+\end{tabularx}
+
+\end{document}

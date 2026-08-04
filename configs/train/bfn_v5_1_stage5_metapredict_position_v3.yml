@@ -1,0 +1,96 @@
+# Direct position-logit routing adaptation. The direct residual head is zero
+# initialized, so iteration zero exactly preserves the frozen sequence model.
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      direct_position_routing: true
+      contrastive_order_sensitive: true
+      disorder_condition_scale: 1.0
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    disorder_align: 0.0
+    diversity: 0.0
+    anti_degen: 0.0
+    disorder_mismatch_rank: 1.0
+    disorder_mismatch_rank_margin: 0.02
+    disorder_position_rank: 1.0
+    disorder_position_rank_margin: 0.02
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    label_smoothing: 0.05
+    encoder_dropout: 0.0
+    head_dropout: 0.0
+    t_clamp: 0.95
+
+train:
+  loss_weights:
+    seq: 1.0
+    disorder_mismatch_rank: 0.5
+    disorder_position_rank: 0.5
+  freeze_backbone: true
+  trainable_modules:
+    - disorder_pair_norm
+    - disorder_route_score
+    - disorder_pair_value
+    - disorder_value
+    - disorder_position_head
+  max_iters: 1200
+  val_freq: 100
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  early_stopping_patience: 5
+  checkpoint_selection_metric: disorder_position_rank_gap
+  checkpoint_selection_max_seq_loss: 2.35
+  seed: 2131
+  validation_seed: 2133
+  max_grad_norm: 1.0
+  ema_decay: 0.99
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 3
+    min_lr: 1.e-6
+
+dataset:
+  disorder_lookup_train: ./data/sabdab2_abag_project_split_v2/disorder_profile_adaptation_metapredict_v3.pkl
+  disorder_lookup_train_split: adaptation
+  disorder_lookup_val: ./data/sabdab2_abag_project_split_v2/disorder_profile_dev_metapredict_v3.pkl
+  disorder_lookup_val_split: project_dev
+  require_disorder_lookup: true
+  train:
+    type: phase3
+    lmdb_path: ./data/sabdab2_abag_project_split_v2/adaptation.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: true
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/sabdab2_abag_project_split_v2/dev.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor

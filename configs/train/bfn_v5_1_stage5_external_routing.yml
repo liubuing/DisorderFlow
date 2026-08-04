@@ -1,0 +1,113 @@
+# External-disorder routing correction from the accepted Stage 5 checkpoint.
+# Initialize, do not resume, from the Stage 5 corrective EMA best checkpoint:
+#   python train.py configs/train/bfn_v5_1_stage5_external_routing.yml \
+#     --init logs/v5_1_corrective/train/bfn_v5_1_stage5_corrective_2026_07_21__07_19_10_corrective/checkpoints/best.pt \
+#     --device cuda --no_amp
+# The disorder head is not an inference objective. This stage only teaches the
+# sequence decoder to respond to an externally supplied, non-circular profile.
+# Position-level routing v2. The corrected 300-step pilot passed the
+# factual-vs-mismatched gate on all 328 clustered validation complexes. Formal
+# training must initialize from that pilot and pass the same gate again.
+# REQUIRED CONTRACT:
+#   1. External profiles are rebuilt and audited against the clustered Phase3
+#      train/val IDs rather than reused from sabdab_phase3_processed/train.
+#   2. A baseline deterministic counterfactual reports factual better than a
+#      mismatched profile, not merely different from an all-zero profile.
+#   3. The profile scale is recorded; the current mixed weak-label median is
+#      about 0.28, so the legacy Stage 5 saturation scale of 0.22 is invalid.
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      contrastive_order_sensitive: true
+      disorder_condition_scale: 1.0
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    disorder_align: 0.5
+    disorder_align_scale: 1.0
+    disorder_entropy_low: 0.5
+    disorder_entropy_high: 2.7
+    diversity: 0.05
+    anti_degen: 0.02
+    disorder_mismatch_rank: 1.0
+    disorder_mismatch_margin: 0.05
+    disorder_position_rank: 1.0
+    disorder_position_rank_margin: 0.03
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    label_smoothing: 0.05
+    encoder_dropout: 0.0
+    head_dropout: 0.0
+    t_clamp: 0.95
+
+train:
+  loss_weights:
+    seq: 0.25
+    disorder_align: 1.0
+    diversity: 1.0
+    anti_degen: 1.0
+    disorder_mismatch_rank: 1.0
+    disorder_position_rank: 1.0
+  freeze_backbone: true
+  trainable_modules:
+    - head_seq
+    - disorder_proj
+    - disorder_pair_norm
+    - disorder_route_score
+    - disorder_pair_value
+    - disorder_value
+  max_iters: 1500
+  val_freq: 150
+  log_freq: 10
+  batch_size: 1
+  warmup_steps: 100
+  early_stopping_patience: 8
+  checkpoint_selection_metric: disorder_mismatch_rank_gap
+  seed: 2061
+  max_grad_norm: 1.0
+  ema_decay: 0.99
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 4
+    min_lr: 1.e-6
+
+dataset:
+  disorder_lookup_train: ./data/phase3_v5_1_pair_clustered/disorder_profile_train_v1.pkl
+  disorder_lookup_val: ./data/phase3_v5_1_pair_clustered/disorder_profile_val_v1.pkl
+  require_disorder_lookup: true
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: true
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+        selection: [H1, H2, H3, L1, L2, L3]
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor

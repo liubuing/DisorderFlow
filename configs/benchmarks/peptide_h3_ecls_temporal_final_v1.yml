@@ -1,0 +1,29 @@
+schema_version: 1
+status: frozen_before_first_and_only_temporal_final_run
+purpose: final_evaluation_of_epitope_conditioned_likelihood_shift
+split_audit: data/peptide_h3_temporal_split_v3/audit.json
+benchmark_split: sealed_final
+lmdb: data/peptide_h3_temporal_split_v3/sealed_final.lmdb
+inference_axis: official_antigen_cluster
+proteinmpnn:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  model_name: v_48_020
+  seed: 2309
+shuffle_trials: 200
+statistics:
+  bootstrap_trials: 10000
+development_gates:
+  minimum_median_ecls_advantage: 0.1
+  minimum_fraction_positive_ecls_advantage: 0.7
+  require_ecls_mean_ci95_lower_above_zero: true
+final_contract:
+  n_records: 31
+  n_inference_units: 15
+  ids_sha256: 7cbc63b7afb42dbdc13da9469f99ab7e927fc5b3f14f500713705869da1821cf
+  attempts: 1
+  failure_is_terminal: true
+policy:
+  no_checkpoint_selection: true
+  no_threshold_changes: true
+  no_repeat_after_result: true

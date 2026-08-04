@@ -1,0 +1,72 @@
+{
+  "n_records": 107,
+  "models": {
+    "v12": 5,
+    "v14": 43,
+    "v11_seqconf": 5,
+    "v15C": 24,
+    "v17i": 30
+  },
+  "metrics": {
+    "baseline": {
+      "spearman_plddt": -0.0805285478928357,
+      "spearman_iptm": 0.4728164589310385,
+      "mae_plddt": 0.08069585191504039,
+      "mae_iptm": 0.3158655110920701,
+      "oc_ratio_plddt": 1.300885808603261,
+      "oc_ratio_iptm": 6.084616331061529
+    },
+    "isotonic": {
+      "spearman_plddt": 0.35261530719913753,
+      "spearman_iptm": 0.6221575104177445,
+      "mae_plddt": 0.01355973156523151,
+      "mae_iptm": 0.012508614910175214,
+      "oc_ratio_plddt": 1.0042262743623296,
+      "oc_ratio_iptm": 1.0574706727089667
+    },
+    "global_affine": {
+      "spearman_plddt": -0.0805285478928357,
+      "spearman_iptm": -0.4728164589310385,
+      "mae_plddt": 0.013992555050091796,
+      "mae_iptm": 0.02552523346938918,
+      "oc_ratio_plddt": 1.0046507852723223,
+      "oc_ratio_iptm": 1.1364325705459197,
+      "params_plddt": {
+        "slope": 0.02197577013991568,
+        "intercept": 0.245018776338432
+      },
+      "params_iptm": {
+        "slope": -0.04191187135101364,
+        "intercept": 0.0905708716965254
+      }
+    },
+    "ridge_ppl_augmented": {
+      "spearman_plddt": 0.5180804714227522,
+      "spearman_iptm": 0.4830422812382791,
+      "mae_plddt": 0.012605120192765447,
+      "mae_iptm": 0.02329733702009467,
+      "oc_ratio_plddt": 1.004123676589534,
+      "oc_ratio_iptm": 1.123714523283967,
+      "coefficients_plddt": [
+        0.025085533350071368,
+        0.007295215302051795,
+        -0.015377960627450006
+      ],
+      "coefficients_iptm": [
+        -0.03752861628876859,
+        -0.0075103480242410085,
+        0.023915760184909752
+      ]
+    },
+    "ridge_loo_cv": {
+      "spearman_plddt": 0.4534808055010494,
+      "spearman_iptm": 0.4617794536042331,
+      "mae_plddt": 0.012924244055510459,
+      "mae_iptm": 0.02392626758616666
+    }
+  },
+  "diagnosis": {
+    "core_problem": "BFN confidence outputs are near-constant within each model (std ~1e-5). Isotonic/affine calibration fixes MAGNITUDE but cannot recover DISCRIMINATION. PPL remains the primary ranking signal.",
+    "recommendation": "Use ridge_ppl_augmented for combined scoring; for head discrimination fix, see finetune_confidence_head_v2.py (方案C)."
+  }
+}

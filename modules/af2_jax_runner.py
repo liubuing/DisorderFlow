@@ -237,7 +237,9 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     pipeline. Features are built in pure numpy and fed directly to the model.
 
     Args:
-        ab_seq: antibody amino acid sequence (1-letter)
+        ab_seq: antibody amino acid sequence (1-letter). For multi-chain
+            antibodies (e.g. Fab), separate chains with ':' (colon):
+            "VH_SEQUENCE:VL_SEQUENCE". Do NOT concatenate without separator.
         epi_seq: epitope amino acid sequence (1-letter)
         data_dir: AlphaFold params directory
         num_recycle: number of recycling iterations

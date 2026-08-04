@@ -12,7 +12,7 @@ from __future__ import annotations
 import math
 import random
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 
 AA = "ACDEFGHIKLMNPQRSTVWY"
@@ -416,6 +416,7 @@ def generate_contact_guided_variants(
     n: int = 100,
     max_mutations: int = 4,
     seed: int = 42,
+    allowed_positions: Optional[Iterable[int]] = None,
 ) -> List[Dict]:
     """Generate paratope variants guided by contact topology.
 
@@ -424,8 +425,15 @@ def generate_contact_guided_variants(
     or contact-compatible residues. This is a candidate-library generator, not a
     structural grafting model.
     """
+    if max_mutations < 1:
+        raise ValueError("max_mutations must be at least 1")
     rng = random.Random(seed)
     native = contact_map["paratope_sequence"]
+    positions_pool = list(range(len(native))) if allowed_positions is None else sorted(set(allowed_positions))
+    if not positions_pool:
+        raise ValueError("allowed_positions must contain at least one position")
+    if positions_pool[0] < 0 or positions_pool[-1] >= len(native):
+        raise ValueError("allowed_positions contains an out-of-range paratope index")
     hotspots = _hotspot_positions(contact_map)
     position_options = [_position_allowed_residues(contact_map, i, hotspots) for i in range(len(native))]
     variants = []
@@ -434,9 +442,9 @@ def generate_contact_guided_variants(
     while len(variants) < n and attempts < n * 100:
         attempts += 1
         seq = list(native)
-        n_mut = rng.randint(1, max(1, min(max_mutations, len(native))))
-        weights = [0.25 if i in hotspots else 1.0 for i in range(len(native))]
-        positions = _weighted_sample_without_replacement(rng, list(range(len(native))), weights, n_mut)
+        n_mut = rng.randint(1, min(max_mutations, len(positions_pool)))
+        weights = [0.25 if i in hotspots else 1.0 for i in positions_pool]
+        positions = _weighted_sample_without_replacement(rng, positions_pool, weights, n_mut)
         mutations = []
         for pos in positions:
             choices = [a for a in position_options[pos] if a != native[pos]]

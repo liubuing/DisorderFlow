@@ -108,8 +108,7 @@ def design_cdrs_for_segment(model, config, scaffold_pdb, epitope_pdb,
 
     # Determine context chains for Complex mode
     if context_chains is None:
-        # Default: Complex mode (epitope visible)
-        _ctx = [epitope_chain]
+        _ctx = None
     elif context_chains == []:
         # Explicit FixBB mode
         _ctx = []

@@ -130,9 +130,16 @@ if __name__ == '__main__':
 
     # WAY4 V7 P0-fix-B: wrap dataset with per-residue disorder profiles
     disorder_lookup_path = config.dataset.get('disorder_lookup') if hasattr(config, 'dataset') else None
-    if disorder_lookup_path is not None:
+    split_lookup_paths = {
+        'train': config.dataset.get('disorder_lookup_train'),
+        'val': config.dataset.get('disorder_lookup_val'),
+    } if hasattr(config, 'dataset') else {}
+    split_lookup_labels = {
+        'train': config.dataset.get('disorder_lookup_train_split', 'train'),
+        'val': config.dataset.get('disorder_lookup_val_split', 'val'),
+    } if hasattr(config, 'dataset') else {}
+    if disorder_lookup_path is not None or any(split_lookup_paths.values()):
         from disorderflow.datasets.disorder_augmented import DisorderAugmentedDataset, load_disorder_lookup
-        disorder_lookup = load_disorder_lookup(disorder_lookup_path)
         # Wrap both splits so validation measures the same conditioning task.
         for split_name, dataset in [('train', train_dataset), ('val', val_dataset)]:
             ids = getattr(dataset, 'ids', getattr(dataset, 'all_ids', None))
@@ -141,6 +148,16 @@ if __name__ == '__main__':
                     'Disorder lookup provided but %s sample IDs are unavailable; skipping',
                     split_name)
                 continue
+            lookup_path = split_lookup_paths.get(split_name) or disorder_lookup_path
+            if lookup_path is None:
+                raise RuntimeError(f'Missing disorder lookup for {split_name} split')
+            disorder_lookup = load_disorder_lookup(
+                lookup_path,
+                expected_split=split_lookup_labels[split_name]
+                if split_lookup_paths.get(split_name) else None,
+                expected_ids=ids if split_lookup_paths.get(split_name) else None,
+                require_envelope=bool(split_lookup_paths.get(split_name)),
+            )
             if config.dataset.get('require_disorder_lookup', False):
                 valid_ids = {
                     str(key).casefold() for key, value in disorder_lookup.items()
@@ -659,10 +676,30 @@ if __name__ == '__main__':
             else:
                 scheduler.step()
 
+        selection_key = config.train.get('checkpoint_selection_metric')
+        if selection_key:
+            if selection_key not in loss_tape.accumulate:
+                raise RuntimeError(
+                    f'Checkpoint selection metric missing from validation: {selection_key}')
+            selection_value = loss_tape.accumulate[selection_key] / loss_tape.total
+            logger.info(
+                'Checkpoint selection metric %s=%.6f',
+                selection_key, float(selection_value))
+        else:
+            selection_value = avg_loss
+        max_seq_loss = config.train.get('checkpoint_selection_max_seq_loss')
+        if max_seq_loss is not None:
+            seq_value = loss_tape.accumulate['seq'] / loss_tape.total
+            if seq_value > float(max_seq_loss):
+                logger.info(
+                    'Checkpoint rejected: seq loss %.6f exceeds %.6f',
+                    float(seq_value), float(max_seq_loss))
+                selection_value = float('inf')
+
         if ema is not None:
             ema.restore(model)
 
-        return avg_loss
+        return selection_value
 
     # Early stopping
     early_stop_patience = config.train.get('early_stopping_patience', 0)

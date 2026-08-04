@@ -27,6 +27,7 @@ from disorderflow.utils.transforms import get_transform  # noqa: E402
 from evaluate_v5_1_phase3 import load_checkpoint  # noqa: E402
 from generate_v5_1_abeta_candidates import ABETA42, rmsf_profile  # noqa: E402
 from state_contact_scorer import extract_contact_map  # noqa: E402
+from disorderflow.utils.protein.constants import ChothiaCDRRange  # noqa: E402
 
 AA = "ACDEFGHIKLMNPQRSTVWY"
 REFERENCES = {
@@ -156,6 +157,7 @@ def main():
     parser.add_argument("--construct-fasta", default="outputs/abeta_full_chain_constructs_nglyco_rescued_v2/full_chain_constructs.fasta")
     parser.add_argument("--output-dir", default="results/v5_1_candidates/abeta42_local")
     parser.add_argument("--max-mutations", type=int, default=4)
+    parser.add_argument("--cdr", choices=["H3"], help="Reject candidates with mutations outside this Chothia CDR")
     parser.add_argument("--top", type=int, default=8)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--seed", type=int, default=4100)
@@ -185,6 +187,14 @@ def main():
             continue
         try:
             mutations = mutation_map(row, contact_map)
+            if args.cdr == "H3":
+                h3_start, h3_end = ChothiaCDRRange.H3
+                outside = [
+                    f"{chain}:{residue}" for chain, residue in mutations
+                    if chain not in ("H", "A") or not (h3_start <= residue <= h3_end)
+                ]
+                if outside:
+                    raise ValueError(f"mutations_outside_H3: {','.join(outside)}")
             batch = build_batch(reference, mutations, full_profile[start:start + len(peptide_sequence)], args.device)
             factual = evaluate(model, batch, args.device, True, args.seed + index)
             zero = evaluate(model, batch, args.device, False, args.seed + index)
@@ -227,7 +237,10 @@ def main():
         "checkpoint": args.checkpoint,
         "weights_kind": "ema",
         "source_library": args.library,
-        "selection_contract": "contact/developability-gated local variants, <=4 mutations, corrected factual-vs-zero reranking",
+        "selection_contract": (
+            f"contact/developability-gated local variants, <={args.max_mutations} mutations, "
+            f"CDR={args.cdr or 'unrestricted'}, corrected factual-vs-zero reranking"
+        ),
         "n_input": len(rows),
         "n_scored": len(records),
         "n_failed": len(failures),

@@ -183,7 +183,8 @@ def main():
         "developability_status", "developability_flags", "heavy_risk", "light_risk",
         "heavy_net_charge", "light_net_charge", "heavy_max_hydro9", "light_max_hydro9",
         "heavy_nglyco", "light_nglyco", "inherited_flags", "introduced_or_candidate_specific_flags",
-        "applied_mutations",
+        "applied_mutations", "h3_mutations", "background_mutations", "h3_mutation_count",
+        "total_mutation_count", "nas_status", "nglyco_rescue", "sequence_sha256",
     ]
     with open(out_dir / "shortlist_developability.csv", "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
@@ -229,7 +230,8 @@ def classify_inherited_flags(rows, max_risk):
         candidate_specific = flags - inherited
         r["inherited_flags"] = ";".join(sorted(inherited))
         r["introduced_or_candidate_specific_flags"] = ";".join(sorted(candidate_specific))
-        if r["combined_developability_risk"] <= max_risk and not candidate_specific:
+        nas_retained = str(r.get("nas_status", "")).startswith("retained")
+        if r["combined_developability_risk"] <= max_risk and not candidate_specific and not nas_retained:
             r["developability_status"] = "developability_pass"
         else:
             r["developability_status"] = "developability_review"

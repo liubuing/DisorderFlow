@@ -120,6 +120,25 @@ misfolding_disease:
     model_type: alphafold2_multimer_v3
     top_k_iterative: 3
   idp:
+    disorder_predictor_status: unsupported
+    external_profile_mode: exploratory_whole_cdr_temperature
+    external_profile_routing:
+      final_holdout_status: sealed_not_evaluated
+      production_checkpoint_replacement: false
+      production_status: rejected_development_gates
+      reason: position-specific factual advantage did not generalize on project development
+    external_sequence_predictor:
+      accepted_interface: versioned_per_residue_sequence_profile
+      cache_required: true
+      device: cpu
+      fallback_to_model_disorder_head: false
+      implementation: metapredict
+      invalid_sequence_action: fail
+      model_version: V3
+      normalized: true
+      package_version: 3.0.2
+      provenance_required: true
+      status: configured_offline
     min_plddt_for_idp: 0.4
     require_af2_validation: true
     warn_on_design: true
@@ -127,7 +146,6 @@ misfolding_disease:
   targets_dir: data/misfolding_targets
 models:
   bfn:
-    # Run `python scripts/download_assets.py --checkpoints` first
     checkpoint: logs/pretrained/best.pt
     config: configs/demo_design.yml
   esmif:

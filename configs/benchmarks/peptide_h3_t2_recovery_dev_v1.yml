@@ -1,0 +1,67 @@
+schema_version: 1
+status: frozen_after_reproducibility_smoke_before_development_run
+purpose: test_moderate_perturbation_recovery_with_held_out_contacts_and_ecls
+ensemble_class: T2_moderate_perturbation_broad_residue_contact_recovery
+split_audit: data/peptide_h3_publication_split_v4/audit.json
+benchmark_split: development
+lmdb: data/sabdab2_abag_project_split_v2/dev.lmdb
+inference_axis: official_antigen_cluster
+selection:
+  one_record_per_inference_unit: true
+  n_records: 7
+  ids_sha256: eb1d136cab134ae23a4a2d8cbadba0a9793795d852b40aff94938490aa6c1d98
+chains:
+  antibody: [H, L]
+  peptide: P
+sampling:
+  platform: OpenCL
+  ph: 7.4
+  pdbfixer_seed: 3503
+  friction_per_ps: 1.0
+  timestep_fs: 2.0
+  minimization_tolerance_kj_mol_nm: 10.0
+  minimization_iterations: 300
+  snapshot_minimization_iterations: 200
+  antibody_heavy_atom_restraint: 5000.0
+  contact_definition: original_deposited_CA_pairs
+  contact_cutoff_angstrom: 8.0
+  supplied_contact_fraction: 0.5
+  perturbation_anchor_upper_bound_nm: 1.5
+  perturbation_anchor_stiffness: 100.0
+  recovery_contact_upper_bound_nm: 0.8
+  recovery_contact_stiffness: 150.0
+  perturbation_temperature_kelvin: 700.0
+  perturbation_steps: 1500
+  recovery_temperature_kelvin: 300.0
+  recovery_steps: 2000
+  initial_rmsd_min_angstrom: 1.5
+  initial_rmsd_max_angstrom: 3.0
+  seeds: [3527, 3539, 3557, 3571]
+  quality_control:
+    max_antibody_rmsd: 0.5
+    max_final_peptide_rmsd: 3.5
+ensemble_requirements:
+  minimum_accepted_replicas: 3
+  minimum_acceptance_fraction: 0.75
+ecls:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  model_name: v_48_020
+  seed: 3581
+  shuffle_trials: 200
+statistics:
+  inference_unit: official_antigen_cluster
+  bootstrap_trials: 10000
+  bootstrap_seed: 3593
+development_gates:
+  minimum_valid_cluster_fraction: 0.8
+  require_held_out_recovery_ci95_lower_above_zero: true
+  minimum_fraction_clusters_positive_held_out_recovery: 0.7
+  require_positive_mean_final_ecls_advantage: true
+controls:
+  perturbed_before_recovery: required
+  supplied_contacts_excluded_from_primary_recovery: true
+  composition_matched_h3_shuffles: required
+policy:
+  temporal_final_access: forbidden
+  claim_boundary: local_recovery_from_native_derived_moderate_perturbations_not_blind_docking_or_equilibrium_sampling

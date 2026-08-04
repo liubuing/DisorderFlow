@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "engineering_smoke_4hix_ensemble",
+  "chains": {
+    "antibody": ["H", "L"],
+    "peptide": "A"
+  },
+  "sampling": {
+    "platform": "CPU",
+    "ph": 7.4,
+    "temperature_kelvin": 300.0,
+    "friction_per_ps": 1.0,
+    "timestep_fs": 2.0,
+    "minimization_tolerance_kj_mol_nm": 10.0,
+    "minimization_iterations": 300,
+    "snapshot_minimization_iterations": 150,
+    "equilibration_steps": 50,
+    "production_steps": 150,
+    "antibody_heavy_atom_restraint": 5000.0,
+    "peptide_backbone_restraint": 25.0,
+    "contact_cutoff_angstrom": 4.5,
+    "seeds": [2701, 2711, 2721, 2731],
+    "quality_control": {
+      "max_antibody_rmsd": 0.5,
+      "min_peptide_rmsd": 0.05,
+      "max_peptide_rmsd": 3.0,
+      "min_contact_retention": 0.5
+    }
+  }
+}

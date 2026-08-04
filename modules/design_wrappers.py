@@ -57,6 +57,7 @@ def create_jax_af2_validator(
     cdr_spec: str,
     num_recycle: int = 3,
     data_dir: Optional[str] = None,
+    scaffold_light_chain: Optional[str] = None,
 ) -> Callable:
     """Return an af2_validator(sequences, output_dir=None, progress_cb=None, **kwargs) -> List[Dict].
 
@@ -67,11 +68,13 @@ def create_jax_af2_validator(
 
     Args:
         scaffold_pdb: path to the scaffold PDB file
-        scaffold_chain: chain ID of the scaffold
+        scaffold_chain: chain ID of the antibody heavy chain
         epi_seq: epitope/antigen amino acid sequence (1-letter)
         cdr_spec: CDR region string, e.g. 'B:26-33,51-58,97-113'
         num_recycle: AF2 recycling steps
         data_dir: AlphaFold params directory
+        scaffold_light_chain: if provided (e.g. 'L'), include light chain as
+            separate chain in AF2 multimer (VH:VL format)
     """
     if data_dir is None:
         data_dir = os.path.expanduser('~/.cache/colabfold')
@@ -79,6 +82,9 @@ def create_jax_af2_validator(
     # Pre-compute scaffold sequence and CDR ranges (same for all designs)
     scaffold_seq = _extract_sequence_from_pdb(scaffold_pdb, scaffold_chain)
     cdr_ranges = _parse_cdr_ranges(cdr_spec)
+    light_seq = None
+    if scaffold_light_chain:
+        light_seq = _extract_sequence_from_pdb(scaffold_pdb, scaffold_light_chain)
 
     def af2_validator(sequences, output_dir=None, progress_cb=None, **kwargs):
         results = []
@@ -86,6 +92,8 @@ def create_jax_af2_validator(
         for i, seq in enumerate(sequences):
             try:
                 full_ab = graft_cdrs(scaffold_seq, seq, cdr_ranges)
+                if light_seq:
+                    full_ab = f"{full_ab}:{light_seq}"
                 af2_result = run_multimer_prediction(
                     full_ab, epi_seq,
                     num_recycle=num_recycle,

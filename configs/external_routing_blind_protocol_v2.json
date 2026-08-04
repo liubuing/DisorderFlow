@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "status": "frozen_before_project_final_profile_generation",
+  "supersedes": "external_routing_blind_protocol_v1.json (failed without retesting)",
+  "predictor": {
+    "package": "metapredict",
+    "package_version": "3.0.2",
+    "model_version": "V3",
+    "device": "cpu",
+    "normalized": true,
+    "invalid_sequence_action": "fail"
+  },
+  "data_boundary": {
+    "retired_development_only": "SAbDab2 official test, 717 cases",
+    "adaptation": "SAbDab2 official train project split, 728 cases",
+    "development": "SAbDab2 official train project split, 187 cases",
+    "final": "SAbDab2 official train project split, 230 sealed cases",
+    "final_ids_sha256": "5905a1e3e4311bd218497cce958dc6eea40457abab8f98cac1224ac7e2a7b068",
+    "isolation": "PDB, antigen 30%/80%, CDR-H3 50%/80% component-disjoint"
+  },
+  "model_selection": {
+    "initialization_checkpoint": "logs/v5_1_corrective/train/bfn_v5_1_stage5_corrective_2026_07_21__07_19_10_corrective/checkpoints/best.pt",
+    "training_config": "configs/train/bfn_v5_1_stage5_metapredict_position_v2.yml",
+    "checkpoint_metric": "disorder_position_rank_gap",
+    "training_seed": 2121,
+    "trainable_scope": "position routing residual only",
+    "final_allowed": false
+  },
+  "post_freeze_evaluation_order": [
+    "project_development_full",
+    "project_final_baseline_full",
+    "project_final_candidate_full"
+  ],
+  "project_final": {
+    "attempts_per_checkpoint": 1,
+    "subsampling_forbidden": true,
+    "checkpoint_selection_forbidden": true,
+    "candidate_gates": {
+      "factual_minus_mismatched_nll_mean_at_most": -0.005,
+      "factual_minus_mismatched_nll_ci95_upper_below": 0.0,
+      "factual_minus_shuffled_nll_mean_at_most": -0.005,
+      "factual_minus_shuffled_nll_ci95_upper_below": 0.0,
+      "shuffled_mean_abs_logit_change_at_least": 0.01,
+      "shuffled_argmax_hamming_at_least": 0.005,
+      "factual_nll_degradation_vs_baseline_at_most": 0.05
+    }
+  },
+  "failure_policy": "A failed project-final gate is reported as failure. No tuning or repeat evaluation against the 230-case final set is permitted."
+}
