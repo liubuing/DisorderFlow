@@ -101,16 +101,15 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
     N, L = batch['aa'].shape
     mask_res = batch['mask'].bool()
     mask_gen = batch['generate_flag'].bool() & mask_res
+    cn = batch.get('chain_nb', torch.zeros(N, L, dtype=torch.long))
 
-    # Set conditioning
+    # Set conditioning - modify batch in-place
     if conditioning_on and disorder_profile is not None:
-        batch_run = dict(batch)
-        batch_run['epitope_disorder_profile'] = disorder_profile.unsqueeze(0).to(DEVICE)
-        batch_run['epitope_disorder'] = disorder_profile.mean().unsqueeze(0).unsqueeze(0).to(DEVICE)
+        batch['epitope_disorder_profile'] = disorder_profile.unsqueeze(0).to(DEVICE)
+        batch['epitope_disorder'] = disorder_profile.mean().unsqueeze(0).unsqueeze(0).to(DEVICE)
     else:
-        batch_run = dict(batch)
-        batch_run.pop('epitope_disorder_profile', None)
-        batch_run.pop('epitope_disorder', None)
+        batch.pop('epitope_disorder_profile', None)
+        batch.pop('epitope_disorder', None)
 
     # Sample options
     sample_opt = {
@@ -119,14 +118,24 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
         'disorder_guided_strength': guided_strength,
     }
     if guided_on and conditioning_on and disorder_profile is not None:
-        # Use external pliability map
+        # Use external pliability map: only for antigen residues
         pliability = torch.zeros(1, L, device=DEVICE)
-        ag_mask = batch.get('fragment_type', torch.zeros(N, L, dtype=torch.long)) == 3
-        pliability[0, ag_mask[0]] = disorder_profile[:L].to(DEVICE)
+        ag_nb = int(cn.max().item()) if cn.numel() > 0 else max(set(cn.flatten().tolist()))
+        ag_mask_bool = (cn[0] == ag_nb)
+        n_ag = ag_mask_bool.sum().item()
+        if n_ag > 0:
+            n_copy = min(n_ag, len(disorder_profile))
+            pliability[0, ag_mask_bool] = disorder_profile[:n_copy].to(DEVICE)
         sample_opt['disorder_pliability'] = pliability
 
     sequences = []
     all_metrics = []
+    
+    # Debug: check batch keys
+    if not hasattr(run_paired_generation, '_debug_printed'):
+        print(f"    [DEBUG] batch keys: {sorted(batch.keys())[:15]}", flush=True)
+        print(f"    [DEBUG] batch aa shape: {batch['aa'].shape}", flush=True)
+        run_paired_generation._debug_printed = True
 
     for seed in seeds:
         torch.manual_seed(seed)
@@ -135,22 +144,33 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
         with torch.no_grad():
             try:
                 result = bfn.sample(
-                    batch_run,
+                    batch,
                     sample_opt=sample_opt,
                 )
-                # Extract generated sequence
-                pred_aa = result['aa'] if isinstance(result, dict) else result[0]
-                if pred_aa.dim() == 2:
-                    pred_aa = pred_aa[0]  # first batch element
+                # Extract generated sequence from sample result
+                if isinstance(result, dict):
+                    if 'pred_logits' in result:
+                        logits = result['pred_logits']
+                        if logits.dim() == 3:
+                            logits = logits[0]
+                        pred_aa = logits.argmax(dim=-1)  # (L,)
+                    elif 0 in result:
+                        pred_aa = result[0][2]  # (v_0, final_pos, final_seq)
+                        if pred_aa.dim() == 2:
+                            pred_aa = pred_aa[0]
+                    else:
+                        raise KeyError(f"No sequence in result: {sorted(result.keys())[:5]}")
+                else:
+                    pred_aa = result[0]
 
                 # Get CDR positions
-                gen_mask = mask_gen[0] if mask_gen.dim() == 2 else mask_gen
-                cdr_seq = pred_aa[gen_mask].cpu().numpy()
+                gen_mask_1d = mask_gen[0] if mask_gen.dim() == 2 else mask_gen
+                cdr_seq = pred_aa[gen_mask_1d].cpu().numpy()
                 sequences.append(cdr_seq)
 
-                # Compute metrics from the final logits if available
-                if isinstance(result, dict) and 'seq_logits' in result:
-                    metrics = compute_cdr_metrics(result['seq_logits'][0], gen_mask)
+                # Compute metrics from the final logits
+                if isinstance(result, dict) and 'pred_logits' in result:
+                    metrics = compute_cdr_metrics(result['pred_logits'][0], gen_mask_1d)
                 else:
                     # Approximate from sequence
                     metrics = {
@@ -163,7 +183,10 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
                 all_metrics.append(metrics)
 
             except Exception as e:
-                print(f"    [WARN] seed={seed} failed: {e}")
+                if seed == seeds[0]:
+                    import traceback
+                    print(f"    [ERROR] seed={seed}: {e}", flush=True)
+                    traceback.print_exc()
                 sequences.append(None)
                 all_metrics.append(None)
 
@@ -238,9 +261,9 @@ def run_ablation(args):
         arr = lookup.get(sid)
         if arr is None or len(arr) == 0:
             continue
-        if arr.max() > 0.4:
+        if np.mean(arr) > 0.3:
             high_flex.append((sid, arr))
-        elif arr.max() < 0.15:
+        elif np.mean(arr) < 0.2:
             low_flex.append((sid, arr))
 
     print(f"\n  Available: {len(high_flex)} high-flex, {len(low_flex)} low-flex antigens")
@@ -280,32 +303,38 @@ def run_ablation(args):
                 continue
             entry = pickle.loads(raw)
 
-        # Build minimal batch for sampling
+        # Build batch using transform pipeline
         from disorderflow.utils.data import PaddingCollate
         from disorderflow.utils.train import recursive_to
+        from disorderflow.utils.transforms import get_transform
 
         try:
-            structure = entry
-            if 'antigen' not in structure or structure['antigen'] is None:
-                continue
-
-            # Use the full complex batch if available
-            batch_data = structure.get('batch')
+            transform = get_transform([
+                {'type': 'mask_multiple_cdrs'},
+                {'type': 'merge_chains'},
+                {'type': 'patch_around_anchor'},
+            ])
+            batch_data = transform(entry)
             if batch_data is None:
-                # Construct from antibody + antigen
                 continue
-
             batch = recursive_to(PaddingCollate()([batch_data]), DEVICE)
             batch['mask'] = batch.get('mask', torch.ones(1, batch['aa'].shape[1]).bool().to(DEVICE))
+            # Ensure required keys for BFN sampling
+            if 'pair_feat' not in batch:
+                batch['pair_feat'] = torch.zeros(1, batch['aa'].shape[1], batch['aa'].shape[1], 128, device=DEVICE)
+            if 'generate_flag' not in batch:
+                batch['generate_flag'] = torch.zeros(1, batch['aa'].shape[1], dtype=torch.bool, device=DEVICE)
 
             L = batch['aa'].shape[1]
             disorder_profile = torch.zeros(L, dtype=torch.float32)
-            frag = batch.get('fragment_type', torch.zeros(1, L, dtype=torch.long))
-            ag_mask = (frag[0] == 3) if frag.dim() == 2 else (frag == 3)
+            # Antigen chain is the last one in merge_chains order
+            cn = batch.get('chain_nb', torch.zeros(1, L, dtype=torch.long))
+            ag_nb = int(cn.max().item())
+            ag_mask = (cn[0] == ag_nb)
             n_ag = ag_mask.sum().item()
             if n_ag > 0:
                 n_copy = min(n_ag, len(disorder_arr))
-                ag_indices = ag_mask.nonzero(as_tuple=True)[0]
+                ag_indices = ag_mask.nonzero(as_tuple=True)[1] if ag_mask.dim() == 2 else ag_mask.nonzero(as_tuple=True)[0]
                 disorder_profile[ag_indices[:n_copy]] = torch.tensor(disorder_arr[:n_copy])
 
         except Exception as e:
