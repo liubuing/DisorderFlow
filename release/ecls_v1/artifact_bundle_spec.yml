@@ -1,0 +1,22 @@
+schema_version: 1
+bundle_name: disorderflow-ecls-v1-artifacts.zip
+classification: large reproducibility artifacts excluded from Git
+files:
+  - logs/bfn_successor_v3_contact_v2_exposed_2026_08_09__09_06_40_successor_v3_contact_v2_cb/checkpoints/best.pt
+  - logs/bfn_successor_v3_h3_specificity_2026_08_07__11_35_01_successor_v3_h3_specificity_s3107/checkpoints/best.pt
+  - data/successor_v3_contact_dev_v1/train.lmdb
+  - data/successor_v3_contact_dev_v1/eval.lmdb
+  - data/successor_v3_contact_dev_v1/meta_indices.pkl
+  - data/successor_v3_contact_dev_v1/manifest.json
+  - data/successor_v3_confirmatory/reference_union_manifest_v3.json
+  - data/successor_v3_exploratory/structures_final/structural_manifest.json
+  - data/successor_v3_exploratory/isolation_audit.json
+  - data/successor_v3_exploratory/structures_final/pdb
+  - results/publication/h3_submission_package_v1/ECLS_GCLC_reviewer_package_v1.zip
+distribution:
+  status: blocked_pending_remote_upload
+  intended_repository: https://huggingface.co/datasets/liubuing/disorderflow
+  immutable_revision: null
+  immutable_url: null
+  blocker: Hugging Face API and CLI timed out during release construction.
+release_rule: status may become published only after immutable_revision and immutable_url resolve and the downloaded bundle passes SHA-256 verification.

@@ -1,2 +1,23 @@
-*.sh text eol=lf
-*.bat text eol=crlf
+* text=auto eol=lf
+
+*.json -text
+*.yaml -text
+*.yml -text
+*.csv -text
+results/**/*.json binary
+results/**/*.csv binary
+publication/**/*.json binary
+release/**/*.json binary
+release/ecls_v1/*.json binary
+experiments/**/*.json binary
+experiments/**/*.csv binary
+*.pt binary
+*.pth binary
+*.pkl binary
+*.lmdb binary
+*.npz binary
+*.npy binary
+*.zip binary
+*.pdf binary
+*.pptx binary
+*.docx binary

@@ -1,0 +1,49 @@
+schema_version: 1
+release_id: disorderflow-ecls-v1
+classification: source_and_lightweight_evidence
+include:
+  - README.md
+  - .gitattributes
+  - PUBLICATION_PROTOCOL.md
+  - LICENSE.md
+  - pyproject.toml
+  - publication/MANUSCRIPT_DRAFT.md
+  - publication/ECLS_SCOPE_FREEZE.yml
+  - publication/*.json
+  - configs/benchmarks/successor_v3*.yml
+  - configs/train/bfn_successor_v3*.yml
+  - disorderflow/**/*.py
+  - modules/bfn_loader.py
+  - scripts/*h3*.py
+  - scripts/*successor_v3*.py
+  - scripts/build/*successor_v3*.py
+  - scripts/build/build_release_artifact_bundle.py
+  - scripts/build/build_release_source_manifest.py
+  - scripts/pipelines/run_successor_v3_contact_v2_pipeline.py
+  - scripts/validate_release_lineage.py
+  - scripts/fetch_release_artifacts.py
+  - tests/test_h3*.py
+  - tests/test_successor_v3*.py
+  - tests/test_sabdab_successor_v3_snapshot.py
+  - tests/test_bfn_fixed_scoring.py
+  - tests/test_release_lineage.py
+  - tests/test_contact_v2_confirmatory_contract.py
+  - experiments/successor_v3_contact_v2/*
+  - release/ecls_v1/REPRODUCIBILITY.md
+  - release/ecls_v1/artifact_bundle_spec.yml
+  - release/ecls_v1/artifact_bundle_manifest.json
+  - release/ecls_v1/source_release_spec.yml
+  - release/ecls_v1/software_environment.yml
+  - results/publication/h3_ecls_temporal_final_v1/final_decision.json
+  - results/publication/h3_ecls_temporal_final_v1/results.json
+  - results/publication/h3_ecls_adaptation_v1/results.json
+  - results/publication/h3_candidate_reranking_dev_v1/results.json
+  - results/publication/h3_generator_calibration_v1/analysis.json
+  - results/publication/h3_generator_calibration_v1/milestone_decision.json
+  - results/publication/h3_submission_package_v1/main_results.csv
+  - results/successor_v3_contact_v2/baselines.json
+  - results/successor_v3_contact_v2/development_evaluation.json
+exclude:
+  - '**/__pycache__/**'
+  - '**/*.pyc'
+  - release/ecls_v1/source_manifest.json

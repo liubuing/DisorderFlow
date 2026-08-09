@@ -28,6 +28,12 @@ import sys
 import time
 from pathlib import Path
 
+from disorderflow.utils.protein.constants import ressymb_to_resindex
+
+AA_LETTERS = ''.join(
+    residue for residue, index in sorted(ressymb_to_resindex.items(), key=lambda item: item[1])
+    if index < 20)
+
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -76,7 +82,7 @@ def compute_cdr_metrics(seq_logits, mask_gen):
     top_aa_pct = probs.max(dim=-1)[0].mean().item()
 
     # Has 6-mer repeat (degeneracy check)
-    seq_str = ''.join([chr(65 + i) for i in argmax_seq.cpu().numpy()])
+    seq_str = ''.join(AA_LETTERS[i] for i in argmax_seq.cpu().tolist())
     has_6mer = any(seq_str[i:i+6] == seq_str[i+6:i+12]
                    for i in range(max(0, len(seq_str) - 12)))
 
@@ -130,7 +136,7 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
 
     sequences = []
     all_metrics = []
-    
+
     # Debug: check batch keys
     if not hasattr(run_paired_generation, '_debug_printed'):
         print(f"    [DEBUG] batch keys: {sorted(batch.keys())[:15]}", flush=True)
@@ -369,7 +375,7 @@ def run_ablation(args):
                 baseline_seqs = valid_seqs
             elif baseline_seqs and valid_seqs:
                 hamming_vals = []
-                for s_on, s_off in zip(valid_seqs, baseline_seqs):
+                for s_on, s_off in zip(valid_seqs, baseline_seqs, strict=False):
                     h = hamming_fraction(s_on, s_off)
                     if h is not None:
                         hamming_vals.append(h)
@@ -417,15 +423,15 @@ def run_ablation(args):
         delta = np.mean(on_entropy) - np.mean(off_entropy)
         hamming = results['cond_ON_guided_ON']['hamming_vs_baseline']
         avg_hamming = np.mean(hamming) if hamming else 0
-        print(f"  VERDICT:")
+        print("  VERDICT:")
         print(f"    Entropy delta (ON - OFF): {delta:+.4f}")
         print(f"    Mean Hamming (ON vs OFF): {avg_hamming:.4f}")
         if avg_hamming < 0.01 and abs(delta) < 0.01:
-            print(f"    → Conditioning has NO EFFECT (disorder_proj likely untrained)")
+            print("    → Conditioning has NO EFFECT (disorder_proj likely untrained)")
         elif avg_hamming > 0.05 and delta > 0.02:
-            print(f"    → Conditioning IS ACTIVE: higher disorder → more diverse CDRs")
+            print("    → Conditioning IS ACTIVE: higher disorder → more diverse CDRs")
         else:
-            print(f"    → WEAK/MIXED signal: needs more training or stronger conditioning")
+            print("    → WEAK/MIXED signal: needs more training or stronger conditioning")
 
     # Save results
     out_path = PROJECT / 'calibration_artifacts' / 'ablation_disorder_results.json'

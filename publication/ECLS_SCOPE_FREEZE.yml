@@ -1,0 +1,37 @@
+schema_version: 1
+status: frozen_primary_manuscript_scope
+frozen_at: 2026-08-09
+working_title: Backbone-conditioned likelihood contrasts for computational scoring of antibody CDR-H3 sequences in antibody-peptide complex structures
+primary_claim: Deposited native CDR-H3 sequences have more favorable ECLS than composition-matched shuffles on the one-time temporal structure panel.
+primary_inference_unit: official_antigen_cluster
+primary_result:
+  clusters: 15
+  mean_ecls_advantage: 0.172281
+  cluster_bootstrap_ci95: [0.059156, 0.291920]
+  positive_clusters: 12
+  frozen_decision:
+    path: results/publication/h3_ecls_temporal_final_v1/final_decision.json
+    sha256: 0e32c22ceaddd829497011708445b136f4f0a1f13f061bcbfdd76d68bacd8cb0
+  frozen_results:
+    path: results/publication/h3_ecls_temporal_final_v1/results.json
+    sha256: d4c47461be4b06367576ffe25532198cf9a0b56463c16bb36050a69f3b3f2c69
+included_as_core_evidence:
+  - frozen adaptation analysis as development provenance
+  - one-time temporal-final native-versus-shuffle ECLS
+  - composition-matched counterfactual control definition
+included_only_as_negative_or_supplementary:
+  - universal cross-generator ECLS reranking failure
+  - exploratory generator-calibrated GCLC
+  - T1 and T2/T2.1 structural recovery
+  - 4HIX computational case study
+  - multiscaffold-v2 terminal negative design result
+  - CAID3 disorder evaluation
+excluded_from_primary_claim:
+  - successor-v3 and contact-v2
+  - antibody design success
+  - binding, affinity, specificity, hotspot causality, efficacy, or safety
+  - planned SPR/BLI experiments
+terminal_rules:
+  temporal_final_rerun: forbidden
+  contact_v2_promotion_without_independent_confirmation: forbidden
+  wet_lab_language_before_measurements: forbidden

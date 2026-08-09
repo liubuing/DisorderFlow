@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "frozen_date": "2026-08-05",
+  "scope": "experimentally measured mutations in antibody-peptide or antibody-IDP complexes",
+  "claim_boundary": "heterogeneous external evidence panel; not a pooled quantitative affinity benchmark",
+  "records": [
+    {
+      "id": "crenezumab_abeta_y32a_hc",
+      "antibody": "crenezumab",
+      "target": "amyloid-beta",
+      "pdb_id": "5KNA",
+      "mutation": "Y32A",
+      "mutation_chain_role": "antibody_heavy",
+      "mutation_count": 1,
+      "assay": "SPR single-cycle kinetics",
+      "endpoint": "binding_detectability",
+      "effect": "no_detectable_binding",
+      "extraction_tier": "exact_categorical_text",
+      "doi": "10.1038/srep39374",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5171940/",
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "crenezumab_abeta_g95a_hc",
+      "antibody": "crenezumab",
+      "target": "amyloid-beta",
+      "pdb_id": "5KNA",
+      "mutation": "G95A",
+      "mutation_chain_role": "antibody_heavy",
+      "mutation_count": 1,
+      "assay": "SPR single-cycle kinetics",
+      "endpoint": "binding_detectability",
+      "effect": "no_detectable_binding",
+      "extraction_tier": "exact_categorical_text",
+      "doi": "10.1038/srep39374",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5171940/",
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "crenezumab_abeta_d101a_hc",
+      "antibody": "crenezumab",
+      "target": "amyloid-beta",
+      "pdb_id": "5KNA",
+      "mutation": "D101A",
+      "mutation_chain_role": "antibody_heavy",
+      "mutation_count": 1,
+      "assay": "SPR single-cycle kinetics",
+      "endpoint": "binding_detectability",
+      "effect": "no_detectable_binding",
+      "extraction_tier": "exact_categorical_text",
+      "doi": "10.1038/srep39374",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5171940/",
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "crenezumab_abeta_s52a_hc",
+      "antibody": "crenezumab",
+      "target": "amyloid-beta",
+      "pdb_id": "5KNA",
+      "mutation": "S52A",
+      "mutation_chain_role": "antibody_heavy",
+      "mutation_count": 1,
+      "assay": "SPR single-cycle kinetics",
+      "endpoint": "fold_affinity_loss",
+      "value": 1.8,
+      "effect": "weakened_binding",
+      "extraction_tier": "exact_numeric_text",
+      "doi": "10.1038/srep39374",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5171940/",
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "crenezumab_abeta_hc_delta_1_2",
+      "antibody": "crenezumab",
+      "target": "amyloid-beta",
+      "pdb_id": "5KNA",
+      "mutation": "delta_E1_V2",
+      "mutation_chain_role": "antibody_heavy",
+      "mutation_count": 2,
+      "assay": "SPR single-cycle kinetics",
+      "endpoint": "fold_affinity_loss",
+      "value": 2.6,
+      "effect": "weakened_binding",
+      "extraction_tier": "exact_numeric_text",
+      "doi": "10.1038/srep39374",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5171940/",
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "solanezumab_abeta_g95a_hc",
+      "antibody": "solanezumab",
+      "target": "amyloid-beta",
+      "pdb_id": "4XXD",
+      "mutation": "G95A",
+      "mutation_chain_role": "antibody_heavy",
+      "mutation_count": 1,
+      "assay": "ELISA",
+      "endpoint": "EC50_nM",
+      "wild_type_value": 3.5,
+      "mutant_lower_bound": 3500.0,
+      "censoring": "right",
+      "effect": "at_least_1000_fold_weaker",
+      "extraction_tier": "exact_censored_numeric_text",
+      "doi": "10.1016/j.csbj.2025.10.018",
+      "source_url": "https://doi.org/10.1016/j.csbj.2025.10.018",
+      "license": "CC BY-NC-ND 4.0"
+    }
+  ],
+  "excluded_sources": [
+    {
+      "name": "SKEMPI 2.0",
+      "reason": "no eligible antibody-amyloid, antibody-tau, or antibody-alpha-synuclein peptide complexes",
+      "url": "https://life.bsc.es/pid/skempi2/database/download/skempi_v2.csv",
+      "doi": "10.1093/bioinformatics/bty635"
+    },
+    {
+      "name": "AB-Bind",
+      "reason": "folded protein antigens rather than peptide or IDP targets; repository has no declared license",
+      "url": "https://github.com/sarahsirin/AB-Bind-Database",
+      "doi": "10.1002/pro.2829"
+    },
+    {
+      "name": "bapineuzumab/4HIX",
+      "reason": "reported truncations and N-terminal biotinylation, but no quantitative point-mutation series",
+      "doi": "10.1038/srep01302"
+    },
+    {
+      "name": "gantenerumab/5CSZ",
+      "reason": "no publicly accessible quantitative point-mutation series located",
+      "doi": "10.3233/JAD-2011-110977"
+    }
+  ]
+}

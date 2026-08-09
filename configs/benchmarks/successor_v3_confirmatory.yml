@@ -1,0 +1,92 @@
+schema_version: 1
+status: frozen_before_live_snapshot_acquisition
+frozen_at_utc: 2026-08-07T07:35:39.8052497Z
+classification: one_time_internal_computational_confirmation; not external or experimental
+
+claim_boundary:
+  permits:
+    - native_H3_antigen_conditioning_on_newly_acquired_structures
+    - fixed_backbone_contact_routing
+  prohibits:
+    - binding
+    - affinity
+    - experimental_specificity
+    - therapeutic_efficacy
+    - external_generalization
+
+frozen_checkpoints:
+  successor:
+    path: logs/bfn_successor_v3_h3_specificity_2026_08_07__11_35_01_successor_v3_h3_specificity_s3107/checkpoints/best.pt
+    sha256: de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618
+  stage_a:
+    path: logs/bfn_multiscaffold_v2_stage_a_random_2026_08_06__08_43_37_multiscaffold_v2_random_s2647/checkpoints/best.pt
+    sha256: 00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f
+
+snapshot:
+  source_url: https://sabdab.opig.stats.ox.ac.uk/api/download/all-summary
+  baseline: data/sabdab2_current/all-summary.csv
+  acquisition: write_once_after_protocol_freeze
+  candidate_rule: INSTANCE_and_PDB_absent_from_baseline_and_all_prior_exposure
+
+structural_eligibility:
+  paired_heavy_light_required: true
+  exactly_one_peptide_antigen_required: true
+  antigen_length: [5, 50]
+  h3_length: [4, 30]
+  h3_definition: ANARCII_2.0.8_Chothia_positions_93_102
+  heavy_atom_contact_cutoff_angstrom: 4.5
+  minimum_contacting_h3_positions: 1
+  missing_data_action: exclude
+
+isolation:
+  exact_pdb_match: exclude
+  minimum_coverage: 0.80
+  coverage_mode: 0
+  minimum_identity:
+    vh: 0.90
+    vl: 0.90
+    paired_cdr: 0.70
+    h3: 0.50
+    antigen: 0.30
+  candidate_components: connected_components_across_all_five_sequence_axes
+  minimum_components_to_unseal: 12
+
+representative_selection:
+  order:
+    - n_contacting_h3_positions_descending
+    - n_h3_antigen_residue_contacts_descending
+    - resolution_ascending_non_null_first
+    - instance_ascending
+donor_selection:
+  different_component_required: true
+  order:
+    - absolute_antigen_length_difference_ascending
+    - instance_ascending
+
+primary_endpoint:
+  metric: component_mean_factual_minus_mismatched_antigen_native_H3_NLL
+  favorable_direction: negative
+  fixed_t: 0.5
+  seeds: [4103, 4111, 4127]
+  shared_noise_between_factual_and_mismatch: true
+  bootstrap_draws: 10000
+  bootstrap_seed: 4153
+
+gates:
+  minimum_valid_components: 12
+  minimum_valid_fraction: 0.80
+  maximum_mean_factual_minus_mismatched_nll: -0.005
+  maximum_component_bootstrap_ci95_upper: 0.0
+  minimum_negative_component_fraction: 0.70
+  maximum_successor_minus_stage_a_factual_nll: 0.05
+  minimum_contact_auroc: 0.60
+
+execution_policy:
+  checkpoint_selection: forbidden
+  threshold_tuning: forbidden
+  candidate_replacement_after_unsealing: forbidden
+  sample_size_extension: forbidden
+  confirmatory_evaluation_attempts: 1
+  generation: not_part_of_this_confirmation
+  af2_or_prodigy_selection: forbidden
+  insufficient_components_action: freeze_feasibility_failure_without_model_access

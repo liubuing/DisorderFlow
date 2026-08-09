@@ -1,0 +1,27 @@
+schema_version: 1
+status: frozen_before_candidate_selection_and_any_af2_access
+generation_config: configs/benchmarks/multiscaffold_confirmatory_v2_generation.yml
+generation_config_sha256: b5086a673215f92b39697c57f658d1a63c311891b8256ec50b00ebce05a73dda
+raw_generation: results/multiscaffold_confirmatory_v2/raw_generation.json
+raw_generation_sha256: bc61c7dfb8b00b562dba9b77f2d91f0113a72932cf55d34b0b1c30645a9afeca
+raw_generation_audit: results/multiscaffold_confirmatory_v2/raw_generation_audit.json
+raw_generation_audit_sha256: bb7187fd8a139a94413b40a52eb4569d7745ecd77297a79e7b28436c611d3205
+selection:
+  slots_per_arm_component: 3
+  require_unique_h3_within_arm_component: true
+  insufficient_unique_candidates: retain_failed_selection_slots
+  objective_priority:
+    - maximize_distinct_generation_seeds
+    - maximize_minimum_pairwise_hamming_distance
+    - maximize_total_pairwise_hamming_distance
+    - minimize_sum_sample_indices
+    - lexicographic_attempt_id_tiebreak
+  prohibited_inputs:
+    - generator_score
+    - bfn_confidence
+    - af2_outputs
+    - interface_scores
+    - native_recovery
+output: results/multiscaffold_confirmatory_v2/pre_af2_selection.json
+expected_slots: 300
+claim_boundary: sequence-diversity selection only; no structural or performance evidence

@@ -1,6 +1,7 @@
 ﻿import os
 import shutil
 import argparse
+import hashlib
 import pickle
 import torch
 from torch.nn.utils import clip_grad_norm_
@@ -12,6 +13,7 @@ if torch.cuda.is_available():
     torch.backends.cudnn.allow_tf32 = True
 
 from disorderflow.datasets import get_dataset
+from disorderflow.disorder_metrics import pooled_disorder_metrics
 from disorderflow.models import get_model
 from disorderflow.utils.misc import *
 from disorderflow.utils.data import *
@@ -93,14 +95,44 @@ if __name__ == '__main__':
     parser.add_argument('--no_amp', action='store_true', help='Disable mixed precision training')
     parser.add_argument('--max-iters', type=int, default=None, help='Override config max_iters')
     parser.add_argument('--val-freq', type=int, default=None, help='Override config val_freq')
+    parser.add_argument('--seed', type=int, default=None, help='Override config random seed')
     args = parser.parse_args()
 
     # Load configs
     config, config_name = load_config(args.config)
+    allowed_initializer_sha256 = config.get('lineage', {}).get(
+        'allowed_initializer_sha256')
+    if allowed_initializer_sha256:
+        if args.finetune is not None:
+            raise RuntimeError(
+                'This lineage prohibits --finetune; use its frozen --init or '
+                'resume a checkpoint from the same lineage')
+        if args.resume is not None:
+            resume_metadata = torch.load(
+                args.resume, map_location='cpu', weights_only=False)
+            resume_lineage = resume_metadata.get('config', {}).get('lineage', {})
+            if (resume_lineage.get('allowed_initializer_sha256')
+                    != allowed_initializer_sha256):
+                raise RuntimeError(
+                    'Resume checkpoint does not belong to the configured lineage')
+            del resume_metadata
+        else:
+            if args.init is None:
+                raise RuntimeError(
+                    'This lineage requires --init with its frozen allowed initializer')
+            with open(args.init, 'rb') as initializer_handle:
+                initializer_sha256 = hashlib.file_digest(
+                    initializer_handle, 'sha256').hexdigest()
+            if initializer_sha256 != allowed_initializer_sha256:
+                raise RuntimeError(
+                    'Initializer SHA-256 does not match the frozen lineage contract: '
+                    f'{initializer_sha256}')
     if args.max_iters is not None:
         config.train.max_iters = args.max_iters
     if args.val_freq is not None:
         config.train.val_freq = args.val_freq
+    if args.seed is not None:
+        config.train.seed = args.seed
     seed_all(config.train.seed)
 
     # Logging
@@ -143,6 +175,8 @@ if __name__ == '__main__':
         # Wrap both splits so validation measures the same conditioning task.
         for split_name, dataset in [('train', train_dataset), ('val', val_dataset)]:
             ids = getattr(dataset, 'ids', getattr(dataset, 'all_ids', None))
+            if ids is None and hasattr(dataset, '_valid_indices'):
+                ids = [f'{index:08d}' for index in dataset._valid_indices]
             if ids is None:
                 logger.warning(
                     'Disorder lookup provided but %s sample IDs are unavailable; skipping',
@@ -169,12 +203,22 @@ if __name__ == '__main__':
                 if not filtered_ids:
                     raise RuntimeError(
                         f'No {split_name} samples have required disorder profiles')
-                dataset.ids = filtered_ids
+                if hasattr(dataset, '_valid_indices'):
+                    keep = {str(value).casefold() for value in filtered_ids}
+                    dataset._valid_indices = [
+                        index for index in dataset._valid_indices
+                        if f'{index:08d}'.casefold() in keep
+                    ]
+                else:
+                    dataset.ids = filtered_ids
                 ids = filtered_ids
                 logger.info(
                     'Filtered %s to %d samples with measured disorder profiles',
                     split_name, len(ids))
-            wrapped = DisorderAugmentedDataset(dataset, disorder_lookup, ids)
+            balance_boost = float(config.dataset.train.get(
+                'disorder_balance_boost', 0.0)) if split_name == 'train' else 0.0
+            wrapped = DisorderAugmentedDataset(
+                dataset, disorder_lookup, ids, balance_boost=balance_boost)
             if split_name == 'train':
                 train_dataset = wrapped
             else:
@@ -621,6 +665,8 @@ if __name__ == '__main__':
         loss_tape_folded = ValidationLossTape()
         n_idp = 0
         n_folded = 0
+        disorder_scores = []
+        disorder_labels = []
         with torch.no_grad():
             model.eval()
             for i, batch in enumerate(tqdm(val_loader, desc='Validate', dynamic_ncols=True)):
@@ -640,6 +686,7 @@ if __name__ == '__main__':
                 # Forward
                 device_type = 'cuda' if args.device == 'cuda' else 'cpu'
                 if args.device == 'mps': device_type = 'mps'
+                fixed_scores = None
                 with torch.autocast(
                         device_type=device_type, dtype=amp_dtype, enabled=amp_enabled):
                     loss_dict = model(batch)
@@ -647,6 +694,20 @@ if __name__ == '__main__':
                     loss = sum_weighted_losses(loss_dict, config.train.loss_weights)
                     loss_dict['overall'] = loss
                     loss_dict['avg_t'] = avg_t
+
+                    if 'disorder_label' in batch:
+                        fixed_scores = model.bfn.score_fixed(
+                            batch, fixed_t=config.train.get('val_fixed_t', 0.5))['disorder']
+
+                if fixed_scores is not None:
+                    metric_mask = batch['mask'].bool()
+                    if 'disorder_supervision_mask' in batch:
+                        metric_mask = metric_mask & batch['disorder_supervision_mask'].bool()
+                    targets = batch['disorder_label'].float()
+                    metric_mask = metric_mask & torch.isfinite(targets)
+                    disorder_scores.extend(
+                        torch.sigmoid(fixed_scores.float())[metric_mask].cpu().tolist())
+                    disorder_labels.extend(targets[metric_mask].cpu().tolist())
 
                 # Skip NaN val samples (same logic as training micro-batch NaN skip)
                 if torch.isnan(loss) or torch.isinf(loss):
@@ -667,6 +728,18 @@ if __name__ == '__main__':
             loss_tape_idp.log(it, logger, writer, 'val/idp')
         if n_folded > 0:
             loss_tape_folded.log(it, logger, writer, 'val/folded')
+        disorder_metrics = {}
+        if disorder_scores:
+            disorder_metrics = pooled_disorder_metrics(disorder_scores, disorder_labels)
+            logger.info(
+                '[val/disorder] Iter %05d | ROC-AUC %.4f | PR-AUC %.4f | MCC %.4f | '
+                'positive_rate %.4f | residues %d',
+                it, disorder_metrics['disorder_auc_roc'],
+                disorder_metrics['disorder_auc_pr'], disorder_metrics['disorder_mcc'],
+                disorder_metrics['disorder_positive_rate'],
+                disorder_metrics['disorder_n_residues'])
+            for name, value in disorder_metrics.items():
+                writer.add_scalar(f'val/{name}', value, it)
         # Don't step scheduler during warmup —warmup manually controls LR.
         # Stepping during warmup can cause the scheduler to decay its internal LR,
         # leading to a sudden drop when warmup ends and the scheduler takes over.
@@ -678,13 +751,20 @@ if __name__ == '__main__':
 
         selection_key = config.train.get('checkpoint_selection_metric')
         if selection_key:
-            if selection_key not in loss_tape.accumulate:
+            if selection_key in disorder_metrics:
+                metric_value = disorder_metrics[selection_key]
+            elif selection_key in loss_tape.accumulate:
+                metric_value = loss_tape.accumulate[selection_key] / loss_tape.total
+            else:
                 raise RuntimeError(
                     f'Checkpoint selection metric missing from validation: {selection_key}')
-            selection_value = loss_tape.accumulate[selection_key] / loss_tape.total
             logger.info(
                 'Checkpoint selection metric %s=%.6f',
-                selection_key, float(selection_value))
+                selection_key, float(metric_value))
+            selection_mode = config.train.get('checkpoint_selection_mode', 'min')
+            if selection_mode not in ('min', 'max'):
+                raise ValueError(f'Unsupported checkpoint selection mode: {selection_mode}')
+            selection_value = -metric_value if selection_mode == 'max' else metric_value
         else:
             selection_value = avg_loss
         max_seq_loss = config.train.get('checkpoint_selection_max_seq_loss')

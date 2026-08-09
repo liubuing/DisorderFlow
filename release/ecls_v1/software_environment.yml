@@ -1,0 +1,23 @@
+schema_version: 1
+captured_at: 2026-08-09
+platform: Windows
+python: 3.14.5
+pytorch: 2.12.0+cu130
+cuda_runtime: '13.0'
+gpu: NVIDIA GeForce RTX 5060 Laptop GPU
+nvidia_driver: '610.74'
+packages:
+  numpy: 2.4.6
+  scipy: 1.17.1
+  pandas: 2.3.3
+  scikit_learn: 1.9.0
+  lmdb: 2.2.1
+  pyyaml: 6.0.3
+  biopython: '1.87'
+external_tools:
+  mmseqs2:
+    version: 15-6f452+ds-2+b3
+    execution_environment: WSL Debian
+notes:
+  - AlphaFold, OpenMM, ProteinMPNN, and ESM-IF analyses have separate environment constraints in their runner artifacts.
+  - Exact CUDA reproducibility requires compatible hardware and driver; analysis-only tests can run on CPU.

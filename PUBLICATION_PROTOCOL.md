@@ -1,32 +1,35 @@
-# Flexible-Epitope Antibody Design Publication Protocol
+# ECLS Structural Sequence-Scoring Publication Protocol
 
 ## Target
 
 - Primary venue: Bioinformatics.
 - Secondary venue: PLOS Computational Biology, conditional on a stronger
   biological analysis of flexible-epitope recognition.
-- Study type: computational methods and benchmark paper.
+- Study type: computational structural sequence-scoring and benchmark paper.
 - Wet-lab validation: out of scope for the current study.
 
 ## Primary Claim
 
-The study will test whether ensemble-aware, template-constrained CDR-H3 design
-improves computational compatibility with flexible peptide epitopes on a
-strictly homology-disjoint benchmark, relative to single-structure design and
-established sequence-design baselines.
+The primary claim is that epitope-conditioned likelihood shift (ECLS) assigns
+the deposited native CDR-H3 a more favorable peptide-coordinate likelihood
+contrast than composition-matched shuffled H3 controls on the frozen temporal
+antibody-peptide structure panel.
+
+This is a native-versus-counterfactual structural sequence-scoring claim. It is
+not a claim that ECLS generally reranks generated candidates, improves antibody
+design, predicts contacts without bound geometry, identifies causal hotspots,
+or predicts binding.
 
 The study will not claim experimentally validated binding, affinity,
 specificity, or therapeutic efficacy.
 
 ## Method Under Test
 
-The proposed method must combine:
-
-1. Multiple peptide-epitope conformations per antibody scaffold.
-2. Mean-case and lower-tail interface objectives.
-3. Preservation of experimentally observed epitope contacts.
-4. Fab-fold and developability constraints.
-5. Candidate diversity constraints.
+The method under test is the fixed-coefficient ECLS contrast defined below.
+Ensemble design, disorder conditioning, contact-v2, candidate generation, AF2
+reranking, and wet-lab mutation testing are outside the primary paper claim.
+They may appear only as explicitly labelled negative results, supplementary
+development analyses, or future work.
 
 External metapredict profiles and the internal disorder head are ablation arms,
 not ground-truth disorder labels. The internal head must be described as a
@@ -96,14 +99,38 @@ Every arm receives the same structures, design positions, sample count, and
 post-generation filters. A missing or failed baseline is reported as missing;
 it cannot be silently omitted.
 
+**Current completion status (2026-08-05):** a 4HIX diagnostic completed parent
+BFN, current BFN with disorder conditioning on and off, and ProteinMPNN using
+the same 12-residue H3 mask, three seeds, and eight candidates per seed. This
+single pre-AF2 scaffold is insufficient for the publication baseline panel.
+Matched-position ESM-IF is operational on seven exposed development antigen
+units (168/168 raw candidates; zero failures), but it is not confirmatory.
+A new SAbDab snapshot produced 91 structurally eligible candidates. The v1
+audit found zero independent from 4,129 training/prior-exposure records under
+50%-identity VH/VL gates, which are unsuitable for germline-related antibody
+frameworks. Before accessing any generator or scorer output, the frozen v2
+matrix selected 90% VH/VL, 70% paired-CDR, 50% H3, and 30% antigen identity at
+80% coverage and yielded 20 connected-component representatives. They are a
+prospective internal holdout, not external confirmation. A controlled Stage A
+random-initialization and Stage B disorder-supervision lineage completed, and
+raw generation preserved all 2,400 frozen attempts across five arms with no
+final failed slots. Diversity-only selection retained 280 candidates and 20
+explicit ESM-IF shortfall slots. Three-seed AF2 completed 960 predictions and
+PRODIGY scored 959 structures, with one no-contact failure. Only 7/20 components
+were valid across all arms; oracle-baseline-minus-proposed mean delta was
+-0.7635 kcal/mol (95% component-bootstrap CI -1.5063 to -0.0403), and every
+preregistered gate failed. The full design claim is rejected for this internal
+v2 hypothesis.
+
 ## Evaluation
 
 ### Primary endpoint
 
-The primary endpoint is paired improvement over the strongest baseline in
-lower-tail ensemble interface compatibility on the development and final
-complexes. The exact score and lower-tail quantile must be fixed after a
-scorer sanity benchmark and before model comparison.
+The primary endpoint is antigen-cluster-level native ECLS advantage over 200
+composition-matched H3 shuffles on the one-time temporal final. The frozen
+summary is mean advantage `0.172281`, 95% cluster-bootstrap CI
+`[0.059156, 0.291920]`, with 12/15 positive clusters. That temporal final is
+terminal and must not be rerun.
 
 ### Mandatory secondary endpoints
 
@@ -115,6 +142,16 @@ scorer sanity benchmark and before model comparison.
 - Fab structural validity and developability pass rate.
 - Sequence uniqueness and cluster-level diversity.
 - Runtime and compute cost.
+
+The 4HIX diagnostic now includes a computational contact-position alanine scan,
+PRODIGY interface scoring, sequence developability, diversity, and runtime.
+These are single-scaffold computational endpoints. A public mutation audit
+retained six heterogeneous anti-Abeta records (five point mutations), but only
+one point mutation had an exact uncensored numeric fold effect; pooled
+quantitative validation is therefore prohibited. Multi-scaffold confirmatory
+endpoints are now available as a negative internal computational result. They
+do not establish non-binding, affinity, external generalization, or experimental
+failure; an internal holdout is not external confirmation.
 
 Synthetic mutations and shuffled sequences are counterfactual controls, not
 experimental non-binders. Metrics must use complex-level estimates, not treat
@@ -129,10 +166,11 @@ residues or generated sequences from one complex as independent samples.
 - No claim based only on pooled residue-level AUROC.
 - No final-set tuning, threshold changes, checkpoint selection, or reruns.
 
-## Development Gates
+## Historical Development Gates
 
-The publication final can be evaluated only if all conditions hold on the
-development set:
+The already completed temporal final was eligible only after the following
+development conditions. These gates are historical and cannot be reused to
+justify a new final evaluation:
 
 1. The primary endpoint improves over the strongest complete baseline and its
    paired 95% confidence interval excludes zero.
@@ -144,8 +182,9 @@ development set:
    data, or the remaining provenance limitation is explicitly bounded.
 6. All required baselines and preregistered ablations completed successfully.
 
-If these gates fail, the final remains sealed and the method is revised using
-development data only.
+The broader multi-generator design gates subsequently failed. That failure does
+not reverse the bounded ECLS native-versus-shuffle result, but it prohibits an
+antibody-design-success claim in this paper.
 
 ## Existing Evidence Classification
 
@@ -163,6 +202,17 @@ development data only.
   one representative per antigen cluster.
 - The first ECLS discovery set has only seven antigen clusters and is
   hypothesis-generating evidence.
+- The legacy disorder-conditioning ablation produced 2.83% Hamming change. The
+  corrected production inference path, after explicit antigen-chain role
+  assignment, produced 8.33% paired Hamming change on 4HIX; 17/24 pairs changed.
+  This establishes pathway sensitivity, not beneficial design direction.
+- Frozen CAID3 Disorder-NOX evaluation retained 187/204 targets after direct
+  training-sequence homology screening and scored 83 exact AFDB mappings. Among
+  71 mixed-label UniRef50 clusters, macro ROC-AUC was 0.7551 with bootstrap 95%
+  CI [0.6945, 0.8119]. Metapredict reached 0.7927; paired BFN-minus-metapredict
+  was -0.0376, 95% CI [-0.0786, 0.0056]. External discrimination passed, while
+  calibration failed (Brier 0.2991; ECE 0.3794). The head may be described as
+  externally discriminative but not superior or probability-calibrated.
 - The exposed 46-antigen-cluster adaptation analysis passed its frozen development
   gates: mean advantage 0.217481, bootstrap 95% CI [0.146050, 0.289555], median
   advantage 0.203056, and 80.4348% positive clusters.
@@ -221,6 +271,47 @@ novel H3s bind, and not confirmation on the immutable temporal final.
 4. Development report with seed-level and family-level analyses.
 5. One-time final report generated from the frozen protocol.
 6. Tables, figures, model cards, limitations, and reproducibility package.
+
+## Disorder Supervision Status (2026-08-05)
+
+The confidence-weighted supervision implementation is documented in
+`docs/DISORDER_SUPERVISION_PROTOCOL.md`. DisProt experimental regions are now
+represented with per-residue source, confidence, and evidence masks; unknown
+residues are not treated as ordered. CAID2 targets and their available UniRef50
+clusters are excluded before a deterministic UniRef50 train/development split.
+
+The current local structure intersection contains 61 train and 6 development
+records (5,542 supervised residues; zero cross-split clusters). After enforcing
+the model's length range, only 27 train and 5 development structures remain.
+This was sufficient for pipeline smoke testing but not publication training.
+Three balanced-v4 seeds were subsequently completed. Frozen CAID3 evaluation is
+reported above; its positive discrimination and failed calibration replace the
+earlier `post-evaluation remains unrun` status.
+
+## Follow-up Diagnostic Results (2026-08-05)
+
+The corrected 4HIX H3 is chain-local `H:96-107` (`VRYDHYSGSSDY`). The previous
+10- and 11-residue masks are invalid. Each matched generation arm produced 24
+unique candidates. Mean native recovery was 0.0799 for current disorder-on,
+0.1528 for current disorder-off, 0.0625 for parent BFN, and 0.3264 for
+ProteinMPNN. The result does not favor disorder conditioning by native recovery.
+
+Three candidates per arm were selected before AF2 by each arm's native score and
+evaluated with three identical AF2 seeds. Mean candidate-median ipTM was 0.4563
+for current disorder-on, 0.4450 for disorder-off, 0.4524 for parent BFN, and
+0.4557 for ProteinMPNN. Native and composition-shuffle medians were 0.4621 and
+0.4635. AF2 therefore did not separate native from shuffle or establish design
+improvement. PRODIGY scores had large seed spread and are descriptive only.
+
+Developability pass fractions at the frozen 0.55 heuristic threshold were
+0.708, 0.750, 0.792, and 1.000 for current-on, current-off, parent BFN, and
+ProteinMPNN. Contact-position Y3A, S9A, and S10A scans did not show a consistent
+AF2/PRODIGY loss and are computational counterfactuals, not mutation evidence.
+
+The separate 3STB five-seed panel retained high monomer pLDDT but failed every
+multimer gate. Native mean ipTM was 0.138 versus 0.110 for a composition-matched
+CDR scramble; all designed arms were at or below 0.110. The de novo full-length
+Abeta42 interface ceiling remains unbroken.
 
 ## Pose-Neighborhood Ensemble Extension
 

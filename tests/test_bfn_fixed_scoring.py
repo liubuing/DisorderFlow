@@ -33,6 +33,7 @@ def test_candidate_injection_is_exact_and_validates_length():
 class _FixedReceiver(nn.Module):
     def forward(self, seq, pos, ori, ang, t, pair_feat, mask_res, **kwargs):
         assert torch.equal(seq.argmax(dim=-1), torch.tensor([[0, 1, 2]]))
+        assert kwargs['orientation_is_rotation'] is True
         n, length = mask_res.shape
         zeros = torch.zeros(n, length)
         return (
@@ -102,3 +103,20 @@ def test_model_score_uses_unmasked_embeddings_and_propagates_result():
     model.encode = types.MethodType(encode, model)
     result = model.score({}, fixed_t=0.25)
     assert result['state_compatibility'].item() == 0.25
+
+
+def test_pair_contact_noisy_or_aggregation_and_empty_antigen():
+    from disorderflow.modules.bfn.receiver import aggregate_pair_contact_logits
+
+    pair_logits = torch.tensor([[[0.0, 0.0], [4.0, -4.0]]])
+    antigen = torch.tensor([[True, True]])
+    result = aggregate_pair_contact_logits(pair_logits, antigen)
+    assert torch.allclose(torch.sigmoid(result[0, 0]), torch.tensor(0.75))
+    assert torch.sigmoid(result[0, 1]) > 0.98
+    empty = aggregate_pair_contact_logits(pair_logits, torch.zeros_like(antigen))
+    assert torch.equal(empty, torch.full_like(empty, -20.0))
+
+    saturated = aggregate_pair_contact_logits(
+        torch.full((1, 2, 200), 10.0, dtype=torch.bfloat16),
+        torch.ones((1, 200), dtype=torch.bool))
+    assert torch.isfinite(saturated).all()

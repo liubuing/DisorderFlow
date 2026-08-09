@@ -1,0 +1,88 @@
+# Confidence-weighted residue-level disorder training.
+# Build split-specific schema-v3 artifacts with build_disorder_supervision.py.
+# Initialize with --init (not --finetune) so compatible disorder_proj/head tensors
+# from the activated checkpoint are retained.
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      disorder_condition_scale: 1.0
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    plddt: 1.5
+    iptm: 2.0
+    pae: 0.2
+    disorder: 1.5
+    disorder_focal_gamma: 4.0
+    disorder_rank: 0.5
+    disorder_rank_temperature: 1.0
+    disorder_rank_min_gap: 0.05
+    disorder_align: 0.08
+    disorder_align_scale: 1.0
+    diversity: 0.02
+    anti_degen: 0.02
+    head_dropout: 0.15
+    encoder_dropout: 0.0
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+
+train:
+  amp_dtype: bfloat16
+  loss_weights:
+    seq: 1.0
+    plddt: 1.5
+    iptm: 2.0
+    pae: 0.2
+    disorder: 1.5
+    disorder_rank: 0.5
+  freeze_backbone: true
+  unfreeze_encoder_layers: 2
+  max_iters: 8000
+  val_freq: 200
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 300
+  seed: 2030
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  optimizer:
+    type: adamw
+    lr: 8.e-5
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 25
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_idp_unified
+    max_residues: 250
+    disorder_balance_boost: 5.0
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_idp_unified
+    max_residues: 350
+  disorder_lookup_train: data/disorder_supervision/train_v3.pkl
+  disorder_lookup_train_split: train
+  disorder_lookup_val: data/disorder_supervision/dev_v3.pkl
+  disorder_lookup_val_split: dev
+  require_disorder_lookup: true

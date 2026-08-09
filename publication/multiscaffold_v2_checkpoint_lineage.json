@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_v2_candidate_generation",
+  "holdout_manifest_sha256": "b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380",
+  "stage_a": {
+    "initialization": "random",
+    "config": "configs/train/bfn_multiscaffold_v2_stage_a_random.yml",
+    "config_sha256": "57935148ea0b65234436302827a62b280c2311e8e51a86b1e00e9bace29ba7b6",
+    "checkpoint": "logs/bfn_multiscaffold_v2_stage_a_random_2026_08_06__08_43_37_multiscaffold_v2_random_s2647/checkpoints/best.pt",
+    "checkpoint_sha256": "00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f",
+    "iteration": 100000,
+    "validation_loss": 2.4305
+  },
+  "stage_b": {
+    "initialization": "stage_a_only",
+    "config": "configs/train/bfn_multiscaffold_v2_stage_b_disorder.yml",
+    "config_sha256": "426da178df61d8d11ab554a937154128aca36d3b302178b39a2755c2973443c2",
+    "source_checkpoint_sha256": "00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f",
+    "checkpoint": "logs/bfn_multiscaffold_v2_stage_b_disorder_2026_08_06__19_00_50_multiscaffold_v2_stagea100k_s2657/checkpoints/best.pt",
+    "checkpoint_sha256": "5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3",
+    "iteration": 2200,
+    "validation_disorder_roc_auc": 0.9051453809079083
+  },
+  "prohibited_initializers": [
+    "balanced_v4",
+    "parent_bfn",
+    "legacy_disorderflow"
+  ],
+  "claim_boundary": "checkpoint provenance only; no generation or benchmark result"
+}

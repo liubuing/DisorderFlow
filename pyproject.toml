@@ -38,6 +38,11 @@ dev = [
     "pytest-cov",
     "ruff>=0.4.0",
 ]
+publication = [
+    "scikit-learn>=1.3",
+    "statsmodels>=0.14",
+    "huggingface-hub>=0.24",
+]
 af2 = [
     "jax",
     "jaxlib",
@@ -70,6 +75,9 @@ markers = [
 line-length = 100
 target-version = "py310"
 extend-exclude = [".venv_cuda", "venv_wsl", "venv_colabfold", "casp17", "diffab", "docs", "data", "logs", "results", "ref"]
+
+[tool.ruff.format]
+line-ending = "lf"
 
 [tool.ruff.lint]
 # Keep lint permissive for a research codebase — focus on real bugs, not style.

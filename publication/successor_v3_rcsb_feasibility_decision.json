@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "RCSB_metadata_feasibility_gate_failed",
+  "frozen_at_utc": "2026-08-07T09:58:47.3731912Z",
+  "classification": "pre_structure_pre_model_confirmatory_feasibility; not a performance result",
+  "preregistration": {
+    "path": "publication/successor_v3_confirmatory_preregistration.json",
+    "sha256": "33a14c3236a13eb04e98757e3ad1a7f09b145be34eae881d7b2258ea8f9f7866"
+  },
+  "acquisition_addendum": {
+    "path": "configs/benchmarks/successor_v3_rcsb_acquisition_addendum.yml",
+    "sha256": "4bb493230289e26812253405b0ccc218c49751662864c4ef2dfd0221cbdb9330",
+    "canonical_query_sha256": "b6b9e99d1f8d90f148db3fcaf81002b7b3df8db078ee93b03ddd11eff567289d"
+  },
+  "snapshot": {
+    "path": "data/successor_v3_rcsb_snapshot_2026_08_07/acquisition.json",
+    "sha256": "09ecc1dfb4b14e293afab7bc314a9ac0287e422e0e777b1e73b5d7a683d39be8",
+    "retrieved_at_utc": "2026-08-07T09:58:13.565916Z",
+    "queried_entries": 57
+  },
+  "discovery": {
+    "path": "data/successor_v3_rcsb_snapshot_2026_08_07/discovery.json",
+    "sha256": "0911e00e88aaae7d14fadc643aebffb932b953e44a5f985ed8053119b897a46e",
+    "excluded_entries": 55,
+    "exact_new_entry_ids": [
+      "11EX",
+      "9TV0"
+    ],
+    "exact_new_entries": 2
+  },
+  "frozen_gate": {
+    "minimum_exact_new_entry_ids_before_mmcif_download": 12,
+    "observed_exact_new_entry_ids": 2,
+    "passed": false
+  },
+  "decision": "insufficient exact-new RCSB entry IDs; freeze feasibility failure without mmCIF download, structural eligibility filtering, homology audit, or model access",
+  "prohibitions": [
+    "do not lower the 12-entry metadata minimum",
+    "do not download candidate mmCIF structures for this confirmatory attempt",
+    "do not run ANARCII or structural eligibility filtering on these candidates",
+    "do not run the successor or Stage A checkpoints on this snapshot",
+    "do not create a confirmatory evaluation attempt ledger for this snapshot"
+  ],
+  "next_eligible_action": "wait for a later independent structural snapshot with at least 12 exact-new entry IDs, then freeze a new acquisition addendum before candidate identity access",
+  "claim_boundary": "This is a model-free metadata sample-size feasibility failure. It neither supports nor rejects successor-v3 performance."
+}

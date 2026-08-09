@@ -1,0 +1,33 @@
+schema_version: 1
+status: metadata_discovery_complete; structure_and_homology_audit_pending
+purpose: homology-isolated matched multi-scaffold H3 candidate benchmark
+discovery: data/multiscaffold_confirmatory_v1/discovery.json
+isolation:
+  axes:
+    pdb_id: exact
+    vh: {minimum_identity: 0.5, minimum_coverage: 0.8}
+    vl: {minimum_identity: 0.5, minimum_coverage: 0.8}
+    cdr_h3: {minimum_identity: 0.5, minimum_coverage: 0.8}
+    antigen: {minimum_identity: 0.3, minimum_coverage: 0.8}
+  minimum_antigen_components: 12
+  forbid_previous_archive: true
+  forbid_all_previously_exposed_records: true
+generation:
+  seeds: [2609, 2617, 2621]
+  candidates_per_seed: 8
+  preserve_native_h3_length: true
+  arms:
+    - current_bfn_disorder_on
+    - current_bfn_disorder_off
+    - parent_bfn
+    - proteinmpnn
+    - esm_if
+  identical_structure_context_positions_and_filters: true
+  failed_candidates_remain_failures: true
+selection:
+  freeze_before_af2: true
+  candidates_per_arm_per_component: 3
+evaluation:
+  primary: worst_conformer_independent_interface_score
+  secondary: [native_recovery, contact_recovery, diversity, developability, af2, runtime]
+claim_boundary: no experimental binding or affinity claim

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "decision_date": "2026-08-05",
+  "hypothesis": "supplied contact restraints improve held-out contact recovery over count-, role-, and distance-matched random restraints",
+  "source_result": "results_t2.1_v2_final.json",
+  "source_sha256": "ee33f4aa0c182fdbca3d3c63140f2036b64248162b949974574515740d6bd9d6",
+  "corrected_analysis": "results/publication/h3_t2.1_v2_posthoc/final_decision.json",
+  "primary_contrast": {
+    "name": "supplied_minus_random_restraints",
+    "mean": -0.036648084424638364,
+    "ci95": [
+      -0.06379209198094643,
+      -0.010813940960999786
+    ],
+    "n_inference_units": 13,
+    "inference_unit": "official_antigen_cluster"
+  },
+  "mechanism_supported": false,
+  "terminal_for_current_mechanism": true,
+  "rerun_existing_final_permitted": false,
+  "decision": "The current contact-specific guidance mechanism is rejected. A new dataset is not required to close this negative hypothesis; future testing requires a mechanistically distinct method and a separately preregistered, previously unexposed benchmark."
+}

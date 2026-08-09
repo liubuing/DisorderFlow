@@ -1,0 +1,77 @@
+schema_version: 1
+status: amended_after_label_implementation_audit_before_model_freeze
+frozen_at_utc: 2026-08-09T00:40:17.2313119Z
+amended_at_utc: 2026-08-09T01:04:15.2010190Z
+amendment:
+  reason: canonical PDB 9c79 contains a residue identifier unsupported by the existing preprocessor
+  action: deterministically record and exclude every record_batch failure
+  structure_repair_or_candidate_replacement: forbidden
+  training_started_before_preprocessing_amendment: false
+  pre_training_config_fix: add train.loss_weights mirror required by train.py logging
+  numerical_stability_fix:
+    failed_run: bfn_successor_v3_contact_v2_exposed_2026_08_09__08_47_30_successor_v3_contact_v2
+    failure: bf16 rounded 1-1e-8 to 1 and produced infinite noisy-or logits
+    invalid_run_disposition: aborted_at_iteration_279_and_never_eligible_for_freeze
+    correction: compute noisy-or logits in float32 log-survival space
+    restart_policy: restart_from_frozen_initializer; do_not_resume_failed_run
+  contact_label_fix:
+    superseded_run: bfn_successor_v3_contact_v2_exposed_2026_08_09__08_52_07_successor_v3_contact_v2_stable
+    failure: pair loss used CA distance while frozen protocol requires CB with CA fallback
+    superseded_run_disposition: completed_but_never_eligible_for_freeze
+    correction: derive residue and pair labels from mask_heavyatom CB with CA fallback
+    restart_policy: restart_from_frozen_initializer; do_not_resume_superseded_run
+  storage_compaction_fix:
+    timing: after_model_freeze
+    scientific_effect: none
+    action: compact LMDB physical allocation without changing key-value records
+    dataset_manifest_and_split: unchanged
+classification: retrospective_exposed_development; not_confirmatory_not_external
+
+inputs:
+  structural_manifest:
+    path: data/successor_v3_exploratory/structures_final/structural_manifest.json
+    sha256: 26030e2c6de2523b7aa1b35e70653218ef06175ecf743b35de92cb24a915fe8f
+    records: 207
+  exposure_reference:
+    path: data/successor_v3_confirmatory/reference_union_manifest_v3.json
+    sha256: 61d63d6006a1ae1b0d6543572f78ca37502d4a804ef3bf34cbbea7ccea01d900
+
+split:
+  axes: {vh: 0.90, vl: 0.90, paired_cdr: 0.70, h3: 0.50, antigen: 0.30}
+  minimum_coverage: 0.80
+  coverage_mode: 0
+  folds: 5
+  eval_fold: 4
+  whole_connected_components_required: true
+
+hard_negatives:
+  donor_component_must_differ: true
+  donor_antigen_sequence_must_differ: true
+  order: [absolute_antigen_length_difference_ascending, instance_ascending]
+  fixed_before_training: true
+
+contact_v2:
+  target: H3_antigen_residue_pair_contact
+  atom: CB_with_CA_fallback
+  distance_cutoff_angstrom: 8.0
+  pair_head: projected_residue_bilinear_plus_pair_feature_bias
+  residue_aggregation: noisy_or_over_antigen_residues
+
+initializer:
+  path: logs/bfn_successor_v3_h3_specificity_2026_08_07__11_35_01_successor_v3_h3_specificity_s3107/checkpoints/best.pt
+  sha256: de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618
+
+future_confirmation:
+  current_development_pdbs_are_permanently_exposed: true
+  minimum_exact_new_entries: 12
+  reference_union: data/successor_v3_confirmatory/reference_union_manifest_v3.json
+  model_freeze_required_before_candidate_structure_access: true
+
+frozen_code:
+  scripts/build/build_successor_v3_contact_dev_dataset.py: 7addbaa3a0f96bec5777fdd30e34f0ed8f6a288d4b6bcaba8c230cf00fc924ba
+  disorderflow/modules/bfn/receiver.py: 9f13f6a772e529cdac715bb6116250f59a490413332a72a0cd7a8164ab19c2d9
+  disorderflow/modules/bfn/core.py: 6b4c218f7d4f5bdb90940186800f9f80fb3007732c79a55d2c31d8d91fb7b62f
+  disorderflow/models/bfn_model.py: 0fdbe6cbef39ba96046ca3ad3335c1a552630a755f6a30d0f605be987e0ab192
+  configs/train/bfn_successor_v3_contact_v2_exposed.yml: 1cea3ae907883cf857d178ffed23d92a3ff2d3de1b559574d06ee9807875a1ac
+
+claim_boundary: Development may guide architecture and training only. Results cannot support confirmation, external generalization, binding, affinity, specificity, or therapeutic claims.

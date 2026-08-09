@@ -1,0 +1,33 @@
+schema_version: 1
+status: frozen_before_successor_v3_training
+classification: development_only; not confirmatory or external evidence
+supersedes_for_development_only: previously exposed adaptation immutability
+sources:
+  audit: data/peptide_h3_publication_split_v4/audit.json
+  adaptation_manifest: data/peptide_h3_publication_split_v4/adaptation_manifest.csv
+  development_manifest: data/peptide_h3_publication_split_v4/development_manifest.csv
+prohibited_sources:
+  - data/peptide_h3_publication_split_v4/sealed_final_manifest.csv
+  - data/multiscaffold_confirmatory_v2/holdout_manifest.json
+unit: connected_component_of_official_antigen_clusters
+folds:
+  count: 5
+  assignment: first_8_bytes_sha256_of_component_modulo_5
+representative_selection:
+  order:
+    - n_contacting_h3_positions_descending
+    - n_h3_antigen_residue_contacts_descending
+    - id_ascending
+development_gates:
+  minimum_components: 12
+  factual_minus_mismatched_native_h3_nll_component_ci95_upper_below: 0.0
+  factual_native_h3_nll_may_not_worsen_by_more_than: 0.05
+  contact_auroc_minimum: 0.60
+  valid_component_fraction_minimum: 0.80
+  sampled_h3_unique_fraction_minimum: 0.50
+policy:
+  checkpoint_selection_allowed: true
+  threshold_tuning_allowed: true
+  v2_rerun_allowed: false
+  confirmatory_claim_allowed: false
+  successor_confirmatory_protocol_requires_new_unexposed_data: true

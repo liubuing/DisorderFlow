@@ -16,7 +16,6 @@ import numpy as np
 import torch
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "modules"))
@@ -31,7 +30,6 @@ from benchmark_h3_epitope_delta import (  # noqa: E402
     write_record_backbone,
 )
 from benchmark_vs_mpnn import sequence_recovery  # noqa: E402
-
 
 AA = set("ACDEFGHIKLMNPQRSTVWY")
 
@@ -159,6 +157,32 @@ def load_esmif():
     return model.cpu().eval(), alphabet
 
 
+def build_esmif_partial_sequence(heavy_sequence, h3_indices, total_length):
+    design_positions = set(h3_indices)
+    if not design_positions:
+        raise ValueError("ESM-IF design positions are empty")
+    if min(design_positions) < 0 or max(design_positions) >= len(heavy_sequence):
+        raise ValueError("ESM-IF design positions fall outside the heavy chain")
+    partial = ["<pad>"] * total_length
+    for index, aa in enumerate(heavy_sequence):
+        partial[index] = "<mask>" if index in design_positions else aa
+    return partial
+
+
+def validate_esmif_sample(sampled_heavy, native_heavy, h3_indices):
+    if len(sampled_heavy) != len(native_heavy):
+        raise ValueError("ESM-IF changed the heavy-chain length")
+    design_positions = set(h3_indices)
+    changed_fixed = [
+        index for index, (sampled, native) in enumerate(
+            zip(sampled_heavy, native_heavy, strict=True))
+        if index not in design_positions and sampled != native
+    ]
+    if changed_fixed:
+        raise ValueError(
+            f"ESM-IF changed fixed heavy-chain positions: {changed_fixed[:10]}")
+
+
 def generate_esmif(config, model, pdb_path, h3_indices, chain_ids, seed):
     from esm.inverse_folding import multichain_util
 
@@ -167,9 +191,8 @@ def generate_esmif(config, model, pdb_path, h3_indices, chain_ids, seed):
     if len(heavy_sequence) <= h3_indices[-1]:
         raise ValueError("ESM-IF heavy sequence is shorter than the official H3 mapping")
     all_coords = multichain_util._concatenate_coords(coords, "H")
-    partial = ["<pad>"] * len(all_coords)
-    for index, aa in enumerate(heavy_sequence):
-        partial[index] = "<mask>" if index in set(h3_indices) else aa
+    partial = build_esmif_partial_sequence(
+        heavy_sequence, h3_indices, len(all_coords))
     rows = []
     for sample_index in range(int(config["generation"]["candidates_per_seed"])):
         torch.manual_seed(seed + sample_index)
@@ -177,6 +200,7 @@ def generate_esmif(config, model, pdb_path, h3_indices, chain_ids, seed):
             all_coords, partial_seq=partial,
             temperature=float(config["generation"]["esm_if"]["temperature"]))
         sampled_heavy = sampled[:len(heavy_sequence)]
+        validate_esmif_sample(sampled_heavy, heavy_sequence, h3_indices)
         rows.append({
             "sequence": "".join(sampled_heavy[index] for index in h3_indices),
             "full_heavy_sequence": sampled_heavy,

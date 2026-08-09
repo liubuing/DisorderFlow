@@ -1,0 +1,86 @@
+# Stage A for the v2 prospective internal benchmark.
+# Run without --resume, --finetune, or --init. Every parameter starts randomly.
+
+lineage:
+  initialization: random
+  allowed_checkpoint_flags: []
+  holdout_manifest: data/multiscaffold_confirmatory_v2/holdout_manifest.json
+  representative_ids_sha256: eb520619e539c3cc9c0963f4dfcdca35fb75a960b4b99e31c9079cd9edc1ec7f
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      disorder_condition_scale: 1.0
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 2.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+    huber_beta: 0.1
+    train_recycles: 2
+    mask_aug_prob: 0.4
+    mask_aug_ratio: [0.2, 0.8]
+    head_dropout: 0.15
+    encoder_dropout: 0.05
+    label_smoothing: 0.03
+
+train:
+  amp_dtype: bfloat16
+  loss_weights:
+    seq: 2.0
+    dist: 0.5
+    ang: 0.5
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.3
+  freeze_backbone: false
+  max_iters: 100000
+  val_freq: 500
+  log_freq: 20
+  batch_size: 1
+  warmup_steps: 1000
+  seed: 2647
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  early_stopping_patience: 30
+  optimizer:
+    type: adamw
+    lr: 2.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 20
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/train.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/val.lmdb
+    transform:
+      - type: mask_multiple_cdrs
+      - type: merge_chains
+      - type: patch_around_anchor

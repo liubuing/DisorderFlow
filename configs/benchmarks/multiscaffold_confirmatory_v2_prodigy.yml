@@ -1,0 +1,22 @@
+schema_version: 1
+status: frozen_before_v2_independent_interface_scoring
+af2_config: configs/benchmarks/multiscaffold_confirmatory_v2_af2.yml
+af2_config_sha256: a028383049d35c8214813f70960358f1a760faa745c68e99a27801a702e75c2a
+af2_results: results/multiscaffold_confirmatory_v2/af2/results.json
+af2_results_sha256: 6594ab405ef71273dc7674c28c5e45278a18da36971ca614cec4ee17b8c537d2
+scorer:
+  name: PRODIGY
+  package: prodigy-prot
+  version: 2.4.0
+  antibody_chains: [A, B]
+  antigen_chains: [C]
+  selection_arguments: ["A,B", "C"]
+  temperature_celsius: 25.0
+  processors: 4
+endpoint:
+  direction: lower_delta_g_is_better
+  per_entity_seed_summary: [median, maximum_worst_conformer, range]
+  failed_structures_remain_failures: true
+output: results/multiscaffold_confirmatory_v2/prodigy/results.json
+expected_slots: 960
+claim_boundary: independent empirical structure score on AF2 models; not measured affinity or binding

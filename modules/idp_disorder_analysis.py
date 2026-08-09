@@ -12,11 +12,13 @@ Disorder >= 0.3 → "disordered" (unreliable for structure-based methods)
 import torch
 import torch.nn.functional as F
 import numpy as np
+from os import PathLike
 
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 
 
-def predict_disorder(model, config, pdb_path, chain_id='A', device='cuda'):
+def predict_disorder(
+        model, config, pdb_path, chain_id='A', device='cuda', calibration=None):
     """Run BFN disorder prediction on a protein structure.
 
     Uses mask_region with no design regions so the model processes the
@@ -29,6 +31,7 @@ def predict_disorder(model, config, pdb_path, chain_id='A', device='cuda'):
         pdb_path: Path to protein PDB file
         chain_id: Chain to analyze
         device: torch device
+        calibration: Optional calibration artifact path or loaded dict
 
     Returns:
         dict with keys:
@@ -70,7 +73,23 @@ def predict_disorder(model, config, pdb_path, chain_id='A', device='cuda'):
         )
 
     disorder_logits = traj['disorder'][0][mask_res]
-    disorder_scores = torch.sigmoid(disorder_logits).cpu().numpy()
+    calibration_metadata = None
+    if calibration is not None:
+        from disorderflow.disorder_calibration import (
+            apply_platt,
+            load_disorder_calibration,
+        )
+        artifact = (load_disorder_calibration(calibration)
+                    if isinstance(calibration, (str, bytes, PathLike)) else calibration)
+        disorder_scores = apply_platt(
+            disorder_logits.cpu(), **artifact['parameters']).numpy()
+        calibration_metadata = {
+            'method': artifact['method'],
+            'threshold': float(artifact['threshold']),
+            'checkpoint_sha256': artifact.get('checkpoint_sha256'),
+        }
+    else:
+        disorder_scores = torch.sigmoid(disorder_logits).cpu().numpy()
 
     aa = batch['aa'][0][mask_res]
     sequence = ''.join(AA_LETTERS[a] if a < 20 else 'X' for a in aa.cpu())
@@ -78,11 +97,14 @@ def predict_disorder(model, config, pdb_path, chain_id='A', device='cuda'):
     # Extract residue IDs from structure seqmap
     residue_ids = _extract_residue_ids(structure, chain_id, n_valid)
 
-    return {
+    result = {
         'disorder_scores': disorder_scores.astype(np.float32),
         'sequence': sequence,
         'residue_ids': residue_ids,
     }
+    if calibration_metadata is not None:
+        result['calibration'] = calibration_metadata
+    return result
 
 
 def _extract_residue_ids(structure, chain_id, expected_len):

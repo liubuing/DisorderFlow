@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "contact_diagnostic_and_future_exposure_update_complete",
+  "sealed_at_utc": "2026-08-08T02:30:27.1012538Z",
+  "classification": "post_evaluation_diagnostic_and_metadata_governance; not confirmatory",
+  "original_exploratory_result": {
+    "path": "results/successor_v3_exploratory/analysis.json",
+    "sha256": "9e31ccccd7520ba8d02a8ec157c6826397b9960315ca08f078c458427f9a3892",
+    "modified": false
+  },
+  "contact_contract_audit": {
+    "training_evaluation_definition_match": true,
+    "generated_positions": "H3 generated positions",
+    "antigen_mask": "real residues with Fragment.Antigen",
+    "atom": "CB with CA fallback",
+    "distance_cutoff_angstrom": 8.0,
+    "mask_mismatch_components": 0
+  },
+  "fixed_scoring_defect": {
+    "root_cause": "score_fixed passed valid rotation matrices through a stochastic SVD projection",
+    "fix_scope": "score_fixed only; training, mismatch forward, and sampling retain projection behavior",
+    "modified_code": {
+      "disorderflow/modules/bfn/receiver.py": "26ee9b2f3db125e6747b78649bf571b949339cdfaf98b66707e4346a216e21ae",
+      "disorderflow/modules/bfn/core.py": "21bfd57fbde41ae4c4a34385910aebe2a76fa1a7c2eb39d0e7d7385ad3cda7b2"
+    },
+    "before_fix_batch_context": {
+      "mean_absolute_logit_difference": 0.013853764533996582,
+      "maximum_absolute_logit_difference": 0.1311192512512207,
+      "components_above_1e_3": 33
+    },
+    "after_fix_batch_context": {
+      "mean_absolute_logit_difference": 2.1240927956321022e-07,
+      "maximum_absolute_logit_difference": 9.5367431640625e-07,
+      "components_above_1e_6": 0
+    }
+  },
+  "deterministic_contact_diagnostic": {
+    "path": "results/successor_v3_exploratory/contact_diagnostics_v3_deterministic.json",
+    "sha256": "be635e53f814be0f76acb9b73bc3d37443969c96003df7cd9139c7ce806077a7",
+    "successor_auroc": 0.512332990750257,
+    "successor_average_precision": 0.4463631103320337,
+    "successor_mean_positive_logit": 1.2904447531370524,
+    "successor_mean_negative_logit": 1.2440223378672017,
+    "stage_a_auroc": 0.5,
+    "stage_a_logit_standard_deviation": 0.0,
+    "conclusion": "contact-head generalization remains near random after removing fixed-scoring noise"
+  },
+  "exposure_update": {
+    "reference_union": {
+      "path": "data/successor_v3_confirmatory/reference_union_manifest_v3.json",
+      "sha256": "61d63d6006a1ae1b0d6543572f78ca37502d4a804ef3bf34cbbea7ccea01d900"
+    },
+    "base_sequence_records": 4542,
+    "added_exploratory_sequence_records": 207,
+    "updated_sequence_records": 4749,
+    "base_exact_exposed_pdb_ids": 284,
+    "updated_exact_exposed_pdb_ids": 576,
+    "all_240_exploratory_metadata_pdbs_excluded": true,
+    "all_57_viewed_rcsb_entry_ids_excluded": true
+  },
+  "future_readiness": {
+    "discovery": {
+      "path": "data/successor_v3_rcsb_snapshot_2026_08_07/discovery_after_exposure_v3.json",
+      "sha256": "9d55468ea333b2fe117a059e8b0e1d12e1326af433c8c6dc1fd1d6e8aaafe595"
+    },
+    "decision": {
+      "path": "publication/successor_v3_future_readiness_after_exposure_2026_08_07.json",
+      "sha256": "a46a93925f5ee7e23c926140d336d518e916ef7cf56f3ea7aa33124f77daadf1"
+    },
+    "policy": {
+      "path": "configs/benchmarks/successor_v3_future_snapshot_policy.yml",
+      "sha256": "b6bbddae70ad6a8ccce5debcd3c8f8c85553a8948ea4314da12e7405963b965c"
+    },
+    "exact_new_entry_ids": 0,
+    "minimum_required": 12,
+    "ready": false,
+    "next_action": "wait at least seven days before another write-once metadata acquisition"
+  },
+  "claim_boundary": "This follow-up diagnoses a contact-head weakness and updates future exclusion governance. It does not alter the sealed exploratory result or provide confirmatory, external, binding, affinity, or therapeutic evidence."
+}

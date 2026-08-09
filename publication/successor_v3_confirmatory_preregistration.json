@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_live_snapshot_acquisition",
+  "frozen_at_utc": "2026-08-07T07:35:39.8052497Z",
+  "classification": "one_time_internal_computational_confirmation; not external or experimental",
+  "protocol": {
+    "path": "configs/benchmarks/successor_v3_confirmatory.yml",
+    "sha256": "b5a95ad3523cce35fc533f80d3ac4fa00ded122a509221b2715630c33740b718"
+  },
+  "frozen_code": {
+    "scripts/build/acquire_sabdab_successor_v3_snapshot.py": "595e8bfb6e03bb87be6680e0effdfce27d78f22f3d8a79a379ee74bf52e7a9d6",
+    "scripts/build/discover_sabdab_successor_v3_snapshot.py": "449b1e9504a9a9eb0d1811411b5bd02cb35ba77a2316f4efaae6d960390ab5ef",
+    "scripts/build/materialize_successor_v3_confirmatory.py": "b6b5fe48167fc6bb567d80b5e0b7e8b7eebca80b78fca29fa58973f4c9a501f1",
+    "scripts/build/build_successor_v3_confirmatory_reference.py": "98ddbca80ef77e5994c2ffd1b1533e855eb6f5c4c7b12c5d37e79e9e3cf40b35",
+    "scripts/audit_successor_v3_isolation.py": "ace1a169bac26155e1041b2e794a183dc08ccf9af592f01a8ca7331bb3fde887",
+    "scripts/evaluate_successor_v3_confirmatory.py": "5f8c43691057a8f99864d1183f064305bb5ba2bf2c5cfd2d97ada722845bc52c"
+  },
+  "reference_union": {
+    "path": "data/successor_v3_confirmatory/reference_union_manifest_v2.json",
+    "sha256": "097c9eeeafefdaba2045ab818f9c277046dc7dda7b18ae586b77b78706ab5239",
+    "records": 4542,
+    "exact_exposed_pdb_ids": 284
+  },
+  "frozen_checkpoints": {
+    "successor_sha256": "de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618",
+    "stage_a_sha256": "00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f"
+  },
+  "prior_exposure": {
+    "data/sabdab2_current/all-summary.csv": "494c0263b98aa69f73379ea6ccb44a4ac791db1d324cb7f6959e96f4656b3544",
+    "data/sabdab2_current/splits.tar.gz": "54e3b9cdae5f5ff57a4210866f87e86686203556eea6a033200ff55c0f81e2b7",
+    "data/multiscaffold_confirmatory_v1/discovery.json": "a0939d713fcacec4addaaf3d2b9d97fa4f560645e75e4d14498a0a6ab2c695bc",
+    "data/multiscaffold_confirmatory_v2/holdout_manifest.json": "b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380",
+    "data/successor_v3_development/manifest.json": "16aa11f662df4ddcb1441011c92bb19c52da997417cbb733e4e5f83d291cedb8",
+    "publication/successor_v3_checkpoint_lineage.json": "a33cf1aa91595535be9e3398dce563d42eeb04d3fa9fccc8974c7507143ed766"
+  },
+  "access_sequence": [
+    "freeze_protocol_code_reference_and_checkpoints",
+    "acquire_write_once_live_summary",
+    "discover_exact_new_metadata",
+    "materialize_and_contact_filter_without_model_access",
+    "run_exact_and_five_axis_isolation",
+    "stop_without_model_access_if_fewer_than_12_components",
+    "otherwise_run_exactly_one_confirmatory_evaluation"
+  ],
+  "claim_boundary": "No candidate identity from the live snapshot was accessed before this artifact. Passing the future test would support internal computational antigen conditioning only, not binding, affinity, external generalization, or therapeutic efficacy."
+}

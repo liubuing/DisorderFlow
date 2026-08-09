@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "exposed_contact_baselines_complete",
+  "classification": "retrospective exposed development; not confirmatory or external",
+  "inputs": {
+    "dataset": {
+      "path": "data/successor_v3_contact_dev_v1/manifest.json",
+      "sha256": "02da7c9b821f2116226cee623762f879fcff2f2631bf7736bc941aa5c0e6dfdc"
+    },
+    "structural": {
+      "path": "data/successor_v3_exploratory/structures_final/structural_manifest.json",
+      "sha256": "26030e2c6de2523b7aa1b35e70653218ef06175ecf743b35de92cb24a915fe8f"
+    },
+    "isolation": {
+      "path": "data/successor_v3_exploratory/isolation_audit.json",
+      "sha256": "4ec384b439a09cd9d43c886bf3b11d84906fa6e84d420ff9578ca4cc0c6e8514"
+    },
+    "protocol": {
+      "path": "configs/benchmarks/successor_v3_contact_v2_development.yml",
+      "sha256": "d714af0de52b0b839f0a49553d84ae46466187a88f90d35792c2bc4abef6a23a"
+    }
+  },
+  "counts": {
+    "records": 206,
+    "residues": 2814,
+    "reference_isolated_records": 45,
+    "reference_isolated_residues": 570
+  },
+  "arms": {
+    "geometry_distance_ceiling": {
+      "all_exposed_records": {
+        "n": 2814,
+        "positive_fraction": 0.417910447761194,
+        "auroc": 1.0,
+        "average_precision": 1.0,
+        "brier_score": 0.0380252969363641
+      },
+      "matched_held_out_fold_4": {
+        "n": 540,
+        "positive_fraction": 0.48703703703703705,
+        "auroc": 1.0,
+        "average_precision": 0.9999999999999999,
+        "brier_score": 0.0442352655843974
+      },
+      "reference_isolated_subset": {
+        "n": 570,
+        "positive_fraction": 0.4421052631578947,
+        "auroc": 1.0,
+        "average_precision": 0.9999999999999999,
+        "brier_score": 0.03866195832669282
+      }
+    },
+    "sequence_logistic": {
+      "all_exposed_records": {
+        "n": 2814,
+        "positive_fraction": 0.417910447761194,
+        "auroc": 0.7543261962904821,
+        "average_precision": 0.6392152372585036,
+        "brier_score": 0.20508354296620526
+      },
+      "matched_held_out_fold_4": {
+        "n": 540,
+        "positive_fraction": 0.48703703703703705,
+        "auroc": 0.7430920646250566,
+        "average_precision": 0.7001628572939345,
+        "brier_score": 0.2113441102502949
+      },
+      "reference_isolated_subset": {
+        "n": 570,
+        "positive_fraction": 0.4421052631578947,
+        "auroc": 0.7806853349306179,
+        "average_precision": 0.7037120588603354,
+        "brier_score": 0.19288966633454493
+      }
+    },
+    "frozen_encoder_logistic_probe": {
+      "all_exposed_records": {
+        "n": 2814,
+        "positive_fraction": 0.417910447761194,
+        "auroc": 0.8862859551635062,
+        "average_precision": 0.8437259551713396,
+        "brier_score": 0.13904982202675567
+      },
+      "matched_held_out_fold_4": {
+        "n": 540,
+        "positive_fraction": 0.48703703703703705,
+        "auroc": 0.8923693566320298,
+        "average_precision": 0.8807317386191493,
+        "brier_score": 0.13508272696429002
+      },
+      "reference_isolated_subset": {
+        "n": 570,
+        "positive_fraction": 0.4421052631578947,
+        "auroc": 0.8926450034940601,
+        "average_precision": 0.8574892053981433,
+        "brier_score": 0.13104526218971158
+      }
+    }
+  },
+  "claim_boundary": "Geometry is a label-derived ceiling. Sequence and encoder results are component-fold development estimates only."
+}

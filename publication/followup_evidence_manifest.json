@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "frozen_date": "2026-08-05",
+  "files": [
+    {
+      "path": "results/ablation/4hix_bfn_matched_v1.json",
+      "sha256": "a4df611b1f9710d398ad32602b2393285b72afe1f824e4606f5eb61f99df2cbf"
+    },
+    {
+      "path": "results/ablation/4hix_mpnn_matched_v1.json",
+      "sha256": "3ec4453668725deacbc689a372f3fc54209d713731c58018960182e680ab43dd"
+    },
+    {
+      "path": "results/ablation/4hix_matched_summary_v1.json",
+      "sha256": "716ebf953c0a607d8fb978bbc42adf7ef7ec836f5549f40715356b69d3580196"
+    },
+    {
+      "path": "results/ablation/4hix_matched_af2_v1/results.json",
+      "sha256": "ecceb192a1e08a18bae322e5d1044ccc6afe2436de27b688a4611541d2e0c397"
+    },
+    {
+      "path": "results/ablation/4hix_prodigy_v1.json",
+      "sha256": "90b3ba83f8a9d00bf8c1247d2380e45a2f64cb13495fba674a581c0f5891be24"
+    },
+    {
+      "path": "results/ablation/4hix_alanine_af2_v1/results.json",
+      "sha256": "8476f7176ee29c2b49f83345b7b8f0b662ad62e797faf2cfb4a8035383be7e27"
+    },
+    {
+      "path": "results/ablation/4hix_alanine_prodigy_v1.json",
+      "sha256": "3f3518f007fc96e5996618fc3607195b6b60ade56e120464d6079f59c72b30e6"
+    },
+    {
+      "path": "results/ablation/caid3_disorder_nox_balanced_v4_s2032.json",
+      "sha256": "101e0274a998e2fbee5e04367dc671133ddb5857a1b303f04a1ecc4c2f6f6212"
+    },
+    {
+      "path": "results/ablation/caid3_external_analysis_v1.json",
+      "sha256": "a518bd6540ad44e1310f628873bd7e192b6df7bdb13abb236c93064396ba29ea"
+    },
+    {
+      "path": "results/binder_validation/3stb_panel_v1/panel_report.json",
+      "sha256": "15b7dfc6fe0b060732e252d2c3d493047505768e11019da5a4fe99e36ab79008"
+    },
+    {
+      "path": "data/caid3/disorder_nox_training_homology.json",
+      "sha256": "4b7abda8c75f8c7a612ee2c989e0b3a93725dcbd2b364f6ff1638c48bae212c6"
+    },
+    {
+      "path": "publication/t21_mechanism_terminal_decision.json",
+      "sha256": "53a7c6b9c80aa245fbe310a95a6e329981ad91725fc4e695459728bf7a537387"
+    },
+    {
+      "path": "publication/experimental_mutations_v1.json",
+      "sha256": "94523cd1c06bc080040c3dd9dae74f98c6e7196aa8d9a736fe9a9d084b42c801"
+    },
+    {
+      "path": "results/ablation/experimental_mutations_v1.json",
+      "sha256": "a4eea37b9163c6ba005228f199252154400167cee0bd0279d7d22bc3b777a0cd"
+    },
+    {
+      "path": "data/multiscaffold_confirmatory_v1/discovery.json",
+      "sha256": "a0939d713fcacec4addaaf3d2b9d97fa4f560645e75e4d14498a0a6ab2c695bc"
+    },
+    {
+      "path": "data/multiscaffold_confirmatory_v1/structural_manifest.json",
+      "sha256": "e85651f9a1ab14cb41988100917b8fe820fb3c9a4638ee238f6fa6611f07e6cb"
+    },
+    {
+      "path": "data/multiscaffold_confirmatory_v1/homology_audit.json",
+      "sha256": "7a77012eb7d3835542eb33a7119947fdb2e2c56267ce70e7ab852557a3eeba4a"
+    },
+    {
+      "path": "results/ablation/esmif_h3_development_v1.json",
+      "sha256": "561772d2b733a2f3ab7179a20a7a6de741af90e79fc39562df83fcdbb47ae49e"
+    },
+    {
+      "path": "data/multiscaffold_confirmatory_v2/feasibility_audit.json",
+      "sha256": "b200781919c2129c3206da7986a1d032c80b3954cc0cae43e1952f121ae128f3"
+    },
+    {
+      "path": "data/multiscaffold_confirmatory_v2/holdout_manifest.json",
+      "sha256": "b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380"
+    },
+    {
+      "path": "data/multiscaffold_confirmatory_v2/disorder_lookup_audit.json",
+      "sha256": "ed4f709a11ae33337c5f8e4dbeb1e927001d370663190b7a55a948fdb42bc2f7"
+    },
+    {
+      "path": "results/ablation/multiscaffold_v2_training_contract.json",
+      "sha256": "39fddc0bac1a714997f0b3697eb5689a7a85518259abe66fd29acdcc0f57551c"
+    },
+    {
+      "path": "configs/benchmarks/multiscaffold_confirmatory_v2.yml",
+      "sha256": "18000881b7fab4a20ddbd4a573c614926d2c8358712e17d43290f91a7f740586"
+    },
+    {
+      "path": "configs/train/bfn_multiscaffold_v2_stage_a_random.yml",
+      "sha256": "57935148ea0b65234436302827a62b280c2311e8e51a86b1e00e9bace29ba7b6"
+    },
+    {
+      "path": "configs/train/bfn_multiscaffold_v2_stage_b_disorder.yml",
+      "sha256": "426da178df61d8d11ab554a937154128aca36d3b302178b39a2755c2973443c2"
+    },
+    {
+      "path": "configs/benchmarks/multiscaffold_confirmatory_v2_generation.yml",
+      "sha256": "b5086a673215f92b39697c57f658d1a63c311891b8256ec50b00ebce05a73dda"
+    },
+    {
+      "path": "publication/multiscaffold_v2_checkpoint_lineage.json",
+      "sha256": "43d8cc47d509185029c24b514e76fa55dca24d806cb88cf1339e83d045e68906"
+    },
+    {
+      "path": "results/multiscaffold_confirmatory_v2/raw_generation.json",
+      "sha256": "bc61c7dfb8b00b562dba9b77f2d91f0113a72932cf55d34b0b1c30645a9afeca"
+    },
+    {
+      "path": "results/multiscaffold_confirmatory_v2/raw_generation_audit.json",
+      "sha256": "bb7187fd8a139a94413b40a52eb4569d7745ecd77297a79e7b28436c611d3205"
+    },
+    {
+      "path": "configs/benchmarks/multiscaffold_confirmatory_v2_selection.yml",
+      "sha256": "89873898d3bede131c364fdfd1744fc88f4d6794e56844ee3c7e3352b92f7c11"
+    },
+    {
+      "path": "results/multiscaffold_confirmatory_v2/pre_af2_selection.json",
+      "sha256": "26a63c6a2f3e8860cfc4ffac79579678c59d48bd0d8b647bba234116cec067d7"
+    },
+    {
+      "path": "configs/benchmarks/multiscaffold_confirmatory_v2_af2.yml",
+      "sha256": "a028383049d35c8214813f70960358f1a760faa745c68e99a27801a702e75c2a"
+    },
+    {
+      "path": "results/multiscaffold_confirmatory_v2/af2/results.json",
+      "sha256": "6594ab405ef71273dc7674c28c5e45278a18da36971ca614cec4ee17b8c537d2"
+    },
+    {
+      "path": "configs/benchmarks/multiscaffold_confirmatory_v2_prodigy.yml",
+      "sha256": "0d7cfd575ea4717b06a483cf8a00b7717628435393c99f4332deccd60a5a7f2b"
+    },
+    {
+      "path": "results/multiscaffold_confirmatory_v2/prodigy/results.json",
+      "sha256": "6b7e59fbf2e17c8af3b9a63a35cbfbf66c30ae6937ea5b1bac39292e0aa1bafb"
+    },
+    {
+      "path": "configs/benchmarks/multiscaffold_confirmatory_v2_analysis.yml",
+      "sha256": "a8ce95be6f00049966ba28bd8983852381337d5307158c289ad7a836dea6fa8d"
+    },
+    {
+      "path": "results/multiscaffold_confirmatory_v2/analysis.json",
+      "sha256": "783903e932b6fd53fff3bc0e00c732a35e12ef088ae2f8c010c56251958e7a7b"
+    }
+  ]
+}

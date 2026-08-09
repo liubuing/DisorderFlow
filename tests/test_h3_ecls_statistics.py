@@ -1,4 +1,10 @@
-from scripts.analyze_h3_ecls_statistics import leave_one_out_range, sign_flip_p
+import pytest
+
+from scripts.analyze_h3_ecls_statistics import (
+    benjamini_hochberg,
+    leave_one_out_range,
+    sign_flip_p,
+)
 
 
 def test_exact_sign_flip_for_three_consistent_units():
@@ -9,3 +15,7 @@ def test_exact_sign_flip_for_three_consistent_units():
 
 def test_leave_one_out_range():
     assert leave_one_out_range([1.0, 2.0, 3.0]) == [1.5, 2.5]
+
+
+def test_benjamini_hochberg_preserves_input_order():
+    assert benjamini_hochberg([0.03, 0.01, 0.2]) == [0.045, 0.03, 0.20000000000000004]

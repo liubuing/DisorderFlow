@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from benchmark_h3_epitope_delta import read_record, write_record_backbone  # noqa: E402
 from generate_h3_peptide_t21 import generate_t2_1  # noqa: E402
+from t21_statistics import aggregate  # noqa: E402
 
 
 def selected_hash(records):
@@ -100,64 +101,6 @@ def benchmark_record(config, audit_record, lmdb_path, out_dir):
     return result
 
 
-def bootstrap_mean_ci(values, seed, trials=10000):
-    rng = np.random.default_rng(int(seed))
-    means = [float(np.mean(np.asarray(values)[rng.integers(0, len(values), size=len(values))]))
-             for _ in range(int(trials))]
-    means.sort()
-    return float(means[int(0.025 * len(means))]), float(means[int(0.975 * len(means))])
-
-
-def aggregate(results, config):
-    valid = [r for r in results if r.get("valid_t2_1")]
-    hits = [r for r in results if r.get("torsion_hit_tier")]
-    if not valid:
-        return {"n_records": len(results), "n_torsion_hits": len(hits),
-                "n_valid_structures": 0, "gate_pass": False}
-
-    s = config["statistics"]
-    trials = int(s["bootstrap_trials"])
-    sd = int(s["bootstrap_seed"])
-
-    def ci(key):
-        vals = [r["metrics"][key] for r in valid if key in r.get("metrics", {})]
-        if len(vals) < 2:
-            return float(np.mean(vals)) if vals else None, [None, None]
-        return float(np.mean(vals)), list(bootstrap_mean_ci(vals, sd, trials))
-
-    mean_c, c_ci = ci("mean_held_out_contact_recovery")
-    mean_r, r_ci = ci("mean_rmsd_recovery_angstrom")
-    vf = len(valid) / max(1, len(hits))
-    cv = [r["metrics"].get("mean_held_out_contact_recovery", 0) for r in valid]
-    pf = float(np.mean(np.asarray(cv) > 0))
-
-    gates = config["development_gates"]
-    passed = bool(
-        vf >= float(gates["minimum_valid_structure_fraction"])
-        and (c_ci[0] is not None and c_ci[0] > 0)
-        and pf >= float(gates["minimum_fraction_structures_positive_held_out_recovery"]))
-
-    arms_cmp = {}
-    for an in ("all_contacts", "random_restraints", "null_structural"):
-        av = [r["metrics"].get(f"{an}_held_out_contact", None) for r in valid]
-        av = [v for v in av if v is not None]
-        if av:
-            arms_cmp[an] = {"mean": float(np.mean(av)),
-                            "ci95": list(bootstrap_mean_ci(av, sd + 1, trials))}
-
-    return {
-        "n_records": len(results), "n_torsion_hits": len(hits),
-        "n_valid_structures": len(valid), "valid_structure_fraction": vf,
-        "mean_held_out_contact_recovery": mean_c,
-        "held_out_contact_recovery_ci95": c_ci,
-        "fraction_structures_positive_held_out_recovery": pf,
-        "mean_rmsd_recovery_angstrom": mean_r,
-        "rmsd_recovery_ci95": r_ci,
-        "arm_comparisons": arms_cmp,
-        "gate_pass": passed,
-    }
-
-
 def select_structures(audit, config):
     mode = config.get("selection_mode", "per_structure")
     records = audit["records"][config["benchmark_split"]]
@@ -200,7 +143,11 @@ def main():
         t = results[-1].get("torsion_hit_tier")
         print(f"  {i}/{len(selected)} {rec['id']} valid={v} torsion={t}", flush=True)
 
-    agg = aggregate(results, config)
+    cluster_by_id = {
+        record["id"]: record["axis_values"]["official_antigen_cluster"][0]
+        for record in audit["records"][config["benchmark_split"]]
+    }
+    agg = aggregate(results, config, cluster_by_id)
     output = {
         "schema_version": 1,
         "status": "t2.1_v2_per_structure_final",

@@ -1,0 +1,48 @@
+schema_version: 2
+status: frozen_before_new_lineage_training_or_candidate_generation
+classification: prospective_internal_holdout_not_external_confirmation
+feasibility_audit: data/multiscaffold_confirmatory_v2/feasibility_audit.json
+feasibility_audit_sha256: b200781919c2129c3206da7986a1d032c80b3954cc0cae43e1952f121ae128f3
+holdout_manifest: data/multiscaffold_confirmatory_v2/holdout_manifest.json
+holdout_manifest_sha256: b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380
+representative_ids_sha256: eb520619e539c3cc9c0963f4dfcdca35fb75a960b4b99e31c9079cd9edc1ec7f
+isolation:
+  coverage: 0.8
+  hard_axes:
+    pdb_id: exact
+    antigen: {minimum_identity: 0.3, coverage_mode: 0}
+    cdr_h3: {minimum_identity: 0.5, coverage_mode: 0}
+    paired_cdr: {minimum_identity: 0.7, coverage_mode: 0}
+    vh: {minimum_identity: 0.9, coverage_mode: 0}
+    vl: {minimum_identity: 0.9, coverage_mode: 0}
+  cdr_definition:
+    scheme: chothia
+    h1: 26-32
+    h2: 52-56
+    h3: 93-102_anchor_bounded
+    l1: 24-34
+    l2: 50-56
+    l3: 89-97
+holdout:
+  reference_independent_records: 22
+  all_axis_components: 20
+  representatives: 20
+  minimum_required_components: 12
+training_lineage:
+  stage_a: random_initialization_filtered_antibody_pretraining
+  stage_b: stage_a_only_initialization_disorder_supervision
+  prohibited_initializers: [balanced_v4, parent_bfn, legacy_disorderflow]
+generation:
+  seeds: [2609, 2617, 2621]
+  candidates_per_seed: 8
+  arms:
+    - current_bfn_disorder_on
+    - current_bfn_disorder_off
+    - stage_a_antibody_bfn
+    - proteinmpnn
+    - esm_if
+  failed_candidates_remain_failures: true
+selection:
+  freeze_before_af2: true
+  candidates_per_arm_per_component: 3
+claim_boundary: prospective internal benchmark; external and experimental confirmation remain required

@@ -1,0 +1,9 @@
+analysis,n_inference_units,effect,ci95_low,ci95_high,interpretation
+ECLS adaptation native-vs-shuffle,46,0.217481,0.14605,0.289555,positive exposed adaptation confirmation
+ECLS temporal-final native-vs-shuffle,15,0.172281,0.059156,0.29192,positive one-time temporal final
+Universal ECLS gain over complex NLL,7,0.055952380952380934,-0.19166666666666665,0.2718253968253968,development gate rejected
+Generator-aware NNR over random,7,0.35317460317460314,0.1666666666666667,0.49603174603174605,positive exploratory development result
+T1 ensemble native-vs-shuffle ECLS,6,0.13142325121495455,0.02195108234054503,0.23244940156531002,positive mean but frozen development gate rejected
+T1 ensemble gain over deposited single pose,6,-0.20044364859320454,-0.3517636699094215,-0.03554329412320572,ensemble underperformed deposited pose
+T2 held-out contact recovery,3,-0.017094017094017113,-0.05128205128205129,0.047619047619047596,moderate-perturbation recovery gate rejected
+T2 RMSD recovery angstrom,3,-0.14146321303678408,-0.4146287425259552,0.11353235844311478,no consistent recovery toward deposited pose

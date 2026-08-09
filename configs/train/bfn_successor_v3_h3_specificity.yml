@@ -1,0 +1,95 @@
+# Development-only successor to the terminal-negative v2 lineage.
+# Initialize only with --init from the frozen v2 Stage A checkpoint.
+
+lineage:
+  classification: development_only; not confirmatory
+  allowed_initializer: publication/multiscaffold_v2_checkpoint_lineage.json#stage_a
+  allowed_initializer_sha256: 00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f
+  prohibited_initializer: stage_b
+  prohibited_evaluation: data/multiscaffold_confirmatory_v2/holdout_manifest.json
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+  train_structure: false
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    contact: 0.3
+    antigen_mismatch_rank: 0.5
+    antigen_mismatch_rank_margin: 0.05
+    train_recycles: 1
+    label_smoothing: 0.03
+    encoder_dropout: 0.05
+    t_clamp: 0.95
+
+train:
+  amp_dtype: bfloat16
+  loss_weights:
+    seq: 1.0
+    contact: 0.3
+    antigen_mismatch_rank: 0.5
+  freeze_backbone: true
+  trainable_modules:
+    - head_seq
+    - head_seq_fixbb
+    - pair_proj
+    - antigen_xa
+    - antigen_xa_norm
+    - antigen_xa_pre_norm
+    - contact_head
+  unfreeze_encoder_layers: 2
+  max_iters: 5000
+  val_freq: 250
+  log_freq: 10
+  batch_size: 4
+  warmup_steps: 250
+  seed: 3107
+  validation_seed: 3119
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  early_stopping_patience: 12
+  checkpoint_selection_metric: antigen_mismatch_rank
+  checkpoint_selection_mode: min
+  checkpoint_selection_max_seq_loss: 3.0
+  optimizer:
+    type: adamw
+    lr: 2.e-5
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 6
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/train.lmdb
+    transform:
+      - type: mask_single_cdr
+        selection: H_CDR3
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: phase3
+    lmdb_path: ./data/phase3_v5_1_pair_clustered/val.lmdb
+    transform:
+      - type: mask_single_cdr
+        selection: H_CDR3
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor

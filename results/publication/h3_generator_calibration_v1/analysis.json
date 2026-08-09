@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "status": "retrospective development analysis; temporal final not accessed",
+  "score_formula": "complex_nll - lambda * apo_nll",
+  "coefficients": {
+    "bfn": 1.0,
+    "esm_if": 1.0,
+    "proteinmpnn": 1.75
+  },
+  "proteinmpnn_adaptation_curve": [
+    {
+      "lambda": 0.0,
+      "mean_nnr": 0.0055900621118012426,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.05,
+      "mean_nnr": 0.0055900621118012426,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.1,
+      "mean_nnr": 0.006625258799171842,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.15,
+      "mean_nnr": 0.006625258799171842,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.2,
+      "mean_nnr": 0.006625258799171842,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.25,
+      "mean_nnr": 0.006625258799171842,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.3,
+      "mean_nnr": 0.006625258799171842,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.35,
+      "mean_nnr": 0.009109730848861283,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.4,
+      "mean_nnr": 0.009109730848861283,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.45,
+      "mean_nnr": 0.009109730848861283,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.5,
+      "mean_nnr": 0.009109730848861283,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.55,
+      "mean_nnr": 0.009109730848861283,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.6,
+      "mean_nnr": 0.009109730848861283,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.65,
+      "mean_nnr": 0.011180124223602485,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.7,
+      "mean_nnr": 0.013250517598343687,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.75,
+      "mean_nnr": 0.03171152518978606,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.8,
+      "mean_nnr": 0.05165631469979296,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.85,
+      "mean_nnr": 0.07956349206349206,
+      "top1_fraction": 0.0
+    },
+    {
+      "lambda": 0.9,
+      "mean_nnr": 0.1429951690821256,
+      "top1_fraction": 0.021739130434782608
+    },
+    {
+      "lambda": 0.95,
+      "mean_nnr": 0.2284075224292616,
+      "top1_fraction": 0.06521739130434782
+    },
+    {
+      "lambda": 1.0,
+      "mean_nnr": 0.37361111111111117,
+      "top1_fraction": 0.13043478260869565
+    },
+    {
+      "lambda": 1.05,
+      "mean_nnr": 0.46143029675638364,
+      "top1_fraction": 0.2391304347826087
+    },
+    {
+      "lambda": 1.1,
+      "mean_nnr": 0.5396739130434782,
+      "top1_fraction": 0.30434782608695654
+    },
+    {
+      "lambda": 1.15,
+      "mean_nnr": 0.6080314009661835,
+      "top1_fraction": 0.391304347826087
+    },
+    {
+      "lambda": 1.2,
+      "mean_nnr": 0.7217391304347827,
+      "top1_fraction": 0.41304347826086957
+    },
+    {
+      "lambda": 1.25,
+      "mean_nnr": 0.7708764665286405,
+      "top1_fraction": 0.5434782608695652
+    },
+    {
+      "lambda": 1.3,
+      "mean_nnr": 0.839932712215321,
+      "top1_fraction": 0.5652173913043478
+    },
+    {
+      "lambda": 1.35,
+      "mean_nnr": 0.8628623188405796,
+      "top1_fraction": 0.6304347826086957
+    },
+    {
+      "lambda": 1.4,
+      "mean_nnr": 0.884308143547274,
+      "top1_fraction": 0.717391304347826
+    },
+    {
+      "lambda": 1.45,
+      "mean_nnr": 0.9058747412008282,
+      "top1_fraction": 0.8043478260869565
+    },
+    {
+      "lambda": 1.5,
+      "mean_nnr": 0.9186249137336092,
+      "top1_fraction": 0.8043478260869565
+    },
+    {
+      "lambda": 1.55,
+      "mean_nnr": 0.927924430641822,
+      "top1_fraction": 0.8478260869565217
+    },
+    {
+      "lambda": 1.6,
+      "mean_nnr": 0.9441856452726018,
+      "top1_fraction": 0.8695652173913043
+    },
+    {
+      "lambda": 1.65,
+      "mean_nnr": 0.9441856452726018,
+      "top1_fraction": 0.8695652173913043
+    },
+    {
+      "lambda": 1.7,
+      "mean_nnr": 0.9514320220841961,
+      "top1_fraction": 0.8913043478260869
+    },
+    {
+      "lambda": 1.75,
+      "mean_nnr": 0.9565648723257418,
+      "top1_fraction": 0.9130434782608695
+    },
+    {
+      "lambda": 1.8,
+      "mean_nnr": 0.9574706694271913,
+      "top1_fraction": 0.9130434782608695
+    },
+    {
+      "lambda": 1.85,
+      "mean_nnr": 0.9613957902001381,
+      "top1_fraction": 0.9130434782608695
+    },
+    {
+      "lambda": 1.9,
+      "mean_nnr": 0.9692460317460317,
+      "top1_fraction": 0.9130434782608695
+    },
+    {
+      "lambda": 1.95,
+      "mean_nnr": 0.9704537612146307,
+      "top1_fraction": 0.9130434782608695
+    },
+    {
+      "lambda": 2.0,
+      "mean_nnr": 0.9728692201518289,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.05,
+      "mean_nnr": 0.9728692201518289,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.1,
+      "mean_nnr": 0.9728692201518289,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.15,
+      "mean_nnr": 0.9728692201518289,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.2,
+      "mean_nnr": 0.9749827467218771,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.25,
+      "mean_nnr": 0.9749827467218771,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.3,
+      "mean_nnr": 0.9749827467218771,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.35,
+      "mean_nnr": 0.9749827467218771,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.4,
+      "mean_nnr": 0.9749827467218771,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.45,
+      "mean_nnr": 0.9749827467218771,
+      "top1_fraction": 0.9347826086956522
+    },
+    {
+      "lambda": 2.5,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.55,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.6,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.65,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.7,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.75,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.8,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.85,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.9,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 2.95,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    },
+    {
+      "lambda": 3.0,
+      "mean_nnr": 0.9761904761904762,
+      "top1_fraction": 0.9565217391304348
+    }
+  ],
+  "development": {
+    "generators": {
+      "bfn": {
+        "lambda": 1.0,
+        "n_units": 7,
+        "mean_calibrated_nnr": 0.8452380952380952,
+        "calibrated_over_random_ci95": [
+          0.07142857142857147,
+          0.48809523809523814
+        ],
+        "calibrated_over_random_permutation_p": 0.078125,
+        "mean_ecls_nnr": 0.8452380952380952,
+        "mean_complex_nll_nnr": 1.0,
+        "calibrated_over_random_bh_q": 0.1171875
+      },
+      "esm_if": {
+        "lambda": 1.0,
+        "n_units": 7,
+        "mean_calibrated_nnr": 0.7142857142857143,
+        "calibrated_over_random_ci95": [
+          -0.07142857142857142,
+          0.5
+        ],
+        "calibrated_over_random_permutation_p": 0.453125,
+        "mean_ecls_nnr": 0.7142857142857143,
+        "mean_complex_nll_nnr": 1.0,
+        "calibrated_over_random_bh_q": 0.453125
+      },
+      "proteinmpnn": {
+        "lambda": 1.75,
+        "n_units": 7,
+        "mean_calibrated_nnr": 1.0,
+        "calibrated_over_random_ci95": [
+          0.5,
+          0.5
+        ],
+        "calibrated_over_random_permutation_p": 0.015625,
+        "mean_ecls_nnr": 0.6083333333333333,
+        "mean_complex_nll_nnr": 0.0,
+        "calibrated_over_random_bh_q": 0.046875
+      }
+    },
+    "n_inference_units": 7,
+    "mean_generator_aware_nnr": 0.8531746031746031,
+    "generator_aware_over_random_ci95": [
+      0.1666666666666667,
+      0.49603174603174605
+    ],
+    "generator_aware_over_random_permutation_p": 0.046875,
+    "mean_gain_over_complex_nll": 0.18650793650793657,
+    "gain_over_complex_nll_ci95": [
+      -0.0019841269841269138,
+      0.32936507936507947
+    ],
+    "gain_over_complex_nll_permutation_p": 0.171875,
+    "fraction_units_above_random": 0.8571428571428571,
+    "leave_one_cluster_out_mean_nnr_range": [
+      0.8287037037037037,
+      0.9375
+    ],
+    "units": [
+      {
+        "unit": "E128",
+        "generator_aware_nnr": 1.0,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": 0.33333333333333337,
+        "bfn": 1.0,
+        "esm_if": 1.0,
+        "proteinmpnn": 1.0
+      },
+      {
+        "unit": "E132",
+        "generator_aware_nnr": 0.9861111111111112,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": 0.31944444444444453,
+        "bfn": 0.9583333333333334,
+        "esm_if": 1.0,
+        "proteinmpnn": 1.0
+      },
+      {
+        "unit": "E166",
+        "generator_aware_nnr": 1.0,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": 0.33333333333333337,
+        "bfn": 1.0,
+        "esm_if": 1.0,
+        "proteinmpnn": 1.0
+      },
+      {
+        "unit": "E17",
+        "generator_aware_nnr": 0.6527777777777778,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": -0.01388888888888884,
+        "bfn": 0.9583333333333334,
+        "esm_if": 0.0,
+        "proteinmpnn": 1.0
+      },
+      {
+        "unit": "E3",
+        "generator_aware_nnr": 0.9861111111111112,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": 0.31944444444444453,
+        "bfn": 0.9583333333333334,
+        "esm_if": 1.0,
+        "proteinmpnn": 1.0
+      },
+      {
+        "unit": "E7",
+        "generator_aware_nnr": 1.0,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": 0.33333333333333337,
+        "bfn": 1.0,
+        "esm_if": 1.0,
+        "proteinmpnn": 1.0
+      },
+      {
+        "unit": "E8",
+        "generator_aware_nnr": 0.34722222222222227,
+        "complex_nll_nnr": 0.6666666666666666,
+        "gain": -0.31944444444444436,
+        "bfn": 0.041666666666666664,
+        "esm_if": 0.0,
+        "proteinmpnn": 1.0
+      }
+    ]
+  },
+  "claim_boundary": "retrospective_native_spike_retrieval_not_binding_or_novel_candidate_quality"
+}

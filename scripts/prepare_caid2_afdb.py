@@ -27,7 +27,7 @@ def fetch_json(url, retries=3):
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             if attempt + 1 == retries:
                 raise
-            time.sleep(2 ** attempt)
+            time.sleep(2**attempt)
 
 
 def map_target(target):
@@ -70,38 +70,62 @@ def download(item, output_dir):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--caid-dir", default="data/caid2/disorder_nox")
-    parser.add_argument("--conformation-train", default="data/confidence_conformation_v5_clustered/confidence_train.lmdb")
+    parser.add_argument(
+        "--conformation-train",
+        default="data/confidence_conformation_v5_clustered/confidence_train.lmdb",
+    )
     parser.add_argument("--phase3-train", default="data/phase3_v5_1_pair_clustered/train.lmdb")
     parser.add_argument("--output-dir", default="results/caid_workdir")
     parser.add_argument("--report", default="data/caid2/disorder_nox_afdb_audit.json")
     parser.add_argument("--mmseqs", default="mmseqs")
     parser.add_argument("--threads", type=int, default=8)
     parser.add_argument("--max-length", type=int, default=380)
+    parser.add_argument(
+        "--homology-audit",
+        help="Precomputed audit JSON containing independent_ids; skips a new MMseqs run",
+    )
+    parser.add_argument("--benchmark-name", default="CAID2 Disorder-NOX")
     args = parser.parse_args()
 
     targets = load_caid_reference(args.caid_dir)
-    candidate_records = [{"id": target["id"], "sequence": target["sequence"]} for target in targets]
-    training = load_lmdb(args.conformation_train)
-    phase3 = load_lmdb(args.phase3_train)
-    training_records = [
-        {"id": f"conformation:{index}", "sequence": record.get("sequence", "")}
-        for index, record in enumerate(training)
-    ] + [
-        {"id": f"phase3:{index}", "sequence": record.get("antigen_sequence", "")}
-        for index, record in enumerate(phase3)
-    ]
-
-    with tempfile.TemporaryDirectory(prefix="caid2_audit_") as tmp:
-        tmp_dir = Path(tmp)
-        query = tmp_dir / "caid.fasta"
-        database = tmp_dir / "training.fasta"
-        hits_path = tmp_dir / "hits.tsv"
-        write_fasta(query, candidate_records, "sequence", "id")
-        write_fasta(database, training_records, "sequence", "id")
-        hits = mmseqs_hits(
-            args.mmseqs, query, database, hits_path, 0.3, tmp_dir / "work", args.threads)
-
-    independent = [target for target in targets if target["id"] not in hits]
+    if args.homology_audit:
+        homology_audit = json.loads(Path(args.homology_audit).read_text())
+        independent_ids = set(homology_audit["independent_ids"])
+        independent = [target for target in targets if target["id"] in independent_ids]
+        hits = homology_audit["hits"]
+        training_sources = {
+            "balanced_v4_exact_training_lookup": str(
+                homology_audit.get("inputs", {}).get("lookup_sha256")
+            )
+        }
+    else:
+        candidate_records = [
+            {"id": target["id"], "sequence": target["sequence"]} for target in targets
+        ]
+        training = load_lmdb(args.conformation_train)
+        phase3 = load_lmdb(args.phase3_train)
+        training_records = [
+            {"id": f"conformation:{index}", "sequence": record.get("sequence", "")}
+            for index, record in enumerate(training)
+        ] + [
+            {"id": f"phase3:{index}", "sequence": record.get("antigen_sequence", "")}
+            for index, record in enumerate(phase3)
+        ]
+        with tempfile.TemporaryDirectory(prefix="caid2_audit_") as tmp:
+            tmp_dir = Path(tmp)
+            query = tmp_dir / "caid.fasta"
+            database = tmp_dir / "training.fasta"
+            hits_path = tmp_dir / "hits.tsv"
+            write_fasta(query, candidate_records, "sequence", "id")
+            write_fasta(database, training_records, "sequence", "id")
+            hits = mmseqs_hits(
+                args.mmseqs, query, database, hits_path, 0.3, tmp_dir / "work", args.threads
+            )
+        independent = [target for target in targets if target["id"] not in hits]
+        training_sources = {
+            "conformation_train": args.conformation_train,
+            "phase3_antigen_train": args.phase3_train,
+        }
     mappings = []
     with ThreadPoolExecutor(max_workers=min(args.threads, 8)) as executor:
         jobs = {executor.submit(map_target, target): target["id"] for target in independent}
@@ -114,7 +138,11 @@ def main():
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    eligible = [item for item in mappings if item["status"] == "mapped" and item["length"] <= args.max_length]
+    eligible = [
+        item
+        for item in mappings
+        if item["status"] == "mapped" and item["length"] <= args.max_length
+    ]
     with ThreadPoolExecutor(max_workers=min(args.threads, 8)) as executor:
         jobs = {executor.submit(download, item, output_dir): item for item in eligible}
         for job in as_completed(jobs):
@@ -122,12 +150,9 @@ def main():
             item["status"] = "cached" if job.result() else "download_error"
 
     report = {
-        "benchmark": "CAID2 Disorder-NOX",
+        "benchmark": args.benchmark_name,
         "caid_targets": len(targets),
-        "training_sources": {
-            "conformation_train": args.conformation_train,
-            "phase3_antigen_train": args.phase3_train,
-        },
+        "training_sources": training_sources,
         "homology_threshold": {"minimum_identity": 0.3, "coverage": 0.8, "coverage_mode": 0},
         "homology_excluded": len(hits),
         "homology_independent": len(independent),
@@ -140,7 +165,16 @@ def main():
     for item in mappings:
         report["status_counts"][item["status"]] = report["status_counts"].get(item["status"], 0) + 1
     Path(args.report).write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(json.dumps({key: value for key, value in report.items() if key not in ("mappings", "homology_hits")}, indent=2))
+    print(
+        json.dumps(
+            {
+                key: value
+                for key, value in report.items()
+                if key not in ("mappings", "homology_hits")
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

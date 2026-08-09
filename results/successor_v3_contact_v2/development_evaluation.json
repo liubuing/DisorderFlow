@@ -1,0 +1,704 @@
+{
+  "schema_version": 1,
+  "status": "exposed_contact_v2_development_evaluation_complete",
+  "classification": "retrospective exposed development; not confirmatory or external",
+  "checkpoint": {
+    "path": "logs/bfn_successor_v3_contact_v2_exposed_2026_08_09__09_06_40_successor_v3_contact_v2_cb/checkpoints/best.pt",
+    "sha256": "9d844ea2fb5f34000d9258f9c08e26744dd6c7049c2c0a3edd96d3faffe6d29b"
+  },
+  "config": {
+    "path": "configs/train/bfn_successor_v3_contact_v2_exposed.yml",
+    "sha256": "1cea3ae907883cf857d178ffed23d92a3ff2d3de1b559574d06ee9807875a1ac"
+  },
+  "dataset_manifest": {
+    "path": "data/successor_v3_contact_dev_v1/manifest.json",
+    "sha256": "02da7c9b821f2116226cee623762f879fcff2f2631bf7736bc941aa5c0e6dfdc"
+  },
+  "fixed_t": 0.5,
+  "held_out_fold": 4,
+  "held_out_records": 46,
+  "residue_contact": {
+    "n": 540,
+    "positive_fraction": 0.48703703703703705,
+    "auroc": 0.953150951943007,
+    "average_precision": 0.9531067584748907,
+    "brier_score": 0.1147598505995038
+  },
+  "pair_contact": {
+    "n": 5577,
+    "positive_fraction": 0.1018468710776403,
+    "auroc": 0.9543090043555402,
+    "average_precision": 0.7061249080723322,
+    "brier_score": 0.05057569775776113
+  },
+  "component_level": {
+    "residue_contact": {
+      "eligible_components": 20,
+      "macro_auroc": 0.9601975522129507,
+      "macro_auroc_component_bootstrap_ci95": [
+        0.9230976053560972,
+        0.986609168374567
+      ],
+      "macro_average_precision": 0.9760075803790151,
+      "macro_average_precision_component_bootstrap_ci95": [
+        0.9607580761128589,
+        0.9897395263383507
+      ],
+      "components": [
+        {
+          "component_id": "SV3D006",
+          "n": 36,
+          "positive_fraction": 0.5,
+          "auroc": 0.9722222222222222,
+          "average_precision": 0.9744059749542207,
+          "brier_score": 0.11622979960265226
+        },
+        {
+          "component_id": "SV3D007",
+          "n": 91,
+          "positive_fraction": 0.5274725274725275,
+          "auroc": 0.9375,
+          "average_precision": 0.9375810827084935,
+          "brier_score": 0.16959469356851134
+        },
+        {
+          "component_id": "SV3D008",
+          "n": 81,
+          "positive_fraction": 0.6666666666666666,
+          "auroc": 0.9567901234567902,
+          "average_precision": 0.9774384347540209,
+          "brier_score": 0.1279264927536414
+        },
+        {
+          "component_id": "SV3D009",
+          "n": 12,
+          "positive_fraction": 0.3333333333333333,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.03372520467113576
+        },
+        {
+          "component_id": "SV3D021",
+          "n": 42,
+          "positive_fraction": 0.47619047619047616,
+          "auroc": 0.9886363636363636,
+          "average_precision": 0.9867685144233134,
+          "brier_score": 0.11309129123651258
+        },
+        {
+          "component_id": "SV3D024",
+          "n": 5,
+          "positive_fraction": 0.6,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.03755340501914028
+        },
+        {
+          "component_id": "SV3D026",
+          "n": 10,
+          "positive_fraction": 0.3,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.053207952653927804
+        },
+        {
+          "component_id": "SV3D027",
+          "n": 100,
+          "positive_fraction": 0.46,
+          "auroc": 0.9508856682769726,
+          "average_precision": 0.9451318431644963,
+          "brier_score": 0.10848877439890074
+        },
+        {
+          "component_id": "SV3D028",
+          "n": 8,
+          "positive_fraction": 0.375,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.013269787759723208
+        },
+        {
+          "component_id": "SV3D029",
+          "n": 4,
+          "positive_fraction": 0.75,
+          "auroc": 0.6666666666666666,
+          "average_precision": 0.9166666666666665,
+          "brier_score": 0.32691460167226283
+        },
+        {
+          "component_id": "SV3D030",
+          "n": 14,
+          "positive_fraction": 0.5714285714285714,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.3238921551764892
+        },
+        {
+          "component_id": "SV3D036",
+          "n": 20,
+          "positive_fraction": 0.25,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.041445156890421504
+        },
+        {
+          "component_id": "SV3D039",
+          "n": 9,
+          "positive_fraction": 0.5555555555555556,
+          "auroc": 0.9,
+          "average_precision": 0.9266666666666667,
+          "brier_score": 0.19118982994483524
+        },
+        {
+          "component_id": "SV3D044",
+          "n": 12,
+          "positive_fraction": 0.6666666666666666,
+          "auroc": 0.90625,
+          "average_precision": 0.9659090909090909,
+          "brier_score": 0.11057354290142518
+        },
+        {
+          "component_id": "SV3D045",
+          "n": 16,
+          "positive_fraction": 0.4375,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.020506558393143033
+        },
+        {
+          "component_id": "SV3D050",
+          "n": 14,
+          "positive_fraction": 0.5,
+          "auroc": 1.0,
+          "average_precision": 0.9999999999999998,
+          "brier_score": 0.013910108254345415
+        },
+        {
+          "component_id": "SV3D060",
+          "n": 23,
+          "positive_fraction": 0.34782608695652173,
+          "auroc": 0.925,
+          "average_precision": 0.8895833333333334,
+          "brier_score": 0.1196274827292004
+        },
+        {
+          "component_id": "SV3D061",
+          "n": 15,
+          "positive_fraction": 0.26666666666666666,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.056337440944698135
+        },
+        {
+          "component_id": "SV3D066",
+          "n": 12,
+          "positive_fraction": 0.3333333333333333,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.03574546008880114
+        },
+        {
+          "component_id": "SV3D069",
+          "n": 16,
+          "positive_fraction": 0.3125,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.05590850871995755
+        }
+      ]
+    },
+    "pair_contact": {
+      "eligible_components": 20,
+      "macro_auroc": 0.9585561956808666,
+      "macro_auroc_component_bootstrap_ci95": [
+        0.9445601804321055,
+        0.9716837372010549
+      ],
+      "macro_average_precision": 0.7680004743998354,
+      "macro_average_precision_component_bootstrap_ci95": [
+        0.7212517768832407,
+        0.8181827551992271
+      ],
+      "components": [
+        {
+          "component_id": "SV3D006",
+          "n": 360,
+          "positive_fraction": 0.10555555555555556,
+          "auroc": 0.9568486433474992,
+          "average_precision": 0.7760254249781581,
+          "brier_score": 0.0489953681012905
+        },
+        {
+          "component_id": "SV3D007",
+          "n": 674,
+          "positive_fraction": 0.11572700296735905,
+          "auroc": 0.9491481672689726,
+          "average_precision": 0.7175157973231402,
+          "brier_score": 0.06008099165074969
+        },
+        {
+          "component_id": "SV3D008",
+          "n": 854,
+          "positive_fraction": 0.14168618266978922,
+          "auroc": 0.9193397449629621,
+          "average_precision": 0.591333867445001,
+          "brier_score": 0.08700573472135394
+        },
+        {
+          "component_id": "SV3D009",
+          "n": 216,
+          "positive_fraction": 0.06018518518518518,
+          "auroc": 0.9837059492231905,
+          "average_precision": 0.7425189745027803,
+          "brier_score": 0.02697113389344954
+        },
+        {
+          "component_id": "SV3D021",
+          "n": 316,
+          "positive_fraction": 0.12974683544303797,
+          "auroc": 0.9623946784922395,
+          "average_precision": 0.7711456520183456,
+          "brier_score": 0.06771376750754132
+        },
+        {
+          "component_id": "SV3D024",
+          "n": 60,
+          "positive_fraction": 0.13333333333333333,
+          "auroc": 0.903846153846154,
+          "average_precision": 0.642697653223969,
+          "brier_score": 0.08398464955185145
+        },
+        {
+          "component_id": "SV3D026",
+          "n": 80,
+          "positive_fraction": 0.05,
+          "auroc": 0.993421052631579,
+          "average_precision": 0.9166666666666666,
+          "brier_score": 0.014542434245597046
+        },
+        {
+          "component_id": "SV3D027",
+          "n": 1248,
+          "positive_fraction": 0.08974358974358974,
+          "auroc": 0.9708721076458753,
+          "average_precision": 0.8150509031937982,
+          "brier_score": 0.03569877043389717
+        },
+        {
+          "component_id": "SV3D028",
+          "n": 56,
+          "positive_fraction": 0.07142857142857142,
+          "auroc": 1.0,
+          "average_precision": 1.0,
+          "brier_score": 0.0030461796588193016
+        },
+        {
+          "component_id": "SV3D029",
+          "n": 40,
+          "positive_fraction": 0.175,
+          "auroc": 0.9047619047619048,
+          "average_precision": 0.7778388278388279,
+          "brier_score": 0.0780768277355047
+        },
+        {
+          "component_id": "SV3D030",
+          "n": 112,
+          "positive_fraction": 0.14285714285714285,
+          "auroc": 0.9375,
+          "average_precision": 0.7015312624658815,
+          "brier_score": 0.09544237282813225
+        },
+        {
+          "component_id": "SV3D036",
+          "n": 220,
+          "positive_fraction": 0.05,
+          "auroc": 0.983906046107003,
+          "average_precision": 0.776948051948052,
+          "brier_score": 0.02206914565119577
+        },
+        {
+          "component_id": "SV3D039",
+          "n": 72,
+          "positive_fraction": 0.18055555555555555,
+          "auroc": 0.9256844850065189,
+          "average_precision": 0.6688366819770994,
+          "brier_score": 0.111960159400015
+        },
+        {
+          "component_id": "SV3D044",
+          "n": 96,
+          "positive_fraction": 0.15625,
+          "auroc": 0.9053497942386831,
+          "average_precision": 0.7052417368206843,
+          "brier_score": 0.09652065350417575
+        },
+        {
+          "component_id": "SV3D045",
+          "n": 176,
+          "positive_fraction": 0.09659090909090909,
+          "auroc": 0.9829818719940806,
+          "average_precision": 0.8197794852206617,
+          "brier_score": 0.03395731416261316
+        },
+        {
+          "component_id": "SV3D050",
+          "n": 112,
+          "positive_fraction": 0.20535714285714285,
+          "auroc": 0.9789936492427943,
+          "average_precision": 0.9371046969512442,
+          "brier_score": 0.04750531071680982
+        },
+        {
+          "component_id": "SV3D060",
+          "n": 322,
+          "positive_fraction": 0.052795031055900624,
+          "auroc": 0.9695274831243973,
+          "average_precision": 0.6426998981410746,
+          "brier_score": 0.02939372697527436
+        },
+        {
+          "component_id": "SV3D061",
+          "n": 135,
+          "positive_fraction": 0.08148148148148149,
+          "auroc": 0.9956011730205279,
+          "average_precision": 0.9595404595404595,
+          "brier_score": 0.026362590847799194
+        },
+        {
+          "component_id": "SV3D066",
+          "n": 300,
+          "positive_fraction": 0.03666666666666667,
+          "auroc": 0.976407675369613,
+          "average_precision": 0.7421240910157167,
+          "brier_score": 0.020831469176819207
+        },
+        {
+          "component_id": "SV3D069",
+          "n": 128,
+          "positive_fraction": 0.0625,
+          "auroc": 0.9708333333333333,
+          "average_precision": 0.6554093567251462,
+          "brier_score": 0.03836882426818375
+        }
+      ]
+    }
+  },
+  "matched_same_record_baselines": {
+    "artifact": {
+      "path": "results/successor_v3_contact_v2/baselines.json",
+      "sha256": "44f169230797a0371b1c73d20c6019a5b560fb6f8d140d49197f8d705eb7aa62"
+    },
+    "held_out_fold_4": {
+      "geometry_distance_ceiling": {
+        "n": 540,
+        "positive_fraction": 0.48703703703703705,
+        "auroc": 1.0,
+        "average_precision": 0.9999999999999999,
+        "brier_score": 0.0442352655843974
+      },
+      "sequence_logistic": {
+        "n": 540,
+        "positive_fraction": 0.48703703703703705,
+        "auroc": 0.7430920646250566,
+        "average_precision": 0.7001628572939345,
+        "brier_score": 0.2113441102502949
+      },
+      "frozen_encoder_logistic_probe": {
+        "n": 540,
+        "positive_fraction": 0.48703703703703705,
+        "auroc": 0.8923693566320298,
+        "average_precision": 0.8807317386191493,
+        "brier_score": 0.13508272696429002
+      }
+    },
+    "candidate_minus_frozen_encoder_residue_auroc": 0.060781595310977266
+  },
+  "gates": {
+    "held_out_residue_auroc_at_least_0_80": true,
+    "held_out_pair_auroc_at_least_0_80": true,
+    "held_out_pair_ap_above_prevalence": true,
+    "residue_auroc_above_matched_frozen_encoder_probe": true,
+    "residue_component_macro_ci95_lower_at_least_0_70": true,
+    "finite_scores": true
+  },
+  "eligible_for_future_confirmation": true,
+  "rows": [
+    {
+      "instance": "pdb_00002hrp-H-L",
+      "component_id": "SV3D006",
+      "residues": 18,
+      "pairs": 180
+    },
+    {
+      "instance": "pdb_00002otu-B-A",
+      "component_id": "SV3D007",
+      "residues": 11,
+      "pairs": 121
+    },
+    {
+      "instance": "pdb_00002otw-B-A",
+      "component_id": "SV3D007",
+      "residues": 11,
+      "pairs": 121
+    },
+    {
+      "instance": "pdb_00002w65-A-B",
+      "component_id": "SV3D008",
+      "residues": 11,
+      "pairs": 88
+    },
+    {
+      "instance": "pdb_00003h0t-B-A",
+      "component_id": "SV3D009",
+      "residues": 12,
+      "pairs": 216
+    },
+    {
+      "instance": "pdb_00003o6l-H-L",
+      "component_id": "SV3D008",
+      "residues": 10,
+      "pairs": 150
+    },
+    {
+      "instance": "pdb_00005eor-H-L",
+      "component_id": "SV3D007",
+      "residues": 9,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00005myo-B-A",
+      "component_id": "SV3D008",
+      "residues": 12,
+      "pairs": 120
+    },
+    {
+      "instance": "pdb_00005myx-B-A",
+      "component_id": "SV3D008",
+      "residues": 8,
+      "pairs": 96
+    },
+    {
+      "instance": "pdb_00005n7b-H1-H2",
+      "component_id": "SV3D021",
+      "residues": 8,
+      "pairs": 40
+    },
+    {
+      "instance": "pdb_00005owp-H1-H2",
+      "component_id": "SV3D021",
+      "residues": 8,
+      "pairs": 56
+    },
+    {
+      "instance": "pdb_00005vzy-H-L",
+      "component_id": "SV3D024",
+      "residues": 5,
+      "pairs": 60
+    },
+    {
+      "instance": "pdb_00005yy4-A1-A2",
+      "component_id": "SV3D026",
+      "residues": 10,
+      "pairs": 80
+    },
+    {
+      "instance": "pdb_00006axk-A-B",
+      "component_id": "SV3D027",
+      "residues": 14,
+      "pairs": 154
+    },
+    {
+      "instance": "pdb_00006bb4-H-L",
+      "component_id": "SV3D028",
+      "residues": 8,
+      "pairs": 56
+    },
+    {
+      "instance": "pdb_00006ct7-A-B",
+      "component_id": "SV3D029",
+      "residues": 4,
+      "pairs": 40
+    },
+    {
+      "instance": "pdb_00006frj-H1-H2",
+      "component_id": "SV3D021",
+      "residues": 8,
+      "pairs": 40
+    },
+    {
+      "instance": "pdb_00006h0e-A-B",
+      "component_id": "SV3D030",
+      "residues": 14,
+      "pairs": 112
+    },
+    {
+      "instance": "pdb_00006lra-H-L",
+      "component_id": "SV3D007",
+      "residues": 12,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00006o24-A-B",
+      "component_id": "SV3D036",
+      "residues": 20,
+      "pairs": 220
+    },
+    {
+      "instance": "pdb_00006p8d-A-B",
+      "component_id": "SV3D039",
+      "residues": 9,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00006pef-A-B",
+      "component_id": "SV3D044",
+      "residues": 12,
+      "pairs": 96
+    },
+    {
+      "instance": "pdb_00006vry-H-L",
+      "component_id": "SV3D045",
+      "residues": 16,
+      "pairs": 176
+    },
+    {
+      "instance": "pdb_00006wfy-H-L",
+      "component_id": "SV3D027",
+      "residues": 18,
+      "pairs": 216
+    },
+    {
+      "instance": "pdb_00006x78-B-A",
+      "component_id": "SV3D008",
+      "residues": 15,
+      "pairs": 75
+    },
+    {
+      "instance": "pdb_00006x7w-A-C",
+      "component_id": "SV3D050",
+      "residues": 14,
+      "pairs": 112
+    },
+    {
+      "instance": "pdb_00006x8p-H-L",
+      "component_id": "SV3D008",
+      "residues": 5,
+      "pairs": 70
+    },
+    {
+      "instance": "pdb_00006x8q-H-L",
+      "component_id": "SV3D008",
+      "residues": 5,
+      "pairs": 65
+    },
+    {
+      "instance": "pdb_00006x8s-H-L",
+      "component_id": "SV3D008",
+      "residues": 5,
+      "pairs": 65
+    },
+    {
+      "instance": "pdb_00006x8u-H-L",
+      "component_id": "SV3D008",
+      "residues": 5,
+      "pairs": 60
+    },
+    {
+      "instance": "pdb_00007fgj-H-L",
+      "component_id": "SV3D007",
+      "residues": 12,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00007fgl-H-L",
+      "component_id": "SV3D007",
+      "residues": 12,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00007fgr-H-L",
+      "component_id": "SV3D007",
+      "residues": 12,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00007o33-H-L",
+      "component_id": "SV3D008",
+      "residues": 5,
+      "pairs": 65
+    },
+    {
+      "instance": "pdb_00007vtj-H-L",
+      "component_id": "SV3D007",
+      "residues": 12,
+      "pairs": 72
+    },
+    {
+      "instance": "pdb_00008axh-H1-H2",
+      "component_id": "SV3D021",
+      "residues": 8,
+      "pairs": 40
+    },
+    {
+      "instance": "pdb_00008duz-A-B",
+      "component_id": "SV3D021",
+      "residues": 10,
+      "pairs": 140
+    },
+    {
+      "instance": "pdb_00008ekf-HHH-LLL",
+      "component_id": "SV3D027",
+      "residues": 14,
+      "pairs": 140
+    },
+    {
+      "instance": "pdb_00008fbw-A-B",
+      "component_id": "SV3D060",
+      "residues": 23,
+      "pairs": 322
+    },
+    {
+      "instance": "pdb_00008fdc-A-B",
+      "component_id": "SV3D061",
+      "residues": 15,
+      "pairs": 135
+    },
+    {
+      "instance": "pdb_00008v8f-A1-A2",
+      "component_id": "SV3D006",
+      "residues": 18,
+      "pairs": 180
+    },
+    {
+      "instance": "pdb_00008vwe-H-L",
+      "component_id": "SV3D066",
+      "residues": 12,
+      "pairs": 300
+    },
+    {
+      "instance": "pdb_00008zxw-A-B",
+      "component_id": "SV3D069",
+      "residues": 16,
+      "pairs": 128
+    },
+    {
+      "instance": "pdb_00009nkz-H-L",
+      "component_id": "SV3D027",
+      "residues": 18,
+      "pairs": 252
+    },
+    {
+      "instance": "pdb_00009nl0-H-L",
+      "component_id": "SV3D027",
+      "residues": 18,
+      "pairs": 216
+    },
+    {
+      "instance": "pdb_00009nzf-H-L",
+      "component_id": "SV3D027",
+      "residues": 18,
+      "pairs": 270
+    }
+  ],
+  "claim_boundary": "These metrics select a frozen candidate only; they do not confirm performance."
+}

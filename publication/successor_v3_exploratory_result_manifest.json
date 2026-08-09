@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "status": "retrospective_exploratory_evaluation_sealed",
+  "sealed_at_utc": "2026-08-07T18:05:30.4519415Z",
+  "classification": "retrospective_exploratory; not confirmatory or external",
+  "artifacts": {
+    "protocol": {
+      "path": "configs/benchmarks/successor_v3_exploratory.yml",
+      "sha256": "1f4228c89586ef4016ef55973290436036fa60501285ffce9e201c1b9916a411"
+    },
+    "discovery": {
+      "path": "data/successor_v3_exploratory/discovery.json",
+      "sha256": "26f9f685f36242fe1d40cac082542944ab6c4e874ce6007af126a2d8668d82f6"
+    },
+    "structural_manifest": {
+      "path": "data/successor_v3_exploratory/structures_final/structural_manifest.json",
+      "sha256": "26030e2c6de2523b7aa1b35e70653218ef06175ecf743b35de92cb24a915fe8f"
+    },
+    "isolation_audit": {
+      "path": "data/successor_v3_exploratory/isolation_audit.json",
+      "sha256": "4ec384b439a09cd9d43c886bf3b11d84906fa6e84d420ff9578ca4cc0c6e8514"
+    },
+    "analysis": {
+      "path": "results/successor_v3_exploratory/analysis.json",
+      "sha256": "9e31ccccd7520ba8d02a8ec157c6826397b9960315ca08f078c458427f9a3892"
+    },
+    "future_readiness": {
+      "path": "publication/successor_v3_future_readiness_2026_08_07.json",
+      "sha256": "eecbfa953f4aba90a4c066eeab26c9977a9d96d1a2381ad28014f6c57d06d559"
+    }
+  },
+  "cohort_flow": {
+    "metadata_selected_pdbs": 240,
+    "structurally_eligible": 207,
+    "reference_homology_excluded": 162,
+    "independent_instances": 45,
+    "independent_components": 39,
+    "three_seed_valid_components": 33
+  },
+  "successor": {
+    "mean_factual_minus_mismatched_native_h3_nll": -0.504067169295417,
+    "component_bootstrap_ci95": [
+      -0.707143806756446,
+      -0.3197129879635995
+    ],
+    "negative_component_fraction": 0.9393939393939394,
+    "mean_factual_native_h3_nll": 0.713762457021559,
+    "contact_auroc": 0.5184000265225607
+  },
+  "stage_a": {
+    "mean_factual_minus_mismatched_native_h3_nll": -0.07269497862969987,
+    "component_bootstrap_ci95": [
+      -0.1202997531478453,
+      -0.03670815509377106
+    ],
+    "mean_factual_native_h3_nll": 0.7937626633981261,
+    "contact_auroc": 0.5
+  },
+  "successor_minus_stage_a_factual_native_h3_nll": {
+    "mean": -0.08000020637656703,
+    "component_bootstrap_ci95": [
+      -0.121486457429751,
+      -0.041223484924947394
+    ]
+  },
+  "descriptive_reference_threshold_comparison": {
+    "classification": "descriptive reuse of frozen thresholds; not a confirmatory gate",
+    "minimum_valid_components": true,
+    "minimum_valid_fraction": true,
+    "maximum_mean_factual_minus_mismatched_nll": true,
+    "maximum_component_bootstrap_ci95_upper": true,
+    "minimum_negative_component_fraction": true,
+    "maximum_successor_minus_stage_a_factual_nll": true,
+    "minimum_contact_auroc": false,
+    "all_thresholds_passed": false
+  },
+  "future_confirmatory_status": {
+    "exact_new_entries": 2,
+    "minimum_required": 12,
+    "ready": false,
+    "action": "wait for a later independent snapshot; do not pool failed snapshots"
+  },
+  "claim_boundary": "The retrospective panel supports an exploratory antigen-mismatch NLL signal but not the contact-routing threshold. It cannot establish confirmation, external generalization, binding, affinity, experimental specificity, or therapeutic efficacy."
+}

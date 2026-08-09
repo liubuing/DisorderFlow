@@ -5,7 +5,7 @@ from ._base import register_transform
 
 
 @register_transform('merge_chains')
-class MergeChains(object):
+class MergeChains:
 
     def __init__(self):
         super().__init__()
@@ -24,8 +24,10 @@ class MergeChains(object):
     def _data_attr(self, data, name):
         if name in ('generate_flag', 'anchor_flag') and name not in data:
             return torch.zeros(data['aa'].shape, dtype=torch.bool)
-        elif name == 'epitope_disorder_profile' and name not in data:
+        elif name in ('epitope_disorder_profile', 'disorder_confidence') and name not in data:
             return torch.zeros(data['aa'].shape, dtype=torch.float32)
+        elif name == 'disorder_supervision_mask' and name not in data:
+            return torch.zeros(data['aa'].shape, dtype=torch.bool)
         else:
             return data[name]
 
@@ -75,8 +77,10 @@ class MergeChains(object):
             'torsion': [],
             'mask_torsion': [],
         }
-        if any('epitope_disorder_profile' in data for data in data_list):
-            tensor_props['epitope_disorder_profile'] = []
+        for name in ('epitope_disorder_profile', 'disorder_supervision_mask',
+                     'disorder_confidence'):
+            if any(name in data for data in data_list):
+                tensor_props[name] = []
 
         for data in data_list:
             for k in list_props.keys():
@@ -90,11 +94,11 @@ class MergeChains(object):
             **list_props,
             **tensor_props,
         }
-        
+
         # Propagate cdr_type if exists
         if structure['heavy'] is not None and 'cdr_type' in structure['heavy']:
             data_out['cdr_type'] = structure['heavy']['cdr_type']
         elif structure['light'] is not None and 'cdr_type' in structure['light']:
             data_out['cdr_type'] = structure['light']['cdr_type']
-            
+
         return data_out

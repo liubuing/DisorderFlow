@@ -9,7 +9,6 @@ from pathlib import Path
 
 import numpy as np
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -56,6 +55,20 @@ def leave_one_out_range(values):
     return [min(means), max(means)]
 
 
+def benjamini_hochberg(p_values):
+    """Return FDR-adjusted q values in the original order."""
+    count = len(p_values)
+    order = sorted(range(count), key=lambda index: p_values[index])
+    adjusted = [0.0] * count
+    running = 1.0
+    for rank_index in range(count - 1, -1, -1):
+        original_index = order[rank_index]
+        rank = rank_index + 1
+        running = min(running, float(p_values[original_index]) * count / rank)
+        adjusted[original_index] = running
+    return adjusted
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -72,22 +85,30 @@ def main():
         float(row["summary"]["ecls_advantage"]) for row in adaptation["results"]]
     temporal_values = [
         float(row["mean_ecls_advantage"]) for row in temporal["inference_units"]]
+    adaptation_test = sign_flip_p(adaptation_values)
+    temporal_test = sign_flip_p(temporal_values)
+    q_values = benjamini_hochberg([adaptation_test["p"], temporal_test["p"]])
+    adaptation_test["bh_q_across_reported_ecls_tests"] = q_values[0]
+    temporal_test["bh_q_across_reported_ecls_tests"] = q_values[1]
     output = {
         "schema_version": 1,
         "status": "post_hoc_sensitivity_from_saved_results; not_a_final_rerun",
         "decision_rule_note": (
             "Frozen ECLS decisions used bootstrap confidence intervals and preregistered gates; "
             "these P values are supplementary and were computed after evaluation."),
+        "inference_note": (
+            "No per-cluster hypothesis tests were performed. Each antigen cluster is one "
+            "inference unit; bootstrap and sign-flip procedures operate on cluster summaries."),
         "adaptation": {
             "n_inference_units": len(adaptation_values),
             "mean": float(np.mean(adaptation_values)),
-            "sign_flip": sign_flip_p(adaptation_values),
+            "sign_flip": adaptation_test,
             "leave_one_cluster_out_mean_range": leave_one_out_range(adaptation_values),
         },
         "temporal_final": {
             "n_inference_units": len(temporal_values),
             "mean": float(np.mean(temporal_values)),
-            "sign_flip": sign_flip_p(temporal_values),
+            "sign_flip": temporal_test,
             "leave_one_cluster_out_mean_range": leave_one_out_range(temporal_values),
             "model_forward_performed": False,
         },

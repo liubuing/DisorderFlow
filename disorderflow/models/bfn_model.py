@@ -5,7 +5,11 @@ from disorderflow.modules.common.geometry import construct_3d_basis
 from disorderflow.modules.encoders.residue import ResidueEmbedding
 from disorderflow.modules.encoders.pair import PairEmbedding
 from disorderflow.modules.bfn.core import AntibodyBFN_Core
-from disorderflow.utils.protein.constants import max_num_heavyatoms, BBHeavyAtom
+from disorderflow.utils.protein.constants import (
+    max_num_heavyatoms,
+    BBHeavyAtom,
+    Fragment,
+)
 from ._base import register_model
 
 
@@ -13,6 +17,36 @@ resolution_to_num_atoms = {
     'backbone+CB': 5,
     'full': max_num_heavyatoms
 }
+
+
+def build_antigen_sequence_mismatch(batch):
+    """Swap antigen sequences across a batch while preserving target geometry."""
+    if 'hard_antigen_mismatch_aa' in batch:
+        mismatch = batch['hard_antigen_mismatch_aa'].to(batch['aa'].device)
+        valid = batch.get('hard_antigen_mismatch_valid')
+        if valid is None:
+            valid = (mismatch != batch['aa']).any(dim=1)
+        return mismatch, valid.to(batch['aa'].device).bool()
+    aa = batch['aa']
+    if aa.shape[0] < 2 or 'fragment_type' not in batch:
+        return None, None
+
+    antigen = (batch['fragment_type'] == int(Fragment.Antigen)) & batch['mask'].bool()
+    mismatch = aa.clone()
+    valid = torch.zeros(aa.shape[0], dtype=torch.bool, device=aa.device)
+    for target in range(aa.shape[0]):
+        donor = (target + 1) % aa.shape[0]
+        target_idx = torch.where(antigen[target])[0]
+        donor_idx = torch.where(antigen[donor])[0]
+        if target_idx.numel() == 0 or donor_idx.numel() == 0:
+            continue
+        mapped = torch.linspace(
+            0, donor_idx.numel() - 1, target_idx.numel(), device=aa.device
+        ).round().long()
+        donor_aa = aa[donor, donor_idx[mapped]]
+        mismatch[target, target_idx] = donor_aa
+        valid[target] = not torch.equal(aa[target, target_idx], donor_aa)
+    return mismatch, valid
 
 
 @register_model('antibody_bfn')
@@ -102,6 +136,20 @@ class AntibodyBFN(nn.Module):
         # The current BFN Core prototype doesn't mix context res_feat.
         # We should probably improve Receiver to take context res_feat.
         batch['res_feat'] = res_feat
+
+        if self.cfg.get('loss_weight', {}).get('antigen_mismatch_rank', 0) > 0:
+            mismatch_aa, mismatch_valid = build_antigen_sequence_mismatch(batch)
+            if mismatch_aa is not None:
+                mismatch_batch = dict(batch)
+                mismatch_batch['aa'] = mismatch_aa
+                _, mismatch_pair_feat = self.encode(
+                    mismatch_batch,
+                    remove_structure=self.cfg.get('train_structure', True),
+                    remove_sequence=self.cfg.get('train_sequence', True),
+                )
+                batch['antigen_mismatch_aa'] = mismatch_aa
+                batch['antigen_mismatch_pair_feat'] = mismatch_pair_feat
+                batch['antigen_mismatch_valid'] = mismatch_valid
 
         loss_dict = self.bfn(batch)
         return loss_dict

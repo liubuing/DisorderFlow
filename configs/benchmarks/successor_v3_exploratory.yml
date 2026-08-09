@@ -1,0 +1,94 @@
+schema_version: 1
+status: amended_after_materialization_timeout_before_model_access
+frozen_at_utc: 2026-08-07T11:40:59.8076799Z
+amended_at_utc: 2026-08-07T18:03:18.2807327Z
+amendment:
+  reason: original materializer downloaded all 240 CIFs but exceeded the execution timeout during ANARCII numbering
+  scope: reuse byte-identical local CIF downloads in a fresh write-once output directory
+  candidate_selection_change: none
+  structural_eligibility_change: none
+  model_or_checkpoint_access_before_amendment: false
+  execution_fixes:
+    - add repository root to direct-execution import paths
+    - ignore Windows cleanup errors for WSL-created MMseqs symbolic links
+    - treat a batch with no valid antigen mismatch as zero valid seeds instead of raising a missing-key error
+  post_checkpoint_execution_fix:
+    checkpoint_loaded: true
+    aggregate_metrics_observed_before_fix: false
+    panel_or_donor_change: none
+    reason: frozen helper assumed every donor produced a sequence mismatch; one fixed pair did not
+classification: retrospective_exploratory; not_confirmatory_not_external
+
+claim_boundary:
+  permits:
+    - retrospective_native_H3_antigen_conditioning_analysis
+    - fixed_backbone_contact_routing_analysis
+  prohibits:
+    - confirmatory_evidence
+    - external_generalization
+    - binding
+    - affinity
+    - experimental_specificity
+    - therapeutic_efficacy
+
+selection:
+  source: data/sabdab2_snapshot_2026_08_06_successor_v3/all-summary.csv
+  reference_union: data/successor_v3_confirmatory/reference_union_manifest_v2.json
+  peptide_antigen_required: true
+  paired_heavy_light_required: true
+  exact_reference_union_pdb_excluded: true
+  one_instance_per_pdb: true
+  order: [deposition_date_desc, resolution_asc, instance_asc]
+  maximum_pdbs: 240
+
+structural_eligibility:
+  implementation: frozen_successor_v3_confirmatory_materializer
+  antigen_length: [5, 50]
+  h3_length: [4, 30]
+  h3_definition: ANARCII_2.0.8_Chothia_positions_93_102
+  heavy_atom_contact_cutoff_angstrom: 4.5
+  minimum_contacting_h3_positions: 1
+
+isolation:
+  reference_union: data/successor_v3_confirmatory/reference_union_manifest_v2.json
+  minimum_coverage: 0.80
+  coverage_mode: 0
+  minimum_identity:
+    vh: 0.90
+    vl: 0.90
+    paired_cdr: 0.70
+    h3: 0.50
+    antigen: 0.30
+  minimum_components_for_exploratory_evaluation: 12
+
+frozen_checkpoints:
+  successor:
+    path: logs/bfn_successor_v3_h3_specificity_2026_08_07__11_35_01_successor_v3_h3_specificity_s3107/checkpoints/best.pt
+    sha256: de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618
+  stage_a:
+    path: logs/bfn_multiscaffold_v2_stage_a_random_2026_08_06__08_43_37_multiscaffold_v2_random_s2647/checkpoints/best.pt
+    sha256: 00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f
+
+primary_endpoint:
+  metric: component_mean_factual_minus_mismatched_antigen_native_H3_NLL
+  favorable_direction: negative
+  fixed_t: 0.5
+  seeds: [4103, 4111, 4127]
+  bootstrap_draws: 10000
+  bootstrap_seed: 4153
+
+future_confirmatory_readiness:
+  minimum_exact_new_entry_ids: 12
+  pooling_prior_failed_snapshots: forbidden
+  structure_access_before_gate: forbidden
+  checkpoint_access_before_new_protocol_freeze: forbidden
+
+frozen_code:
+  scripts/build/discover_successor_v3_exploratory.py: 4b1b5726d038744cc88029d43aaf06ad3c153584886a33859f39e0f4a10710f6
+  scripts/build/materialize_successor_v3_confirmatory.py: b6b5fe48167fc6bb567d80b5e0b7e8b7eebca80b78fca29fa58973f4c9a501f1
+  scripts/build/resume_successor_v3_exploratory_materialization.py: 287a5a79a271319f8f12955e72f2e931392d1be874a45d262ab1c0c959ee930d
+  scripts/audit_successor_v3_exploratory.py: 0a5f1544eebec80cc43e585cde919fa9a7382c853b73854e52d041fd30d20f83
+  scripts/audit_successor_v3_isolation.py: ace1a169bac26155e1041b2e794a183dc08ccf9af592f01a8ca7331bb3fde887
+  scripts/evaluate_successor_v3_exploratory.py: e472b986cea7d99e83776de04380c25d6e728240a13c4d1698e24c014b2d19f6
+  scripts/evaluate_successor_v3_confirmatory.py: 5f8c43691057a8f99864d1183f064305bb5ba2bf2c5cfd2d97ada722845bc52c
+  scripts/check_successor_v3_future_readiness.py: 1e77d508cb3bae2e3081ec41796c9f4ec11e59e890ee867bffb26471990cf6e4

@@ -11,6 +11,19 @@ import numpy as np
 import torch
 
 
+def _supervision_arrays(entry):
+    """Return values, evidence mask, and confidence for old or v3 lookups."""
+    if entry is None:
+        return None, None, None
+    if isinstance(entry, dict) and 'values' in entry:
+        values = np.asarray(entry['values'], dtype=np.float32)
+        mask = np.asarray(entry.get('mask', np.isfinite(values)), dtype=bool)
+        confidence = np.asarray(entry.get('confidence', np.ones_like(values)), dtype=np.float32)
+        return values, mask, confidence
+    values = np.asarray(entry, dtype=np.float32)
+    return values, np.isfinite(values), np.ones_like(values, dtype=np.float32)
+
+
 class DisorderAugmentedDataset:
     """Wraps a Phase3Dataset to add per-residue epitope disorder profiles.
 
@@ -20,7 +33,7 @@ class DisorderAugmentedDataset:
     - The profile has shape (L,) where L is the patched sequence length
     """
 
-    def __init__(self, base_dataset, disorder_lookup, sample_ids):
+    def __init__(self, base_dataset, disorder_lookup, sample_ids, balance_boost=0.0):
         """
         Args:
             base_dataset: Phase3Dataset instance
@@ -30,6 +43,24 @@ class DisorderAugmentedDataset:
         self._base = base_dataset
         self._lookup = disorder_lookup
         self._ids = sample_ids
+        self._sample_weights = self._build_sample_weights(float(balance_boost))
+
+    def _build_sample_weights(self, boost):
+        if boost <= 0:
+            return getattr(self._base, '_sample_weights', None)
+        weights = np.ones(len(self._ids), dtype=np.float64)
+        for index, sample_id in enumerate(self._ids):
+            entry = self._lookup.get(sample_id)
+            if entry is None:
+                entry = self._lookup.get(str(sample_id).casefold())
+            values, mask, confidence = _supervision_arrays(entry)
+            if values is None or not mask.any():
+                continue
+            coverage = float(mask.mean())
+            evidence = float(confidence[mask].mean())
+            disorder = float(values[mask].mean())
+            weights[index] += boost * coverage * evidence * disorder
+        return weights
 
     def __getitem__(self, idx):
         sid = self._ids[idx]
@@ -44,16 +75,27 @@ class DisorderAugmentedDataset:
             if structure is not None and structure.get('antigen') is not None:
                 antigen = structure['antigen']
                 profile = torch.zeros(antigen['aa'].shape[0], dtype=torch.float32)
-                if disorder_arr is not None and len(disorder_arr) > 0:
-                    n_copy = min(profile.shape[0], len(disorder_arr))
+                evidence_mask = torch.zeros_like(profile, dtype=torch.bool)
+                confidence = torch.zeros_like(profile)
+                values, source_mask, source_confidence = _supervision_arrays(disorder_arr)
+                if values is not None and len(values) > 0:
+                    n_copy = min(profile.shape[0], len(values))
                     profile[:n_copy] = torch.as_tensor(
-                        np.asarray(disorder_arr)[:n_copy], dtype=torch.float32)
+                        values[:n_copy], dtype=torch.float32)
+                    evidence_mask[:n_copy] = torch.as_tensor(source_mask[:n_copy], dtype=torch.bool)
+                    confidence[:n_copy] = torch.as_tensor(source_confidence[:n_copy], dtype=torch.float32)
                 antigen['epitope_disorder_profile'] = profile
+                antigen['disorder_supervision_mask'] = evidence_mask
+                antigen['disorder_confidence'] = confidence
                 data = self._base.transform(structure) if self._base.transform else structure
                 if data is not None and 'aa' in data:
                     # Inject disorder_label for the disorder head loss
                     if 'epitope_disorder_profile' in data:
                         data['disorder_label'] = data['epitope_disorder_profile'].clone()
+                        data['disorder_supervision_mask'] = data.get(
+                            'disorder_supervision_mask', torch.zeros_like(data['aa'], dtype=torch.bool))
+                        data['disorder_confidence'] = data.get(
+                            'disorder_confidence', torch.zeros_like(data['disorder_label']))
                     else:
                         data['disorder_label'] = torch.zeros(
                             data['aa'].shape[0], dtype=torch.float32)
@@ -80,21 +122,34 @@ class DisorderAugmentedDataset:
         fragment_type = data.get('fragment_type')
         L = data['aa'].shape[0]
         profile = torch.zeros(L, dtype=torch.float32)
+        supervision_mask = torch.zeros(L, dtype=torch.bool)
+        confidence = torch.zeros(L, dtype=torch.float32)
 
-        if disorder_arr is not None and len(disorder_arr) > 0 and fragment_type is not None:
-            ag_mask = (fragment_type == 3)  # Fragment.Antigen = 3
-            n_ag = ag_mask.sum().item()
-            if n_ag > 0:
-                n_copy = min(n_ag, len(disorder_arr))
-                ag_indices = ag_mask.nonzero(as_tuple=True)[0]
-                profile[ag_indices[:n_copy]] = torch.tensor(
-                    disorder_arr[:n_copy], dtype=torch.float32
+        values, source_mask, source_confidence = _supervision_arrays(disorder_arr)
+        if values is not None and len(values) > 0:
+            ag_indices = torch.empty(0, dtype=torch.long)
+            if fragment_type is not None:
+                ag_indices = (fragment_type == 3).nonzero(as_tuple=True)[0]
+            # Confidence/IDP LMDB records are single proteins rather than
+            # antibody-antigen complexes, so full-length evidence maps directly.
+            target_indices = (ag_indices if len(ag_indices) else
+                              torch.arange(L) if len(values) == L else ag_indices)
+            if len(target_indices):
+                n_copy = min(len(target_indices), len(values))
+                profile[target_indices[:n_copy]] = torch.tensor(
+                    values[:n_copy], dtype=torch.float32
                 )
+                supervision_mask[target_indices[:n_copy]] = torch.as_tensor(
+                    source_mask[:n_copy], dtype=torch.bool)
+                confidence[target_indices[:n_copy]] = torch.as_tensor(
+                    source_confidence[:n_copy], dtype=torch.float32)
 
         data['epitope_disorder_profile'] = profile
         # Also inject disorder_label for the disorder HEAD loss (core.py lines 394-432).
         # Without this key in every sample, PaddingCollate drops it and the loss never fires.
         data['disorder_label'] = profile.clone()
+        data['disorder_supervision_mask'] = supervision_mask
+        data['disorder_confidence'] = confidence
 
         return self._add_negative_profiles(self._add_scalar_mean(data), idx)
 
@@ -105,7 +160,8 @@ class DisorderAugmentedDataset:
         if fragment_type is not None:
             ag_mask = (fragment_type == 3)
             ag_profile = profile[ag_mask]
-            ag_mean = ag_profile.mean().item() if ag_profile.numel() > 0 else 0.0
+            ag_mean = (ag_profile.mean().item() if ag_profile.numel() > 0
+                       else profile.mean().item())
         else:
             ag_mean = profile.mean().item()
         data['epitope_disorder'] = torch.tensor([[ag_mean]], dtype=torch.float32)
@@ -134,9 +190,10 @@ class DisorderAugmentedDataset:
         if donor is None and self._lookup:
             donor = self._lookup.get(str(donor_id).casefold())
         mismatch = torch.zeros_like(data['epitope_disorder_profile'])
-        if donor is not None and len(donor) and fragment_type is not None:
+        donor_values, donor_mask, _ = _supervision_arrays(donor)
+        if donor_values is not None and donor_mask.any() and fragment_type is not None:
             antigen_indices = torch.where(fragment_type == 3)[0]
-            donor_values = np.asarray(donor, dtype=np.float32)
+            donor_values = donor_values[donor_mask]
             if len(antigen_indices):
                 source_x = np.linspace(0.0, 1.0, len(donor_values))
                 target_x = np.linspace(0.0, 1.0, len(antigen_indices))
@@ -211,8 +268,9 @@ class DisorderBalancedSampler:
         for i in range(n):
             sid = sample_ids[i] if i < len(sample_ids) else None
             arr = disorder_lookup.get(sid) if (disorder_lookup and sid) else None
-            if arr is not None and len(arr) > 0:
-                mean_d = float(np.mean(arr))
+            values, mask, _ = _supervision_arrays(arr)
+            if values is not None and mask.any():
+                mean_d = float(np.mean(values[mask]))
                 weights[i] = 1.0 + boost * mean_d
 
         # Normalize to probability distribution
@@ -250,9 +308,28 @@ def load_disorder_lookup(path, expected_split=None, expected_ids=None, require_e
     profiles = artifact['profiles']
     if expected_ids is not None:
         normalized = [str(value) for value in expected_ids]
-        digest = hashlib.sha256('\n'.join(normalized).encode('utf-8')).hexdigest()
-        if artifact.get('ids_sha256') != digest:
-            raise ValueError(f'Disorder lookup ID fingerprint mismatch: {path}')
-        if set(map(str.casefold, normalized)) != set(map(str.casefold, profiles)):
-            raise ValueError(f'Disorder lookup ID set mismatch: {path}')
-    return profiles
+        expected_set = set(map(str.casefold, normalized))
+        profile_set = set(map(str.casefold, profiles))
+        if artifact.get('schema_version', 1) >= 3:
+            if not expected_set & profile_set:
+                raise ValueError(f'Disorder lookup has no IDs in the requested dataset: {path}')
+        else:
+            digest = hashlib.sha256('\n'.join(normalized).encode('utf-8')).hexdigest()
+            if artifact.get('ids_sha256') != digest:
+                raise ValueError(f'Disorder lookup ID fingerprint mismatch: {path}')
+            if expected_set != profile_set:
+                raise ValueError(f'Disorder lookup ID set mismatch: {path}')
+    if artifact.get('schema_version', 1) >= 3:
+        return profiles
+    source = artifact.get('source_contract', {}).get('primary_source')
+    confidence = {
+        'charge_hydropathy_heuristic_v1': 0.10,
+    }.get(source, 0.25 if source else 1.0)
+    return {
+        key: {
+            'values': np.asarray(value, dtype=np.float32),
+            'mask': np.isfinite(value),
+            'confidence': np.full(len(value), confidence, dtype=np.float32),
+        }
+        for key, value in profiles.items()
+    }

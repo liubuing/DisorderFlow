@@ -1,0 +1,38 @@
+schema_version: 1
+status: frozen_before_any_v2_af2_inference
+selection_config: configs/benchmarks/multiscaffold_confirmatory_v2_selection.yml
+selection_config_sha256: 89873898d3bede131c364fdfd1744fc88f4d6794e56844ee3c7e3352b92f7c11
+selection: results/multiscaffold_confirmatory_v2/pre_af2_selection.json
+selection_sha256: 26a63c6a2f3e8860cfc4ffac79579678c59d48bd0d8b647bba234116cec067d7
+holdout_manifest: data/multiscaffold_confirmatory_v2/holdout_manifest.json
+holdout_manifest_sha256: b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380
+controls:
+  per_component: [native, composition_shuffle]
+  composition_shuffle_seed: 7307
+  require_non_native_shuffle: true
+af2:
+  backend: modules.af2_jax_runner.run_multimer_prediction
+  wsl_distribution: Ubuntu-24.04
+  environment: venv_wsl
+  model_type: alphafold2_multimer_v3
+  model_number: 1
+  model_parameters: C:/Users/34342/.cache/colabfold/params/params_model_1_multimer_v3.npz
+  model_parameters_sha256: 611da8fc7478928f68de12e8b226260ef1f4ce62bcc29b008572e52f4f212959
+  seeds: [7103, 7111, 7121]
+  recycles: 3
+  msa_mode: single_sequence_two_identical_rows
+  templates: disabled_zero_features
+  models_per_seed: 1
+  chunk_size: 24
+  return_structures: true
+  retain_full_pae_matrix: false
+expected:
+  selected_candidates: 280
+  selection_failed_slots: 20
+  controls: 40
+  prediction_entities: 320
+  prediction_slots: 960
+output:
+  results: results/multiscaffold_confirmatory_v2/af2/results.json
+  structures: results/multiscaffold_confirmatory_v2/af2/pdb
+claim_boundary: computational structure prediction on a prospective internal holdout; not binding or external confirmation

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 """Minimal BFN model loader —no Gradio/UI dependencies.
 
 Loads the BFN model from checkpoint with proper config handling.
@@ -7,22 +7,23 @@ Supports XPU and CUDA devices.
 
 import os
 import re
-import torch
 from pathlib import Path
+
+import torch
 
 
 def _detect_device():
     """Auto-detect available device: CUDA > XPU > CPU."""
     if torch.cuda.is_available():
-        return 'cuda'
-    elif hasattr(torch, 'xpu') and torch.xpu.is_available():
-        return 'xpu'
-    return 'cpu'
+        return "cuda"
+    elif hasattr(torch, "xpu") and torch.xpu.is_available():
+        return "xpu"
+    return "cpu"
 
 
 PROJECT_DIR = Path(__file__).parent.parent
-DEFAULT_MODEL_CONFIG = PROJECT_DIR / 'configs' / 'demo_design.yml'
-APP_CONFIG_FILE = PROJECT_DIR / 'app_config.yaml'
+DEFAULT_MODEL_CONFIG = PROJECT_DIR / "configs" / "demo_design.yml"
+APP_CONFIG_FILE = PROJECT_DIR / "app_config.yaml"
 
 _bfn_model = None
 _bfn_config = None
@@ -30,13 +31,14 @@ _bfn_config = None
 
 def _get_checkpoint_path():
     """Read checkpoint path from app_config.yaml."""
-    override = os.environ.get('DISORDERFLOW_CHECKPOINT')
+    override = os.environ.get("DISORDERFLOW_CHECKPOINT")
     if override:
         return str(Path(override).expanduser().resolve())
     import yaml
-    with open(APP_CONFIG_FILE, encoding='utf-8') as f:
+
+    with open(APP_CONFIG_FILE, encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
-    path = Path(cfg['models']['bfn']['checkpoint']).expanduser()
+    path = Path(cfg["models"]["bfn"]["checkpoint"]).expanduser()
     return str(path if path.is_absolute() else PROJECT_DIR / path)
 
 
@@ -66,16 +68,16 @@ def load_bfn(device=None):
     config, _ = _lc(DEFAULT_MODEL_CONFIG)
     ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
 
-    mc = ckpt['config'].model
-    if hasattr(ckpt['config'], 'train') and hasattr(ckpt['config'].train, 'loss_weights'):
-        mc['loss_weight'] = dict(ckpt['config'].train.loss_weights)
+    mc = ckpt["config"].model
+    if hasattr(ckpt["config"], "train") and hasattr(ckpt["config"].train, "loss_weights"):
+        mc["loss_weight"] = dict(ckpt["config"].train.loss_weights)
 
     model = get_model(mc).to(device)
 
-    ckpt_state = ckpt['model']
+    ckpt_state = ckpt["model"]
     # Skip ipTM head keys if architecture mismatches
-    if any('head_iptm' in k for k in ckpt_state):
-        new_iptm_keys = [k for k in model.state_dict() if 'head_iptm' in k]
+    if any("head_iptm" in k for k in ckpt_state):
+        new_iptm_keys = [k for k in model.state_dict() if "head_iptm" in k]
         shape_mismatch = False
         for k in new_iptm_keys:
             if k in ckpt_state and ckpt_state[k].shape != model.state_dict()[k].shape:
@@ -83,7 +85,7 @@ def load_bfn(device=None):
                 break
         if shape_mismatch:
             for k in list(ckpt_state.keys()):
-                if 'head_iptm' in k:
+                if "head_iptm" in k:
                     ckpt_state.pop(k)
 
     model.load_state_dict(ckpt_state, strict=False)
@@ -98,45 +100,47 @@ def has_disorder_head(model=None):
     """Check if the loaded model has a disorder prediction head."""
     if model is None:
         model, _ = load_bfn()
-    if hasattr(model, 'receiver'):
-        return getattr(model.receiver, 'disorder_head', False)
-    if hasattr(model, 'bfn') and hasattr(model.bfn, 'receiver'):
-        return getattr(model.bfn.receiver, 'disorder_head', False)
+    if hasattr(model, "receiver"):
+        return getattr(model.receiver, "disorder_head", False)
+    if hasattr(model, "bfn") and hasattr(model.bfn, "receiver"):
+        return getattr(model.bfn.receiver, "disorder_head", False)
     return False
 
 
 def parse_region_spec(region_spec):
     """Convert 1-based user residue positions to 0-based MaskRegion indices."""
     regions = {}
-    for cid, spec in re.findall(r'([A-Za-z0-9]+):([0-9,\-\s]+)', region_spec):
+    for cid, spec in re.findall(r"([A-Za-z0-9]+):([0-9,\-\s]+)", region_spec):
         indices = []
-        for segment in spec.split(','):
+        for segment in spec.split(","):
             segment = segment.strip()
             if not segment:
                 continue
-            if '-' in segment:
-                start_text, end_text = segment.split('-', 1)
+            if "-" in segment:
+                start_text, end_text = segment.split("-", 1)
                 start, end = int(start_text.strip()), int(end_text.strip())
                 if start < 1 or end < start:
-                    raise ValueError(f'Invalid 1-based residue range: {segment}')
+                    raise ValueError(f"Invalid 1-based residue range: {segment}")
                 indices.extend(range(start - 1, end))
             else:
                 position = int(segment)
                 if position < 1:
-                    raise ValueError(f'Invalid 1-based residue position: {position}')
+                    raise ValueError(f"Invalid 1-based residue position: {position}")
                 indices.append(position - 1)
         if indices:
             regions[cid] = sorted(set(indices))
     if not regions:
-        raise ValueError(f'Invalid region spec: {region_spec}')
+        raise ValueError(f"Invalid region spec: {region_spec}")
     return regions
 
 
-def build_region_batch(pdb_path, region_spec, context_chains=None, device=None):
+def build_region_batch(
+    pdb_path, region_spec, context_chains=None, device=None, antigen_chains=None
+):
     """Build the masked model batch shared by generation and fixed scoring."""
     from disorderflow.datasets.protein import preprocess_protein_structure
-    from disorderflow.utils.train import recursive_to
     from disorderflow.utils.data import PaddingCollate
+    from disorderflow.utils.train import recursive_to
     from disorderflow.utils.transforms import get_transform
 
     if device is None:
@@ -146,14 +150,16 @@ def build_region_batch(pdb_path, region_spec, context_chains=None, device=None):
 
     if context_chains is None:
         from Bio import PDB
-        parsed = PDB.PDBParser(QUIET=True).get_structure('context', pdb_path)[0]
-        context_chains = [chain.id for chain in parsed.get_chains()
-                          if chain.id not in design_chains]
+
+        parsed = PDB.PDBParser(QUIET=True).get_structure("context", pdb_path)[0]
+        context_chains = [
+            chain.id for chain in parsed.get_chains() if chain.id not in design_chains
+        ]
     else:
         context_chains = list(context_chains)
     overlap = set(context_chains) & set(design_chains)
     if overlap:
-        raise ValueError(f'Context chains cannot also be design chains: {sorted(overlap)}')
+        raise ValueError(f"Context chains cannot also be design chains: {sorted(overlap)}")
     all_chains = sorted(
         set(design_chains + context_chains),
         key=lambda chain: design_chains.index(chain) if chain in design_chains else 999,
@@ -161,61 +167,97 @@ def build_region_batch(pdb_path, region_spec, context_chains=None, device=None):
 
     structure = preprocess_protein_structure(pdb_path, chain_ids=all_chains)
     if structure is None:
-        raise ValueError(f'Cannot parse structure: {pdb_path}')
-    transform = get_transform([
-        {'type': 'mask_region', 'regions': regions},
-        {'type': 'merge_protein'},
-        {'type': 'patch_protein'},
-    ])
+        raise ValueError(f"Cannot parse structure: {pdb_path}")
+    transform = get_transform(
+        [
+            {"type": "mask_region", "regions": regions},
+            {"type": "merge_protein"},
+            {"type": "patch_protein"},
+        ]
+    )
     batch = recursive_to(PaddingCollate()([transform(structure)]), device)
-    if not batch['generate_flag'].any():
-        raise ValueError('No residues selected for design')
+    if antigen_chains is not None:
+        from disorderflow.utils.protein.constants import Fragment
+
+        antigen_chains = set(antigen_chains)
+        unknown = antigen_chains - set(context_chains)
+        if unknown:
+            raise ValueError(
+                f"Antigen chains must be included in context_chains: {sorted(unknown)}"
+            )
+        fragment_type = torch.full_like(batch["fragment_type"], fill_value=int(Fragment.Light))
+        for index, label in enumerate(batch["chain_id"]):
+            chain_id = label[0] if isinstance(label, (tuple, list)) else label
+            if chain_id in design_chains:
+                fragment_type[0, index] = int(Fragment.Heavy)
+            elif chain_id in antigen_chains:
+                fragment_type[0, index] = int(Fragment.Antigen)
+        batch["fragment_type"] = fragment_type
+    if not batch["generate_flag"].any():
+        raise ValueError("No residues selected for design")
     return batch
 
 
 def inject_candidate_sequence(batch, candidate_sequence):
     """Inject an exact candidate sequence into the batch's generated positions."""
-    aa_letters = 'ACDEFGHIKLMNPQRSTVWY'
+    aa_letters = "ACDEFGHIKLMNPQRSTVWY"
     candidate = candidate_sequence.strip().upper()
-    gen_mask = batch['generate_flag'].bool()
+    gen_mask = batch["generate_flag"].bool()
     expected_length = int(gen_mask.sum().item())
     if len(candidate) != expected_length:
         raise ValueError(
-            f'Candidate sequence has length {len(candidate)}; '
-            f'design region requires {expected_length}')
+            f"Candidate sequence has length {len(candidate)}; "
+            f"design region requires {expected_length}"
+        )
     invalid = sorted(set(candidate) - set(aa_letters))
     if invalid:
         raise ValueError(f"Candidate sequence contains invalid residues: {''.join(invalid)}")
 
-    batch['aa'] = batch['aa'].clone()
+    batch["aa"] = batch["aa"].clone()
     encoded = torch.tensor(
         [aa_letters.index(residue) for residue in candidate],
-        dtype=batch['aa'].dtype,
-        device=batch['aa'].device,
+        dtype=batch["aa"].dtype,
+        device=batch["aa"].device,
     )
-    batch['aa'][gen_mask] = encoded
+    batch["aa"][gen_mask] = encoded
     return batch
 
 
-def score_bfn_candidate(pdb_path, region_spec, candidate_sequence,
-                        context_chains=None, device=None, fixed_t=0.5,
-                        model=None):
+def score_bfn_candidate(
+    pdb_path,
+    region_spec,
+    candidate_sequence,
+    context_chains=None,
+    device=None,
+    fixed_t=0.5,
+    model=None,
+):
     """Build and score a supplied candidate without sequence generation."""
     if device is None:
         device = _detect_device()
     if model is None:
         model, _ = load_bfn(device)
-    batch = build_region_batch(
-        pdb_path, region_spec, context_chains=context_chains, device=device)
+    batch = build_region_batch(pdb_path, region_spec, context_chains=context_chains, device=device)
     inject_candidate_sequence(batch, candidate_sequence)
     with torch.no_grad():
         return model.score(batch, fixed_t=fixed_t)
 
 
-def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
-                   context_chains=None, device=None, sort_by=None, descending=True,
-                   disorder_guided=False, disorder_guided_strength=1.0,
-                   epitope_disorder_profile=None, sampling_seed=None):
+def run_bfn_design(
+    pdb_path,
+    region_spec,
+    num_samples=10,
+    stochastic=True,
+    context_chains=None,
+    device=None,
+    sort_by=None,
+    descending=True,
+    disorder_guided=False,
+    disorder_guided_strength=1.0,
+    epitope_disorder_profile=None,
+    sampling_seed=None,
+    antigen_chains=None,
+):
     """Run BFN protein sequence design on specified regions.
 
     Args:
@@ -227,6 +269,9 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
             (e.g. ['A'] for antigen). These chains are NOT designed.
             None includes every non-design chain (Complex mode); [] includes
             no additional chains (FixBB mode).
+        antigen_chains: subset of context_chains carrying antigen residues.
+            Required when epitope_disorder_profile is supplied through the
+            generic protein-design path.
         device: torch device
         disorder_guided: exploratory whole-CDR temperature control using an
             externally supplied epitope disorder profile. The model disorder
@@ -241,44 +286,52 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
     if device is None:
         device = _detect_device()
 
-    AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
+    AA_LETTERS = "ACDEFGHIKLMNPQRSTVWY"
 
     model, config = load_bfn(device)
-    sampling_config = getattr(config, 'sampling', None)
-    seed_all(getattr(sampling_config, 'seed', 42))
+    sampling_config = getattr(config, "sampling", None)
+    seed_all(getattr(sampling_config, "seed", 42))
 
     batch = build_region_batch(
-        pdb_path, region_spec, context_chains=context_chains, device=device)
-    gen_mask = batch['generate_flag'][0].bool()
+        pdb_path,
+        region_spec,
+        context_chains=context_chains,
+        device=device,
+        antigen_chains=antigen_chains,
+    )
+    gen_mask = batch["generate_flag"][0].bool()
 
     sample_opt = {
-        'deterministic': not stochastic,
-        'num_recycles': 3,
-        'return_disorder': False,
+        "deterministic": not stochastic,
+        "num_recycles": 3,
+        "return_disorder": False,
     }
     if epitope_disorder_profile is not None:
-        mask_antigen = model.bfn._mask_antigen(batch, batch['generate_flag'].bool())
+        mask_antigen = model.bfn._mask_antigen(batch, batch["generate_flag"].bool())
         profile_values = torch.as_tensor(
-            epitope_disorder_profile, dtype=torch.float32, device=device).flatten()
+            epitope_disorder_profile, dtype=torch.float32, device=device
+        ).flatten()
         antigen_count = int(mask_antigen.sum().item())
         if len(profile_values) != antigen_count:
             raise ValueError(
-                f'Epitope disorder profile has {len(profile_values)} residues; '
-                f'context has {antigen_count}')
-        condition = torch.zeros_like(batch['aa'], dtype=torch.float32)
+                f"Epitope disorder profile has {len(profile_values)} residues; "
+                f"context has {antigen_count}"
+            )
+        condition = torch.zeros_like(batch["aa"], dtype=torch.float32)
         condition[mask_antigen] = profile_values
-        batch['mask_antigen'] = mask_antigen
-        batch['epitope_disorder_profile'] = condition
+        batch["mask_antigen"] = mask_antigen
+        batch["epitope_disorder_profile"] = condition
         pliability = torch.zeros_like(condition)
-        pliability[batch['generate_flag'].bool()] = profile_values.mean()
-        sample_opt['disorder_pliability'] = pliability
+        pliability[batch["generate_flag"].bool()] = profile_values.mean()
+        sample_opt["disorder_pliability"] = pliability
     if disorder_guided:
         if epitope_disorder_profile is None:
             raise ValueError(
-                'disorder_guided requires epitope_disorder_profile; '
-                'the model disorder head is unsupported for inference')
-        sample_opt['disorder_guided'] = True
-        sample_opt['disorder_guided_strength'] = disorder_guided_strength
+                "disorder_guided requires epitope_disorder_profile; "
+                "the model disorder head is unsupported for inference"
+            )
+        sample_opt["disorder_guided"] = True
+        sample_opt["disorder_guided_strength"] = disorder_guided_strength
     results_list = []
 
     for i in range(num_samples):
@@ -288,9 +341,9 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
             traj = model.sample(batch, sample_opt=sample_opt)
 
         pred_aa = traj[0][2][0][gen_mask]
-        seq = ''.join(AA_LETTERS[a] if a < 20 else 'X' for a in pred_aa.cpu())
+        seq = "".join(AA_LETTERS[a] if a < 20 else "X" for a in pred_aa.cpu())
 
-        logits = traj['pred_logits'][0][gen_mask]
+        logits = traj["pred_logits"][0][gen_mask]
         lp = torch.log_softmax(logits[..., :20], dim=-1)
         probs = torch.exp(lp)
         nll = -lp[range(len(pred_aa)), pred_aa].mean()
@@ -298,26 +351,30 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
 
         entropy = -(probs * lp).sum(dim=-1).mean().item()
         max_prob = probs.max(dim=-1).values.mean().item()
-        plddt_val = traj['plddt'][0][gen_mask].mean().item()
-        plddt_per_res = traj['plddt'][0][gen_mask]
+        plddt_val = traj["plddt"][0][gen_mask].mean().item()
+        plddt_per_res = traj["plddt"][0][gen_mask]
         plddt_std = plddt_per_res.std().item()
-        iptm_val = traj['iptm'][0].item()
-        pae_val = traj['pae'][0][gen_mask][:, gen_mask].mean().item()
+        iptm_val = traj["iptm"][0].item()
+        pae_val = traj["pae"][0][gen_mask][:, gen_mask].mean().item()
 
         result = {
-            'sequence': seq, 'ppl': ppl, 'entropy': entropy,
-            'max_prob': max_prob,
-            'plddt': plddt_val, 'plddt_std': plddt_std,
-            'iptm': iptm_val, 'pae': pae_val,
+            "sequence": seq,
+            "ppl": ppl,
+            "entropy": entropy,
+            "max_prob": max_prob,
+            "plddt": plddt_val,
+            "plddt_std": plddt_std,
+            "iptm": iptm_val,
+            "pae": pae_val,
         }
 
-        contact = traj.get('contact')
+        contact = traj.get("contact")
         if contact is not None:
-            result['contact_score'] = torch.sigmoid(contact[0][gen_mask]).mean().item()
+            result["contact_score"] = torch.sigmoid(contact[0][gen_mask]).mean().item()
 
-        state_compatibility = traj.get('state_compatibility')
+        state_compatibility = traj.get("state_compatibility")
         if state_compatibility is not None:
-            result['state_compatibility'] = state_compatibility[0].item()
+            result["state_compatibility"] = state_compatibility[0].item()
 
         results_list.append(result)
 
@@ -329,6 +386,6 @@ def run_bfn_design(pdb_path, region_spec, num_samples=10, stochastic=True,
     # to send to AF2, turning the pipeline into confidence-ranked selection.
     if sort_by is not None and results_list:
         reverse = bool(descending)
-        results_list.sort(key=lambda r: r.get(sort_by, float('-inf')), reverse=reverse)
+        results_list.sort(key=lambda r: r.get(sort_by, float("-inf")), reverse=reverse)
 
     return results_list

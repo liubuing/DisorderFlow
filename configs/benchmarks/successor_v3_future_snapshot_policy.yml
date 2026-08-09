@@ -1,0 +1,34 @@
+schema_version: 1
+status: active_waiting_for_unexposed_metadata
+frozen_at_utc: 2026-08-08T02:30:27.1012538Z
+classification: future_confirmatory_metadata_readiness_only
+
+reference_union:
+  path: data/successor_v3_confirmatory/reference_union_manifest_v3.json
+  sha256: 61d63d6006a1ae1b0d6543572f78ca37502d4a804ef3bf34cbbea7ccea01d900
+  exact_exposed_pdb_ids: 576
+  sequence_reference_records: 4749
+
+acquisition:
+  query_implementation: scripts/build/acquire_rcsb_successor_v3_snapshot.py
+  exact_exclusion_implementation: scripts/build/discover_rcsb_successor_v3_snapshot.py
+  readiness_implementation: scripts/check_successor_v3_future_readiness.py
+  cadence: no_more_than_once_per_7_days
+  output_policy: timestamped_write_once_directory
+  latest_sabdab_summary_required: true
+  explicit_reference_v3_argument_required: true
+
+gate:
+  minimum_exact_new_entry_ids: 12
+  pooling_prior_failed_snapshots: forbidden
+  pooling_exploratory_records: forbidden
+  mmcif_access_before_gate: forbidden
+  checkpoint_access_before_new_protocol_freeze: forbidden
+  action_when_not_ready: update_exposure_ledger_and_wait
+  action_when_ready: freeze_new_confirmatory_protocol_before_structure_access
+
+current_state:
+  discovery: data/successor_v3_rcsb_snapshot_2026_08_07/discovery_after_exposure_v3.json
+  readiness: publication/successor_v3_future_readiness_after_exposure_2026_08_07.json
+  exact_new_entry_ids: 0
+  ready: false

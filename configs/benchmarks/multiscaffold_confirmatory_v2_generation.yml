@@ -1,0 +1,54 @@
+schema_version: 1
+status: frozen_before_v2_candidate_generation
+protocol: configs/benchmarks/multiscaffold_confirmatory_v2.yml
+protocol_sha256: 18000881b7fab4a20ddbd4a573c614926d2c8358712e17d43290f91a7f740586
+holdout_manifest: data/multiscaffold_confirmatory_v2/holdout_manifest.json
+holdout_manifest_sha256: b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380
+checkpoint_lineage: publication/multiscaffold_v2_checkpoint_lineage.json
+generation:
+  seeds: [2609, 2617, 2621]
+  candidates_per_seed: 8
+  preserve_native_h3_length: true
+  canonical_chain_map: {heavy: H, light: L, antigen: P}
+  raw_attempts_expected: 2400
+  retain_native_candidates: true
+  retain_duplicate_candidates: true
+  failed_candidates_remain_failures: true
+  arms:
+    current_bfn_disorder_on:
+      type: bfn
+      checkpoint: logs/bfn_multiscaffold_v2_stage_b_disorder_2026_08_06__19_00_50_multiscaffold_v2_stagea100k_s2657/checkpoints/best.pt
+      checkpoint_sha256: 5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3
+      stochastic: true
+      disorder_profile: stage_b_head_raw_sigmoid_latent_routing
+      disorder_guided_strength: 1.0
+    current_bfn_disorder_off:
+      type: bfn
+      checkpoint: logs/bfn_multiscaffold_v2_stage_b_disorder_2026_08_06__19_00_50_multiscaffold_v2_stagea100k_s2657/checkpoints/best.pt
+      checkpoint_sha256: 5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3
+      stochastic: true
+      disorder_profile: none
+    stage_a_antibody_bfn:
+      type: bfn
+      checkpoint: logs/bfn_multiscaffold_v2_stage_a_random_2026_08_06__08_43_37_multiscaffold_v2_random_s2647/checkpoints/best.pt
+      checkpoint_sha256: 00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f
+      stochastic: true
+      disorder_profile: none
+    proteinmpnn:
+      type: proteinmpnn
+      script: ProteinMPNN/protein_mpnn_run.py
+      weights: ProteinMPNN/vanilla_model_weights
+      model_name: v_48_020
+      model_weights_sha256: c9cb4a671d79604111231f8dbfc7c590e06f1197453b7a6854ac6661a642f5bd
+      temperature: 0.1
+    esm_if:
+      type: esm_if
+      model: esm_if1_gvp4_t16_142M_UR50
+      temperature: 0.1
+      device: cpu
+      context: multichain_coordinates_without_context_sequences
+output:
+  path: results/multiscaffold_confirmatory_v2/raw_generation.json
+  schema: one_row_per_attempt
+  candidate_selection_permitted: false
+claim_boundary: raw prospective internal generation; no candidate selection or confirmatory endpoint

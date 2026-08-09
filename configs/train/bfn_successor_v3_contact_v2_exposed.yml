@@ -1,0 +1,72 @@
+lineage:
+  classification: retrospective exposed development only; not confirmatory or external
+  allowed_initializer: successor_v3_h3_specificity
+  allowed_initializer_sha256: de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618
+
+model:
+  type: antibody_bfn
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+      pair_contact: true
+  train_structure: false
+  train_sequence: true
+  ot_opt: {num_iters: 5}
+  loss_weight:
+    seq: 0.1
+    contact: 0.3
+    contact_pair: 1.0
+    antigen_mismatch_rank: 0.2
+    antigen_mismatch_rank_margin: 0.05
+    train_recycles: 1
+    label_smoothing: 0.03
+    encoder_dropout: 0.05
+    t_clamp: 0.95
+
+train:
+  amp_dtype: bfloat16
+  loss_weights:
+    seq: 0.1
+    contact: 0.3
+    contact_pair: 1.0
+    antigen_mismatch_rank: 0.2
+  freeze_backbone: true
+  trainable_modules: [contact_pair, antigen_xa]
+  unfreeze_encoder_layers: 1
+  max_iters: 1500
+  val_freq: 50
+  log_freq: 10
+  batch_size: 4
+  warmup_steps: 100
+  seed: 5107
+  validation_seed: 5119
+  max_grad_norm: 1.0
+  ema_decay: 0.99
+  early_stopping_patience: 10
+  checkpoint_selection_metric: contact_pair
+  checkpoint_selection_mode: min
+  optimizer:
+    type: adamw
+    lr: 2.e-4
+    weight_decay: 1.e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 4
+    min_lr: 1.e-6
+
+dataset:
+  train:
+    type: lmdb_preprocessed
+    db_path: ./data/successor_v3_contact_dev_v1/train.lmdb
+  val:
+    type: lmdb_preprocessed
+    db_path: ./data/successor_v3_contact_dev_v1/eval.lmdb

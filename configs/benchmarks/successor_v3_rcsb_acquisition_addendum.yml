@@ -1,0 +1,65 @@
+schema_version: 1
+status: frozen_before_rcsb_candidate_query
+frozen_at_utc: 2026-08-07T08:59:27.8646667Z
+parent_preregistration: publication/successor_v3_confirmatory_preregistration.json
+classification: independent_RCSB_acquisition_addendum; same_internal_confirmatory_hypothesis
+
+query:
+  canonical_query_sha256: b6b9e99d1f8d90f148db3fcaf81002b7b3df8db078ee93b03ddd11eff567289d
+  api_version_observed: 2.6.0
+  endpoint: https://search.rcsb.org/rcsbsearch/v2/query
+  return_type: entry
+  full_text_value: antibody
+  minimum_initial_release_date: 2026-07-14
+  results_content_type: [experimental]
+  results_verbosity: compact
+  sort: rcsb_id_ascending
+  page_rows: 10000
+  pagination_policy: total_count_must_be_constant_and_ids_strictly_increasing
+
+frozen_code:
+  scripts/build/acquire_rcsb_successor_v3_snapshot.py: cd6350c484bb1fdf107b132b6fbfe16a1355bd077f53391b2ea90be0f76a1090
+  scripts/build/discover_rcsb_successor_v3_snapshot.py: 9f80dc63cef63c4ee3725358a12fa38984df1a75eb040da17eb0f047b4c8800d
+  tests/test_successor_v3_rcsb_acquisition.py: d88c17c1d604a2dbab74b32e7ffec0316991a265f3cd44bb4d4b2fc6e058199a
+
+exact_exclusion:
+  rcsb_ids_in_latest_sabdab_snapshot: exclude
+  rcsb_ids_in_reference_union: exclude
+  rcsb_ids_in_any_prior_exposure: exclude
+
+full_mmcif_eligibility:
+  assembly_policy: biological_assembly_1_only; reject_missing_or_ambiguous
+  polymer_sequence_source: entity_poly_seq_and_pdbx_poly_seq_scheme
+  chain_classification: ANARCII_2.0.8_Chothia
+  heavy_roles: [H]
+  light_roles: [K, L]
+  reject_multiple_variable_domains_per_chain: true
+  h3_length: [4, 30]
+  h3_coordinate_mapping: exact_unique_monotonic_contiguous
+  heavy_light_pairing:
+    maximum_variable_domain_centroid_distance_angstrom: 25.0
+    minimum_interdomain_ca_pairs_within_10_angstrom: 8
+    minimum_framework_positions_per_chain_in_heavy_atom_contacts_within_5_angstrom: 6
+    ambiguity_action: exclude_component_unless_exactly_one_H_and_one_L
+  peptide:
+    polymer_length: [5, 50]
+    ANARCII_unclassified_required: true
+    complete_backbone_required: [N, CA, C, O]
+    h3_heavy_atom_contact_cutoff_angstrom: 4.5
+    exactly_one_contacting_peptide_per_HL_pair: true
+  canonical_output:
+    chain_ids: [H, L, P]
+    contiguous_residue_numbering_from_one: true
+    standard_amino_acids_only: true
+    deterministic_altloc_selection: occupancy_then_blank_then_A
+
+feasibility:
+  minimum_exact_new_entry_ids_before_mmcif_download: 12
+  minimum_reference_independent_components: 12
+  insufficient_action: freeze_failure_without_checkpoint_access
+
+evaluation:
+  protocol: configs/benchmarks/successor_v3_confirmatory.yml
+  checkpoint_or_threshold_changes: forbidden
+  additional_confirmatory_attempts: forbidden
+  note: RCSB replaces the infeasible SAbDab acquisition source; it does not create a second performance attempt.

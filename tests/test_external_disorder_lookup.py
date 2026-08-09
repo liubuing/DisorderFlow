@@ -24,7 +24,9 @@ def test_split_artifact_fails_closed(tmp_path):
     }
     path = tmp_path / 'lookup.pkl'
     path.write_bytes(pickle.dumps(artifact))
-    assert set(load_disorder_lookup(path, 'train', ids, True)) == set(ids)
+    loaded = load_disorder_lookup(path, 'train', ids, True)
+    assert set(loaded) == set(ids)
+    assert np.allclose(loaded['a']['confidence'], 1.0)
     with pytest.raises(ValueError, match='split mismatch'):
         load_disorder_lookup(path, 'val', ids, True)
     with pytest.raises(ValueError, match='fingerprint mismatch'):

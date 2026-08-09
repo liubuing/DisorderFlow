@@ -1,7 +1,7 @@
-# Disorder-Aware Training V2 — Full Fix Integration
+# Disorder-Aware Training V2 - legacy weak-label baseline
 #
 # Integrates all 4 fixes for the disorder design pipeline:
-#   Fix 1: Experimental labels (B-factors / MobiDB / RMSF) — no circular dependency
+#   Label source: charge-hydropathy heuristic, not experimental ground truth
 #   Fix 2: disorder_label injected via DisorderAugmentedDataset — head loss fires
 #   Fix 3: Focal-weighted loss (gamma=4) + balanced oversampling (boost=5)
 #   Fix 4: Ablation-ready (run scripts/ablation_disorder_conditioning.py after training)
@@ -110,6 +110,6 @@ dataset:
       - type: mask_multiple_cdrs
       - type: merge_chains
       - type: patch_around_anchor
-  # Fix 1 + Fix 2: experimental disorder lookup
+  # Legacy weak lookup. Do not use this config for disorder-function claims.
   # Feeds BOTH epitope_disorder_profile (conditioning) AND disorder_label (head loss)
   disorder_lookup: data/sabdab_disorder_lookup_experimental.pkl

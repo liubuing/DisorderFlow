@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "status": "planned_not_executed",
+  "classification": "prospective wet-experiment design; contains no measurements",
+  "inputs": {
+    "checkpoint": {
+      "path": "logs/bfn_successor_v3_contact_v2_exposed_2026_08_09__09_06_40_successor_v3_contact_v2_cb/checkpoints/best.pt",
+      "sha256": "9d844ea2fb5f34000d9258f9c08e26744dd6c7049c2c0a3edd96d3faffe6d29b"
+    },
+    "dataset_manifest": {
+      "path": "data/successor_v3_contact_dev_v1/manifest.json",
+      "sha256": "02da7c9b821f2116226cee623762f879fcff2f2631bf7736bc941aa5c0e6dfdc"
+    },
+    "structural_manifest": {
+      "path": "data/successor_v3_exploratory/structures_final/structural_manifest.json",
+      "sha256": "26030e2c6de2523b7aa1b35e70653218ef06175ecf743b35de92cb24a915fe8f"
+    }
+  },
+  "panel": [
+    {
+      "target_instance": "pdb_00006vry-H-L",
+      "component_id": "SV3D045",
+      "pdb_id": "6vry",
+      "h3_sequence": "AREYCIGSTCYPILDS",
+      "selection_score": 0.9999524354934692,
+      "construct_ids": [
+        "pdb_00006vry-H-L__WT",
+        "pdb_00006vry-H-L__HOT1_C10A",
+        "pdb_00006vry-H-L__HOT2_S8A",
+        "pdb_00006vry-H-L__LOW_A1G"
+      ]
+    },
+    {
+      "target_instance": "pdb_00009nkz-H-L",
+      "component_id": "SV3D027",
+      "pdb_id": "9nkz",
+      "h3_sequence": "ARVQLDYGPGYQYYGMDV",
+      "selection_score": 0.9999409914016724,
+      "construct_ids": [
+        "pdb_00009nkz-H-L__WT",
+        "pdb_00009nkz-H-L__HOT1_Q12A",
+        "pdb_00009nkz-H-L__HOT2_Y14A",
+        "pdb_00009nkz-H-L__LOW_V18A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00008fdc-A-B",
+      "component_id": "SV3D061",
+      "pdb_id": "8fdc",
+      "h3_sequence": "ARDFFVSGSYNYFDP",
+      "selection_score": 0.9999385476112366,
+      "construct_ids": [
+        "pdb_00008fdc-A-B__WT",
+        "pdb_00008fdc-A-B__HOT1_S9A",
+        "pdb_00008fdc-A-B__HOT2_F5A",
+        "pdb_00008fdc-A-B__LOW_P15A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00006x7w-A-C",
+      "component_id": "SV3D050",
+      "pdb_id": "6x7w",
+      "h3_sequence": "ARHGEGKYGSNFAY",
+      "selection_score": 0.9999222159385681,
+      "construct_ids": [
+        "pdb_00006x7w-A-C__WT",
+        "pdb_00006x7w-A-C__HOT1_S10A",
+        "pdb_00006x7w-A-C__HOT2_Y8A",
+        "pdb_00006x7w-A-C__LOW_A1G"
+      ]
+    },
+    {
+      "target_instance": "pdb_00002hrp-H-L",
+      "component_id": "SV3D006",
+      "pdb_id": "2hrp",
+      "h3_sequence": "ARSGGIERYDGTYYVMDY",
+      "selection_score": 0.99989253282547,
+      "construct_ids": [
+        "pdb_00002hrp-H-L__WT",
+        "pdb_00002hrp-H-L__HOT1_G11A",
+        "pdb_00002hrp-H-L__HOT2_T12A",
+        "pdb_00002hrp-H-L__LOW_Y18A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00006x78-B-A",
+      "component_id": "SV3D008",
+      "pdb_id": "6x78",
+      "h3_sequence": "TRGGTTFVAEPWLAY",
+      "selection_score": 0.999821126461029,
+      "construct_ids": [
+        "pdb_00006x78-B-A__WT",
+        "pdb_00006x78-B-A__HOT1_E10A",
+        "pdb_00006x78-B-A__HOT2_T6A",
+        "pdb_00006x78-B-A__LOW_Y15A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00003h0t-B-A",
+      "component_id": "SV3D009",
+      "pdb_id": "3h0t",
+      "h3_sequence": "ARGIVFSYAMDV",
+      "selection_score": 0.9996669888496399,
+      "construct_ids": [
+        "pdb_00003h0t-B-A__WT",
+        "pdb_00003h0t-B-A__HOT1_F6A",
+        "pdb_00003h0t-B-A__HOT2_V5A",
+        "pdb_00003h0t-B-A__LOW_R2A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00006o24-A-B",
+      "component_id": "SV3D036",
+      "pdb_id": "6o24",
+      "h3_sequence": "ARDAHYSDSSGYSSWGYFDY",
+      "selection_score": 0.9992735385894775,
+      "construct_ids": [
+        "pdb_00006o24-A-B__WT",
+        "pdb_00006o24-A-B__HOT1_A4G",
+        "pdb_00006o24-A-B__HOT2_Y6A",
+        "pdb_00006o24-A-B__LOW_D19A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00006h0e-A-B",
+      "component_id": "SV3D030",
+      "pdb_id": "6h0e",
+      "h3_sequence": "VRGHCDGTTCSRAY",
+      "selection_score": 0.995866060256958,
+      "construct_ids": [
+        "pdb_00006h0e-A-B__WT",
+        "pdb_00006h0e-A-B__HOT1_D6A",
+        "pdb_00006h0e-A-B__HOT2_T8A",
+        "pdb_00006h0e-A-B__LOW_Y14A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00007fgr-H-L",
+      "component_id": "SV3D007",
+      "pdb_id": "7fgr",
+      "h3_sequence": "ARSTYYSGALDY",
+      "selection_score": 0.992309033870697,
+      "construct_ids": [
+        "pdb_00007fgr-H-L__WT",
+        "pdb_00007fgr-H-L__HOT1_Y5A",
+        "pdb_00007fgr-H-L__HOT2_S7A",
+        "pdb_00007fgr-H-L__LOW_Y12A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00005owp-H1-H2",
+      "component_id": "SV3D021",
+      "pdb_id": "5owp",
+      "h3_sequence": "TGVGQFAY",
+      "selection_score": 0.9903876781463623,
+      "construct_ids": [
+        "pdb_00005owp-H1-H2__WT",
+        "pdb_00005owp-H1-H2__HOT1_G4A",
+        "pdb_00005owp-H1-H2__HOT2_V3A",
+        "pdb_00005owp-H1-H2__LOW_F6A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00008fbw-A-B",
+      "component_id": "SV3D060",
+      "pdb_id": "8fbw",
+      "h3_sequence": "AKDATPYYYSGGYWYVGNYSFDY",
+      "selection_score": 0.9887111186981201,
+      "construct_ids": [
+        "pdb_00008fbw-A-B__WT",
+        "pdb_00008fbw-A-B__HOT1_N18A",
+        "pdb_00008fbw-A-B__HOT2_G17A",
+        "pdb_00008fbw-A-B__LOW_Y23A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00006p8d-A-B",
+      "component_id": "SV3D039",
+      "pdb_id": "6p8d",
+      "h3_sequence": "ASGYVAFHY",
+      "selection_score": 0.988453209400177,
+      "construct_ids": [
+        "pdb_00006p8d-A-B__WT",
+        "pdb_00006p8d-A-B__HOT1_V5A",
+        "pdb_00006p8d-A-B__HOT2_Y4A",
+        "pdb_00006p8d-A-B__LOW_Y9A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00006pef-A-B",
+      "component_id": "SV3D044",
+      "pdb_id": "6pef",
+      "h3_sequence": "AGSPVRQREQDY",
+      "selection_score": 0.983590304851532,
+      "construct_ids": [
+        "pdb_00006pef-A-B__WT",
+        "pdb_00006pef-A-B__HOT1_R8A",
+        "pdb_00006pef-A-B__HOT2_V5A",
+        "pdb_00006pef-A-B__LOW_Q7A"
+      ]
+    },
+    {
+      "target_instance": "pdb_00005yy4-A1-A2",
+      "component_id": "SV3D026",
+      "pdb_id": "5yy4",
+      "h3_sequence": "ARDYYTNYGD",
+      "selection_score": 0.9333345293998718,
+      "construct_ids": [
+        "pdb_00005yy4-A1-A2__WT",
+        "pdb_00005yy4-A1-A2__HOT1_T6A",
+        "pdb_00005yy4-A1-A2__HOT2_D3A",
+        "pdb_00005yy4-A1-A2__LOW_A1G"
+      ]
+    },
+    {
+      "target_instance": "pdb_00005vzy-H-L",
+      "component_id": "SV3D024",
+      "pdb_id": "5vzy",
+      "h3_sequence": "ASGDY",
+      "selection_score": 0.9291751980781555,
+      "construct_ids": [
+        "pdb_00005vzy-H-L__WT",
+        "pdb_00005vzy-H-L__HOT1_S2A",
+        "pdb_00005vzy-H-L__HOT2_D4A",
+        "pdb_00005vzy-H-L__LOW_A1G"
+      ]
+    }
+  ],
+  "power_analysis": {
+    "primary_comparison": "target-level mean(high-contact mutant minus WT log10(KD)) minus low-contact mutant minus WT log10(KD)",
+    "independent_targets": 16,
+    "high_contact_mutations": 32,
+    "low_contact_controls": 16,
+    "two_sided_alpha": 0.05,
+    "target_effect_log10_kd": 0.5,
+    "assumed_sd_log10_kd": 0.5,
+    "target_level_paired_t_test_power": 0.9618851119323157,
+    "technical_replicates_per_construct": 3,
+    "note": "Technical replicates assess assay precision and do not increase biological n."
+  },
+  "claim_boundary": "Constructs are model-selected hypotheses. No binding result is asserted."
+}

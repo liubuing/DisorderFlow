@@ -110,6 +110,9 @@ class AntibodyBFN_Core(nn.Module):
         x_seq_target = batch['aa'].clone() # (N, L), immutable supervision target
         x_seq = x_seq_target.clone() # receiver input may be contrastively augmented
         x_pos = batch['pos_heavyatom'][:, :, 1] # CA (N, L, 3)
+        cb = batch['pos_heavyatom'][:, :, 4]
+        cb_mask = batch['mask_heavyatom'][:, :, 4].bool()
+        contact_pos = torch.where(cb_mask.unsqueeze(-1), cb, x_pos)
         x_pos = self._normalize_position(x_pos) # Normalize position
         
         # === Backbone atom coordinates (N, CA, C, O) ===
@@ -248,6 +251,7 @@ class AntibodyBFN_Core(nn.Module):
             # Feed confidence + sequence embedding into next recycle
             prev_plddt, prev_iptm, prev_pae = pred_plddt, pred_iptm, pred_pae
             prev_seq_emb = self.receiver.v12_seq_emb(F.softmax(pred_seq.detach(), dim=-1))
+        pred_contact_pair = getattr(self.receiver, 'last_pair_contact_logits', None)
         # --- End Recycling ---
         
         # 4. Training Losses
@@ -272,6 +276,56 @@ class AntibodyBFN_Core(nn.Module):
         # Directly teach profile specificity. A mismatched antigen profile must
         # assign lower likelihood to the native CDR than the factual profile.
         factual_nll = (loss_seq * mask_gen).sum(dim=1) / mask_gen.sum(dim=1).clamp(min=1)
+
+        mismatch_w = self.loss_weight.get('antigen_mismatch_rank', 0.0)
+        mismatch_aa = batch.get('antigen_mismatch_aa')
+        mismatch_pair_feat = batch.get('antigen_mismatch_pair_feat')
+        if mismatch_w > 0 and mismatch_aa is not None and mismatch_pair_feat is not None:
+            mismatch_valid = batch.get(
+                'antigen_mismatch_valid',
+                torch.ones(N, dtype=torch.bool, device=x_seq.device),
+            ).bool() & mask_gen.any(dim=1) & batch['mask_antigen'].any(dim=1)
+            if mismatch_valid.any():
+                factual_onehot = F.one_hot(
+                    x_seq.clamp(min=0, max=self.num_classes - 1),
+                    num_classes=self.num_classes,
+                ).to(theta_seq.dtype)
+                mismatch_onehot = F.one_hot(
+                    mismatch_aa.clamp(min=0, max=self.num_classes - 1),
+                    num_classes=self.num_classes,
+                ).to(theta_seq.dtype)
+                alpha = self.flow_seq._alpha(t_expanded).unsqueeze(-1)
+                antigen_mask = batch['mask_antigen'].unsqueeze(-1)
+                mismatch_theta = torch.where(
+                    antigen_mask,
+                    theta_seq + alpha * (mismatch_onehot - factual_onehot),
+                    theta_seq,
+                )
+                mismatch_inp_seq = self.flow_seq.probabilities(mismatch_theta)
+                mismatch_output = self.receiver(
+                    mismatch_inp_seq, inp_pos, inp_ori, inp_ang, t,
+                    mismatch_pair_feat, mask_res,
+                    backbone_pos=backbone_pos, prev_conf=None, prev_iptm=None,
+                    prev_pae=None, prev_seq_emb=None, mask_gen=mask_gen,
+                    mask_antigen=batch['mask_antigen'], epitope_disorder=None,
+                )
+                mismatch_ce = sequence_cross_entropy_20(
+                    mismatch_output[0], x_seq_target,
+                    label_smoothing=self.loss_weight.get('label_smoothing', 0.0),
+                )
+                mismatch_nll = ((mismatch_ce * mask_gen).sum(dim=1)
+                                / mask_gen.sum(dim=1).clamp(min=1))
+                gap = factual_nll - mismatch_nll
+                margin = float(self.loss_weight.get(
+                    'antigen_mismatch_rank_margin', 0.05))
+                losses['antigen_mismatch_rank'] = (
+                    margin + gap[mismatch_valid]).clamp(min=0).mean()
+                losses['antigen_mismatch_gap'] = gap[mismatch_valid].mean().detach()
+                if batch.get('return_per_sample_metrics', False):
+                    losses['factual_nll_per_sample'] = factual_nll.detach()
+                    losses['antigen_mismatch_gap_per_sample'] = gap.detach()
+                    losses['antigen_mismatch_valid_per_sample'] = mismatch_valid.detach()
+
         for loss_name, profile_key in (
                 ('disorder_position_rank', 'epitope_disorder_shuffled_profile'),
                 ('disorder_mismatch_rank', 'epitope_disorder_mismatched_profile')):
@@ -316,7 +370,8 @@ class AntibodyBFN_Core(nn.Module):
                     cdr_idx = mask_gen[b].bool()
                     ag_idx = mask_antigen[b].bool()
                     if cdr_idx.any() and ag_idx.any():
-                        dists = torch.cdist(pos[b][cdr_idx], pos[b][ag_idx])
+                        dists = torch.cdist(
+                            contact_pos[b][cdr_idx], contact_pos[b][ag_idx])
                         contact_label[b][cdr_idx] = (dists.min(dim=1).values < 8.0).float()
 
                 # BCE loss only on CDR residues
@@ -324,6 +379,19 @@ class AntibodyBFN_Core(nn.Module):
                     pred_contact, contact_label, reduction='none')
                 n_cdr = mask_gen.sum().clamp(min=1)
                 losses['contact'] = (loss_contact * mask_gen).sum() / n_cdr
+
+                pair_w = self.loss_weight.get('contact_pair', 0.0)
+                if pair_w > 0 and pred_contact_pair is not None:
+                    pair_mask = mask_gen.unsqueeze(-1) & mask_antigen.unsqueeze(1)
+                    pair_label = torch.zeros_like(pred_contact_pair)
+                    for b in range(N_batch):
+                        if pair_mask[b].any():
+                            pair_label[b] = (
+                                torch.cdist(contact_pos[b], contact_pos[b]) < 8.0).float()
+                    pair_loss = F.binary_cross_entropy_with_logits(
+                        pred_contact_pair, pair_label, reduction='none')
+                    losses['contact_pair'] = pair_w * (
+                        pair_loss * pair_mask).sum() / pair_mask.sum().clamp(min=1)
 
         # Direction H: contrastive CDR-antigen matching loss.
         # BCE: real CDR → 1, shuffled CDR → 0. Forces encoder to learn
@@ -427,10 +495,7 @@ class AntibodyBFN_Core(nn.Module):
             loss_pae = huber_pae(pred_pae, pae_target)
             losses['pae'] = (loss_pae * mask_pair).sum() / (mask_pair.sum() + 1e-8)
 
-        # === Disorder Loss (Focal-weighted Huber on continuous RMSF labels) ===
-        # Addresses severe class imbalance: ~0.74% of residues are disordered.
-        # Focal weighting: w_i = 1 + gamma * target_i, so disordered residues
-        # (target~0.5-1.0) get up to (1+gamma)x the weight of ordered ones.
+        # === Disorder Loss (class-balanced BCE on confidence-weighted labels) ===
         if 'disorder_label' in batch and 'disorder' in self.loss_weight and self.loss_weight['disorder'] > 0:
             disorder_target = batch['disorder_label'].float()  # (N, L) continuous [0, 1]
             if disorder_target.dim() == 1:
@@ -441,15 +506,28 @@ class AntibodyBFN_Core(nn.Module):
             else:
                 disorder_target = disorder_target[:, :pred_len]
             mask_disorder = mask_res[:, :pred_len]
-            disorder_prob = torch.sigmoid(pred_disorder)
-            huber = nn.SmoothL1Loss(reduction='none', beta=0.1)
-            per_residue_loss = huber(disorder_prob, disorder_target)
-
-            # Focal reweighting: boost disordered residues
-            focal_gamma = float(self.loss_weight.get('disorder_focal_gamma', 4.0))
-            focal_weight = 1.0 + focal_gamma * disorder_target.detach()
-            weighted_loss = per_residue_loss * focal_weight * mask_disorder
-            losses['disorder'] = weighted_loss.sum() / (mask_disorder.sum() + 1e-8)
+            if 'disorder_supervision_mask' in batch:
+                supervision_mask = batch['disorder_supervision_mask'].bool()
+                supervision_mask = supervision_mask[:, :pred_len]
+                mask_disorder = mask_disorder & supervision_mask
+            confidence = batch.get('disorder_confidence')
+            if confidence is None:
+                confidence = torch.ones_like(disorder_target)
+            confidence = confidence.float()[:, :pred_len].clamp(0, 1)
+            evidence_weight = confidence * mask_disorder
+            per_residue_loss = F.binary_cross_entropy_with_logits(
+                pred_disorder.float(), disorder_target, reduction='none')
+            positive_mass = (evidence_weight * disorder_target).sum()
+            negative_mass = (evidence_weight * (1.0 - disorder_target)).sum()
+            if positive_mass > 0 and negative_mass > 0:
+                class_weight = (
+                    disorder_target / (2.0 * positive_mass)
+                    + (1.0 - disorder_target) / (2.0 * negative_mass)
+                )
+                losses['disorder'] = (per_residue_loss * evidence_weight * class_weight).sum()
+            else:
+                losses['disorder'] = (
+                    per_residue_loss * evidence_weight).sum() / (evidence_weight.sum() + 1e-8)
 
         # Rank-only supervision is permitted when calibration supports relative
         # within-protein flexibility but not absolute RMSF magnitudes.
@@ -465,10 +543,13 @@ class AntibodyBFN_Core(nn.Module):
                     value=float('nan'))
             else:
                 disorder_target = disorder_target[:, :pred_len]
+            rank_mask = mask_res[:, :pred_len]
+            if 'disorder_supervision_mask' in batch:
+                rank_mask = rank_mask & batch['disorder_supervision_mask'].bool()[:, :pred_len]
             losses['disorder_rank'] = _within_protein_disorder_ranking(
                 pred_disorder,
                 disorder_target,
-                mask_res[:, :pred_len],
+                rank_mask,
                 temperature=float(self.loss_weight.get(
                     'disorder_rank_temperature', 1.0)),
                 min_target_gap=float(self.loss_weight.get(
@@ -655,9 +736,11 @@ class AntibodyBFN_Core(nn.Module):
             mask_gen=mask_gen,
             mask_antigen=batch.get('mask_antigen'),
             epitope_disorder=epi_disorder,
+            orientation_is_rotation=True,
         )
         (_, _, _, _, pred_plddt, pred_iptm, pred_pae, pred_disorder,
          pred_contact, pred_contrastive) = result
+        pred_contact_pair = getattr(self.receiver, 'last_pair_contact_logits', None)
 
         residue_mask = mask_res.to(pred_plddt.dtype)
         pair_mask = (mask_res.unsqueeze(-1) & mask_res.unsqueeze(-2)).to(pred_pae.dtype)
@@ -669,6 +752,8 @@ class AntibodyBFN_Core(nn.Module):
             'disorder': (pred_disorder * residue_mask
                          if pred_disorder is not None else None),
             'contact': pred_contact * residue_mask,
+            'contact_pair': (pred_contact_pair * pair_mask
+                             if pred_contact_pair is not None else None),
             'state_compatibility': pred_contrastive * sample_mask,
         }
 

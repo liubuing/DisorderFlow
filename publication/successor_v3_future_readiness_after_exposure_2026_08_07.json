@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "future_snapshot_not_ready",
+  "checked_at_utc": "2026-08-08T02:28:54.099325Z",
+  "classification": "metadata_only_future_confirmatory_readiness",
+  "source_discovery": "data\\successor_v3_rcsb_snapshot_2026_08_07\\discovery_after_exposure_v3.json",
+  "source_discovery_sha256": "9d55468ea333b2fe117a059e8b0e1d12e1326af433c8c6dc1fd1d6e8aaafe595",
+  "minimum_exact_new_entries": 12,
+  "observed_exact_new_entries": 0,
+  "ready": false,
+  "candidate_entry_ids_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "decision": "wait_for_a_later_snapshot; structure_and_checkpoint_access_forbidden",
+  "claim_boundary": "metadata readiness only; not a performance result"
+}

@@ -1,0 +1,39 @@
+schema_version: 1
+status: frozen_before_v2_arm_level_summary_access
+selection: results/multiscaffold_confirmatory_v2/pre_af2_selection.json
+selection_sha256: 26a63c6a2f3e8860cfc4ffac79579678c59d48bd0d8b647bba234116cec067d7
+af2_results: results/multiscaffold_confirmatory_v2/af2/results.json
+af2_results_sha256: 6594ab405ef71273dc7674c28c5e45278a18da36971ca614cec4ee17b8c537d2
+prodigy_results: results/multiscaffold_confirmatory_v2/prodigy/results.json
+prodigy_results_sha256: 6b7e59fbf2e17c8af3b9a63a35cbfbf66c30ae6937ea5b1bac39292e0aa1bafb
+primary:
+  proposed_arm: current_bfn_disorder_on
+  baseline_arms:
+    - current_bfn_disorder_off
+    - stage_a_antibody_bfn
+    - proteinmpnn
+    - esm_if
+  score: prodigy_predicted_delta_g_kcal_mol
+  direction: lower_is_better
+  candidate_seed_aggregation: maximum_worst_seed
+  arm_component_aggregation: mean_of_three_candidate_worst_seed_scores
+  comparator: componentwise_minimum_oracle_across_all_baseline_arms
+  positive_delta: baseline_oracle_minus_proposed
+validity:
+  candidate_requires_successful_seeds: 3
+  arm_component_requires_selected_unique_candidates: 3
+  primary_component_requires_all_arms_valid: true
+  failed_or_missing_slots_are_not_imputed: true
+gates:
+  minimum_valid_components: 12
+  minimum_valid_fraction: 0.8
+  minimum_positive_component_fraction: 0.7
+  require_component_bootstrap_ci95_lower_above_zero: true
+statistics:
+  bootstrap_trials: 10000
+  bootstrap_seed: 7603
+secondary:
+  af2_metrics: [iptm, interface_pae, antibody_plddt, antigen_plddt]
+  controls: [native, composition_shuffle]
+output: results/multiscaffold_confirmatory_v2/analysis.json
+claim_boundary: prospective internal computational benchmark; no external, binding, affinity, or efficacy claim

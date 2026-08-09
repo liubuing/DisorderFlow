@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "metadata_feasibility_gate_failed",
+  "classification": "pre_model_confirmatory_feasibility; not a performance result",
+  "preregistration": {
+    "path": "publication/successor_v3_confirmatory_preregistration.json",
+    "sha256": "33a14c3236a13eb04e98757e3ad1a7f09b145be34eae881d7b2258ea8f9f7866"
+  },
+  "snapshot": {
+    "path": "data/sabdab2_snapshot_2026_08_06_successor_v3/acquisition.json",
+    "sha256": "31cf8b92c54e34aa6259bba75287a20f64fa78a0dfcf8c772d7c5e31d5f6f381",
+    "summary_sha256": "00b9ab8864155fc34592e14eaf9bb92d38f4953e08fed10e1400be68233dccfb",
+    "retrieved_at_utc": "2026-08-07T07:44:30.986726Z",
+    "maximum_update_date": "20260806"
+  },
+  "discovery": {
+    "path": "data/successor_v3_confirmatory/discovery_2026_08_06.json",
+    "sha256": "539f0acb8506626b01ff9cfaa668f174dc89959dc72e5df7ad6d1caadfaab080",
+    "new_instances": 173,
+    "new_pdbs": 99,
+    "peptide_candidate_instances": 19,
+    "peptide_candidate_pdbs": 9
+  },
+  "frozen_gate": {
+    "minimum_reference_independent_components": 12,
+    "maximum_possible_exact_pdb_independent_components": 9,
+    "passed": false
+  },
+  "decision": "insufficient newly acquired PDBs; freeze feasibility failure without structure download, homology audit, or model access",
+  "prohibitions": [
+    "do not lower the 12-component minimum",
+    "do not reuse baseline, v2, or successor-development records",
+    "do not download candidate structures for confirmatory evaluation",
+    "do not run the successor or Stage A checkpoints on this snapshot",
+    "do not create a confirmatory evaluation attempt ledger for this snapshot"
+  ],
+  "next_eligible_action": "wait for a later write-once SAbDab or independent structural snapshot with at least 12 exact-new peptide-antibody PDBs, then freeze a new acquisition addendum before accessing candidate identities",
+  "claim_boundary": "This is a model-free sample-size feasibility failure. It neither supports nor rejects successor-v3 performance."
+}

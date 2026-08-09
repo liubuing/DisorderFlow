@@ -1,0 +1,94 @@
+schema_version: 1
+status: amended_before_candidate_access_waiting_for_independent_components
+frozen_at_utc: 2026-08-09T01:18:04.3368207Z
+classification: future_confirmatory_policy
+
+candidate_model:
+  path: logs/bfn_successor_v3_contact_v2_exposed_2026_08_09__09_06_40_successor_v3_contact_v2_cb/checkpoints/best.pt
+  sha256: 9d844ea2fb5f34000d9258f9c08e26744dd6c7049c2c0a3edd96d3faffe6d29b
+  frozen_after_exposed_development: true
+development_evaluation:
+  path: results/successor_v3_contact_v2/development_evaluation.json
+  sha256: 6affa5d99d93283922caab62fdf08657af8a9ca9f4ceb0cf712116de33573905
+  residue_auroc: 0.953150951943007
+  pair_auroc: 0.9543090043555402
+  pair_average_precision: 0.7061249080723322
+  independent_components_with_both_classes: 20
+  residue_component_macro_auroc: 0.9601975522129507
+  residue_component_macro_auroc_ci95: [0.9230976053560972, 0.986609168374567]
+  eligible_for_future_confirmation: true
+baselines:
+  path: results/successor_v3_contact_v2/baselines.json
+  sha256: 44f169230797a0371b1c73d20c6019a5b560fb6f8d140d49197f8d705eb7aa62
+
+admission:
+  reference_union:
+    path: data/successor_v3_confirmatory/reference_union_manifest_v3.json
+    sha256: 61d63d6006a1ae1b0d6543572f78ca37502d4a804ef3bf34cbbea7ccea01d900
+  minimum_exact_new_eligible_structures: 12
+  minimum_independent_homology_components: 12
+  one_selected_representative_per_component: true
+  mutual_candidate_isolation_required: true
+  component_axes:
+    vh: {maximum_identity: 0.90, minimum_coverage: 0.80}
+    vl: {maximum_identity: 0.90, minimum_coverage: 0.80}
+    paired_cdr: {maximum_identity: 0.70, minimum_coverage: 0.80}
+    h3: {maximum_identity: 0.50, minimum_coverage: 0.80}
+    antigen: {maximum_identity: 0.30, minimum_coverage: 0.80}
+  exact_new_means_absent_from_every_reference_union_axis: true
+  current_207_structure_panel_permanently_exposed: true
+  current_state:
+    eligible_structures: 0
+    independent_homology_components: 0
+    required_independent_homology_components: 12
+    ready: false
+  manifest_must_be_frozen_before_checkpoint_access: true
+  start_attempt_record_makes_evaluation_irreversible: true
+  failed_or_partial_snapshot_pooling: forbidden
+  model_or_threshold_changes_after_candidate_access: forbidden
+
+evaluation:
+  target: H3-antigen CB-with-CA-fallback contacts below 8 angstrom
+  fixed_t: 0.5
+  primary_metric: component_macro_residue_contact_auroc
+  secondary_metrics:
+    - component_macro_pair_contact_auroc
+    - component_macro_average_precision
+    - component_bootstrap_confidence_intervals
+    - pooled_auroc_descriptive_only
+    - brier_score
+  success_gates:
+    residue_component_macro_auroc_ci95_lower_at_least: 0.70
+    pair_component_macro_auroc_ci95_lower_at_least: 0.70
+    candidate_minus_predecessor_component_bootstrap_ci95_lower_above: 0.0
+    all_scores_finite: true
+  report_all_failures_and_exclusions: true
+  inference_unit: independent_homology_component
+
+matched_baselines:
+  same_records_and_contact_labels_required: true
+  geometry_distance_ceiling:
+    interpretation: label-derived upper bound, not a predictive comparator
+  predecessor_checkpoint:
+    path: logs/bfn_successor_v3_h3_specificity_2026_08_07__11_35_01_successor_v3_h3_specificity_s3107/checkpoints/best.pt
+    sha256: de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618
+  development_only_context:
+    matched_fold_sequence_logistic_auroc: 0.7430920646250566
+    matched_fold_frozen_encoder_probe_auroc: 0.8923693566320298
+    prohibition: these fitted development-fold probes are not refit on future data
+
+frozen_inputs:
+  development_dataset_manifest:
+    path: data/successor_v3_contact_dev_v1/manifest.json
+    sha256: 02da7c9b821f2116226cee623762f879fcff2f2631bf7736bc941aa5c0e6dfdc
+  development_protocol:
+    path: configs/benchmarks/successor_v3_contact_v2_development.yml
+    sha256: d714af0de52b0b839f0a49553d84ae46466187a88f90d35792c2bc4abef6a23a
+  evaluation_script:
+    path: scripts/evaluate_successor_v3_contact_v2.py
+    sha256: e52a794a53f3d0abcd13f9f483df366aca51ff891253a3b30e4ded358d96f41d
+  one_shot_confirmatory_evaluation_script:
+    path: scripts/evaluate_successor_v3_contact_v2_confirmatory.py
+    sha256: 70a3f0d69200cf4abd35e02c92e4da75263fa1b4b9ed324f5430da3b35f19929
+
+claim_boundary: A passing future snapshot would confirm only bound-structure contact-map decoding under this protocol, not binding, affinity, hotspot causality, specificity, developability, efficacy, or therapeutic value.

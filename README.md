@@ -1,16 +1,34 @@
-﻿# disorderflow — Protein Sequence Design Platform
+﻿# disorderflow - Research Software for Structure-Conditioned Protein Design
 
-**disorderflow** is a full-stack platform for fixed-backbone protein/antibody sequence design powered by **Bayesian Flow Networks (BFN)**. It integrates sequence design, confidence evaluation, cascade filtering, and AlphaFold2 validation into a unified Gradio web interface.
+**disorderflow** is research software for fixed-backbone protein and antibody
+sequence design powered by Bayesian Flow Networks (BFN). It includes a Gradio
+application, command-line workflows, benchmark tooling, and publication audit
+artifacts. Availability of a software feature does not imply that the feature
+has passed biological or prospective validation.
 
-## Overview
+## Scientific Evidence Status
+
+| Capability or result | Current evidence | Allowed interpretation |
+|---|---|---|
+| ECLS native-vs-shuffle scoring | Positive one-time temporal computational final, 15 antigen clusters | Deposited native H3s have a favorable structure-conditioned likelihood contrast relative to composition-matched shuffles |
+| Cross-generator ECLS reranking | Negative seven-cluster development result | Universal candidate reranking is not established |
+| Multiscaffold antibody design | Terminal negative internal computational benchmark | No antibody-design improvement claim |
+| Contact-v2 | Exposed development; future independent confirmation is `0/12` components | Bound-structure contact-map decoder only |
+| Disorder head | External CAID3 discrimination, below metapredict and poorly calibrated | Experimental routing feature, not a biological probability |
+| SPR/BLI validation | Planned, no measurements | No experimental binding or hotspot claim |
+
+The frozen manuscript scope is defined in
+[`publication/ECLS_SCOPE_FREEZE.yml`](publication/ECLS_SCOPE_FREEZE.yml).
+
+## Available Software
 
 | Component | Description |
 |-----------|-------------|
-| **BFN Model** | Bayesian Flow Network with Geometric Transformer (IPA) backbone |
+| **BFN Model** | Bayesian Flow Network with Geometric Transformer backbone; research use |
 | **Confidence Heads** | Built-in pLDDT, ipTM (context-only), and PAE prediction (V6 Phase 2) |
 | **Cascade Filter** | 3-stage filtering: hard thresholds → dedup → composite scoring (PPL + entropy + pLDDT + ipTM) |
-| **Web Platform** | Gradio UI with 8 specialized tabs for design, evaluation, and analysis |
-| **Design Tools** | BFN, ProteinMPNN, ESM-IF all integrated with unified workflow |
+| **Web Platform** | Gradio UI for design, evaluation, and analysis; operational capability only |
+| **Design Tools** | BFN, ProteinMPNN, and ESM-IF workflow integrations; generated candidates are hypotheses |
 
 ## Quick Start
 
@@ -193,15 +211,29 @@ python manage.py test               # Environment self-test
 
 ## Known Limitations
 
-- **IDP recognition is not externally validated**: the current CAID-standard result
-  (ROC-AUC 0.470, PR-AUC 0.00725) does not support a generalization claim. Disorder
-  scores should be treated as experimental features until leakage-free retraining
-  and homology-clustered external evaluation are complete.
-- **IDP De novo Design — ceiling not yet broken**: While the disorder head identifies IDPs,
-  de novo CDR design for IDP targets (e.g. Aβ42) has not surpassed the AF2 folding
+- **IDP recognition is externally discriminative but not calibrated or superior**:
+  balanced-v4 reached mean UniRef50-disjoint development ROC-AUC 0.896 and CAID2
+  development-regression ROC-AUC 0.742. On frozen CAID3, 71 mixed-label clusters
+  gave macro ROC-AUC 0.755 (95% CI 0.694-0.812), versus 0.793 for metapredict.
+  Brier 0.299 and ECE 0.379 failed calibration criteria. Disorder scores remain
+  experimental routing features, not biological validity probabilities. The evidence hierarchy and commands are defined in
+  [`docs/DISORDER_SUPERVISION_PROTOCOL.md`](docs/DISORDER_SUPERVISION_PROTOCOL.md).
+- **IDP De novo Design — ceiling not yet broken**: External disorder recognition
+  does not establish successful IDP-directed generation, and de novo CDR design for IDP targets
+  (e.g. Aβ42) has not surpassed the AF2 folding
   ceiling (ipTM~0.12–0.14 on 3STB scaffold, vs >0.3 target for viable binders).
-  The V17i Pair Routing breakthrough (Δ=+30pp antigen signal) and V18 MPNN+BFN hybrid
-  pipeline are active directions. For ordered targets, BFN confidence scoring is reliable.
+  Matched-position ESM-IF is operational on seven exposed development antigen
+  units. A v1 audit of 91 new peptide complexes yielded zero records under
+  germline-inappropriate 50%-identity VH/VL gates. A model-free v2 audit froze
+  20 prospective internal holdout components at 90% VH/VL, 70% paired-CDR, 50%
+  H3, and 30% antigen identity. A leakage-controlled random-initialization
+  training lineage completed Stage A and Stage B. Raw generation subsequently
+  recorded all 2,400 frozen attempts across 20 components and five arms with no
+  failed slots. Diversity-only selection, 960 three-seed AF2 predictions, and
+  independent PRODIGY scoring then completed. Only 7/20 components were valid
+  across all arms, the proposed arm's oracle-baseline contrast was negative,
+  and all preregistered gates failed. This v2 internal computational hypothesis
+  and the current T2.1 contact mechanism are terminal negative.
 - **Length constraint**: Trained on proteins L=50-250; encoder position embeddings are
   out-of-distribution for L > 250
 - **ipTM invariance**: Context-only ipTM is constant per protein, not per sequence

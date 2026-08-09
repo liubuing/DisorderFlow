@@ -1,9 +1,21 @@
 ﻿import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import math
 from disorderflow.modules.encoders.ga import GAEncoder
 from disorderflow.modules.bfn.orientation import svd_project_so3
 from disorderflow.modules.bfn.receiver_heads import ResidualMLP, AttentionPAEHead
+
+
+def aggregate_pair_contact_logits(pair_logits, antigen_mask):
+    """Aggregate residue-pair probabilities into any-antigen contact logits."""
+    valid = antigen_mask.bool().unsqueeze(1)
+    output_dtype = pair_logits.dtype
+    log_survival = F.logsigmoid(-pair_logits.float()).masked_fill(
+        ~valid, 0.0).sum(dim=-1)
+    log_contact = torch.log((-torch.expm1(log_survival)).clamp_min(1e-8))
+    logits = (log_contact - log_survival).to(output_dtype)
+    return torch.where(valid.any(dim=-1), logits, torch.full_like(logits, -20.0))
 
 
 class AntibodyBFN_Receiver(nn.Module):
@@ -52,6 +64,7 @@ class AntibodyBFN_Receiver(nn.Module):
         opt.pop('direct_position_routing', None)
         opt.pop('contrastive_order_sensitive', None)
         opt.pop('disorder_condition_scale', None)
+        self.pair_contact = bool(opt.pop('pair_contact', False))
         self.encoder = GAEncoder(res_feat_dim, pair_feat_dim, num_layers, ga_block_opt=opt, dropout=encoder_dropout)
 
         # ── Direction E: antigen→CDR pooling+concat conditioning ──
@@ -89,6 +102,13 @@ class AntibodyBFN_Receiver(nn.Module):
         # minority (contact=1) class.
         nn.init.zeros_(self.contact_head.weight)
         nn.init.constant_(self.contact_head.bias, -1.0)
+        if self.pair_contact:
+            pair_hidden = max(32, pair_feat_dim // 2)
+            self.contact_pair_query = nn.Linear(res_feat_dim, pair_hidden)
+            self.contact_pair_key = nn.Linear(res_feat_dim, pair_hidden)
+            self.contact_pair_bias = nn.Linear(pair_feat_dim, 1)
+            nn.init.constant_(self.contact_pair_bias.bias, -3.0)
+        self.last_pair_contact_logits = None
 
         # ── Direction H: contrastive CDR-antigen matching head ──
         # Plan §2.2: seq recovery (~5% CDR recovery) cannot teach antigen
@@ -250,7 +270,7 @@ class AntibodyBFN_Receiver(nn.Module):
     def forward(self, theta_seq, theta_pos, theta_ori, theta_ang, t, pair_feat, mask_res,
                 backbone_pos=None, prev_conf=None, prev_iptm=None, prev_pae=None,
                 prev_seq_emb=None, mask_gen=None, mask_antigen=None,
-                epitope_disorder=None):  # WAY4 V6: disorder-conditioned
+                epitope_disorder=None, orientation_is_rotation=False):  # WAY4 V6: disorder-conditioned
         N, L, _ = theta_seq.shape
         device = theta_seq.device
         
@@ -265,7 +285,7 @@ class AntibodyBFN_Receiver(nn.Module):
         
         # Orientation: theta_ori is F matrix. Project to R.
         # We pass this as 'R' to GAEncoder.
-        rot = svd_project_so3(theta_ori)
+        rot = theta_ori if orientation_is_rotation else svd_project_so3(theta_ori)
         
         # Angle: theta_ang. Let's assume we extract expected angles.
         # For prototype, we assume theta_ang is (log_weights, means, precisions)
@@ -343,7 +363,17 @@ class AntibodyBFN_Receiver(nn.Module):
 
         # Direction F: per-residue contact prediction — does this CDR residue
         # contact any antigen residue? BCE loss gives antigen path direct signal.
-        pred_contact = self.contact_head(features).squeeze(-1)  # (N, L)
+        self.last_pair_contact_logits = None
+        if self.pair_contact and mask_antigen is not None:
+            query = self.contact_pair_query(features)
+            key = self.contact_pair_key(features)
+            pair_logits = (
+                torch.einsum('nid,njd->nij', query, key) / math.sqrt(query.shape[-1])
+                + self.contact_pair_bias(pair_feat).squeeze(-1))
+            self.last_pair_contact_logits = pair_logits
+            pred_contact = aggregate_pair_contact_logits(pair_logits, mask_antigen)
+        else:
+            pred_contact = self.contact_head(features).squeeze(-1)  # (N, L)
 
         # ── Shared antigen pooling + pair_feat aggregation ──
         # Computed once, used by contrastive head AND pair routing head.

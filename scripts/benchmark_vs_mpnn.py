@@ -32,8 +32,10 @@ sys.path.insert(0, os.path.join(ROOT, "modules"))
 # ── metrics (self-contained) ──
 
 def sequence_recovery(designed, native):
-    """Fraction of positions where designed == native (same length assumed)."""
-    n = min(len(designed), len(native))
+    """Fraction of positions where designed equals native at identical positions."""
+    if len(designed) != len(native):
+        raise ValueError(f"Sequence length mismatch: {len(designed)} != {len(native)}")
+    n = len(native)
     if n == 0:
         return 0.0
     return sum(1 for i in range(n) if designed[i] == native[i]) / n
@@ -89,12 +91,25 @@ def design_mpnn(pdb_path, region_spec, num_samples, mpnn_exe, mpnn_outdir):
     if not mpnn_exe or not os.path.exists(mpnn_exe):
         print(f"  [MPNN] binary not found ({mpnn_exe}) — skipping MPNN arm")
         return []
-    # Parse region_spec "B:26-33,51-58,97-113" → MPNN --chains B --fixed_res / --design
+    # Freeze every non-design position in the selected chain.
     chain = region_spec.split(":")[0]
+    from idp_antibody_design import _extract_sequence_from_pdb, _parse_cdr_ranges
+    chain_sequence = _extract_sequence_from_pdb(pdb_path, chain)
+    ranges = _parse_cdr_ranges(region_spec)
+    design_positions = [
+        position for start, end, _ in ranges for position in range(start, end + 1)]
+    fixed_positions = [
+        position for position in range(1, len(chain_sequence) + 1)
+        if position not in set(design_positions)]
     os.makedirs(mpnn_outdir, exist_ok=True)
+    name = os.path.splitext(os.path.basename(pdb_path))[0]
+    fixed_path = os.path.join(mpnn_outdir, "fixed_positions.jsonl")
+    with open(fixed_path, "w", encoding="ascii") as handle:
+        handle.write(json.dumps({name: {chain: fixed_positions}}) + "\n")
     cmd = [
         sys.executable, mpnn_exe,
         "--pdb_path", pdb_path, "--pdb_path_chains", chain,
+        "--fixed_positions_jsonl", fixed_path,
         "--out_folder", mpnn_outdir,
         "--num_seq_per_target", str(num_samples),
         "--sampling_temp", "0.1",
@@ -105,10 +120,11 @@ def design_mpnn(pdb_path, region_spec, num_samples, mpnn_exe, mpnn_outdir):
         print(f"  [MPNN] run failed: {e}")
         return []
     # Parse MPNN FASTA output.
-    return _parse_mpnn_output(mpnn_outdir, chain)
+    return _parse_mpnn_output(
+        mpnn_outdir, chain, design_positions, len(chain_sequence))
 
 
-def _parse_mpnn_output(mpnn_outdir, chain):
+def _parse_mpnn_output(mpnn_outdir, chain, design_positions, chain_length):
     """ProteinMPNN writes per-PDB FASTAs under <out>/seqs/. Extract designed seqs."""
     seqs_dir = os.path.join(mpnn_outdir, "seqs")
     designs = []
@@ -123,7 +139,14 @@ def _parse_mpnn_output(mpnn_outdir, chain):
                 if line.startswith(">"):
                     continue
                 if line:
-                    designs.append({"sequence": line, "source": "mpnn"})
+                    full_sequence = line.replace("/", "")
+                    if len(full_sequence) != chain_length:
+                        raise ValueError(
+                            f"ProteinMPNN {chain} length {len(full_sequence)} != {chain_length}")
+                    designed = ''.join(full_sequence[position - 1]
+                                       for position in design_positions)
+                    designs.append({"sequence": designed, "full_sequence": full_sequence,
+                                    "source": "mpnn"})
     return designs
 
 

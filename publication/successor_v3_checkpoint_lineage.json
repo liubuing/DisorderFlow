@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_development_gate_evaluation",
+  "classification": "exposed development only; not confirmatory",
+  "initializer": {
+    "lineage": "multiscaffold_v2_stage_a_random",
+    "checkpoint_sha256": "00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f"
+  },
+  "training": {
+    "config": "configs/train/bfn_successor_v3_h3_specificity.yml",
+    "config_sha256": "31799a3a74370311207cd06621ee4c5ec21b1cdfde5e347869732ad0a1a29f17",
+    "iteration": 5000,
+    "checkpoint": "logs/bfn_successor_v3_h3_specificity_2026_08_07__11_35_01_successor_v3_h3_specificity_s3107/checkpoints/best.pt",
+    "checkpoint_sha256": "de94777235b6cbf3b9ae0e935b01474222272d88dad7d8ec4b00d198752f4618",
+    "weights_kind": "ema",
+    "validation_antigen_mismatch_rank": 0.005179,
+    "validation_factual_minus_mismatched_native_h3_nll": -0.3804,
+    "validation_factual_native_h3_nll": 0.6450
+  },
+  "development_evaluation": {
+    "protocol": "configs/benchmarks/successor_v3_development.yml",
+    "protocol_sha256": "467b97f4ab10b2ce299294611febfb70977cd89128f9419f16b4fdeca5a53a3a",
+    "manifest": "data/successor_v3_development/manifest.json",
+    "manifest_sha256": "16aa11f662df4ddcb1441011c92bb19c52da997417cbb733e4e5f83d291cedb8",
+    "analysis": "results/successor_v3_development/analysis.json",
+    "analysis_sha256": "103b0ba0e47d8b2cdb0e531520e6d70ce2fb143b1fbdf7599275095b46d2e333",
+    "valid_components": 52,
+    "factual_minus_mismatched_native_h3_nll": -0.2180793702,
+    "component_bootstrap_ci95": [-0.3076964138, -0.1389347502],
+    "successor_minus_stage_a_factual_native_h3_nll": -0.3023549987,
+    "contact_auroc": 0.6124600128,
+    "all_development_gates_passed": true
+  },
+  "claim_boundary": "Mechanism and training success on exposed development data only. This does not reverse the v2 terminal negative result and is not confirmatory, external, binding, affinity, specificity, or therapeutic evidence.",
+  "next_confirmatory_requirement": "Freeze a new protocol and evaluate on newly acquired records isolated from all training, prior exposure, v2, and successor-v3 development components."
+}

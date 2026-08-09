@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "decision": "advance_generator_aware_contrast_as_development_method",
+  "universal_ecls_reranking_gate": "rejected",
+  "generator_aware_native_retrieval": "positive_development_result",
+  "temporal_final_accessed": false,
+  "rerun_permitted_on_temporal_final": false,
+  "evidence_sha256": {
+    "cross_generator_development": "3e1539fe7c2466a5caa16c7d139abbe872fd4532d3ed165146fa25520ff80389",
+    "proteinmpnn_adaptation": "922c91907d4095bf30de62e3f0325b097ae233e22c50bc7ed5eb1ff1a18d6aab",
+    "generator_calibration_analysis": "ef8a53723a690e46f3e94f4fac16680aee18e271f4af1b72b3bd90fca0b6e7d0"
+  },
+  "claim_boundary": "retrospective native-spike retrieval; no novel-candidate binding, affinity, or specificity claim"
+}

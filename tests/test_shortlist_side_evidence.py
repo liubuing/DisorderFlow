@@ -260,6 +260,8 @@ def test_domain_workflow_metadata_keeps_abeta_claim_conservative():
     cfg = mod.load_config(str(ROOT / "configs" / "statecontrast" / "abeta_position_effect_v1.yml"))
     metadata = mod.workflow_metadata(cfg)
     assert metadata["domain"] == "idp_antibody"
-    assert metadata["reference_check"]["n_references"] == 2
-    assert metadata["claim_level"] == "proof_of_concept_position_discovery"
+    assert metadata["reference_check"]["n_declared_references"] == 2
+    assert metadata["reference_check"]["n_references"] == 0
+    assert metadata["reference_check"]["status"] == "fail"
+    assert metadata["claim_level"] == "exploratory_only"
     assert "parent_only" in metadata["controls"]
