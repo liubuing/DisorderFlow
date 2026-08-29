@@ -1,0 +1,548 @@
+{
+  "schema_version": 1,
+  "status": "tau_candidate_shortlist_complete",
+  "config": "configs/benchmarks/ibec_tau_candidates_v1.yml",
+  "config_sha256": "1e9a753427aec3aa114ba9ea33931852ed7768a647d48a09dbd67626b0b3e196",
+  "runner_sha256": "a13f051800d06e3e365048fddcfd46a081bd1bcb9b194df1f72e69b9be326b66",
+  "target": {
+    "id": "tau_5MP3",
+    "heavy_chain": "A",
+    "light_chain": "B",
+    "reference_antigen_chain": "C",
+    "pose_antigen_chain": "P",
+    "h3_region_spec": "A:96-108",
+    "h3_sequence": "ARDYYGTSFAMDY",
+    "h3_length": 13,
+    "h3_pdb_resid_range": [
+      97,
+      109
+    ],
+    "contact_map_h3_to_paratope": {
+      "4": 7,
+      "5": 8,
+      "8": 9
+    }
+  },
+  "reference": {
+    "native_h3": "ARDYYGTSFAMDY",
+    "h3_sequence_sha256": "1cc052a2b63fcbae1b0104c84464ffb4ca6a29c3510fae286c7f83d42c192bb6",
+    "native_bfn_mean_cms": 0.06338312774896622,
+    "native_bfn_worst_cms": 0.042664870619773865,
+    "native_contact": {
+      "contact_mean": 0.17248000000000002,
+      "contact_min": 0.1497,
+      "contact_std": 0.034467631192177973,
+      "contact_mean_delta_native": 0.0,
+      "contact_min_delta_native": 0.0,
+      "contact_p25_delta_native": 0.0,
+      "contact_pose_scores": [
+        0.1497,
+        0.2409,
+        0.1613,
+        0.152,
+        0.1585
+      ]
+    }
+  },
+  "summary": {
+    "unique_candidates": 275,
+    "all_gates_pass": 163,
+    "diverse_shortlist": 8,
+    "shortlist_minimum": 6
+  },
+  "candidate_source_memberships": {
+    "native": 1,
+    "conservative_library": 200,
+    "composition_shuffle": 40,
+    "proteinmpnn": 10,
+    "bfn": 24
+  },
+  "native_bfn_pose_values": [
+    0.0562782809138298,
+    0.06855296343564987,
+    0.05880359560251236,
+    0.042664870619773865,
+    0.09061592817306519
+  ],
+  "shortlist": [
+    {
+      "rank": 1,
+      "sequence": "AKDYYATSFSMDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 3,
+      "bfn_mean_cms": 0.0615347608923912,
+      "bfn_worst_cms": 0.04547775536775589,
+      "bfn_std_cms": 0.014408255167542043,
+      "bfn_pose_values": [
+        0.05503835529088974,
+        0.06496100127696991,
+        0.05461661517620087,
+        0.04547775536775589,
+        0.08758007735013962
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3945,
+      "risk_increase_over_native": 0.0,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCAKDYYATSFSMDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 2,
+      "sequence": "ARDYYATSFIMDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 2,
+      "bfn_mean_cms": 0.06410440951585769,
+      "bfn_worst_cms": 0.04573658108711243,
+      "bfn_std_cms": 0.015111966578298159,
+      "bfn_pose_values": [
+        0.05555290728807449,
+        0.06997028738260269,
+        0.059214912354946136,
+        0.04573658108711243,
+        0.09004735946655273
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3958,
+      "risk_increase_over_native": 0.0012999999999999678,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCARDYYATSFIMDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 3,
+      "sequence": "ARDFYATSFMMDF",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 4,
+      "bfn_mean_cms": 0.07449097335338592,
+      "bfn_worst_cms": 0.058671705424785614,
+      "bfn_std_cms": 0.015514998125936515,
+      "bfn_pose_values": [
+        0.06501954048871994,
+        0.0829315185546875,
+        0.06488258391618729,
+        0.058671705424785614,
+        0.10094951838254929
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3958,
+      "risk_increase_over_native": 0.0012999999999999678,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCARDFYATSFMMDFWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 4,
+      "sequence": "SRDYYATQFAMDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 3,
+      "bfn_mean_cms": 0.07653059810400009,
+      "bfn_worst_cms": 0.05567047744989395,
+      "bfn_std_cms": 0.01571000465637354,
+      "bfn_pose_values": [
+        0.06809630990028381,
+        0.08144303411245346,
+        0.07446733862161636,
+        0.05567047744989395,
+        0.10297583043575287
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3945,
+      "risk_increase_over_native": 0.0,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCSRDYYATQFAMDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 5,
+      "sequence": "AREYYATSFAIDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 3,
+      "bfn_mean_cms": 0.07136555910110473,
+      "bfn_worst_cms": 0.0524926632642746,
+      "bfn_std_cms": 0.01575211572553768,
+      "bfn_pose_values": [
+        0.060829631984233856,
+        0.07462934404611588,
+        0.06992911547422409,
+        0.0524926632642746,
+        0.09894704073667526
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3958,
+      "risk_increase_over_native": 0.0012999999999999678,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCAREYYATSFAIDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 6,
+      "sequence": "VRDYYAQSFVMDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 4,
+      "bfn_mean_cms": 0.06219024360179901,
+      "bfn_worst_cms": 0.0416230633854866,
+      "bfn_std_cms": 0.016111349169258594,
+      "bfn_pose_values": [
+        0.05374190956354141,
+        0.06844734400510788,
+        0.0576733723282814,
+        0.0416230633854866,
+        0.08946552872657776
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3958,
+      "risk_increase_over_native": 0.0012999999999999678,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCVRDYYAQSFVMDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 7,
+      "sequence": "ARDYYATTFAMDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 2,
+      "bfn_mean_cms": 0.0779034063220024,
+      "bfn_worst_cms": 0.05622506141662598,
+      "bfn_std_cms": 0.016154269984231515,
+      "bfn_pose_values": [
+        0.06807669997215271,
+        0.08293496817350388,
+        0.07767634838819504,
+        0.05622506141662598,
+        0.10460395365953445
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3958,
+      "risk_increase_over_native": 0.0012999999999999678,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCARDYYATTFAMDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    },
+    {
+      "rank": 8,
+      "sequence": "ARDYYASSFGMDY",
+      "sources": [
+        "conservative_library"
+      ],
+      "mutation_count": 3,
+      "bfn_mean_cms": 0.06647041440010071,
+      "bfn_worst_cms": 0.043915458023548126,
+      "bfn_std_cms": 0.016999856604094536,
+      "bfn_pose_values": [
+        0.05901043117046356,
+        0.0717259868979454,
+        0.062320366501808167,
+        0.043915458023548126,
+        0.09537982940673828
+      ],
+      "contact_mean": 0.175,
+      "contact_min": 0.1474,
+      "contact_std": 0.03457496203902471,
+      "contact_mean_delta_native": 0.00252,
+      "contact_min_delta_native": -0.006200000000000011,
+      "contact_p25_delta_native": -0.004599999999999993,
+      "contact_pose_scores": [
+        0.1502,
+        0.2377,
+        0.1874,
+        0.1474,
+        0.1523
+      ],
+      "full_heavy_developability_risk": 0.3945,
+      "risk_increase_over_native": 0.0,
+      "new_h3_cysteines": 0,
+      "new_h3_n_glycosylation_motifs": 0,
+      "full_heavy_sequence": "VQLQQSGPELVKPGTSVKMPCKASGYIFTDYVISWVKQRTGQGLEWIGEIFPRSGSTYYNEKFKGKATLTADKSSNTAYMQLSSVTSEDSAVYFCARDYYASSFGMDYWGQGTSVTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPR",
+      "gate_checks": {
+        "eligible_source": true,
+        "mutation_count": true,
+        "bfn_mean_noninferior": true,
+        "bfn_worst_noninferior": true,
+        "contact_mean_delta": true,
+        "contact_min_delta": true,
+        "developability_risk": true,
+        "risk_increase": true,
+        "no_new_cysteine": true,
+        "no_new_n_glycosylation": true
+      },
+      "all_gates_pass": true
+    }
+  ],
+  "mpnn_commands": [
+    [
+      "C:\\Python314\\python.exe",
+      "D:/biological/DisorderFlow/ProteinMPNN/protein_mpnn_run.py",
+      "--pdb_path",
+      "D:/biological/DisorderFlow/data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb",
+      "--pdb_path_chains",
+      "A B C",
+      "--fixed_positions_jsonl",
+      "D:/biological/DisorderFlow/results/ibec/tau_candidates_v1/mpnn_work/fixed_positions.jsonl",
+      "--path_to_model_weights",
+      "D:/biological/DisorderFlow/ProteinMPNN/vanilla_model_weights",
+      "--model_name",
+      "v_48_020",
+      "--num_seq_per_target",
+      "8",
+      "--batch_size",
+      "1",
+      "--sampling_temp",
+      "0.1",
+      "--seed",
+      "7309",
+      "--save_score",
+      "1",
+      "--suppress_print",
+      "1",
+      "--out_folder",
+      "D:/biological/DisorderFlow/results/ibec/tau_candidates_v1/mpnn_work/seed_7309"
+    ],
+    [
+      "C:\\Python314\\python.exe",
+      "D:/biological/DisorderFlow/ProteinMPNN/protein_mpnn_run.py",
+      "--pdb_path",
+      "D:/biological/DisorderFlow/data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb",
+      "--pdb_path_chains",
+      "A B C",
+      "--fixed_positions_jsonl",
+      "D:/biological/DisorderFlow/results/ibec/tau_candidates_v1/mpnn_work/fixed_positions.jsonl",
+      "--path_to_model_weights",
+      "D:/biological/DisorderFlow/ProteinMPNN/vanilla_model_weights",
+      "--model_name",
+      "v_48_020",
+      "--num_seq_per_target",
+      "8",
+      "--batch_size",
+      "1",
+      "--sampling_temp",
+      "0.1",
+      "--seed",
+      "7321",
+      "--save_score",
+      "1",
+      "--suppress_print",
+      "1",
+      "--out_folder",
+      "D:/biological/DisorderFlow/results/ibec/tau_candidates_v1/mpnn_work/seed_7321"
+    ],
+    [
+      "C:\\Python314\\python.exe",
+      "D:/biological/DisorderFlow/ProteinMPNN/protein_mpnn_run.py",
+      "--pdb_path",
+      "D:/biological/DisorderFlow/data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb",
+      "--pdb_path_chains",
+      "A B C",
+      "--fixed_positions_jsonl",
+      "D:/biological/DisorderFlow/results/ibec/tau_candidates_v1/mpnn_work/fixed_positions.jsonl",
+      "--path_to_model_weights",
+      "D:/biological/DisorderFlow/ProteinMPNN/vanilla_model_weights",
+      "--model_name",
+      "v_48_020",
+      "--num_seq_per_target",
+      "8",
+      "--batch_size",
+      "1",
+      "--sampling_temp",
+      "0.1",
+      "--seed",
+      "7331",
+      "--save_score",
+      "1",
+      "--suppress_print",
+      "1",
+      "--out_folder",
+      "D:/biological/DisorderFlow/results/ibec/tau_candidates_v1/mpnn_work/seed_7331"
+    ]
+  ],
+  "claim_boundary": "computational candidate prioritization only; no binding, affinity, or synthesis authorization"
+}

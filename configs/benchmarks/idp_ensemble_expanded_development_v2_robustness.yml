@@ -1,0 +1,24 @@
+schema_version: 1
+status: source_and_loo_robustness_frozen_before_scoring
+classification: retrospective_expanded_idp_robustness_development
+
+inputs:
+  candidates: reviewer_outputs/idp_ensemble_expanded_development_v2/candidates.json
+  candidates_sha256: 48dd187c2b84645c10a4d16d701d6833c088b5359706336eb2967fd8e24eae8f
+  poses: reviewer_outputs/idp_ensemble_expanded_development_v2/merged_pose_manifest_v2.json
+  poses_sha256: 1a3ade28c6c2a42e32cd6883de4bd8b84f775e5af9cb437404a17023141be5b8
+  checkpoint: ProteinMPNN/vanilla_model_weights/v_48_020.pt
+
+sensitivity:
+  fixed_candidates_only: true
+  source_panels: [experimental_only, sampled_only, mixed]
+  leave_one_pose_out: true
+  no_candidate_regeneration: true
+
+outputs:
+  source_sensitivity: reviewer_outputs/idp_ensemble_expanded_development_v2/source_sensitivity.json
+  leave_one_pose_out: reviewer_outputs/idp_ensemble_expanded_development_v2/leave_one_pose_out.json
+
+claim_boundary: >-
+  ProteinMPNN source and pose sensitivity on exposed retrospective IDP
+  development candidates only. No binding or final-confirmation claim.

@@ -1,0 +1,74 @@
+schema_version: 1
+status: correction_contract_frozen_before_new_data_or_model_access
+classification: therapeutic_antibody_discovery_method_correction
+purpose: >-
+  Correct the four limitations identified in the v2 pilot: use a true
+  autoregressive multi-conformer generator, reserve an untouched cohort,
+  require at least 12 independent components, and compare a broader but
+  matched antibody mutation space.
+
+model:
+  required_generator: autoregressive_multi_conformer_conditioned_model
+  current_positionwise_poe_is_not_eligible: true
+  required_conditioning: each_next_residue_conditioned_on_prefix_and_pose
+  pose_aggregation: frozen_equal_weight_log_probability
+  fallback_to_positionwise_poe: forbidden
+  fallback_to_native_conditional_npz: forbidden
+  checkpoint_must_be_frozen_before_candidate_access: true
+  adapter_audit:
+    path: reviewer_outputs/idp_ensemble_correction_v3/model_adapter_audit_v6.json
+
+cohort:
+  source: untouched_confirmation_metadata_gate
+  minimum_exact_new_structures: 12
+  minimum_independent_antibody_lineage_components: 12
+  minimum_targets: 3
+  maximum_components_per_lineage: 1
+  maximum_components_per_epitope_cluster: 2
+  historical_development_components_are_ineligible: true
+  coordinate_access_before_manifest_freeze: forbidden
+
+comparison:
+  inference_unit: independent_antibody_lineage_component
+  paired_arms: [ensemble, single_state]
+  candidates_per_component_arm: 4
+  native_controls_per_component: 1
+  independent_generation_seeds: [12001, 12011, 12021, 12031]
+  equal_seed_budget_between_arms: true
+  randomization_seed: 12041
+  assay_blinding_required: true
+  qc_and_fit_freeze_before_unblinding: true
+
+mutation_space:
+  mutable_regions: [heavy_chain_h3]
+  maximum_h3_substitutions: 8
+  substitution_buckets: [2, 4, 6, 8]
+  candidate_count_per_bucket: 1
+  light_chain_mutation: forbidden_in_pilot
+  framework_mutation: forbidden_in_pilot
+  fixed_mutation_budget_between_arms: true
+  post_access_budget_changes: forbidden
+
+evidence:
+  primary_endpoint: component_paired_ensemble_minus_single_state_log10_kd_improvement
+  required_data: [binding_kd_or_interval_censored_kd, expression_qc, specificity_panel]
+  minimum_components_for_pilot_claim: 12
+  independent_confirmation_required_for_strong_claim: true
+  no_computational_only_upgrade_to_evidence_score: true
+
+gates:
+  autoregressive_generator_ready: true
+  current_historical_extension_cohort: false
+  minimum_independent_components_ready: true
+  broader_mutation_space_ready: true
+  untouched_cohort_ready: true
+  experimental_measurements_present: false
+
+outputs:
+  status: reviewer_outputs/idp_ensemble_correction_v3/status_v2.json
+  readiness_check: reviewer_outputs/idp_ensemble_correction_v3/readiness.json
+
+claim_boundary: >-
+  Method-correction contract only. No claim of ensemble-aware improvement is
+  permitted until the autoregressive model, untouched cohort, 12-component
+  comparison, and blinded binding measurements all pass their gates.

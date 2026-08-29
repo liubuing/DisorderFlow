@@ -1,0 +1,63 @@
+schema_version: 1
+status: frozen_before_tau_h3_candidate_generation
+purpose: correct_13_residue_tau_h3_conservative_candidate_protocol
+classification: prospective_internal_computational_triage
+claim_boundary: computational candidate prioritization only; no binding, affinity, or synthesis authorization
+inputs:
+  sanity_status: results/ibec/tau_sanity_v1/status.json
+  sanity_status_sha256: c924557817ff4b4fc984dbcef79f79849565b3ee6a4cd763724d49b0fd362079
+  pose_panel_audit: outputs/non_abeta_idp_pose_panels_v1/pose_panel_audit.json
+  pose_panel_audit_sha256: 31ddce4f7b0da951bcdca7ecd64e970363f5ea4f3a660f655e228feadd2a9273
+  reference_complex: data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb
+  reference_complex_sha256: 62c7c9ed35cbf2115714bc3e1980348fc3a9a152d115fe95e8cd83769a5b8e42
+  pose_sha256:
+    conformer0: 600f04234d28a468e8eebf97a6580b15641c7a8d1da922ae9a635612f7637ee1
+    conformer1: ec5e4001bb4dd1d85c3651f7aca45b5fd14ffbf238a93901d8179379b6c08a68
+    conformer2: 2283604384ac290365bd5eeff6a4a1b09966957511a353ad5d6f051d9b37b645
+    conformer3: f3795b004354626dc477a6939f33bad78a2baf6cf921a14efb539d08196e86da
+    conformer4: 37751f277cf3bea0d0109e10316717dfe69d54b10dc6dc00f7b8024e6cec1a50
+model:
+  checkpoint: logs/bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032/checkpoints/best.pt
+  checkpoint_sha256: ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252
+  fixed_t: 0.5
+  score_batch_size: 32
+target:
+  id: tau_5MP3
+  heavy_chain: A
+  light_chain: B
+  reference_antigen_chain: C
+  pose_antigen_chain: P
+  h3_region_spec: A:96-108
+  h3_sequence: ARDYYGTSFAMDY
+  h3_length: 13
+  h3_pdb_resid_range: [97, 109]
+  contact_map_h3_to_paratope: {4: 7, 5: 8, 8: 9}
+generation:
+  conservative_library_size: 200
+  conservative_library_seed: 7301
+  composition_shuffle_count: 40
+  composition_shuffle_seed: 7303
+  proteinmpnn:
+    seeds: [7309, 7321, 7331]
+    samples_per_seed: 8
+    temperature: 0.1
+    weights: ProteinMPNN/vanilla_model_weights
+    weights_sha256: c9cb4a671d79604111231f8dbfc7c590e06f1197453b7a6854ac6661a642f5bd
+  bfn_control:
+    seeds: [7349, 7361, 7373]
+    samples_per_seed: 8
+selection:
+  eligible_sources: [conservative_library, bfn]
+  mutation_count: {minimum: 1, maximum: 4}
+  bfn_mean_cms_noninferiority_vs_native: -0.005
+  bfn_worst_cms_noninferiority_vs_native: -0.02
+  contact_mean_delta_minimum: -0.008
+  contact_min_delta_minimum: -0.015
+  maximum_full_heavy_developability_risk: 0.55
+  maximum_risk_increase_over_native: 0.05
+  forbid_new_h3_cysteine: true
+  forbid_new_h3_n_glycosylation_motif: true
+  minimum_pairwise_hamming: 2
+  shortlist_target: 8
+  shortlist_minimum: 6
+output: results/ibec/tau_candidates_v1

@@ -1,0 +1,31 @@
+schema_version: 1
+status: repository_boundaries_v1
+
+zones:
+  core_package: [disorderflow/]
+  stable_runtime: [app.py, manage.py, app_config.yaml, run_disorderflow.ps1]
+  active_workflows: [scripts/, modules/]
+  tests: [tests/]
+  frozen_evidence: [publication/, release/, results/publication/]
+  generated_outputs: [reviewer_outputs/, outputs/, logs/, alphafold_results/]
+  third_party: [ProteinMPNN/, diffab/]
+  documentation: [docs/, README.md]
+
+stable_entrypoints:
+  - run_disorderflow.ps1
+  - manage.py
+  - scripts/statecontrast_v2_cli.py
+
+rules:
+  frozen_evidence_is_write_once: true
+  generated_outputs_are_not_importable_source: true
+  new_root_experiment_scripts_forbidden: true
+  third_party_changes_require_explicit_tests: true
+  active_workflows_may_import_core: true
+  core_must_not_import_reviewer_outputs: true
+
+grandfathered_root_scripts:
+  description: Existing root research scripts remain for reproducibility only.
+  new_files_must_use: scripts/
+
+output: reviewer_outputs/repository_boundary_audit_v1/report.json

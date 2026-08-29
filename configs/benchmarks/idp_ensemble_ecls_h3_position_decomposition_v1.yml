@@ -1,0 +1,47 @@
+schema_version: 1
+status: position_decomposition_frozen_before_formal_contribution_report
+classification: post_failure_mechanism_diagnostic_not_confirmation
+
+analysis_inputs:
+  development:
+    path: reviewer_outputs/idp_ensemble_ecls_scoring_dev_v1/analysis.json
+    sha256: ea40c8e07ed7985a56c13f6a00626485791305effeb2c7749c78fcb840413acf
+  expansion:
+    path: reviewer_outputs/idp_ensemble_ecls_scoring_expansion_v1/analysis.json
+    sha256: ce1ea4ffb61801562ed94a928a46bf5001e65b9c6551a529b12bc99df670916e
+
+components:
+  - component_id: ABETA_5CSZ
+    panel: development
+    score_cache: reviewer_outputs/idp_ensemble_ecls_scoring_dev_v1/work/ABETA_5CSZ/ecls_scores.json
+    score_cache_sha256: 98ed8309260aacd0968d580b92c329139445f6d48eed2483546b3883edc860c6
+  - component_id: TAU_6LRA
+    panel: expansion
+    score_cache: reviewer_outputs/idp_ensemble_ecls_scoring_expansion_v1/work/TAU_6LRA/ecls_scores.json
+    score_cache_sha256: 0865c75a020a20d2917d323daf8d17169c5461e70abbef409311b4610c6b05a9
+
+method: proteinmpnn
+proteinmpnn_alphabet: ACDEFGHIKLMNPQRSTVWYX
+aggregation:
+  p25_weight: 0.45
+  minimum_weight: 0.25
+  mean_weight: 0.20
+  standard_deviation_penalty: 0.10
+
+thresholds:
+  negative_fold_effect: -1.0e-9
+  reconstruction_tolerance: 1.0e-12
+  probability_normalization_tolerance: 1.0e-5
+
+median_comparator:
+  observations: four_training_conformer_winners_scored_on_heldout_conformer
+  selection: middle_two_after_sort_by_total_ecls_then_training_conformer_index
+  duplicate_observations_retained: true
+  positional_attribution: same_middle_two_candidates_used_at_every_h3_position
+
+output:
+  json: reviewer_outputs/idp_ensemble_ecls_h3_position_decomposition_v1/analysis.json
+  csv: reviewer_outputs/idp_ensemble_ecls_h3_position_decomposition_v1/per_position.csv
+  report: reviewer_outputs/idp_ensemble_ecls_h3_position_decomposition_v1/report.md
+
+claim_boundary: exact post hoc localization of computational ECLS negative folds; per-position contributions are model likelihood terms, not residue-level experimental binding energies

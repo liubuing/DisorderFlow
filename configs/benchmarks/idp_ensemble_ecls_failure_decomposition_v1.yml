@@ -1,0 +1,51 @@
+schema_version: 1
+status: diagnostic_rules_frozen_after_schema_audit_before_formal_report
+classification: post_gate_failure_diagnostic_not_confirmatory_inference
+
+inputs:
+  development_analysis:
+    path: reviewer_outputs/idp_ensemble_ecls_scoring_dev_v1/analysis.json
+    sha256: ea40c8e07ed7985a56c13f6a00626485791305effeb2c7749c78fcb840413acf
+    panel: exposed_development
+  expansion_analysis:
+    path: reviewer_outputs/idp_ensemble_ecls_scoring_expansion_v1/analysis.json
+    sha256: ce1ea4ffb61801562ed94a928a46bf5001e65b9c6551a529b12bc99df670916e
+    panel: outcome_unexposed_internal_expansion
+  development_generation:
+    path: reviewer_outputs/idp_ensemble_matched_generation_dev_v1/raw_generation.json
+    sha256: 8be698c4d6ca577c1903e7c7a43c1a575d365da2f6e1c1d1be7b8fe14f8b1ee8
+    panel: exposed_development
+  expansion_generation:
+    path: reviewer_outputs/idp_ensemble_matched_generation_expansion_v1/raw_generation.json
+    sha256: 3b2aa48080361d1cabe477b7acc7d5e65fd0b423ee534f2231d1ee9f2af5f639
+    panel: outcome_unexposed_internal_expansion
+
+methods: [proteinmpnn, single_conformer_bfn, esm_if]
+primary_method: proteinmpnn
+aggregation:
+  p25_weight: 0.45
+  minimum_weight: 0.25
+  mean_weight: 0.20
+  standard_deviation_penalty: 0.10
+
+thresholds:
+  mathematical_effect_epsilon: 1.0e-9
+  practical_neutral_absolute_effect: 1.0e-4
+  leverage_margin_epsilon: 1.0e-6
+  stored_loo_reproduction_tolerance: 1.0e-12
+
+classification_rules:
+  selector_identity: all training-conformer single-state winners equal the ensemble winner in every fold
+  score_equivalence: mathematical zero component effect without selector identity
+  negative_transfer: mean held-out ensemble-minus-single effect below negative mathematical epsilon
+  numerical_near_tie: nonzero absolute mean effect below practical neutral threshold
+  isolated_anomalous_leverage: exactly one conformer changes the full-panel winner and its deletion margin exceeds leverage epsilon
+  diffuse_instability: at least two conformers change the full-panel winner
+  near_clonal_pool: minimum distinct-sequence Hamming distance equals one
+
+output:
+  json: reviewer_outputs/idp_ensemble_ecls_failure_decomposition_v1/analysis.json
+  csv: reviewer_outputs/idp_ensemble_ecls_failure_decomposition_v1/component_method_diagnostics.csv
+  report: reviewer_outputs/idp_ensemble_ecls_failure_decomposition_v1/report.md
+
+claim_boundary: post hoc mechanism diagnosis on exposed computational outcomes; classifications guide v2 development and do not rescue or reinterpret the failed predeclared gate

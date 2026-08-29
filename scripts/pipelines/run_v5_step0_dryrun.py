@@ -3,7 +3,7 @@
 Tests run_inference with minimal sequences, confirms constraint API,
 checks GPU memory on RTX 5060 8GB."""
 import os, sys, tempfile, time, json
-os.chdir("/mnt/c/biological/DisorderFlow")
+os.chdir("/mnt/d/biological/DisorderFlow")
 
 print("V5 Step 0: Chai-1 API dry-run")
 print("=" * 50)

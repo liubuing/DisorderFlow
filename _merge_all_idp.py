@@ -6,10 +6,10 @@ seen = set()
 all_entries = []
 
 sources = [
-    ('C:/biological/DisorderFlow/data/confidence_merged_v8/confidence_train.lmdb', 'v8'),
-    ('C:/biological/DisorderFlow/data/confidence_merged_v9/confidence_train.lmdb', 'v9'),
-    ('C:/biological/DisorderFlow/data/confidence_merged_v10/confidence_train.lmdb', 'v10'),
-    ('C:/biological/DisorderFlow/data/confidence_idp_v3', 'idp_v3'),
+    ('D:/biological/DisorderFlow/data/confidence_merged_v8/confidence_train.lmdb', 'v8'),
+    ('D:/biological/DisorderFlow/data/confidence_merged_v9/confidence_train.lmdb', 'v9'),
+    ('D:/biological/DisorderFlow/data/confidence_merged_v10/confidence_train.lmdb', 'v10'),
+    ('D:/biological/DisorderFlow/data/confidence_idp_v3', 'idp_v3'),
 ]
 
 for path, tag in sources:
@@ -62,7 +62,7 @@ queue = {
     'total': len(all_entries),
     'max_len': MAX_LEN,
 }
-with open('C:/biological/DisorderFlow/data/conformation_queue_merged.json', 'w') as f:
+with open('D:/biological/DisorderFlow/data/conformation_queue_merged.json', 'w') as f:
     json.dump(queue, f, indent=2)
 
 print(f'Saved to data/conformation_queue_merged.json')

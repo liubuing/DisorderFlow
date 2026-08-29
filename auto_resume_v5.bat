@@ -9,7 +9,7 @@ setlocal
 set PROJECT=%~dp0
 set WATCHDOG=%PROJECT%\_watchdog_v5.sh
 set LOG=%PROJECT%\_boot_resume.log
-if not defined DISORDERFLOW_WSL_DISTRO set DISORDERFLOW_WSL_DISTRO=Ubuntu-24.04
+if not defined DISORDERFLOW_WSL_DISTRO set DISORDERFLOW_WSL_DISTRO=Ubuntu-24.04-D
 
 if exist "%PROJECT%\.v5_build_stopped" (
     echo [%date% %time%] Build intentionally stopped; skip boot resume >> "%LOG%"

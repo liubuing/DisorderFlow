@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "raw_generation_complete",
+  "config": "configs/benchmarks/multiscaffold_confirmatory_v2_generation.yml",
+  "config_sha256": "b5086a673215f92b39697c57f658d1a63c311891b8256ec50b00ebce05a73dda",
+  "protocol_sha256": "18000881b7fab4a20ddbd4a573c614926d2c8358712e17d43290f91a7f740586",
+  "holdout_manifest_sha256": "b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380",
+  "checkpoint_lineage_sha256": "43d8cc47d509185029c24b514e76fa55dca24d806cb88cf1339e83d045e68906",
+  "requested": {
+    "components": [
+      "V2C007"
+    ],
+    "arms": [
+      "current_bfn_disorder_on"
+    ],
+    "seeds": [
+      2609
+    ],
+    "samples_per_seed": 1,
+    "attempts": 1
+  },
+  "attempts": [
+    {
+      "attempt_id": "V2C007|current_bfn_disorder_on|2609|00",
+      "component_id": "V2C007",
+      "representative_id": "pdb_00005e8d-H-L",
+      "arm": "current_bfn_disorder_on",
+      "seed": 2609,
+      "sample_index": 0,
+      "status": "success",
+      "sequence": "APCNPDVVFKN",
+      "full_heavy_sequence": "EVQLQQSGAELVKPGASVKLSCTASGFNIKDTYMHWVKQRPEQGLEWIGRIDPLNDKTKYDPKFQGKATITADTSSNSAYLQLSSLTSEDTAVYYCAPCNPDVVFKNWGQGTLVTVSAAKTTPPSVYPLAPGSTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPRD",
+      "generator_score": 78.52542114257812,
+      "native_generated": false,
+      "error": null,
+      "seed_wall_seconds": 4.233411099994555,
+      "ppl": 78.52542114257812,
+      "entropy": 0.6712613105773926,
+      "max_prob": 0.7889014482498169,
+      "plddt": 0.1742560714483261,
+      "plddt_std": 0.0008448881562799215,
+      "iptm": 0.7279525995254517,
+      "pae": 1.060485260495625e-06,
+      "contact_score": 0.2689414620399475,
+      "state_compatibility": -0.12479419261217117,
+      "input_cif_sha256": "8ab504d8ae097c580256594b67060f3496864a16a47d8390187f9171569ade2c",
+      "canonical_pdb_sha256": "acc48a101f0fc5e287a77b006635ce2286ac9e7b34532b6f06454bf4f0063911",
+      "checkpoint_or_model_sha256": "5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3"
+    }
+  ],
+  "claim_boundary": "raw prospective internal generation; no candidate selection or confirmatory endpoint",
+  "summary": {
+    "expected_attempts": 1,
+    "recorded_attempts": 1,
+    "successes": 1,
+    "failures": 0
+  }
+}

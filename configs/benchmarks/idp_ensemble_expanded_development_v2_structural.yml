@@ -1,0 +1,32 @@
+schema_version: 1
+status: structural_admission_frozen_before_h3_contact_analysis
+classification: retrospective_expanded_idp_structural_development
+
+inputs:
+  panel: reviewer_outputs/idp_ensemble_expanded_development_v2/balanced_panel.json
+  panel_sha256: d2c3cb765b9cdc83ccbd9d2165aabbff7415e4e8da54b53972ccd02263687d40
+  coordinate_audit: reviewer_outputs/idp_ensemble_expanded_development_v2/coordinate_audit_v3.json
+  coordinate_audit_sha256: c51b6656f328ab17841462134c4984adfd02760173d45ecb8af04413734ce767
+  coordinate_directory: reviewer_outputs/idp_ensemble_expanded_development_v2/coordinates
+
+h3:
+  numbering_tool: ANARCII
+  numbering_scheme: chothia
+  residue_range_inclusive: [93, 102]
+  length_range: [3, 30]
+
+contact:
+  cutoff_angstrom: 4.5
+  minimum_contacting_h3_positions: 1
+  hydrogen_atoms_excluded: true
+
+selection:
+  model_scores_forbidden: true
+  failed_components_are_not_replaced: true
+  all_admitted_components_remain_exposed_development_only: true
+
+output: reviewer_outputs/idp_ensemble_expanded_development_v2/structural_admission.json
+
+claim_boundary: >-
+  H3-contact structural admission on a retrospective exposed panel. This is
+  method development only and cannot become final_confirmation_v1 evidence.

@@ -2,9 +2,9 @@
 KEY DIFFERENCE from L3: ESM-IF scores p(seq|structure) — sequence-DEPENDENT.
 Same backbone, different CDR sequence = different score. This is what L3 couldn't do."""
 import esm,esm.inverse_folding.util as util,torch,numpy as np,os,json,time,random,sys
-os.chdir("/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow/modules")
+os.chdir("/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow/modules")
 from Bio.PDB import PDBParser
 from scipy.stats import kendalltau
 

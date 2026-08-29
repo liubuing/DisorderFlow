@@ -1,0 +1,198 @@
+schema_version: 1
+status: frozen_before_endpoint_or_candidate_scoring
+classification: historical_structure_development_extension_not_confirmation
+selection_basis: local coordinate availability, explicit antibody and peptide chain roles, target diversity, and no endpoint outcomes
+frozen_date: "2026-08-11"
+
+structural_gates:
+  minimum_heavy_chain_residues: 90
+  minimum_light_chain_residues: 80
+  peptide_length_range: [5, 50]
+  h3_length_range: [4, 30]
+  h3_contact_cutoff_angstrom: 4.5
+  minimum_contacting_h3_positions: 1
+  numbering_tool: ANARCII
+  numbering_scheme: chothia
+
+independence_policy:
+  inference_unit: antibody_lineage_component
+  exact_pdb_reuse_from_exposed_12: forbidden
+  shared_lineage_with_exposed_12: forbidden
+  epitope_overlap_clusters_are_reported: true
+  target_stratified_summary_required: true
+  cluster_bootstrap_required: true
+
+components:
+  - component_id: ABETA_3BAE
+    target: amyloid_beta
+    antibody: WO2
+    antibody_lineage_cluster: WO2
+    epitope_cluster: abeta_n_terminal
+    reference_pdb: data/anti_abeta_refs/3BAE.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    expected_observed_peptide: AEFRHDS
+    ensemble_plan: existing_abeta42_computational_coordinates
+
+  - component_id: ABETA_5W3P
+    target: amyloid_beta
+    antibody: C706
+    antibody_lineage_cluster: C706
+    epitope_cluster: abeta_n_terminal
+    reference_pdb: way4_s0_v2/data/pdbs/5W3P.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: P
+    expected_observed_peptide: DAEFRHDSGYEVHHQK
+    ensemble_plan: existing_abeta42_computational_coordinates
+    sensitivity_only: true
+    pose_limitation: 16-residue epitope exceeds 4.5 A rigid fit on two of five abeta42 seeds; three conformers pass
+
+  - component_id: ABETA_7E6P
+    target: amyloid_beta
+    antibody: 24B3
+    antibody_lineage_cluster: 24B3
+    epitope_cluster: abeta_mid_disulfide_constrained
+    reference_pdb: way4_s0_v2/data/pdbs/7E6P.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    expected_observed_peptide: QKCVFFAEDVGSNC
+    ensemble_plan: synthetic_local_openmm
+    sensitivity_only: true
+    limitation: engineered intrapeptide disulfide constraint
+
+  - component_id: TAU_2V17
+    target: tau
+    antibody: MN423
+    antibody_lineage_cluster: MN423
+    epitope_cluster: tau_386_408
+    reference_pdb: way4_s0_v2/data/pdbs/2V17.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    expected_observed_peptide: TDHGAE
+    ensemble_plan: synthetic_local_openmm
+
+  - component_id: TAU_4TQE
+    target: tau
+    antibody: Tau5
+    antibody_lineage_cluster: Tau5
+    epitope_cluster: tau_212_235
+    reference_pdb: way4_s0_v2/data/pdbs/4TQE.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    expected_observed_peptide: LPTPPTREPKKVAVVR
+    ensemble_plan: synthetic_local_openmm
+
+  - component_id: TAU_5E2V
+    target: tau
+    antibody: AT8
+    antibody_lineage_cluster: AT8
+    epitope_cluster: tau_at8_phospho
+    reference_pdb: way4_s0_v2/data/pdbs/5E2V.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: P
+    expected_observed_peptide: GSPGTPGSR
+    ensemble_plan: synthetic_local_openmm_after_ptm_normalization
+    ptm_normalization: phosphoserine_to_serine_and_phosphothreonine_to_threonine
+    sensitivity_only: true
+
+  - component_id: TAU_5ZV3
+    target: tau
+    antibody: CBTAU-28.1
+    antibody_lineage_cluster: CBTAU-28.1
+    epitope_cluster: tau_n_terminal
+    reference_pdb: way4_s0_v2/data/pdbs/5ZV3.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    expected_observed_peptide: EEPGSETSDAKS
+    ensemble_plan: synthetic_local_openmm
+
+  - component_id: TAU_6BB4
+    target: tau
+    antibody: C5.2
+    antibody_lineage_cluster: C5.2
+    epitope_cluster: tau_386_408
+    reference_pdb: way4_s0_v2/data/pdbs/6BB4.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: P
+    expected_observed_peptide: IVYKSPV
+    ensemble_plan: synthetic_local_openmm_after_ptm_normalization
+    ptm_normalization: phosphoserine_to_serine
+    sensitivity_only: true
+
+  - component_id: TAU_6H06
+    target: tau
+    antibody: CBTAU-22.1
+    antibody_lineage_cluster: CBTAU-22.1
+    epitope_cluster: tau_c_terminal_416
+    reference_pdb: way4_s0_v2/data/pdbs/6H06.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: I
+    expected_observed_peptide: DMVDSPQLAT
+    ensemble_plan: synthetic_local_openmm_after_ptm_normalization
+    ptm_normalization: phosphoserine_to_serine
+    sensitivity_only: true
+
+  - component_id: TAU_6XLI
+    target: tau
+    antibody: PT3
+    antibody_lineage_cluster: PT3
+    epitope_cluster: tau_212_235
+    reference_pdb: way4_s0_v2/data/pdbs/6XLI.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: P
+    expected_observed_peptide: SRTPSLPTPPTRE
+    ensemble_plan: synthetic_local_openmm_after_ptm_normalization
+    ptm_normalization: phosphothreonine_to_threonine
+    sensitivity_only: true
+
+  - component_id: PRION_1CU4
+    target: prion_protein
+    antibody: 3F4
+    antibody_lineage_cluster: 3F4
+    epitope_cluster: prion_109_112
+    reference_pdb: way4_s0_v2/data/pdbs/1CU4.pdb
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: P
+    expected_observed_peptide: APKTNMKHMA
+    ensemble_plan: synthetic_local_openmm
+
+  - component_id: PRION_4J8R
+    target: prion_protein
+    antibody: POM2
+    antibody_lineage_cluster: POM2
+    epitope_cluster: prion_octarepeat
+    reference_pdb: way4_s0_v2/data/pdbs/4J8R.pdb
+    heavy_chain: B
+    light_chain: A
+    antigen_chain: I
+    expected_observed_peptide: PHGGSWGQP
+    ensemble_plan: synthetic_local_openmm
+
+confirmation_reservation:
+  policy: configs/benchmarks/successor_v3_future_snapshot_policy.yml
+  current_exact_new_entries: 0
+  minimum_exact_new_entries: 12
+  earliest_permitted_next_metadata_query_date: "2026-08-14"
+  coordinate_access: forbidden_until_readiness_and_new_protocol_freeze
+  reserved_strata:
+    minimum_targets: 3
+    maximum_components_per_antibody_lineage: 1
+    maximum_components_per_epitope_cluster: 2
+    minimum_non_synthetic_ensemble_components: 6
+
+output:
+  audit: reviewer_outputs/idp_ensemble_development_extension_registry_v1/audit.json
+  component_csv: reviewer_outputs/idp_ensemble_development_extension_registry_v1/components.csv
+
+claim_boundary: historical local structures for endpoint development only; confirmation remains metadata-gated and coordinate-unaccessed

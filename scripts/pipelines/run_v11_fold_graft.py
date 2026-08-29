@@ -12,9 +12,9 @@ Run in WSL (uses af2_jax_runner). Usage:
 """
 import sys, os, json, time, random, subprocess, tempfile, shutil
 import numpy as np
-os.chdir("/mnt/c/biological/DisorderFlow")
-sys.path.insert(0, "/mnt/c/biological/DisorderFlow")
-sys.path.insert(0, "/mnt/c/biological/DisorderFlow/modules")
+os.chdir("/mnt/d/biological/DisorderFlow")
+sys.path.insert(0, "/mnt/d/biological/DisorderFlow")
+sys.path.insert(0, "/mnt/d/biological/DisorderFlow/modules")
 from af2_jax_runner import run_multimer_prediction
 from Bio.PDB import PDBParser, PDBIO, Structure, Model, Chain, Residue
 from Bio.PDB.vectors import Vector

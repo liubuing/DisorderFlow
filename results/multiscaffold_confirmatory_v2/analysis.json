@@ -1,0 +1,1400 @@
+{
+  "schema_version": 1,
+  "status": "primary_gate_failed",
+  "config": "configs/benchmarks/multiscaffold_confirmatory_v2_analysis.yml",
+  "config_sha256": "a8ce95be6f00049966ba28bd8983852381337d5307158c289ad7a836dea6fa8d",
+  "inputs": {
+    "selection": "26a63c6a2f3e8860cfc4ffac79579678c59d48bd0d8b647bba234116cec067d7",
+    "af2_results": "6594ab405ef71273dc7674c28c5e45278a18da36971ca614cec4ee17b8c537d2",
+    "prodigy_results": "6b7e59fbf2e17c8af3b9a63a35cbfbf66c30ae6937ea5b1bac39292e0aa1bafb"
+  },
+  "primary": {
+    "passed": false,
+    "valid_components": 7,
+    "total_components": 20,
+    "valid_fraction": 0.35,
+    "mean_positive_delta": -0.7634761904761902,
+    "median_positive_delta": -0.6276666666666664,
+    "positive_component_fraction": 0.2857142857142857,
+    "component_bootstrap_ci95": [
+      -1.5062857142857144,
+      -0.040285714285713654
+    ],
+    "gate_results": {
+      "minimum_valid_components": false,
+      "minimum_valid_fraction": false,
+      "minimum_positive_component_fraction": false,
+      "bootstrap_ci95_lower_above_zero": false
+    },
+    "rows": [
+      {
+        "component_id": "V2C001",
+        "valid": false,
+        "proposed_score": -8.151000000000002,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -9.662666666666667,
+          "stage_a_antibody_bfn": -9.521666666666667,
+          "proteinmpnn": -9.6,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C002",
+        "valid": false,
+        "proposed_score": -10.194333333333333,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -9.100333333333333,
+          "stage_a_antibody_bfn": -9.275666666666668,
+          "proteinmpnn": -7.288666666666667,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C003",
+        "valid": true,
+        "proposed_score": -11.287333333333335,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -8.514000000000001,
+          "stage_a_antibody_bfn": -10.786,
+          "proteinmpnn": -10.859,
+          "esm_if": -10.339333333333332
+        },
+        "oracle_baseline_arm": "proteinmpnn",
+        "oracle_baseline_score": -10.859,
+        "positive_delta": 0.42833333333333456
+      },
+      {
+        "component_id": "V2C004",
+        "valid": true,
+        "proposed_score": -13.481,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -12.801333333333332,
+          "stage_a_antibody_bfn": -13.020333333333333,
+          "proteinmpnn": -10.996666666666668,
+          "esm_if": -12.516666666666666
+        },
+        "oracle_baseline_arm": "stage_a_antibody_bfn",
+        "oracle_baseline_score": -13.020333333333333,
+        "positive_delta": 0.46066666666666656
+      },
+      {
+        "component_id": "V2C005",
+        "valid": false,
+        "proposed_score": -9.673333333333334,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -8.958,
+          "stage_a_antibody_bfn": -12.413666666666666,
+          "proteinmpnn": -10.026,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C006",
+        "valid": true,
+        "proposed_score": -9.904333333333334,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -8.941666666666665,
+          "stage_a_antibody_bfn": -8.116999999999999,
+          "proteinmpnn": -9.088000000000001,
+          "esm_if": -10.193999999999999
+        },
+        "oracle_baseline_arm": "esm_if",
+        "oracle_baseline_score": -10.193999999999999,
+        "positive_delta": -0.2896666666666654
+      },
+      {
+        "component_id": "V2C007",
+        "valid": false,
+        "proposed_score": -152.94233333333332,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -167.66566666666668,
+          "stage_a_antibody_bfn": -198.26633333333334,
+          "proteinmpnn": -135.64733333333334,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C008",
+        "valid": false,
+        "proposed_score": -6.144666666666667,
+        "baseline_scores": {
+          "current_bfn_disorder_off": null,
+          "stage_a_antibody_bfn": -6.8773333333333335,
+          "proteinmpnn": -6.259333333333333,
+          "esm_if": -6.127666666666666
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C009",
+        "valid": false,
+        "proposed_score": -45.78,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -53.36600000000001,
+          "stage_a_antibody_bfn": -44.35,
+          "proteinmpnn": -34.87133333333333,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C010",
+        "valid": true,
+        "proposed_score": -6.933,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -6.94,
+          "stage_a_antibody_bfn": -7.560666666666666,
+          "proteinmpnn": -7.437666666666668,
+          "esm_if": -6.963
+        },
+        "oracle_baseline_arm": "stage_a_antibody_bfn",
+        "oracle_baseline_score": -7.560666666666666,
+        "positive_delta": -0.6276666666666664
+      },
+      {
+        "component_id": "V2C011",
+        "valid": false,
+        "proposed_score": -7.023,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -6.873666666666666,
+          "stage_a_antibody_bfn": -7.647666666666667,
+          "proteinmpnn": -6.628333333333333,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C012",
+        "valid": false,
+        "proposed_score": -6.726333333333334,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -7.929666666666667,
+          "stage_a_antibody_bfn": -7.856999999999999,
+          "proteinmpnn": -7.412333333333333,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C013",
+        "valid": false,
+        "proposed_score": -201.989,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -200.73466666666664,
+          "stage_a_antibody_bfn": -225.71166666666667,
+          "proteinmpnn": -200.18166666666664,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C014",
+        "valid": true,
+        "proposed_score": -7.612666666666667,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -8.245333333333333,
+          "stage_a_antibody_bfn": -10.036,
+          "proteinmpnn": -6.617,
+          "esm_if": -9.143333333333333
+        },
+        "oracle_baseline_arm": "stage_a_antibody_bfn",
+        "oracle_baseline_score": -10.036,
+        "positive_delta": -2.423333333333333
+      },
+      {
+        "component_id": "V2C015",
+        "valid": false,
+        "proposed_score": -7.667000000000001,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -7.892333333333333,
+          "stage_a_antibody_bfn": -7.117333333333334,
+          "proteinmpnn": -7.395666666666666,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C016",
+        "valid": true,
+        "proposed_score": -7.620333333333334,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -8.814,
+          "stage_a_antibody_bfn": -8.849666666666666,
+          "proteinmpnn": -9.101,
+          "esm_if": -8.506666666666666
+        },
+        "oracle_baseline_arm": "proteinmpnn",
+        "oracle_baseline_score": -9.101,
+        "positive_delta": -1.480666666666667
+      },
+      {
+        "component_id": "V2C017",
+        "valid": false,
+        "proposed_score": -45.13999999999999,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -53.08733333333333,
+          "stage_a_antibody_bfn": -44.12266666666667,
+          "proteinmpnn": -59.36666666666667,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C018",
+        "valid": false,
+        "proposed_score": -330.058,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -332.3243333333333,
+          "stage_a_antibody_bfn": -333.87533333333334,
+          "proteinmpnn": -289.70000000000005,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C019",
+        "valid": false,
+        "proposed_score": -11.969000000000001,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -12.278333333333334,
+          "stage_a_antibody_bfn": -13.128333333333332,
+          "proteinmpnn": -12.225333333333333,
+          "esm_if": null
+        },
+        "oracle_baseline_arm": null,
+        "oracle_baseline_score": null,
+        "positive_delta": null
+      },
+      {
+        "component_id": "V2C020",
+        "valid": true,
+        "proposed_score": -6.420333333333333,
+        "baseline_scores": {
+          "current_bfn_disorder_off": -6.939,
+          "stage_a_antibody_bfn": -7.832333333333334,
+          "proteinmpnn": -6.071333333333333,
+          "esm_if": -6.1946666666666665
+        },
+        "oracle_baseline_arm": "stage_a_antibody_bfn",
+        "oracle_baseline_score": -7.832333333333334,
+        "positive_delta": -1.4120000000000008
+      }
+    ]
+  },
+  "arm_summary": {
+    "current_bfn_disorder_on": {
+      "valid_components": 20,
+      "mean_component_score": -45.33585000000001,
+      "median_component_score": -9.788833333333333
+    },
+    "current_bfn_disorder_off": {
+      "valid_components": 19,
+      "mean_component_score": -49.00359649122806,
+      "median_component_score": -8.958
+    },
+    "stage_a_antibody_bfn": {
+      "valid_components": 20,
+      "mean_component_score": -49.31833333333333,
+      "median_component_score": -9.778833333333333
+    },
+    "proteinmpnn": {
+      "valid_components": 20,
+      "mean_component_score": -42.33866666666667,
+      "median_component_score": -9.3505
+    },
+    "esm_if": {
+      "valid_components": 8,
+      "mean_component_score": -8.748166666666666,
+      "median_component_score": -8.825
+    }
+  },
+  "component_arm": [
+    {
+      "component_id": "V2C001",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.151000000000002
+    },
+    {
+      "component_id": "V2C001",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.662666666666667
+    },
+    {
+      "component_id": "V2C001",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.521666666666667
+    },
+    {
+      "component_id": "V2C001",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.6
+    },
+    {
+      "component_id": "V2C001",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C002",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.194333333333333
+    },
+    {
+      "component_id": "V2C002",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.100333333333333
+    },
+    {
+      "component_id": "V2C002",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.275666666666668
+    },
+    {
+      "component_id": "V2C002",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.288666666666667
+    },
+    {
+      "component_id": "V2C002",
+      "arm": "esm_if",
+      "selected_slots": 2,
+      "valid_candidate_scores": 2,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C003",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -11.287333333333335
+    },
+    {
+      "component_id": "V2C003",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.514000000000001
+    },
+    {
+      "component_id": "V2C003",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.786
+    },
+    {
+      "component_id": "V2C003",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.859
+    },
+    {
+      "component_id": "V2C003",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.339333333333332
+    },
+    {
+      "component_id": "V2C004",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -13.481
+    },
+    {
+      "component_id": "V2C004",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -12.801333333333332
+    },
+    {
+      "component_id": "V2C004",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -13.020333333333333
+    },
+    {
+      "component_id": "V2C004",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.996666666666668
+    },
+    {
+      "component_id": "V2C004",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -12.516666666666666
+    },
+    {
+      "component_id": "V2C005",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.673333333333334
+    },
+    {
+      "component_id": "V2C005",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.958
+    },
+    {
+      "component_id": "V2C005",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -12.413666666666666
+    },
+    {
+      "component_id": "V2C005",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.026
+    },
+    {
+      "component_id": "V2C005",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C006",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.904333333333334
+    },
+    {
+      "component_id": "V2C006",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.941666666666665
+    },
+    {
+      "component_id": "V2C006",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.116999999999999
+    },
+    {
+      "component_id": "V2C006",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.088000000000001
+    },
+    {
+      "component_id": "V2C006",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.193999999999999
+    },
+    {
+      "component_id": "V2C007",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -152.94233333333332
+    },
+    {
+      "component_id": "V2C007",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -167.66566666666668
+    },
+    {
+      "component_id": "V2C007",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -198.26633333333334
+    },
+    {
+      "component_id": "V2C007",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -135.64733333333334
+    },
+    {
+      "component_id": "V2C007",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C008",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.144666666666667
+    },
+    {
+      "component_id": "V2C008",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 2,
+      "invalid_entities": [
+        "V2C008|current_bfn_disorder_off|selection_02"
+      ],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C008",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.8773333333333335
+    },
+    {
+      "component_id": "V2C008",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.259333333333333
+    },
+    {
+      "component_id": "V2C008",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.127666666666666
+    },
+    {
+      "component_id": "V2C009",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -45.78
+    },
+    {
+      "component_id": "V2C009",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -53.36600000000001
+    },
+    {
+      "component_id": "V2C009",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -44.35
+    },
+    {
+      "component_id": "V2C009",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -34.87133333333333
+    },
+    {
+      "component_id": "V2C009",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C010",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.933
+    },
+    {
+      "component_id": "V2C010",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.94
+    },
+    {
+      "component_id": "V2C010",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.560666666666666
+    },
+    {
+      "component_id": "V2C010",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.437666666666668
+    },
+    {
+      "component_id": "V2C010",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.963
+    },
+    {
+      "component_id": "V2C011",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.023
+    },
+    {
+      "component_id": "V2C011",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.873666666666666
+    },
+    {
+      "component_id": "V2C011",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.647666666666667
+    },
+    {
+      "component_id": "V2C011",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.628333333333333
+    },
+    {
+      "component_id": "V2C011",
+      "arm": "esm_if",
+      "selected_slots": 2,
+      "valid_candidate_scores": 2,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C012",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.726333333333334
+    },
+    {
+      "component_id": "V2C012",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.929666666666667
+    },
+    {
+      "component_id": "V2C012",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.856999999999999
+    },
+    {
+      "component_id": "V2C012",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.412333333333333
+    },
+    {
+      "component_id": "V2C012",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C013",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -201.989
+    },
+    {
+      "component_id": "V2C013",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -200.73466666666664
+    },
+    {
+      "component_id": "V2C013",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -225.71166666666667
+    },
+    {
+      "component_id": "V2C013",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -200.18166666666664
+    },
+    {
+      "component_id": "V2C013",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C014",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.612666666666667
+    },
+    {
+      "component_id": "V2C014",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.245333333333333
+    },
+    {
+      "component_id": "V2C014",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -10.036
+    },
+    {
+      "component_id": "V2C014",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.617
+    },
+    {
+      "component_id": "V2C014",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.143333333333333
+    },
+    {
+      "component_id": "V2C015",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.667000000000001
+    },
+    {
+      "component_id": "V2C015",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.892333333333333
+    },
+    {
+      "component_id": "V2C015",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.117333333333334
+    },
+    {
+      "component_id": "V2C015",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.395666666666666
+    },
+    {
+      "component_id": "V2C015",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C016",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.620333333333334
+    },
+    {
+      "component_id": "V2C016",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.814
+    },
+    {
+      "component_id": "V2C016",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.849666666666666
+    },
+    {
+      "component_id": "V2C016",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -9.101
+    },
+    {
+      "component_id": "V2C016",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -8.506666666666666
+    },
+    {
+      "component_id": "V2C017",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -45.13999999999999
+    },
+    {
+      "component_id": "V2C017",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -53.08733333333333
+    },
+    {
+      "component_id": "V2C017",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -44.12266666666667
+    },
+    {
+      "component_id": "V2C017",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -59.36666666666667
+    },
+    {
+      "component_id": "V2C017",
+      "arm": "esm_if",
+      "selected_slots": 2,
+      "valid_candidate_scores": 2,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C018",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -330.058
+    },
+    {
+      "component_id": "V2C018",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -332.3243333333333
+    },
+    {
+      "component_id": "V2C018",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -333.87533333333334
+    },
+    {
+      "component_id": "V2C018",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -289.70000000000005
+    },
+    {
+      "component_id": "V2C018",
+      "arm": "esm_if",
+      "selected_slots": 2,
+      "valid_candidate_scores": 2,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C019",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -11.969000000000001
+    },
+    {
+      "component_id": "V2C019",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -12.278333333333334
+    },
+    {
+      "component_id": "V2C019",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -13.128333333333332
+    },
+    {
+      "component_id": "V2C019",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -12.225333333333333
+    },
+    {
+      "component_id": "V2C019",
+      "arm": "esm_if",
+      "selected_slots": 1,
+      "valid_candidate_scores": 1,
+      "invalid_entities": [],
+      "valid": false,
+      "mean_candidate_worst_delta_g_kcal_mol": null
+    },
+    {
+      "component_id": "V2C020",
+      "arm": "current_bfn_disorder_on",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.420333333333333
+    },
+    {
+      "component_id": "V2C020",
+      "arm": "current_bfn_disorder_off",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.939
+    },
+    {
+      "component_id": "V2C020",
+      "arm": "stage_a_antibody_bfn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -7.832333333333334
+    },
+    {
+      "component_id": "V2C020",
+      "arm": "proteinmpnn",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.071333333333333
+    },
+    {
+      "component_id": "V2C020",
+      "arm": "esm_if",
+      "selected_slots": 3,
+      "valid_candidate_scores": 3,
+      "invalid_entities": [],
+      "valid": true,
+      "mean_candidate_worst_delta_g_kcal_mol": -6.1946666666666665
+    }
+  ],
+  "af2_secondary": {
+    "composition_shuffle": {
+      "iptm": {
+        "entities": 20,
+        "mean_entity_median": 0.35413953959941863,
+        "median_entity_median": 0.38327278196811676
+      },
+      "interface_pae": {
+        "entities": 20,
+        "mean_entity_median": 26.134986400604248,
+        "median_entity_median": 26.424633979797363
+      },
+      "antibody_plddt": {
+        "entities": 20,
+        "mean_entity_median": 0.18744541091640038,
+        "median_entity_median": 0.1853824719496613
+      },
+      "antigen_plddt": {
+        "entities": 20,
+        "mean_entity_median": 0.11007949668121267,
+        "median_entity_median": 0.10579223930835724
+      }
+    },
+    "native": {
+      "iptm": {
+        "entities": 20,
+        "mean_entity_median": 0.3532489534467459,
+        "median_entity_median": 0.38361218571662903
+      },
+      "interface_pae": {
+        "entities": 20,
+        "mean_entity_median": 26.154470252990723,
+        "median_entity_median": 26.43458652496338
+      },
+      "antibody_plddt": {
+        "entities": 20,
+        "mean_entity_median": 0.1873649227249408,
+        "median_entity_median": 0.18547282697864198
+      },
+      "antigen_plddt": {
+        "entities": 20,
+        "mean_entity_median": 0.10949456643538624,
+        "median_entity_median": 0.1072178119017432
+      }
+    },
+    "current_bfn_disorder_off": {
+      "iptm": {
+        "entities": 60,
+        "mean_entity_median": 0.3472623459994793,
+        "median_entity_median": 0.387986958026886
+      },
+      "interface_pae": {
+        "entities": 60,
+        "mean_entity_median": 26.08525822957357,
+        "median_entity_median": 26.417192459106445
+      },
+      "antibody_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.18869553079298887,
+        "median_entity_median": 0.18819801621079818
+      },
+      "antigen_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.11232184112485002,
+        "median_entity_median": 0.10763524117117579
+      }
+    },
+    "current_bfn_disorder_on": {
+      "iptm": {
+        "entities": 60,
+        "mean_entity_median": 0.3449860834827026,
+        "median_entity_median": 0.37826287746429443
+      },
+      "interface_pae": {
+        "entities": 60,
+        "mean_entity_median": 26.15446402231852,
+        "median_entity_median": 26.39768123626709
+      },
+      "antibody_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.18828348456375293,
+        "median_entity_median": 0.18749243210525063
+      },
+      "antigen_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.11197807380136887,
+        "median_entity_median": 0.10644387237614755
+      }
+    },
+    "esm_if": {
+      "iptm": {
+        "entities": 40,
+        "mean_entity_median": 0.32735580410808324,
+        "median_entity_median": 0.33756543695926666
+      },
+      "interface_pae": {
+        "entities": 40,
+        "mean_entity_median": 26.437374353408813,
+        "median_entity_median": 26.717897415161133
+      },
+      "antibody_plddt": {
+        "entities": 40,
+        "mean_entity_median": 0.18867864478772112,
+        "median_entity_median": 0.18809187549701273
+      },
+      "antigen_plddt": {
+        "entities": 40,
+        "mean_entity_median": 0.11073468969753128,
+        "median_entity_median": 0.10828516768912474
+      }
+    },
+    "proteinmpnn": {
+      "iptm": {
+        "entities": 60,
+        "mean_entity_median": 0.34149174243211744,
+        "median_entity_median": 0.3840089440345764
+      },
+      "interface_pae": {
+        "entities": 60,
+        "mean_entity_median": 26.269929472605387,
+        "median_entity_median": 26.567293167114258
+      },
+      "antibody_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.18876391867843365,
+        "median_entity_median": 0.18708670124095628
+      },
+      "antigen_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.11070108182769105,
+        "median_entity_median": 0.10635516771839726
+      }
+    },
+    "stage_a_antibody_bfn": {
+      "iptm": {
+        "entities": 60,
+        "mean_entity_median": 0.35717998978992305,
+        "median_entity_median": 0.37371979653835297
+      },
+      "interface_pae": {
+        "entities": 60,
+        "mean_entity_median": 26.013779099782308,
+        "median_entity_median": 26.462410926818848
+      },
+      "antibody_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.18837244325713035,
+        "median_entity_median": 0.18795495822082747
+      },
+      "antigen_plddt": {
+        "entities": 60,
+        "mean_entity_median": 0.11274080925597353,
+        "median_entity_median": 0.10823887772858143
+      }
+    }
+  },
+  "claim_boundary": "prospective internal computational benchmark; no external, binding, affinity, or efficacy claim"
+}

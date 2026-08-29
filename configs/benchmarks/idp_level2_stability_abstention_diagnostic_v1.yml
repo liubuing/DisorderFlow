@@ -1,0 +1,24 @@
+schema_version: 1
+status: post_result_stability_abstention_diagnostic
+classification: general_antibody_multiconformer_development_diagnostic
+
+inputs:
+  source_sensitivity:
+    path: reviewer_outputs/idp_ensemble_correction_v3_robustness/source_sensitivity.json
+    sha256: 161d57d34a0f2ae8d1fe9e4c8ddf4c9cebf6b7877f06873905c8e0f3531ca053
+  leave_one_pose_out:
+    path: reviewer_outputs/idp_ensemble_correction_v3_robustness/leave_one_pose_out.json
+    sha256: 46d188e4318d7a61b29fc05c74536c478e23b57729126e7de45f8e3dbaad5557
+
+rule:
+  source_panel_direction_consistency_required: true
+  leave_one_pose_out_direction_consistency_required: true
+  abstentions_are_missing_not_zero: true
+  no_candidate_regeneration: true
+  no_threshold_optimization: true
+
+output: reviewer_outputs/idp_level2_stability_abstention_diagnostic_v1/analysis.json
+claim_boundary: >-
+  Post-result diagnostic of a previously specified two-axis stability rule on
+  a general-antibody panel. It cannot establish IDP-specific improvement or
+  alter the level-2 decision. It may only inform a future frozen protocol.

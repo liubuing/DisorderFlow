@@ -1,0 +1,25 @@
+schema_version: 1
+status: independent_scorer_frozen_before_candidate_scoring
+classification: retrospective_expanded_idp_orthogonal_scorer_development
+
+inputs:
+  candidates: reviewer_outputs/idp_ensemble_expanded_development_v2/candidates.json
+  candidates_sha256: 48dd187c2b84645c10a4d16d701d6833c088b5359706336eb2967fd8e24eae8f
+  poses: reviewer_outputs/idp_ensemble_expanded_development_v2/merged_pose_manifest.json
+  poses_sha256: 498acbdcc402d80b08dd12a3ed4c4efd57e0ab077a48b400aaf54d5aba13ba6d
+
+scorer:
+  name: fixed_backbone_h3_antigen_contact_chemistry
+  independent_of_proteinmpnn: true
+  heavy_atom_contact_cutoff_angstrom: 4.5
+  sidechain_contact_cutoff_angstrom: 5.0
+  pose_aggregation: mean
+  native_backbone_geometry_reused: true
+  no_candidate_regeneration: true
+
+output: reviewer_outputs/idp_ensemble_expanded_development_v2/independent_scorer.json
+
+claim_boundary: >-
+  Orthogonal heuristic contact-chemistry score on fixed native H3 geometry. It
+  is independent of ProteinMPNN but is not structure relaxation, binding free
+  energy, experimental affinity, specificity, or confirmation evidence.

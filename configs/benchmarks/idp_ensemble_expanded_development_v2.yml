@@ -1,0 +1,58 @@
+schema_version: 1
+status: expanded_development_contract_frozen_before_registry_analysis
+classification: retrospective_expanded_idp_development_not_confirmation
+frozen_date: "2026-08-18"
+
+isolation:
+  final_confirmation_contract: configs/benchmarks/idp_ensemble_final_confirmation_v1.yml
+  final_confirmation_contract_sha256: 8cb0ee880f6b81a439f7d14efe6346403406fe78ca654f5173885bd063248b71
+  expanded_records_are_ineligible_for_final_v1: true
+  no_future_reclassification_as_untouched: true
+
+sources:
+  sabdab_summary: data/sabdab2_snapshot_2026_08_06_successor_v3/all-summary.csv
+  exposure_reference: data/successor_v3_confirmatory/reference_union_manifest_v3.json
+
+antibody_terms: [antibody, fab, vhh, scfv, nanobody, single-domain antibody, sd-h]
+
+target_ontology:
+  amyloid_beta:
+    category: core_idp
+    patterns: [amyloid beta, amyloid-beta, beta-amyloid, abeta]
+  tau:
+    category: core_idp
+    patterns: [microtubule-associated protein tau, tau peptide, anti-tau]
+  alpha_synuclein:
+    category: core_idp
+    patterns: [alpha-synuclein, alpha synuclein]
+  prion_protein:
+    category: core_idp
+    patterns: [prion protein, major prion protein, prp peptide]
+  huntingtin:
+    category: expanded_idp
+    patterns: [huntingtin, polyq]
+  tdp43:
+    category: expanded_idp
+    patterns: [tar dna-binding protein 43, tdp-43, tdp43]
+  fus:
+    category: expanded_idp
+    patterns: [fused in sarcoma, fus peptide]
+  iapp:
+    category: expanded_idp
+    patterns: [islet amyloid polypeptide, amylin, iapp]
+
+eligibility:
+  heavy_chain_required: true
+  antigen_chain_required: true
+  antigen_types_allowed: [PEPTIDE, PROTEIN]
+  maximum_one_component_per_lineage_target_pdb: true
+  primary_unit: antibody_lineage_target_component
+
+outputs:
+  registry: reviewer_outputs/idp_ensemble_expanded_development_v2/registry.json
+  audit: reviewer_outputs/idp_ensemble_expanded_development_v2/audit.json
+
+claim_boundary: >-
+  Retrospective expanded IDP method-development registry assembled after
+  metadata access. Every included structure and lineage is exposed and
+  permanently ineligible for final_confirmation_v1 or any untouched claim.

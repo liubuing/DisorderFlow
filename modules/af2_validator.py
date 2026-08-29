@@ -15,6 +15,8 @@ from typing import List, Dict, Optional, Callable
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
+from modules.runtime_environment import build_colabfold_command, colabfold_environment
+
 
 def _load_af_config():
     """Load AF2 configuration from app_config.yaml."""
@@ -55,24 +57,7 @@ def validate_sequences(
         list of dicts: [{sequence, plddt, ptm, iptm, max_pae, pdb_path, success, error?}, ...]
     """
     af_cfg = _load_af_config()
-    venv_candidates = [
-        str(PROJECT_DIR / 'venv_wsl' / 'bin' / 'colabfold_batch'),
-        str(PROJECT_DIR / 'venv' / 'bin' / 'colabfold_batch'),
-        str(PROJECT_DIR / 'venv' / 'Scripts' / 'colabfold_batch.exe'),
-        str(PROJECT_DIR / 'venv' / 'Scripts' / 'colabfold_batch'),
-        'colabfold_batch',
-    ]
-    colabfold_exe = None
-    for candidate in venv_candidates:
-        if os.path.exists(candidate) or (candidate == 'colabfold_batch'):
-            import shutil
-            found = shutil.which(candidate)
-            if found:
-                colabfold_exe = found
-                break
-    if colabfold_exe is None:
-        raise FileNotFoundError(
-            f"colabfold_batch not found. Tried: {venv_candidates}")
+    af2_runtime = af_cfg.get('af2', {})
 
     base_dir = Path(output_dir or af_cfg.get('output_dir', 'alphafold_results'))
     base_dir.mkdir(exist_ok=True)
@@ -104,9 +89,7 @@ def validate_sequences(
             f.write(safe_text)
 
         # Build ColabFold command
-        cmd = [
-            colabfold_exe,
-            str(fasta_path), str(result_dir),
+        arguments = [
             '--num-models', '1',
             '--num-recycle', str(num_recycle),
             '--stop-at-score', str(stop_at_score),
@@ -114,10 +97,11 @@ def validate_sequences(
                              if antigen_seq and model_type == 'auto' else model_type),
             '--rank', 'auto',
         ]
+        cmd = build_colabfold_command(
+            af2_runtime, PROJECT_DIR, fasta_path, result_dir, arguments)
 
         try:
-            env = os.environ.copy()
-            env['PATH'] = str(Path(venv_path) / 'Scripts') + os.pathsep + env.get('PATH', '')
+            env = colabfold_environment(af2_runtime, PROJECT_DIR)
             r = subprocess.run(cmd, capture_output=True, text=True,
                               timeout=timeout, cwd=str(PROJECT_DIR), env=env)
 

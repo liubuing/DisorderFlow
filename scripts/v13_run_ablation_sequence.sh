@@ -6,7 +6,7 @@
 
 set -e
 source venv_wsl/bin/activate
-cd /mnt/c/biological/DisorderFlow
+cd /mnt/d/biological/DisorderFlow
 
 V20_CKPT="logs/bfn_v20_amplify_xpu_2026_07_02__21_32_16_v20_win/checkpoints/best.pt"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)

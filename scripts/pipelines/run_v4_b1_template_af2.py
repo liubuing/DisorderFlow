@@ -9,7 +9,7 @@ Usage (WSL):
     python run_v4_b1_template_af2.py
 """
 import sys,os,json,time,subprocess,tempfile
-os.chdir("/mnt/c/biological/DisorderFlow")
+os.chdir("/mnt/d/biological/DisorderFlow")
 
 # Step 1: Prepare templates
 print("Step 1: Preparing crystal templates...")

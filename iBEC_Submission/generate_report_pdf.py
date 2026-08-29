@@ -25,7 +25,7 @@ except:
     HAS_CJK = False
 
 def build_report():
-    output_path = r"C:\biological\DisorderFlow\iBEC_Submission\28-解析无序-项目报告.pdf"
+    output_path = r"D:\biological\DisorderFlow\iBEC_Submission\28-解析无序-项目报告.pdf"
 
     doc = SimpleDocTemplate(
         output_path,
@@ -138,13 +138,13 @@ def build_report():
         styles['BodyText2']
     ))
     elements.append(Paragraph(
-        "Key achievements include: (1) a rigorously validated epitope-conditioned likelihood shift "
+        "Key results include: (1) an epitope-conditioned likelihood shift "
         "(ECLS) metric showing positive native-versus-shuffle discrimination across 46 antigen clusters "
         "(mean advantage 0.217, 80.4% positive clusters); (2) a deterministic torsion perturbation "
-        "recovery benchmark (T2.1 v2) achieving 96.2% valid structure fraction with 100% positive "
-        "contact recovery; and (3) prospective IDP antibody design validation on the 4HIX scaffold "
-        "where 20 of 20 designed CDR-H3 sequences passed AlphaFold 2 multimer validation, with the "
-        "top design exceeding native interface quality (ipTM 0.462 vs. native 0.449).",
+        "recovery benchmark (T2.1 v2) achieving 80.6% overall validity, while random restraints "
+        "outperformed supplied contacts; and (3) a descriptive 4HIX case study in which the top "
+        "ProteinMPNN candidate had ipTM 0.462 versus 0.449 for native. These controls do not "
+        "establish contact-specific recovery or prospective design success.",
         styles['BodyText2']
     ))
 
@@ -305,7 +305,8 @@ def build_report():
         ['Metric', 'Value'],
         ['Total structures', '31'],
         ['Torsion hits (1.5-3.0 A)', '26/31 (83.9%)'],
-        ['Valid structures after recovery', '25/26 (96.2%)'],
+        ['Valid structures overall', '25/31 (80.6%)'],
+        ['Post-tier QC', '25/26 (96.2%)'],
         ['Mean held-out contact recovery', '0.581'],
         ['95% CI', '[0.533, 0.635]'],
         ['Positive recovery fraction', '100%'],
@@ -326,9 +327,8 @@ def build_report():
     elements.append(t3)
     elements.append(Spacer(1, 6))
     elements.append(Paragraph(
-        "This represents a decisive improvement over the initial T2 protocol (3/7 valid, -0.017 recovery), "
-        "demonstrating that the previous failure was caused by parameter calibration rather than a "
-        "fundamental limitation.",
+        "Recovery was positive in the supplied-contact arm, but random restraints had a higher mean "
+        "(0.619 vs 0.581). The controls do not support a contact-specific recovery mechanism.",
         styles['BodyText2']
     ))
 
@@ -366,9 +366,8 @@ def build_report():
     elements.append(t4)
     elements.append(Spacer(1, 6))
     elements.append(Paragraph(
-        "The top 3 designs exceed native ipTM, demonstrating that the BFN-derived framework can guide "
-        "CDR-H3 design with computational interface quality equal to or exceeding the deposited native "
-        "sequence.",
+        "The top 3 ProteinMPNN candidates descriptively exceed native ipTM in this single AF2 run. "
+        "The selected difference does not establish improved interface quality or binding.",
         styles['BodyText2']
     ))
 
@@ -387,9 +386,9 @@ def build_report():
         "From strongest to weakest: (1) ECLS temporal final (n=15 clusters, post-2021, sealed) &mdash; "
         "positive native-versus-shuffle discrimination on independent structures; (2) ECLS adaptation "
         "(n=46 clusters) &mdash; replicates the temporal final pattern on hold-out data; (3) T2.1 v2 "
-        "torsion recovery (n=31 structures, 96.2% valid) &mdash; physical recovery of peptide contacts "
-        "after deterministic perturbation; (4) 4HIX design validation (n=20 designs, 20/20 AF2 pass) "
-        "&mdash; prospective design with top ipTM exceeding native; (5) T1 ensemble (n=7 clusters) "
+        "torsion recovery (n=31 structures, 80.6% valid overall) &mdash; controls do not support contact-specific recovery "
+        "after deterministic perturbation; (4) 4HIX ProteinMPNN case study (n=20 designs) "
+        "&mdash; descriptive selected AF2 difference; (5) T1 ensemble (n=7 clusters) "
         "&mdash; establishes single-pose overconfidence; (6) Generator calibration (n=7 clusters) "
         "&mdash; exploratory; calibrated reranker works, universal reranker rejected.",
         styles['BodyText2']

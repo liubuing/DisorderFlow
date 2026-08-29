@@ -1,0 +1,93 @@
+schema_version: 1
+status: frozen_before_experimental_measurements
+classification: experimental_feedback_confidence_contract
+purpose: build_leakage_safe_features_and_labels_for_idp_antibody_experimental_feedback
+claim_boundary: no binder probability or affinity claim until blinded experimental labels and training gates pass
+inputs:
+  prospective_results:
+    path: results/prospective/abeta_4hix_prospective_v1/results.json
+    sha256: f883fc0539ea972f71bd2971581a1de47c43abf163ed428820f47fca2bbcecdf
+  af2_analysis:
+    path: results/prospective/abeta_4hix_af2_gate_v1/analysis.json
+    sha256: d8343d0400a2bd098345890b4be33cf95caec400c4ca30ff9e3dd6212bab4878
+  expression_package:
+    path: results/prospective/abeta_4hix_expression_prep_v1/expression_package.json
+    sha256: 5eeb321fd9fcc16aab50fd7abcddb362f2a2ca2236adab85613da18f5a42ac2a
+  acceptance_criteria:
+    path: results/prospective/abeta_4hix_expression_prep_v1/experimental_acceptance_criteria.json
+    sha256: a06c0420dee4a6cb0802dcd10fe653315136bd94cb53063251cf1517e89eba12
+  blinding_key:
+    path: results/prospective/abeta_4hix_expression_prep_v1/bli_blinding_key.csv
+    sha256: e646479c5983200846675be7d086625a4d445770b8dd0fafad100fa52e9f5a7d
+panel:
+  target_id: abeta
+  scaffold_id: 3D6
+  candidate_count: 12
+  inference_unit: antibody_scaffold
+  effective_independent_units: 1
+features:
+  forbidden_as_primary_features: [bfn_plddt, bfn_iptm, bfn_pae]
+  computational_only: true
+  columns:
+    - state_mean_complex_minus_stripped
+    - state_std_complex_minus_stripped
+    - state_worst_complex_minus_stripped
+    - state_poses_better_than_native
+    - state_mean_contact_probability
+    - mutation_count
+    - sequence_developability_risk
+    - sequence_hydrophobic_fraction
+    - sequence_net_charge
+    - af2_median_iptm
+    - af2_worst_iptm
+    - af2_iptm_seed_range
+    - af2_median_interface_pae
+    - prodigy_median_delta_g_kcal_mol
+labels:
+  expression_pass:
+    required_batches: 2
+    require_qc_pass: true
+    minimum_yield_mg_per_l: 1.0
+    minimum_sec_monomer_fraction: 0.80
+  binding_screen_hit:
+    target_analyte: abeta_1_11
+    minimum_technical_replicates: 3
+    maximum_replicate_cv: 0.20
+    minimum_signal_ratio_vs_external_negative: 3.0
+    require_both_expression_batches: true
+  specificity_pass:
+    control_analytes: [scrambled_abeta_1_11, BSA]
+    maximum_control_fraction_of_target: 0.20
+  affinity:
+    source: separate_multiconcentration_bli_or_spr
+    single_concentration_kd_forbidden: true
+    interval_censoring_supported: true
+assay_validity:
+  native_control_id: 3D6-native
+  external_negative_blind_id: BL-EXT-NEG
+  mock_blind_id: BL-MOCK
+  require_native_target_signal: true
+  require_external_negative_complete: true
+  require_mock_complete: true
+training_gates:
+  minimum_qc_candidates: 50
+  minimum_positive_binding_hits: 20
+  minimum_scaffolds: 3
+  minimum_targets: 3
+  minimum_independent_expression_batches: 2
+  final_split_axis: scaffold_or_antibody_lineage
+  panel_only_model_forbidden: true
+  deep_model_minimum_records: 200
+model_policy:
+  first_eligible_model: regularized_logistic_regression
+  calibration: independent_development_platt_or_isotonic
+  required_metrics: [auroc, auprc, brier, ece, sensitivity, specificity]
+  abstain_outside_applicability_domain: true
+  no_probability_before_training_gate: true
+outputs:
+  directory: results/prospective/binder_confidence_v1
+  feature_table: pre_experiment_features.csv
+  feature_manifest: feature_manifest.json
+  measurement_status: measurement_status.json
+  labeled_table: labeled_panel.csv
+  panel_analysis: panel_analysis.json

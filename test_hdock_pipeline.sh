@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /mnt/c/biological/DisorderFlow
+cd /mnt/d/biological/DisorderFlow
 
 # Build antibody-peptide PDBs
 python3 << 'PYEOF'

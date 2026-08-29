@@ -1,0 +1,25 @@
+schema_version: 1
+status: pose_source_audit_frozen_before_pose_materialization
+classification: retrospective_expanded_idp_pose_source_development
+
+inputs:
+  structural_admission: reviewer_outputs/idp_ensemble_expanded_development_v2/structural_admission.json
+  structural_admission_sha256: 80c784d6fb0e5c662c2f30a9ec3c35a6ace2078ebe977c7b2f1dfce3249ca21b
+  registry: reviewer_outputs/idp_ensemble_expanded_development_v2/registry.json
+  coordinates: reviewer_outputs/idp_ensemble_expanded_development_v2/coordinates
+
+requirements:
+  minimum_experimental_pose_sources: 2
+  same_lineage_and_target_required: true
+  same_assembly_copy_requires_identical_heavy_and_antigen_sequence: true
+  fallback: restrained_local_interface_sampling
+  no_model_score_based_selection: true
+
+outputs:
+  structural_panel: reviewer_outputs/idp_ensemble_expanded_development_v2/structural_panel.json
+  pose_source_audit: reviewer_outputs/idp_ensemble_expanded_development_v2/pose_source_audit.json
+
+claim_boundary: >-
+  Experimental pose-source inventory on exposed retrospective development
+  components. Missing sources may be filled only by explicitly labeled sampled
+  poses. No record is untouched or final-confirmation eligible.

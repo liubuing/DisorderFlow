@@ -1,0 +1,170 @@
+schema_version: 1
+status: frozen_after_6pxr_input_topology_fix_before_replica_generation
+classification: prospective_internal_expansion_not_external_confirmation
+selection_basis: structural feasibility and exact epitope mapping only; no candidate or ECLS outcomes accessed
+
+requirements:
+  selected_pose_conformers_per_component: 5
+  maximum_epitope_fit_rmsd_angstrom: 4.5
+  maximum_severe_clashes_lt_1_5A: 0
+  minimum_fixed_paratope_contacts: 8
+  maximum_refinement_translation_angstrom: 6.0
+  maximum_refinement_rotation_degrees: 30.0
+
+components:
+  - component_id: ABETA_3U0T
+    target: amyloid_beta
+    disease: Alzheimer disease
+    antibody: ponezumab
+    reference_pdb: data/anti_abeta_refs/3U0T.pdb
+    reference_sha256: 17b9bcd6b476664aaae0d1e68fbee963cd59f55656686017a3bc27b5706fa095
+    heavy_chain: B
+    light_chain: A
+    antigen_chain: F
+    epitope: AIIGLMVGGVV
+    h3_positions_1_indexed: [97, 105]
+    native_h3: ASLYSLPVY
+    ensemble:
+      type: pdb_files
+      provenance: undocumented_computational_abeta42_coordinates
+      source_sha256: 35aac66ee41d53ad6ac8b644dd1889133dd7d76a94de8ea94d9e559a1a212241
+      chain: P
+      paths:
+        - data/abeta_conformations/pdbs/abeta42_seed0_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed1_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed2_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed3_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed4_42.pdb
+
+  - component_id: ABETA_7BXV
+    target: amyloid_beta
+    disease: Alzheimer disease
+    antibody: 11A1
+    reference_pdb: data/anti_abeta_refs/7BXV.pdb
+    reference_sha256: 9127a24e5a7017bc6fd44e57b5c609838391b47c9713e0b51e1012072377473c
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    epitope: YEVHH
+    h3_positions_1_indexed: [97, 107]
+    native_h3: AREAYPNYFDY
+    ensemble:
+      type: pdb_files
+      provenance: undocumented_computational_abeta42_coordinates
+      source_sha256: 35aac66ee41d53ad6ac8b644dd1889133dd7d76a94de8ea94d9e559a1a212241
+      chain: P
+      paths:
+        - data/abeta_conformations/pdbs/abeta42_seed0_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed1_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed2_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed3_42.pdb
+        - data/abeta_conformations/pdbs/abeta42_seed4_42.pdb
+
+  - component_id: TAU_6LRA
+    target: tau
+    disease: tauopathy
+    antibody: Tau2r3
+    reference_pdb: way4_s0_v2/data/pdbs/6LRA.pdb
+    reference_sha256: 71fe3e2da062190a81820180eca2cc318e35f36bc0bfc805e28ca165afa71dd5
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: C
+    epitope: VQIINK
+    h3_positions_1_indexed: [97, 108]
+    native_h3: ARSTYYSGALDY
+    ensemble:
+      type: multi_model_pdb
+      provenance: experimental_solution_nmr_antigen_ensemble
+      source_pdb: data/non_abeta_idp/2MZ7.pdb
+      source_sha256: b414fe2331fabba3e8debdfac8b36711f4de997bada46511a18afb25ca6202c2
+      chain: A
+
+  - component_id: ASYN_2X6M
+    target: alpha_synuclein
+    disease: Parkinson disease
+    antibody: NbSyn2
+    reference_pdb: way4_s0_v2/data/pdbs/2X6M.pdb
+    reference_sha256: 62968495a63cb8cd164693e3b9b5dee49172b3dad687948638dc3fbad6b167e1
+    heavy_chain: A
+    light_chain: null
+    antigen_chain: B
+    epitope: DYEPEA
+    nominal_epitope: GYQDYEPEA
+    observed_residue_range: [135, 140]
+    h3_positions_1_indexed: [97, 114]
+    native_h3: AAKFSPGYCGGSWSNFGY
+    h3_anchor_override: upstream_C97_to_W116
+    ensemble:
+      type: multi_model_pdb
+      provenance: experimental_nmr_epr_antigen_ensemble
+      source_pdb: data/non_abeta_idp/2KKW.pdb
+      source_sha256: 03a7fe46d33ca0ea540c69c7d66ad617e6ed039fd99c5986ab9f12e2f86d209b
+      chain: A
+
+  - component_id: ASYN_6CT7
+    target: alpha_synuclein
+    disease: Parkinson disease
+    antibody: BIIB054
+    reference_pdb: way4_s0_v2/data/pdbs/6CT7.pdb
+    reference_sha256: b519fd5de992f0fc7624fa0bb407aef860c8721f759f8b364bd2bedb354cf9c8
+    heavy_chain: A
+    light_chain: B
+    antigen_chain: S
+    epitope: MDVFMKGLSK
+    h3_positions_1_indexed: [99, 102]
+    native_h3: TSAH
+    ensemble:
+      type: multi_model_pdb
+      provenance: experimental_nmr_epr_antigen_ensemble
+      source_pdb: data/non_abeta_idp/2KKW.pdb
+      source_sha256: 03a7fe46d33ca0ea540c69c7d66ad617e6ed039fd99c5986ab9f12e2f86d209b
+      chain: A
+
+  - component_id: TAU_6PXR
+    target: tau
+    disease: tauopathy
+    antibody: gosuranemab
+    reference_pdb: way4_s0_v2/data/pdbs/6PXR.pdb
+    reference_sha256: 47e4d7c4bd065907ebd87e0e8ec70de8c1627b80c2bb376b7b0c33964bba02af
+    heavy_chain: H
+    light_chain: L
+    antigen_chain: A
+    epitope: AGTYGLGD
+    h3_positions_1_indexed: [96, 105]
+    native_h3: SISWDGAMDY
+    ensemble:
+      type: synthetic_local_openmm
+      provenance: restrained_openmm_local_neighborhood_not_equilibrium_ensemble
+      sampling_mode: peptide_only_then_fixed_antibody_template_transfer
+      seeds: [8201, 8213, 8221, 8231, 8243, 8251, 8263, 8273]
+      sampling:
+        platform: OpenCL
+        ph: 7.4
+        temperature_kelvin: 300.0
+        friction_per_ps: 1.0
+        timestep_fs: 2.0
+        minimization_tolerance_kj_mol_nm: 10.0
+        minimization_iterations: 500
+        snapshot_minimization_iterations: 250
+        equilibration_steps: 100
+        production_steps: 250
+        antibody_heavy_atom_restraint: 5000.0
+        peptide_backbone_restraint: 25.0
+        contact_cutoff_angstrom: 4.5
+        quality_control:
+          min_peptide_rmsd: 0.05
+          max_peptide_rmsd: 3.0
+          max_ca_geometry_outliers: 0
+          max_cn_geometry_outliers: 0
+
+statistics:
+  primary_total_components_after_merge: 12
+  sensitivity_excluding_synthetic_component: 11
+  synthetic_component_id: TAU_6PXR
+
+output:
+  preparation: reviewer_outputs/idp_ensemble_expansion_6ref_v1/preparation.json
+  pose_audit: reviewer_outputs/idp_ensemble_expansion_6ref_v1/pose_audit.json
+  component_manifest: configs/benchmarks/idp_ensemble_expansion_6ref_v1_components.json
+
+claim_boundary: internal computational expansion with mixed ensemble provenance; 6PXR is a local synthetic sensitivity component; no experimental binding or external confirmation claim

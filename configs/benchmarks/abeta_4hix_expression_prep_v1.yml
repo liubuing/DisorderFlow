@@ -1,0 +1,60 @@
+schema_version: 1
+status: frozen_before_expression_package_generation
+purpose: sequence_review_and_blinded_bli_handoff_for_3d6_scfv_panel
+claim_boundary: construct and assay preparation only; not synthesis authorization or binding validation
+input:
+  analysis: results/prospective/abeta_4hix_af2_gate_v1/analysis.json
+  analysis_sha256: d8343d0400a2bd098345890b4be33cf95caec400c4ca30ff9e3dd6212bab4878
+  boundary_script: scripts/pipeline/analyze_shortlist_variable_regions.py
+  boundary_script_sha256: cb6382583f15b92bea33486230efa09f09e58a36f36c9b197a8c1190ceada0f0
+  expected_candidates: 12
+construct:
+  format: secreted_scfv
+  host: HEK293_transient_expression
+  orientation: VH_linker_VL
+  signal_peptide: MDWTWRILFLVAAATGAHS
+  vh_vl_linker: GGGGSGGGGSGGGGS
+  tag_linker: GGGGS
+  purification_tag: HHHHHH
+  native_control_id: 3D6-native
+  shuffle_control_id: 3D6-H3-shuffle-counterfactual
+  shuffle_seed: 6401
+  external_negative_control: purchased_irrelevant_human_scfv_same_tag_format
+  process_blank: mock_transfection
+sequence_gates:
+  require_j_motif_boundaries: true
+  expected_vh_terminal_motif: WGQGTLVTVSS
+  expected_vl_terminal_motif: FGQGTKVEIK
+  require_identical_vl: true
+  maximum_scfv_developability_risk: 0.55
+  forbid_new_n_glycosylation_relative_to_native: true
+  require_even_variable_region_cysteines: true
+dna_reference:
+  classification: nonoptimized_reference_cds_not_order_ready
+  kozak: GCCACC
+  stop_codon: TGA
+  codon_table: deterministic_common_human_codons_for_translation_check_only
+  acceptable_gc_range_for_order: [0.40, 0.68]
+  vendor_requirements:
+    - optimize for Homo sapiens HEK293 expression
+    - preserve exact translated precursor protein
+    - avoid BsaI BsmBI SapI and polyadenylation motifs
+    - avoid homopolymers longer than 6 bases
+    - return full insert sequence and translation report before synthesis approval
+bli:
+  blind_seed: 6413
+  technical_replicates: 3
+  analytes:
+    - {id: abeta_1_11, role: epitope_positive}
+    - {id: scrambled_abeta_1_11, role: sequence_negative}
+    - {id: BSA, role: matrix_negative}
+  plate_format: 96_well
+  decision:
+    maximum_replicate_cv: 0.20
+    minimum_blank_subtracted_signal_ratio_vs_external_negative: 3.0
+    maximum_scrambled_and_bsa_fraction_of_target: 0.20
+    require_concentration_dependent_followup: true
+  replication:
+    independent_expression_batches: 2
+    technical_replicates_per_screening_condition: 3
+output: results/prospective/abeta_4hix_expression_prep_v1

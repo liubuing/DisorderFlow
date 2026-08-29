@@ -1,5 +1,5 @@
 from disorderflow.utils.protein.constants import Fragment
-from modules.bfn_loader import build_region_batch
+from modules.bfn_loader import build_region_batch, parse_region_spec
 
 
 def test_generic_complex_assigns_explicit_antigen_chain():
@@ -15,3 +15,7 @@ def test_generic_complex_assigns_explicit_antigen_chain():
     assert int(antigen.sum()) == 6
     assert int(generated.sum()) == 12
     assert not (antigen & generated).any()
+
+
+def test_frozen_4hix_h3_mask_is_twelve_one_based_positions():
+    assert parse_region_spec("H:96-107") == {"H": list(range(95, 107))}

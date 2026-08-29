@@ -1,0 +1,89 @@
+schema_version: 1
+status: prospective_pilot_contract_frozen_before_candidate_access
+classification: therapeutic_antibody_candidate_screening_prospective_pilot
+purpose: >-
+  Compare a genuinely multi-conformer candidate generator with a matched
+  single-state generator for therapeutic antibody discovery against
+  disease-associated human proteins. This is candidate prioritization for
+  downstream binding validation, not a biological efficacy claim.
+
+component_registry:
+  path: configs/benchmarks/idp_ensemble_development_extension_registry_v1.yml
+  sha256: 3409baa3d5f671cadb5cd8f28943f1807f19c699707ab3467bd01fc977a35e8b
+  inclusion_rule: clean_primary_only
+  expected_components: 6
+  excluded_sensitivity_only: 6
+pose_manifest:
+  path: configs/benchmarks/idp_ensemble_development_extension_v1_poses.json
+  sha256: a64e6995b444e18f226eddcacefbbbbbf9f081cb7fd7ecb82291bb0c3a591bbf
+conditional_score_artifact:
+  path: reviewer_outputs/idp_ensemble_ecls_scoring_extension_v1/analysis.json
+  sha256: 3dbdf49b739a734c6f91ca4c407a70a460de23172f0693d18f679fda7ec0ef69
+
+arms:
+  ensemble_product_of_experts:
+    generator: proteinmpnn_positionwise_conditional_product_of_experts
+    conformer_weighting: equal_fixed_before_candidate_access
+    formula: mean_over_conformers_log_probability
+  single_state:
+    generator: proteinmpnn_positionwise_conditional_single_pose
+    pose_selection: pose_0_from_frozen_manifest
+
+matched_budget:
+  components: 6
+  seeds: [9101, 9111, 9121]
+  candidates_per_component_arm_seed: 8
+  total_generated_candidates_per_arm: 144
+  mutable_region: heavy_chain_h3_only
+  fixed_chains: [light_chain, antigen_chain]
+  max_h3_substitutions: 4
+  substitutions_per_seed: [1, 1, 2, 2, 3, 3, 4, 4]
+  native_control_included: true
+  deduplicate_within_component_arm: true
+  no_cross_arm_deduplication: true
+
+selection:
+  candidate_access_order: generate_then_score_then_randomize
+  candidate_ranking: frozen_product_of_experts_log_probability
+  tie_break: lexicographically_greatest_sequence
+  experimental_candidates_per_component_arm: 2
+  experimental_candidate_substitution_counts: [2, 4]
+  controls_per_component: [native_control]
+  no_endpoint_tuning_after_candidate_access: true
+
+blinding:
+  randomization_seed: 9141
+  opaque_construct_codes: true
+  arm_key_written_once_before_experiment: true
+  analyst_unblinded_after_qc_and_kinetic_fit_freeze: true
+
+primary_endpoint:
+  name: component_paired_ensemble_minus_single_state_log10_kd_improvement
+  direction: higher_is_better
+  inference_unit: independent_antibody_lineage_component
+  formula: single_state_log10_kd_minus_ensemble_log10_kd
+  aggregation: mean_of_two_selected_candidates_per_arm
+  required_measurement: binding_kd_or_interval_censored_kd
+
+secondary_endpoints:
+  - target_selectivity_panel_effect
+  - component_bootstrap_confidence_interval
+  - exact_paired_sign_flip
+  - candidate_expression_and_qc_pass_rate
+
+stop_rules:
+  failed_generation_slots_are_not_imputed: true
+  failed_qc_is_reported_not_replaced: true
+  no_post_unblinding_candidate_replacement: true
+  no_claim_of_affinity_or_specificity_without_measurement: true
+
+outputs:
+  candidate_manifest: reviewer_outputs/idp_ensemble_prospective_pilot_v2/candidate_manifest.json
+  raw_candidates: reviewer_outputs/idp_ensemble_prospective_pilot_v2/candidates.json
+  blind_key: reviewer_outputs/idp_ensemble_prospective_pilot_v2/blind_key.json
+  scoring_manifest: reviewer_outputs/idp_ensemble_prospective_pilot_v2/scoring_manifest.json
+
+claim_boundary: >-
+  Prospective computational candidate-screening pilot for therapeutic antibody
+  discovery; no binding, affinity, specificity, efficacy, safety, or
+  therapeutic-value claim before experimental measurements.

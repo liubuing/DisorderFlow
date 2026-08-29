@@ -1,0 +1,344 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_pose_gate_before_candidate_generation",
+  "classification": "historical_structure_development_extension_not_confirmation",
+  "preparation": "reviewer_outputs/idp_ensemble_development_extension_v1/preparation.json",
+  "preparation_sha256": "7ccf87f4ccd5fc77a0f6b68318efe70068f61c4864305ea1bd159c969016877a",
+  "components": [
+    {
+      "component_id": "ABETA_3BAE",
+      "target": "amyloid_beta",
+      "disease": "Alzheimer disease",
+      "antibody": "WO2",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_3BAE/trimmed_reference.pdb",
+      "reference_sha256": "6ec3d2b9f85eb57e5169f2029819b3f923eebde04c1d04b712fd705339cbe3f7",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "AEFRHDS",
+      "h3_positions_1_indexed": [
+        97,
+        113
+      ],
+      "native_h3": "ARRGFYGRKYEVNHFDY",
+      "ensemble_provenance": "undocumented_computational_abeta42_coordinates",
+      "sensitivity_only": false,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_3BAE/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_3BAE/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_3BAE/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_3BAE/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_3BAE/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "ABETA_5W3P",
+      "target": "amyloid_beta",
+      "disease": "Alzheimer disease",
+      "antibody": "C706",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_5W3P/trimmed_reference.pdb",
+      "reference_sha256": "1f08c43b92236edd7f1970373c8662be79717af5e7c148f3e07bd16859323519",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "P",
+      "epitope": "DAEFRHDSGYEVHHQK",
+      "h3_positions_1_indexed": [
+        97,
+        108
+      ],
+      "native_h3": "AREGSNNNALAY",
+      "ensemble_provenance": "undocumented_computational_abeta42_coordinates",
+      "sensitivity_only": true,
+      "ptm_normalization": null,
+      "pose_limitation": "16-residue epitope exceeds 4.5 A rigid fit on two of five abeta42 seeds; three conformers pass",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_5W3P/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_5W3P/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_5W3P/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "ABETA_7E6P",
+      "target": "amyloid_beta",
+      "disease": "Alzheimer disease",
+      "antibody": "24B3",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_7E6P/trimmed_reference.pdb",
+      "reference_sha256": "785a41d7380eceec8fc7190b0b542aab6b9526b781fc63ce3f83f6887bd2142a",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "QKCVFFAEDVGSNC",
+      "h3_positions_1_indexed": [
+        97,
+        108
+      ],
+      "native_h3": "ALFDGYYPWFAS",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": true,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_7E6P/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_7E6P/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_7E6P/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_7E6P/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/ABETA_7E6P/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_2V17",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "MN423",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_2V17/trimmed_reference.pdb",
+      "reference_sha256": "8333584bc6cd7cfa38b3db2e113ec3237a90ea32d95916d320eb1697ded638b0",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "TDHGAE",
+      "h3_positions_1_indexed": [
+        99,
+        111
+      ],
+      "native_h3": "ARDNGAARATFAY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": false,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_2V17/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_2V17/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_2V17/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_2V17/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_2V17/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_4TQE",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "Tau5",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_4TQE/trimmed_reference.pdb",
+      "reference_sha256": "137158c6ee2524479f32d8c17a04c848e8380c0d21d61a9dfe3df04766d265ae",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "LPTPPTREPKKVAVVR",
+      "h3_positions_1_indexed": [
+        97,
+        110
+      ],
+      "native_h3": "NGRGGMITTDFFDY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": false,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_4TQE/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_4TQE/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_4TQE/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_4TQE/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_4TQE/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_5E2V",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "AT8",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5E2V/trimmed_reference.pdb",
+      "reference_sha256": "177b8fa28b945c71b0c039b6546b4c036a1bf7b0cc1c00f8f56248245a09b1f4",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "P",
+      "epitope": "GSPGTPGSR",
+      "h3_positions_1_indexed": [
+        97,
+        102
+      ],
+      "native_h3": "TRGSLV",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": true,
+      "ptm_normalization": "SEP,TPO",
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5E2V/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5E2V/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5E2V/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5E2V/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5E2V/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_5ZV3",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "CBTAU-28.1",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5ZV3/trimmed_reference.pdb",
+      "reference_sha256": "8ad53fe3ca77d616bfdc2010c996c2a38cd040450f70bace7600828c0b9e09aa",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "EEPGSETSDAKS",
+      "h3_positions_1_indexed": [
+        97,
+        110
+      ],
+      "native_h3": "ARVGRPSKGGWFDP",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": false,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5ZV3/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5ZV3/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5ZV3/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5ZV3/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_5ZV3/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_6BB4",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "C5.2",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6BB4/trimmed_reference.pdb",
+      "reference_sha256": "a4f0bda7ce5fc7168f04f291c845f9d00c57be8db1e7d25dfd77864b8877f694",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "P",
+      "epitope": "IVYKSPV",
+      "h3_positions_1_indexed": [
+        97,
+        104
+      ],
+      "native_h3": "ARRGTMDY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": true,
+      "ptm_normalization": "SEP",
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6BB4/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6BB4/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6BB4/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6BB4/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6BB4/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_6H06",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "CBTAU-22.1",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6H06/trimmed_reference.pdb",
+      "reference_sha256": "d26cc9480ea6177b3b0aa3b096a06349a596a4c52b091ddbcea4daaa7f88b5cc",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "I",
+      "epitope": "DMVDSPQLAT",
+      "h3_positions_1_indexed": [
+        97,
+        110
+      ],
+      "native_h3": "VRGHCDGTTCSRAY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": true,
+      "ptm_normalization": "SEP",
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6H06/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6H06/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6H06/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6H06/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6H06/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_6XLI",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "PT3",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6XLI/trimmed_reference.pdb",
+      "reference_sha256": "0f2895bb742eff0097c27d8d47fa515ce504ca075d24c8903956bba4938504e0",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "P",
+      "epitope": "SRTPSLPTPPTRE",
+      "h3_positions_1_indexed": [
+        96,
+        107
+      ],
+      "native_h3": "ARGWGDYGWFAY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": true,
+      "ptm_normalization": "TPO,TPO",
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6XLI/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6XLI/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6XLI/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6XLI/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/TAU_6XLI/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "PRION_1CU4",
+      "target": "prion_protein",
+      "disease": "prion disease",
+      "antibody": "3F4",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_1CU4/trimmed_reference.pdb",
+      "reference_sha256": "fd40b500c6e71725c48f1c37106d43a30728e3e71310057886ba0ea41ec162fe",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "P",
+      "epitope": "APKTNMKHMA",
+      "h3_positions_1_indexed": [
+        95,
+        101
+      ],
+      "native_h3": "NADLHDY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": false,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_1CU4/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_1CU4/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_1CU4/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_1CU4/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_1CU4/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "PRION_4J8R",
+      "target": "prion_protein",
+      "disease": "prion disease",
+      "antibody": "POM2",
+      "reference_path": "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_4J8R/trimmed_reference.pdb",
+      "reference_sha256": "57ebcd8abad6b4717d785d3f016cfc52850a26967a10bbe21fc9870e95246112",
+      "heavy_chain": "B",
+      "light_chain": "A",
+      "antigen_chain": "I",
+      "epitope": "PHGGSWGQP",
+      "h3_positions_1_indexed": [
+        96,
+        110
+      ],
+      "native_h3": "ARSGAAAPTYYAMDY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "sensitivity_only": false,
+      "ptm_normalization": null,
+      "pose_limitation": null,
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_4J8R/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_4J8R/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_4J8R/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_4J8R/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_development_extension_v1/work/PRION_4J8R/poses/pose_4.pdb"
+      ]
+    }
+  ],
+  "claim_boundary": "historical local structures for endpoint development only; PTM-normalized and disulfide-constrained components are sensitivity-only; confirmation remains metadata-gated"
+}

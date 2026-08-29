@@ -1,0 +1,73 @@
+schema_version: 1
+status: development_protocol_frozen_after_prior_outcome_exposure
+classification: retrospective_development_benchmark_not_confirmation
+
+component_manifest: configs/benchmarks/idp_ensemble_multimethod_dev_v1_components.json
+
+inputs:
+  abeta_evaluation:
+    path: outputs/abeta_multiconf_selection_eval_v1/leave_one_conformer_out.csv
+    sha256: 3042a675bd251eea811c28b49517cc27f0066b9503d7e6745bf30f7ef1024a52
+  abeta_pose_audit:
+    path: outputs/abeta_multiconf_pose_panel_v1/pose_panel_audit.json
+    sha256: efd8fd39c646cd521e936c80d3d4cb2d9679fc21bced970632411fc6f1e0293f
+  nonabeta_evaluation:
+    path: outputs/non_abeta_idp_ensemble_design_v1/leave_one_conformer_out.csv
+    sha256: dbd4d031149116619c2ab80c204b36a34fbefba2a541d6b0cea24f3354bffc51
+  nonabeta_pose_audit:
+    path: outputs/non_abeta_idp_pose_panels_v1/pose_panel_audit.json
+    sha256: 31ddce4f7b0da951bcdca7ecd64e970363f5ea4f3a660f655e228feadd2a9273
+  nonabeta_ensemble_manifest:
+    path: outputs/non_abeta_idp_ensemble_prep_v1/ensemble_manifest.json
+    sha256: 0be520bec5b0f13ef1876ac911c5e68db4609b3a25fc56767136a7985c9034e3
+
+methods:
+  proposed:
+    id: contact_ensemble_robust
+    role: development_proxy_for_future_ensemble_aware_bfn
+    implementation: contact-guided candidate generation and robust multi-conformer selection
+    availability: complete_on_6_components
+  baselines:
+    - id: contact_single_state
+      availability: complete_on_4_abeta_components
+    - id: native
+      availability: complete_on_6_components
+    - id: composition_matched_random
+      availability: complete_on_4_abeta_components
+    - id: single_conformer_bfn
+      availability: unavailable_matched_six_component_arm
+    - id: proteinmpnn
+      availability: unavailable_matched_six_component_arm
+    - id: esm_if
+      availability: unavailable_matched_six_component_arm
+
+generation_contract_for_new_arms:
+  mutable_region: heavy_chain_h3_only
+  seeds: [4101, 4111, 4121]
+  candidates_per_seed: 8
+  temperature: 0.5
+  same_input_pose_and_mutable_positions_per_component: true
+  failures_remain_failures: true
+
+primary:
+  contrast: contact_ensemble_robust_minus_contact_single_state
+  inference_unit: independent_antibody_reference_component
+  within_component_aggregation: mean_across_heldout_conformers
+  direction: higher_is_better
+
+statistics:
+  bootstrap_trials: 10000
+  bootstrap_seed: 8117
+  exact_paired_sign_flip: true
+
+gates:
+  minimum_valid_components: 12
+  minimum_positive_component_fraction: 0.6666666666666666
+  require_component_bootstrap_ci95_lower_above_zero: true
+  require_complete_matched_arms:
+    - single_conformer_bfn
+    - proteinmpnn
+    - esm_if
+
+output: reviewer_outputs/idp_ensemble_multimethod_dev_v1/analysis.json
+claim_boundary: retrospective contact-topology development evidence on computationally transferred antibody poses; no BFN superiority, binding, affinity, specificity, efficacy, or confirmatory claim

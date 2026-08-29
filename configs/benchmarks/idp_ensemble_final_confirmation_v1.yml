@@ -1,0 +1,90 @@
+schema_version: 1
+status: final_pipeline_frozen_before_new_idp_cohort_access
+classification: untouched_idp_antibody_confirmatory_protocol
+frozen_date: "2026-08-18"
+
+scope:
+  required_targets: [amyloid_beta, tau, alpha_synuclein, prion_protein]
+  minimum_targets: 3
+  minimum_exact_new_structures: 12
+  minimum_independent_antibody_lineages: 12
+  maximum_components_per_lineage: 1
+  maximum_components_per_epitope_cluster: 2
+  previously_exposed_structures: forbidden
+  non_idp_targets: ineligible
+
+generator:
+  checkpoint: ProteinMPNN/vanilla_model_weights/v_48_020.pt
+  checkpoint_sha256: c9cb4a671d79604111231f8dbfc7c590e06f1197453b7a6854ac6661a642f5bd
+  mode: prefix_conditioned_autoregressive_multi_pose
+  pose_aggregation: equal_weight_mean_log_probability
+  mutable_region: heavy_chain_h3_only
+  substitution_buckets: [2, 4, 6, 8]
+  seeds: [12001, 12011, 12021, 12031]
+  candidates_per_component_arm: 4
+  native_controls_per_component: 1
+
+pose_requirements:
+  minimum_effective_poses: 2
+  target_effective_poses: 5
+  experimental_anchor_required: true
+  near_duplicate_h3_ca_rmsd_angstrom: 0.25
+  near_duplicate_poses_count_as_one: true
+  source_panels_required: [experimental_only, sampled_only, mixed]
+
+matched_control:
+  baseline: all_single_pose_median
+  definition: >-
+    Score every fixed single-state candidate independently on every admitted
+    pose; aggregate candidate score by the median across poses. Do not use a
+    privileged pose-0 baseline for confirmatory inference.
+  identical_checkpoint: true
+  identical_candidate_and_seed_budget: true
+  identical_mutation_buckets: true
+
+abstention:
+  source_panel_direction_consistency_required: true
+  leave_one_pose_out_direction_consistency_required: true
+  minimum_effective_poses_required: true
+  candidate_specific_developability_hard_failures: [
+    invalid_amino_acid,
+    n_linked_glycosylation_motif,
+    hydrophobic_run_above_4,
+    introduced_unpaired_cysteine,
+  ]
+  posthoc_rule_changes: forbidden
+
+experiment:
+  blinded: true
+  construct_count: 108
+  required_measurements: [
+    binding_kd_or_interval_censored_kd,
+    expression_mg_per_l,
+    specificity_panel,
+    aggregation_or_purity_qc,
+  ]
+  qc_and_fit_freeze_before_unblinding: true
+
+statistics:
+  inference_unit: independent_antibody_lineage_component
+  primary_endpoint: component_paired_ensemble_minus_all_single_pose_median_log10_kd_improvement
+  minimum_valid_components: 12
+  target_stratified_reporting: true
+  exact_two_sided_sign_flip_test: true
+  component_bootstrap_ci95: true
+  leave_one_component_out: true
+  passing_requirements:
+    median_component_improvement_above_zero: true
+    bootstrap_ci95_lower_above_zero: true
+    minimum_positive_components: 8
+
+outputs:
+  readiness: reviewer_outputs/idp_ensemble_final_confirmation_v1/readiness.json
+  discovery: reviewer_outputs/idp_ensemble_final_confirmation_v1/metadata_discovery.json
+  cohort: reviewer_outputs/idp_ensemble_final_confirmation_v1/cohort_manifest.json
+
+claim_boundary: >-
+  This frozen protocol licenses no claim before an exact-new IDP cohort and
+  blinded measurements are complete. A passing first cohort supports only a
+  pre-registered cohort-level improvement; broad reproducibility requires an
+  independent replication cohort or external laboratory replication.

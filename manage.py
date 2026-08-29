@@ -55,19 +55,31 @@ def cmd_start(args):
         # 后台启动
         print(f"[*] 后台启动服务器...")
         log_f = open(LOG_FILE, 'w')
+        creationflags = 0
+        if sys.platform == 'win32':
+            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
         proc = subprocess.Popen(
             [sys.executable, 'app.py'],
             stdout=log_f, stderr=subprocess.STDOUT,
             cwd=str(PROJECT_DIR),
+            creationflags=creationflags,
+            close_fds=True,
         )
+        log_f.close()
         PID_FILE.write_text(str(proc.pid))
-        time.sleep(3)
-        if _is_running(proc.pid):
+        deadline = time.time() + 90
+        while time.time() < deadline and _is_running(proc.pid):
+            if _port_is_open(host, port):
+                break
+            time.sleep(1)
+        if _is_running(proc.pid) and _port_is_open(host, port):
             print(f"[✓] 服务器已启动 (PID: {proc.pid})")
             print(f"    地址: http://{host}:{port}")
             print(f"    日志: {LOG_FILE}")
             print(f"    停止: python manage.py stop")
         else:
+            if PID_FILE.exists():
+                PID_FILE.unlink()
             print(f"[✗] 启动失败，查看日志: {LOG_FILE}")
     else:
         # 前台启动
@@ -192,6 +204,16 @@ def _find_by_port(port=7860):
     except:
         pass
     return None
+
+
+def _port_is_open(host, port):
+    import socket
+
+    try:
+        with socket.create_connection((host, int(port)), timeout=1):
+            return True
+    except OSError:
+        return False
 
 
 # ═══════════════════════════════════════════
@@ -538,14 +560,25 @@ def cmd_test(args):
     """运行环境自检"""
     print("[*] 环境自检...")
     errors = []
+    warnings = []
 
     # Python
     print(f"  Python: {sys.version}")
+    if sys.version_info < (3, 14):
+        warnings.append("冻结发布代码需要 Biopython 1.87 API；本机已验证的主运行时是 Python 3.14")
 
     # PyTorch
     try:
         import torch
         print(f"  PyTorch: {torch.__version__} (CUDA: {torch.cuda.is_available()})")
+        if torch.cuda.is_available():
+            props = torch.cuda.get_device_properties(0)
+            memory_gb = props.total_memory / 1024 ** 3
+            print(f"  GPU: {props.name} ({memory_gb:.1f} GB, CUDA {torch.version.cuda})")
+            if memory_gb < 16:
+                warnings.append("GPU 显存低于 16 GB，AF2 Multimer 应使用单任务和低 recycle")
+        else:
+            warnings.append("Windows PyTorch 未检测到 CUDA；BFN 将回退到 CPU")
     except Exception as e:
         errors.append(f"PyTorch: {e}")
 
@@ -579,14 +612,18 @@ def cmd_test(args):
 
     # BFN model
     config = load_app_config()
-    bfn_ckpt = config['models']['bfn']['checkpoint']
-    if os.path.exists(bfn_ckpt):
+    bfn_ckpt = Path(config['models']['bfn']['checkpoint']).expanduser()
+    if not bfn_ckpt.is_absolute():
+        bfn_ckpt = PROJECT_DIR / bfn_ckpt
+    if bfn_ckpt.exists():
         print(f"  BFN 模型: OK ({bfn_ckpt})")
     else:
         errors.append(f"BFN 模型不存在: {bfn_ckpt}")
 
     # ProteinMPNN
     mpnn_weights = Path(config['models']['proteinmpnn']['weights_dir'])
+    if not mpnn_weights.is_absolute():
+        mpnn_weights = PROJECT_DIR / mpnn_weights
     if mpnn_weights.exists():
         pts = list(mpnn_weights.glob('*.pt'))
         print(f"  ProteinMPNN: OK ({len(pts)} 个权重文件)")
@@ -594,16 +631,44 @@ def cmd_test(args):
         errors.append(f"ProteinMPNN 权重目录不存在: {mpnn_weights}")
 
     # AlphaFold2
-    af_cfg = config.get('alphafold', {})
-    af2_venv = af_cfg.get('af2', {}).get('venv', '')
-    if af2_venv:
-        af2_exe = Path(af2_venv) / 'Scripts' / 'colabfold_batch.exe'
-        if af2_exe.exists():
-            print(f"  AlphaFold2 (ColabFold): OK ({af2_exe})")
-        else:
-            print(f"  AlphaFold2 (ColabFold): 未找到 ({af2_exe})")
+    af_runtime = config.get('alphafold', {}).get('af2', {})
+    try:
+        from modules.runtime_environment import resolve_colabfold_executable
+        af2_exe = resolve_colabfold_executable(af_runtime, PROJECT_DIR)
+    except Exception as e:
+        af2_exe = None
+        errors.append(f"AlphaFold2 配置无效: {e}")
+    if af2_exe:
+        print(f"  AlphaFold2 (ColabFold): OK ({af_runtime.get('backend', 'native')}: {af2_exe})")
     else:
-        print(f"  AlphaFold2: 未配置")
+        errors.append("AlphaFold2 (ColabFold) 可执行文件未找到")
+
+    if af_runtime.get('backend') == 'wsl':
+        distro = af_runtime.get('distribution', 'Ubuntu-24.04-D')
+        environment = af_runtime.get('environment', 'venv_wsl')
+        project_wsl = f"/mnt/{PROJECT_DIR.drive[0].lower()}{PROJECT_DIR.as_posix()[2:]}"
+        python_wsl = f"{project_wsl}/{environment}/bin/python"
+        try:
+            result = subprocess.run(
+                ["wsl.exe", "-d", distro, "--", python_wsl, "-c",
+                 "import jax; print(jax.__version__); print(jax.devices())"],
+                capture_output=True, text=True, timeout=30,
+            )
+            if result.returncode == 0 and "CudaDevice" in result.stdout:
+                print(f"  WSL JAX: GPU OK ({result.stdout.strip().replace(chr(10), ' | ')})")
+            else:
+                errors.append(f"WSL JAX 未检测到 CUDA: {(result.stderr or result.stdout).strip()}")
+        except Exception as e:
+            errors.append(f"WSL JAX 检查失败: {e}")
+
+    try:
+        from openmm import Platform
+        platforms = [Platform.getPlatform(i).getName() for i in range(Platform.getNumPlatforms())]
+        print(f"  OpenMM: {', '.join(platforms)}")
+        if 'CUDA' not in platforms:
+            warnings.append("Windows OpenMM 没有 CUDA 平台；正式 GPU MD 建议在 WSL 环境运行")
+    except Exception as e:
+        warnings.append(f"OpenMM 不可用: {e}")
 
     # Config
     if CONFIG_FILE.exists():
@@ -612,12 +677,17 @@ def cmd_test(args):
         errors.append(f"配置文件不存在: {CONFIG_FILE}")
 
     print()
+    if warnings:
+        print(f"[!] {len(warnings)} 个提示:")
+        for warning in warnings:
+            print(f"  - {warning}")
+        print()
     if errors:
         print(f"[✗] {len(errors)} 个问题:")
         for e in errors:
             print(f"  - {e}")
     else:
-        print("[✓] 所有检查通过！可以运行 python manage.py start")
+        print("[✓] 必要检查通过！可以运行 python manage.py start")
 
 
 # ═══════════════════════════════════════════

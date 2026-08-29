@@ -20,7 +20,7 @@ A3 = {'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS', 'Q': 'GLN',
       'E': 'GLU', 'G': 'GLY', 'H': 'HIS', 'I': 'ILE', 'L': 'LEU', 'K': 'LYS',
       'M': 'MET', 'F': 'PHE', 'P': 'PRO', 'S': 'SER', 'T': 'THR', 'W': 'TRP',
       'Y': 'TYR', 'V': 'VAL'}
-WSL_PYTHON = 'wsl bash -c "cd /mnt/c/biological/DisorderFlow && ./venv_wsl/bin/python'
+WSL_PYTHON = 'wsl bash -c "cd /mnt/d/biological/DisorderFlow && ./venv_wsl/bin/python'
 
 SCAFFOLD = 'data/anti_abeta_refs/4HIX.pdb'
 OUT_DIR = 'fold_dock_results'
@@ -118,9 +118,9 @@ for name, _, _ in designs:
 
     # Run colabfold_batch in WSL
     # Use --num-models 1 --num-recycle 1 for speed
-    wsl_fasta = f'/mnt/c/biological/DisorderFlow/{fasta_path}'
-    wsl_out = f'/mnt/c/biological/DisorderFlow/{out_dir}'
-    cmd = (f'wsl bash -c "cd /mnt/c/biological/DisorderFlow && '
+    wsl_fasta = f'/mnt/d/biological/DisorderFlow/{fasta_path}'
+    wsl_out = f'/mnt/d/biological/DisorderFlow/{out_dir}'
+    cmd = (f'wsl bash -c "cd /mnt/d/biological/DisorderFlow && '
            f'./venv_wsl/bin/colabfold_batch {wsl_fasta} {wsl_out} '
            f'--num-models 1 --num-recycle 1 --use-gpu-relax 2>&1"')
 

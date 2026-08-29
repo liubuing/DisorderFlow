@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "future_snapshot_ready",
+  "checked_at_utc": "2026-08-15T04:49:07.472474Z",
+  "classification": "metadata_only_future_confirmatory_readiness",
+  "source_discovery": "C:\\biological\\DisorderFlow\\data\\successor_v3_rcsb_snapshot_2026_08_15\\discovery_after_exposure_v3.json",
+  "source_discovery_sha256": "2762db8a5bed1f2d289c12b0b7b2914274f7e6be37dfa8e6c2dbfa344f17fae2",
+  "minimum_exact_new_entries": 12,
+  "observed_exact_new_entries": 24,
+  "ready": true,
+  "candidate_entry_ids_sha256": "a0cf85c54fa9b8b28c810f59504b234231efe013c6950fa22fa0e6c5dc15752d",
+  "decision": "eligible_to_freeze_a_new_confirmatory_protocol_before structure access",
+  "claim_boundary": "metadata readiness only; not a performance result"
+}

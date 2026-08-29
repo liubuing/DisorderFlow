@@ -1,0 +1,20 @@
+schema_version: 1
+status: measurement_contract_frozen_before_assay_import
+classification: candidate_developability_measurement_gate
+
+required_measurements:
+  minimum_replicates: 2
+  minimum_expression_mg_per_l: 10.0
+  minimum_sec_monomer_fraction: 0.90
+  maximum_aggregate_fraction: 0.10
+  maximum_polyspecificity_normalized: 0.35
+  melting_temperature_optional: true
+
+missing_measurements:
+  action: fail_closed
+  proxy_substitution_forbidden: true
+
+output: reviewer_outputs/developability_measurement_gate_v1/status.json
+claim_boundary: >-
+  Developability assay QC only. Passing does not establish target binding,
+  affinity, specificity, efficacy, or safety.

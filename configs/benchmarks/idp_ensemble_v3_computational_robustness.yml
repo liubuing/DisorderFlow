@@ -1,0 +1,33 @@
+schema_version: 1
+status: frozen_before_robustness_analysis
+classification: general_antibody_multiconformer_computational_robustness
+
+inputs:
+  candidates: reviewer_outputs/idp_ensemble_correction_v3/candidates.json
+  poses: reviewer_outputs/idp_ensemble_correction_v3/merged_pose_manifest_2026_08_15.json
+  readiness: reviewer_outputs/idp_ensemble_correction_v3/generation_readiness_v2.json
+  checkpoint: ProteinMPNN/vanilla_model_weights/v_48_020.pt
+
+pose_diversity:
+  alignment: heavy_framework_ca_kabsch
+  comparison: h3_ca_rmsd_after_framework_alignment
+  near_duplicate_threshold_angstrom: 0.25
+  report_source_pairs: true
+  no_posthoc_pose_removal: true
+
+sensitivity:
+  fixed_candidates_only: true
+  source_panels: [experimental_only, sampled_only, mixed]
+  leave_one_pose_out: true
+  score: mean_autoregressive_h3_log_probability
+  no_candidate_regeneration: true
+
+claim_boundary: >-
+  Computational robustness analysis of fixed candidates and poses. It cannot
+  establish binding, ensemble improvement, IDP-specific confirmation,
+  efficacy, safety, or therapeutic value.
+
+outputs:
+  pose_diversity: reviewer_outputs/idp_ensemble_correction_v3_robustness/pose_diversity.json
+  source_sensitivity: reviewer_outputs/idp_ensemble_correction_v3_robustness/source_sensitivity.json
+  leave_one_pose_out: reviewer_outputs/idp_ensemble_correction_v3_robustness/leave_one_pose_out.json

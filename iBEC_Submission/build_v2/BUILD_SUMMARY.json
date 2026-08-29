@@ -1,0 +1,14 @@
+{
+  "status": "ibec_preliminary_package_built",
+  "archive": "iBEC_Submission/build_v2/AnalyzingDisorder.zip",
+  "archive_bytes": 1774388,
+  "archive_megabytes": 1.692,
+  "under_50_mb": true,
+  "archive_sha256": "e2a40238d800d60469cf147912cd1d3f3c7063367030aa228264b0922850615c",
+  "required_files": {
+    "project_report_pdf": true,
+    "technical_abstract_pdf": true
+  },
+  "technical_abstract_pages": 10,
+  "submission_deadline": "2026-09-30"
+}

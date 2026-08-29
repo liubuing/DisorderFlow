@@ -1,0 +1,19 @@
+schema_version: 1
+status: frozen_before_nonviral_developability_analysis
+classification: nonviral_sequence_proxy_developability
+
+inputs:
+  subset: reviewer_outputs/idp_ensemble_correction_v3_nonviral/subset.json
+  sequence_qc: reviewer_outputs/idp_ensemble_correction_v3_nonviral/sequence_qc.json
+
+thresholds:
+  minimum_sequence_complexity: 0.55
+  maximum_immunogenicity_proxy: 0.65
+  flag_candidate_cysteine_absent_from_native: true
+
+output: reviewer_outputs/idp_ensemble_correction_v3_nonviral/developability_proxy.json
+
+claim_boundary: >-
+  Heuristic sequence-level proxies only. They are not measured aggregation,
+  polyspecificity, immunogenicity, expression, stability, binding, safety, or
+  therapeutic evidence.

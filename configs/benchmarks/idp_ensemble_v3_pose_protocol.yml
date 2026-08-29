@@ -1,0 +1,36 @@
+schema_version: 1
+status: frozen_before_pose_generation
+classification: general_antibody_multiconformer_pose_protocol
+
+scope:
+  cohort: reviewer_outputs/idp_ensemble_correction_v3/untouched_cohort_admission_v4.json
+  cohort_sha256: 149e47f593d6a938d4a3c1edd25c820da5bb57958ada213002f4eddb466ed9ea
+  target_scope: non_idp_specific_general_antibody_confirmation
+
+pose_sources_in_priority_order:
+  - independent_experimental_structure_same_lineage_and_target
+  - independent_complex_copy_same_biological_assembly
+  - restrained_local_interface_sampling
+
+requirements:
+  minimum_poses_per_component: 2
+  target_poses_per_component: 5
+  distinct_coordinate_sha256_required: true
+  identical_coordinate_duplication: forbidden
+  antibody_framework_restraint_k_kj_mol_nm2: 1000
+  antigen_interface_restraint_k_kj_mol_nm2: 100
+  local_sampling_temperature_kelvin: 300
+  minimization_required: true
+  clash_audit_required: true
+  h3_backbone_complete_required: true
+  equal_pose_count_between_arms: true
+
+rejection:
+  maximum_heavy_atom_clashes_below_1_8_angstrom: 0
+  maximum_missing_h3_backbone_atoms: 0
+  maximum_antibody_framework_ca_rmsd_angstrom: 1.0
+  maximum_interface_ca_rmsd_angstrom: 3.0
+
+claim_boundary: >-
+  Pose-generation protocol for a general antibody multi-conformer panel. It is
+  not IDP-specific confirmation and does not establish candidate performance.

@@ -1,7 +1,7 @@
 """Build a unified source LMDB from merged IDP queue for the conformation build script."""
 import lmdb, pickle, json, os
 
-with open('C:/biological/DisorderFlow/data/conformation_queue_merged.json') as f:
+with open('D:/biological/DisorderFlow/data/conformation_queue_merged.json') as f:
     queue = json.load(f)
 
 entries = queue['entries']
@@ -11,13 +11,13 @@ print(f'Loading {len(entries)} entries from multiple sources...')
 sources = {}
 for tag in ['v10', 'idp_v3']:
     if tag == 'v10':
-        path = 'C:/biological/DisorderFlow/data/confidence_merged_v10/confidence_train.lmdb'
+        path = 'D:/biological/DisorderFlow/data/confidence_merged_v10/confidence_train.lmdb'
     else:
-        path = 'C:/biological/DisorderFlow/data/confidence_idp_v3'
+        path = 'D:/biological/DisorderFlow/data/confidence_idp_v3'
     sources[tag] = lmdb.open(path, readonly=True, max_readers=1)
 
 # Create unified destination
-dst_path = 'C:/biological/DisorderFlow/data/confidence_idp_unified'
+dst_path = 'D:/biological/DisorderFlow/data/confidence_idp_unified'
 os.makedirs(dst_path, exist_ok=True)
 # Remove old if exists
 import shutil

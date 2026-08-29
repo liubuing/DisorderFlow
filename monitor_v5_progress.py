@@ -1,6 +1,6 @@
 """v5 多构象数据集构建进度监控
 用法（任选一种）：
-  wsl -d Ubuntu-24.04 bash -lc "cd /mnt/c/biological/DisorderFlow && source venv_wsl/bin/activate && python monitor_v5_progress.py"
+  wsl -d Ubuntu-24.04-D bash -lc "cd /mnt/d/biological/DisorderFlow && source venv_wsl/bin/activate && python monitor_v5_progress.py"
   C:\\cf\\Scripts\\python.exe monitor_v5_progress.py
 显示：当前进度、ETA、速率、内存、最近完成条目、进程状态
 """
@@ -13,7 +13,7 @@ os.chdir(_here)
 V5 = "data/confidence_conformation_v5/confidence_train.lmdb"
 LOG = "_build_v5.log"
 TOTAL_TARGET = 1301  # 统一源 v2 总条目
-WSL_DISTRO = os.environ.get("DISORDERFLOW_WSL_DISTRO", "Ubuntu-24.04")
+WSL_DISTRO = os.environ.get("DISORDERFLOW_WSL_DISTRO", "Ubuntu-24.04-D")
 
 def get_progress():
     if not os.path.exists(V5):

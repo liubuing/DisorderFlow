@@ -1,0 +1,42 @@
+schema_version: 1
+status: expansion_generation_contract_frozen_before_matched_run
+classification: prospective_internal_expansion_not_external_confirmation
+component_manifest: configs/benchmarks/idp_ensemble_expansion_6ref_v1_components.json
+
+generation:
+  seeds: [4101, 4111, 4121]
+  candidates_per_seed: 8
+  mutable_region: heavy_chain_h3_only
+  canonical_chain_roles: {heavy: H, optional_light: L, antigen: P}
+  failed_slots_remain_failures: true
+  proteinmpnn:
+    enabled: true
+    script: ProteinMPNN/protein_mpnn_run.py
+    weights: ProteinMPNN/vanilla_model_weights
+    checkpoint: ProteinMPNN/vanilla_model_weights/v_48_020.pt
+    checkpoint_sha256: c9cb4a671d79604111231f8dbfc7c590e06f1197453b7a6854ac6661a642f5bd
+    model_name: v_48_020
+    temperature: 0.5
+  single_conformer_bfn:
+    enabled: true
+    checkpoint: logs/bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032/checkpoints/best.pt
+    checkpoint_sha256: ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252
+    device: cuda
+    stochastic: true
+    disorder_guided: false
+  esm_if:
+    enabled: true
+    model: esm_if1_gvp4_t16_142M_UR50
+    checkpoint: D:/DisorderFlowRuntime/cache/torch/hub/checkpoints/esm_if1_gvp4_t16_142M_UR50.pt
+    checkpoint_sha256: be4ba36edec22a9bfaa4946ff6b2815f1f19d8a3d7e0eada8b796d5a0eae9fd4
+    device: cpu
+    temperature: 0.5
+
+validity:
+  exact_raw_candidates_per_slot: 8
+  fixed_positions_must_not_change: true
+  native_sequence_is_not_removed_from_raw_generation: true
+  invalid_or_missing_slots_are_not_imputed: true
+
+output: reviewer_outputs/idp_ensemble_matched_generation_expansion_v1/raw_generation.json
+claim_boundary: matched H3 candidate generation for outcome-unexposed internal expansion; no binding, efficacy, or external confirmation claim

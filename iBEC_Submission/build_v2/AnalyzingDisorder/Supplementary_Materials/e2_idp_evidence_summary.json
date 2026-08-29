@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "ibec_e2_evidence_audit_complete",
+  "config": "configs/benchmarks/ibec_e2_idp_evidence_audit_v1.yml",
+  "config_sha256": "ce5563f51020782c17bf2c2ad2b0293c20e765068d0503fc1eb9c8ba425932e0",
+  "runner_sha256": "fc843afb6da1753b16f6be4afc3ca491c7821eb1b103aef24dfe42ebf3460634",
+  "source_records": 1301,
+  "conformation_records": 1289,
+  "records_with_five_conformations": 1289,
+  "exact_disprot_sequence_matches": 220,
+  "experimental_disorder_evidence_records": 219,
+  "evidence_tier_counts": {
+    "experimentally_curated_fully_disordered": 23,
+    "experimentally_curated_partially_disordered": 36,
+    "experimentally_curated_contains_idr": 99,
+    "experimentally_curated_short_disorder": 61,
+    "disprot_exact_without_disorder_region": 1,
+    "prediction_only_disorder": 9,
+    "conformational_proxy_only": 5,
+    "no_disorder_evidence": 1055
+  },
+  "source_disorder_source_counts": {
+    "af2_plddt_fallback": 57,
+    "ebi_mobidb_lite": 63,
+    "folded": 1169
+  },
+  "truncation": {
+    "missing_records": 12,
+    "source_keys": [
+      "00001289",
+      "00001290",
+      "00001291",
+      "00001292",
+      "00001293",
+      "00001294",
+      "00001295",
+      "00001296",
+      "00001297",
+      "00001298",
+      "00001299",
+      "00001300"
+    ],
+    "minimum_length": 495,
+    "maximum_length": 500,
+    "interpretation": "mechanical_tail_truncation_by_source_order_not_biological_filtering"
+  },
+  "corrected_statement": "1,289 five-conformation protein records; 219 records have exact-sequence DisProt disorder-region evidence.",
+  "deprecated_statement": "800+ natural IDPs",
+  "claim_boundary": "dataset evidence classification only; prediction and AF2 proxies are not experimental IDP annotations",
+  "records_csv_sha256": "0eac2b19fca4aeb0e21f2748c19146a83b43bcf7b83001e85ce8cb7da85caf47"
+}

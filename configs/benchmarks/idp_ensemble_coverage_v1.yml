@@ -1,0 +1,29 @@
+schema_version: 1
+status: coverage_contract_frozen_before_broad_ensemble_import
+classification: exposed_idp_ensemble_coverage_development
+
+requirements:
+  minimum_raw_poses: 3
+  minimum_effective_poses: 3
+  minimum_source_classes: 2
+  minimum_nonlocal_poses: 2
+  near_duplicate_interface_ca_rmsd_angstrom: 0.25
+  minimum_median_interface_ca_rmsd_angstrom: 0.50
+  required_source_classes_any:
+    - experimental
+    - nmr_or_deposited_model
+  local_sampling_alone_is_insufficient: true
+
+source_classification:
+  restrained_local_interface_sampling: local_sampling
+  own_entry: experimental
+  independent_experimental_structure_same_lineage_and_target: experimental
+  independent_complex_copy_same_assembly: experimental
+  nmr_model: nmr_or_deposited_model
+  deposited_model: nmr_or_deposited_model
+  predicted_ensemble: predicted
+
+output: reviewer_outputs/idp_ensemble_coverage_v1/audit.json
+claim_boundary: >-
+  Ensemble coverage audit only. Passing does not establish equilibrium state
+  weights, solution-state populations, binding, or design success.

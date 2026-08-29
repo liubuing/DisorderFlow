@@ -316,7 +316,7 @@ def build_abstract_pdf():
         ('Metric', 'Value'),
         ('Total structures', '31'),
         ('Torsion hits (target tier)', '26/31 (83.9%)'),
-        ('Valid structures after recovery', '25/26 (96.2%)'),
+        ('Valid structures overall', '25/31 (80.6%)'),
         ('Mean held-out contact recovery', '0.581'),
         ('95% CI', '[0.533, 0.635]'),
         ('Positive recovery fraction', '100%'),
@@ -332,7 +332,7 @@ def build_abstract_pdf():
 
     c.setFont('Helvetica', 11)
     c.setFillColor(DARK_TEXT)
-    c.drawString(comp_x + 10, PAGE_H - 145, "T2 (failed) vs T2.1 v2 (success)")
+    c.drawString(comp_x + 10, PAGE_H - 145, "T2 vs T2.1 v2 (recalibrated)")
 
     c.setFont('Helvetica', 10)
     c.setFillColor(GRAY)
@@ -340,11 +340,11 @@ def build_abstract_pdf():
         "T2:  3/7 valid, recovery = \u22120.017",
         "   (high-temp perturbation, poor calibration)",
         "",
-        "T2.1 v2:  25/26 valid, recovery = 0.581",
+        "T2.1 v2:  25/31 valid, recovery = 0.581",
         "   (deterministic torsion, 100 kJ/mol/nm\u00b2)",
         "",
-        "Root cause: parameter calibration,",
-        "not fundamental method limitation.",
+        "Random restraint recovery = 0.619;",
+        "contact-specific mechanism unsupported.",
     ]
     ly = PAGE_H - 165
     for line in lines:
@@ -356,13 +356,13 @@ def build_abstract_pdf():
     c.roundRect(55, PAGE_H - 310, PAGE_W - 110, 24, 4, fill=1, stroke=0)
     c.setFont('Helvetica', 10)
     c.setFillColor(GREEN_TEXT)
-    c.drawString(70, PAGE_H - 303, "Gate pass: 96.2% valid structures, 100% positive contact recovery, mean recovery 0.581")
+    c.drawString(70, PAGE_H - 303, "80.6% valid overall; random restraints outperform supplied contacts (0.619 vs 0.581)")
 
     c.showPage()
 
     # ==================== SLIDE 7: 4HIX DESIGN ====================
     c.draw_slide_bg()
-    c.draw_section_title(6, "4HIX IDP Antibody Design Validation")
+    c.draw_section_title(6, "4HIX ProteinMPNN Computational Case Study")
     c.draw_footer(7)
 
     c.setFont('Helvetica', 11)
@@ -395,7 +395,7 @@ def build_abstract_pdf():
     findings = [
         "20/20 designs pass AF2 validation",
         "Top 3 exceed native ipTM (0.449)",
-        "Best design: ipTM = 0.462 (+2.9%)",
+        "Best design: ipTM = 0.462 (+2.8%, descriptive difference)",
         "Chain separator fix: VH:VL prevents",
         "  4.5x ipTM underestimation",
     ]
@@ -428,7 +428,7 @@ def build_abstract_pdf():
     evidence = [
         ("1. ECLS Temporal Final", "n=15 clusters, post-2021, sealed", "Positive discrimination (0.172, 80%+)"),
         ("2. ECLS Adaptation", "n=46 clusters, exposed", "Replicates temporal final pattern"),
-        ("3. T2.1 v2 Recovery", "n=31 structures, 96.2% valid", "Physical contact recovery (0.581)"),
+        ("3. T2.1 v2 Recovery", "n=31 structures, 80.6% valid", "Random control higher than supplied"),
         ("4. 4HIX Design", "n=20 designs, 20/20 AF2 pass", "Prospective design (top ipTM 0.462)"),
         ("5. T1 Ensemble", "n=7 clusters", "Single-pose overconfidence (\u22120.200)"),
         ("6. Generator Calibration", "n=7 clusters, exploratory", "Calibrated reranker works"),
@@ -526,7 +526,7 @@ def build_abstract_pdf():
         "1. Disorder head: training batches never contained disorder_label \u2192 PaddingCollate dropped",
         "   the field \u2192 disorder loss never fired. Fixed with explicit label injection.",
         "2. AF2 chain separator: antibody chains must use VH:VL (not concatenation) or ipTM drops 4.5x.",
-        "3. T2.1 perturbation: peptide restraint 25 \u2192 100 kJ/mol/nm\u00b2 improved valid fraction 43% \u2192 96.2%.",
+        "3. T2.1 perturbation: recalibrated protocol reached 80.6% overall validity; mechanism unsupported.",
     ]
     by = bug_y + 62
     for b in bugs:
@@ -551,7 +551,7 @@ def build_abstract_pdf():
     conclusions = [
         "ECLS establishes epitope-conditioned CDR-H3 signal (46 clusters, mean 0.217, 80.4% positive)",
         "Temporal transfer confirmed on sealed post-2021 data (mean 0.172, 80% positive, P=0.014)",
-        "T2.1 v2: 96.2% valid structures, 100% positive contact recovery (0.581)",
+        "T2.1 v2: 80.6% valid overall; random control 0.619 vs supplied 0.581",
         "4HIX prospective design: 20/20 pass AF2, top 3 exceed native ipTM",
         "Disorder-aware framework provides principled approach to IDP antibody design",
     ]

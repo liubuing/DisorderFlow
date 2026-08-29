@@ -1,0 +1,27 @@
+schema_version: 1
+status: frozen_before_statecontrast_v2_training
+classification: exposed_expanded_idp_replication_gate
+
+required_panels:
+  development:
+    minimum_components: 12
+  expanded_replication:
+    minimum_components: 20
+    minimum_targets: 4
+
+gates:
+  minimum_positive_component_fraction: 0.6666666666666666
+  require_component_bootstrap_ci95_lower_above_zero: true
+  minimum_source_panel_direction_consistency: 0.80
+  minimum_independent_scorer_favored_fraction: 0.50
+  require_absolute_target_state_noninferiority: true
+  maximum_developability_hard_failure_fraction: 0.20
+
+freeze_rules:
+  no_threshold_changes_after_development_result_access: true
+  no_candidate_regeneration_after_independent_scoring: true
+  expanded_records_permanently_ineligible_for_untouched_confirmation: true
+
+claim_boundary: >-
+  A passing result permits freezing StateContrast-v2 for one new untouched IDP
+  panel. It is not confirmation, binding evidence, or therapeutic validation.

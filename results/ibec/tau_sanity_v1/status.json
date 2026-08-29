@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "status": "ibec_tau_sanity_complete",
+  "decision": "go_tau_second_target_extension",
+  "config": "configs/benchmarks/ibec_tau_sanity_v1.yml",
+  "config_sha256": "65248051a309471ab95b74161d27543b7b6160c583922bd2a17dc47e6dad971a",
+  "runner_sha256": "b45e9175f1eefb490071a6514896ea4a9ea5b1a98a62be60a5cbd256cc52fd3f",
+  "target": {
+    "id": "tau_5MP3",
+    "heavy_chain": "A",
+    "light_chain": "B",
+    "reference_antigen_chain": "C",
+    "pose_antigen_chain": "P",
+    "antigen_sequence": "KHVPGGGSV",
+    "h3_region_spec": "A:96-108",
+    "h3_sequence": "ARDYYGTSFAMDY",
+    "h3_length": 13,
+    "h3_definition": "IMGT_105_117_and_structure_Cys95_Trp109_anchor",
+    "selected_poses": 5
+  },
+  "reference_complex": "data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb",
+  "reference_complex_sha256": "62c7c9ed35cbf2115714bc3e1980348fc3a9a152d115fe95e8cd83769a5b8e42",
+  "structure_checks": [
+    {
+      "conformer": 0,
+      "pose_pdb": "data/non_abeta_idp/pose_panels_v1/tau/conformer0_pose.pdb",
+      "pose_sha256": "600f04234d28a468e8eebf97a6580b15641c7a8d1da922ae9a635612f7637ee1",
+      "geometry_status": "pass",
+      "n_contacts": 20,
+      "severe_clashes": 0,
+      "heavy_length": 219,
+      "antigen_sequence": "KHVPGGGSV",
+      "h3_sequence": "ARDYYGTSFAMDY",
+      "exact_antigen": true,
+      "exact_h3": true
+    },
+    {
+      "conformer": 1,
+      "pose_pdb": "data/non_abeta_idp/pose_panels_v1/tau/conformer1_pose.pdb",
+      "pose_sha256": "ec5e4001bb4dd1d85c3651f7aca45b5fd14ffbf238a93901d8179379b6c08a68",
+      "geometry_status": "pass",
+      "n_contacts": 20,
+      "severe_clashes": 0,
+      "heavy_length": 219,
+      "antigen_sequence": "KHVPGGGSV",
+      "h3_sequence": "ARDYYGTSFAMDY",
+      "exact_antigen": true,
+      "exact_h3": true
+    },
+    {
+      "conformer": 2,
+      "pose_pdb": "data/non_abeta_idp/pose_panels_v1/tau/conformer2_pose.pdb",
+      "pose_sha256": "2283604384ac290365bd5eeff6a4a1b09966957511a353ad5d6f051d9b37b645",
+      "geometry_status": "pass",
+      "n_contacts": 27,
+      "severe_clashes": 0,
+      "heavy_length": 219,
+      "antigen_sequence": "KHVPGGGSV",
+      "h3_sequence": "ARDYYGTSFAMDY",
+      "exact_antigen": true,
+      "exact_h3": true
+    },
+    {
+      "conformer": 3,
+      "pose_pdb": "data/non_abeta_idp/pose_panels_v1/tau/conformer3_pose.pdb",
+      "pose_sha256": "f3795b004354626dc477a6939f33bad78a2baf6cf921a14efb539d08196e86da",
+      "geometry_status": "pass",
+      "n_contacts": 19,
+      "severe_clashes": 0,
+      "heavy_length": 219,
+      "antigen_sequence": "KHVPGGGSV",
+      "h3_sequence": "ARDYYGTSFAMDY",
+      "exact_antigen": true,
+      "exact_h3": true
+    },
+    {
+      "conformer": 4,
+      "pose_pdb": "data/non_abeta_idp/pose_panels_v1/tau/conformer4_pose.pdb",
+      "pose_sha256": "37751f277cf3bea0d0109e10316717dfe69d54b10dc6dc00f7b8024e6cec1a50",
+      "geometry_status": "pass",
+      "n_contacts": 21,
+      "severe_clashes": 0,
+      "heavy_length": 219,
+      "antigen_sequence": "KHVPGGGSV",
+      "h3_sequence": "ARDYYGTSFAMDY",
+      "exact_antigen": true,
+      "exact_h3": true
+    }
+  ],
+  "bfn_pose_scores": [
+    {
+      "conformer": 0,
+      "complex_state_compatibility": 0.056278206408023834,
+      "stripped_state_compatibility": 0.0,
+      "complex_minus_stripped": 0.056278206408023834,
+      "complex_iptm_diagnostic": 0.38792693614959717,
+      "stripped_iptm_diagnostic": 0.3895960748195648
+    },
+    {
+      "conformer": 1,
+      "complex_state_compatibility": 0.0685528814792633,
+      "stripped_state_compatibility": 0.0,
+      "complex_minus_stripped": 0.0685528814792633,
+      "complex_iptm_diagnostic": 0.38811713457107544,
+      "stripped_iptm_diagnostic": 0.38959604501724243
+    },
+    {
+      "conformer": 2,
+      "complex_state_compatibility": 0.058803632855415344,
+      "stripped_state_compatibility": 0.0,
+      "complex_minus_stripped": 0.058803632855415344,
+      "complex_iptm_diagnostic": 0.38834092020988464,
+      "stripped_iptm_diagnostic": 0.38959595561027527
+    },
+    {
+      "conformer": 3,
+      "complex_state_compatibility": 0.04266484081745148,
+      "stripped_state_compatibility": 0.0,
+      "complex_minus_stripped": 0.04266484081745148,
+      "complex_iptm_diagnostic": 0.38850176334381104,
+      "stripped_iptm_diagnostic": 0.38959604501724243
+    },
+    {
+      "conformer": 4,
+      "complex_state_compatibility": 0.09061603248119354,
+      "stripped_state_compatibility": 0.0,
+      "complex_minus_stripped": 0.09061603248119354,
+      "complex_iptm_diagnostic": 0.38863274455070496,
+      "stripped_iptm_diagnostic": 0.38959604501724243
+    }
+  ],
+  "aggregate": {
+    "mean_complex_minus_stripped": 0.0633831188082695,
+    "minimum_abs_complex_minus_stripped": 0.04266484081745148,
+    "coordinate_sensitive_poses": 5,
+    "complex_state_compatibility_range": 0.047951191663742065,
+    "historical_heldout_mean_delta_native": 0.019119999999999998,
+    "historical_heldout_beat_native_rate": 0.8
+  },
+  "checks": {
+    "manifest_pass": true,
+    "pose_audit_pass": true,
+    "all_pose_geometry_pass": true,
+    "zero_severe_clashes": true,
+    "exact_antigen_sequence": true,
+    "exact_h3_sequence": true,
+    "coordinate_sensitive_poses": true,
+    "pose_output_range": true,
+    "historical_heldout_mean_delta": true,
+    "historical_heldout_beat_native_rate": true
+  },
+  "historical_candidate_policy": {
+    "historical_10_position_mpnn_candidates_valid": false,
+    "reason": "old_mask_opened_only_chain_positions_97_to_106_instead_of_full_13_residue_H3"
+  },
+  "next_step": "freeze_correct_13_residue_conservative_H3_candidate_protocol",
+  "claim_boundary": "structural and model-path sanity only; not candidate quality or binding validation"
+}

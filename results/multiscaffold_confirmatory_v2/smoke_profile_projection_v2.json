@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "raw_generation_complete",
+  "config": "configs/benchmarks/multiscaffold_confirmatory_v2_generation.yml",
+  "config_sha256": "b5086a673215f92b39697c57f658d1a63c311891b8256ec50b00ebce05a73dda",
+  "protocol_sha256": "18000881b7fab4a20ddbd4a573c614926d2c8358712e17d43290f91a7f740586",
+  "holdout_manifest_sha256": "b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380",
+  "checkpoint_lineage_sha256": "43d8cc47d509185029c24b514e76fa55dca24d806cb88cf1339e83d045e68906",
+  "requested": {
+    "components": [
+      "V2C013"
+    ],
+    "arms": [
+      "current_bfn_disorder_on"
+    ],
+    "seeds": [
+      2609
+    ],
+    "samples_per_seed": 1,
+    "attempts": 1
+  },
+  "attempts": [
+    {
+      "attempt_id": "V2C013|current_bfn_disorder_on|2609|00",
+      "component_id": "V2C013",
+      "representative_id": "pdb_00007x1u-D1-D2",
+      "arm": "current_bfn_disorder_on",
+      "seed": 2609,
+      "sample_index": 0,
+      "status": "success",
+      "sequence": "AHWQVRAPCNPGCV",
+      "full_heavy_sequence": "VQLVESGGGLVQPGGLSCSASGFAFSSFGMHWVRQAPEKGLEWVAYISSGSGTIYYADTVKGRFTISRDDPKNTLFSLRSEDTAMYYCAHWQVRAPCNPGCVWGQGTTLT",
+      "generator_score": 129.749267578125,
+      "native_generated": false,
+      "error": null,
+      "seed_wall_seconds": 6.397676200023852,
+      "ppl": 129.749267578125,
+      "entropy": 1.1741974353790283,
+      "max_prob": 0.6721228361129761,
+      "plddt": 0.17410017549991608,
+      "plddt_std": 0.0010256029199808836,
+      "iptm": 0.7461780309677124,
+      "pae": 1.060572230926482e-06,
+      "contact_score": 0.2689414620399475,
+      "state_compatibility": -0.09995648264884949,
+      "input_cif_sha256": "2e8c849a3251dd6bc375626454bf273f0d7d77989c280269678d8e208049ad30",
+      "canonical_pdb_sha256": "6fec7d68c047a6f4abae26e2648bcd2dd2ae5a8fe346f287abb722cb4afcbb70",
+      "checkpoint_or_model_sha256": "5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3"
+    }
+  ],
+  "claim_boundary": "raw prospective internal generation; no candidate selection or confirmatory endpoint",
+  "summary": {
+    "expected_attempts": 1,
+    "recorded_attempts": 1,
+    "successes": 1,
+    "failures": 0
+  }
+}

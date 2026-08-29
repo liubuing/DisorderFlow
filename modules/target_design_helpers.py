@@ -350,25 +350,28 @@ def find_residues_facing_region(pdb_path, target_chain, epitope_resseqs,
         distance_cutoff: CA-CA distance threshold in Angstroms
 
     Returns:
-        List of resseq (ints) on query_chain facing the epitope, sorted.
+        List of 1-based sequence positions on query_chain facing the epitope,
+        sorted. PDB residue numbers and insertion codes are not BFN mask indices.
     """
     structure = _parse_structure(pdb_path)
     epitope_set = set(epitope_resseqs)
 
     # Collect CA atoms
     epitope_cas = []
-    query_cas = {}  # resseq -> coord
+    query_cas = {}  # 1-based sequence position -> coord
     for model in structure:
         for chain in model:
+            query_position = 0
             for res in chain:
-                if 'CA' not in res:
+                if 'CA' not in res or res.get_resname().strip() not in AA_3TO1:
                     continue
                 resseq = res.get_id()[1]
                 coord = res['CA'].get_coord()
                 if chain.id == target_chain and resseq in epitope_set:
                     epitope_cas.append(coord)
-                elif chain.id == query_chain:
-                    query_cas[resseq] = coord
+                if chain.id == query_chain:
+                    query_position += 1
+                    query_cas[query_position] = coord
 
     if not epitope_cas or not query_cas:
         return []

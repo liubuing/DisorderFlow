@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import random
 import shlex
 import subprocess
@@ -93,6 +94,7 @@ def build_entities(selection, holdout, shuffle_seed):
 
 
 def windows_to_wsl(path):
+    """Convert an absolute Windows path without assuming the project drive."""
     resolved = path.resolve().as_posix()
     if len(resolved) >= 3 and resolved[1:3] == ":/":
         return f"/mnt/{resolved[0].lower()}{resolved[2:]}"
@@ -100,6 +102,7 @@ def windows_to_wsl(path):
 
 
 def run_chunk(jobs, config, timeout):
+    """Run one persistent WSL worker so JAX/model compilation is amortized."""
     af2 = config["af2"]
     command = (
         f"cd {shlex.quote(windows_to_wsl(ROOT))} && "
@@ -107,9 +110,13 @@ def run_chunk(jobs, config, timeout):
         "python scripts/utils/af2_wsl_batch.py "
         f"--recycle {int(af2['recycles'])}"
     )
+    # JSONL over stdin avoids shell-quoting amino-acid sequences and preserves
+    # one explicit result row per prediction slot.
     payload = "".join(json.dumps(job) + "\n" for job in jobs)
     completed = subprocess.run(
-        ["wsl.exe", "-d", af2["wsl_distribution"], "--", "bash", "-lc", command],
+        ["wsl.exe", "-d", os.environ.get(
+            "DISORDERFLOW_AF2_WSL_DISTRO", af2["wsl_distribution"]),
+         "--", "bash", "-lc", command],
         input=payload, capture_output=True, text=True, timeout=timeout)
     if completed.returncode:
         raise RuntimeError(completed.stderr[-4000:] or f"WSL exited {completed.returncode}")
@@ -143,6 +150,11 @@ def main():
     holdout_path = ROOT / config["holdout_manifest"]
     selection_config_path = ROOT / config["selection_config"]
     parameter_path = Path(config["af2"]["model_parameters"])
+    cache_root = os.environ.get("COLABFOLD_CACHE")
+    if cache_root:
+        parameter_path = Path(cache_root) / "params" / parameter_path.name
+    # The frozen config may retain its historical C: cache path. COLABFOLD_CACHE
+    # relocates only the physical model file while preserving the frozen hash.
     for path, expected in [
         (selection_path, config["selection_sha256"]),
         (holdout_path, config["holdout_manifest_sha256"]),
@@ -184,6 +196,8 @@ def main():
         "claim_boundary": config["claim_boundary"],
     }
     if args.resume and output_path.exists():
+        # Resume is allowed only when the requested entity/seed contract is
+        # byte-for-byte equivalent at the semantic level.
         previous = json.loads(output_path.read_text(encoding="utf-8"))
         for key in ("config_sha256", "selection_sha256", "requested"):
             if previous[key] != output[key]:
@@ -220,6 +234,7 @@ def main():
         try:
             returned, stderr = run_chunk(chunk, config, timeout=600 + 600 * len(chunk))
         except Exception as chunk_error:  # noqa: BLE001
+            # Record every failed slot below; never silently shrink the panel.
             returned = []
             stderr = ""
             error = f"{type(chunk_error).__name__}: {chunk_error}"
@@ -235,7 +250,10 @@ def main():
             success = bool(result and result.get("success"))
             plddt_seq = result.get("plddt_seq", []) if result else []
             antibody_length = len(entity["heavy_sequence"]) + len(entity["light_sequence"])
-            pdb_path = Path(job["output_pdb"].replace("/mnt/c/", "C:/"))
+            pdb_path = Path(job["output_pdb"])
+            if job["output_pdb"].startswith("/mnt/"):
+                drive = job["output_pdb"][5].upper()
+                pdb_path = Path(f"{drive}:/{job['output_pdb'][7:]}")
             row = {
                 "prediction_id": job["id"],
                 "entity_id": entity_id,

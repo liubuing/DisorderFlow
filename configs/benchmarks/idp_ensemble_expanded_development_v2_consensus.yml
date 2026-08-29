@@ -1,0 +1,21 @@
+schema_version: 1
+status: cross_model_consensus_rules_frozen_before_expanded_scoring
+classification: retrospective_expanded_idp_consensus_development
+
+consensus:
+  scorers: [proteinmpnn_mixed_likelihood, contact_chemistry]
+  require_nonzero_direction_from_each_scorer: true
+  require_same_direction: true
+  disagreement_action: abstain
+  ties_action: abstain
+  posthoc_threshold_search: forbidden
+
+robustness:
+  source_panels: [experimental_only, sampled_only, mixed]
+  source_direction_consistency_required: true
+  leave_one_pose_out_direction_consistency_required: true
+
+claim_boundary: >-
+  Consensus and robustness rules developed on exposed retrospective IDP data.
+  Agreement is computational only and cannot establish binding or final
+  confirmation.

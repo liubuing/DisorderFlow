@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "abstain_no_experimental_labels",
+  "assay_validity": {
+    "valid": false,
+    "native_target_complete": false,
+    "native_target_signal_pass": false,
+    "native_expression_pass": false,
+    "external_negative_complete": false,
+    "mock_complete": false
+  },
+  "complete_candidate_labels": 0,
+  "training_readiness": {
+    "eligible": false,
+    "checks": {
+      "minimum_qc_candidates": false,
+      "minimum_positive_binding_hits": false,
+      "minimum_scaffolds": false,
+      "minimum_targets": false
+    },
+    "observed_qc_candidates": 0,
+    "observed_positive_binding_hits": 0,
+    "observed_scaffolds": 1,
+    "observed_targets": 1,
+    "decision": "abstain_insufficient_data"
+  },
+  "probability_output": null,
+  "probability_status": "abstain_not_trained",
+  "claim_boundary": "no binder probability or affinity claim until blinded experimental labels and training gates pass",
+  "privacy_note": "Blind sample mappings and the blinding key are excluded."
+}

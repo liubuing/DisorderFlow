@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_pose_gate_before_candidate_generation",
+  "classification": "prospective_internal_expansion_not_external_confirmation",
+  "preparation": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/preparation.json",
+  "preparation_sha256": "6328c23cae97414c45a759c86f8ad96ab28eb7421c982e10cb548ab4f98fd848",
+  "components": [
+    {
+      "component_id": "ABETA_3U0T",
+      "target": "amyloid_beta",
+      "disease": "Alzheimer disease",
+      "antibody": "ponezumab",
+      "reference_path": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_3U0T/trimmed_reference.pdb",
+      "reference_sha256": "8ae63f2a5bc806eec1a26f5172e4933204b5169371629a1618dfce2e1ba26523",
+      "heavy_chain": "B",
+      "light_chain": "A",
+      "antigen_chain": "F",
+      "epitope": "AIIGLMVGGVV",
+      "h3_positions_1_indexed": [
+        97,
+        105
+      ],
+      "native_h3": "ASLYSLPVY",
+      "ensemble_provenance": "undocumented_computational_abeta42_coordinates",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_3U0T/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_3U0T/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_3U0T/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_3U0T/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_3U0T/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "ABETA_7BXV",
+      "target": "amyloid_beta",
+      "disease": "Alzheimer disease",
+      "antibody": "11A1",
+      "reference_path": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_7BXV/trimmed_reference.pdb",
+      "reference_sha256": "68e1e21bd5cde328cd56b5c2dac3eebb9b016f1cae33190bc3155e27b4201c1e",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "YEVHH",
+      "h3_positions_1_indexed": [
+        97,
+        107
+      ],
+      "native_h3": "AREAYPNYFDY",
+      "ensemble_provenance": "undocumented_computational_abeta42_coordinates",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_7BXV/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_7BXV/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_7BXV/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_7BXV/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ABETA_7BXV/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_6LRA",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "Tau2r3",
+      "reference_path": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6LRA/trimmed_reference.pdb",
+      "reference_sha256": "0c695e8c8b2ce9e15d8f3ce09e69824cb145410eecce5dc5fec8c80a1b9b84a4",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "C",
+      "epitope": "VQIINK",
+      "h3_positions_1_indexed": [
+        97,
+        108
+      ],
+      "native_h3": "ARSTYYSGALDY",
+      "ensemble_provenance": "experimental_solution_nmr_antigen_ensemble",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6LRA/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6LRA/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6LRA/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6LRA/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6LRA/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "ASYN_2X6M",
+      "target": "alpha_synuclein",
+      "disease": "Parkinson disease",
+      "antibody": "NbSyn2",
+      "reference_path": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_2X6M/trimmed_reference.pdb",
+      "reference_sha256": "ba0ff34e67ae63b5c157fd56a7ff6c011f2d95e9f8d5d04b5e4beb8346b3f621",
+      "heavy_chain": "A",
+      "light_chain": null,
+      "antigen_chain": "B",
+      "epitope": "DYEPEA",
+      "h3_positions_1_indexed": [
+        97,
+        114
+      ],
+      "native_h3": "AAKFSPGYCGGSWSNFGY",
+      "ensemble_provenance": "experimental_nmr_epr_antigen_ensemble",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_2X6M/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_2X6M/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_2X6M/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_2X6M/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_2X6M/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "ASYN_6CT7",
+      "target": "alpha_synuclein",
+      "disease": "Parkinson disease",
+      "antibody": "BIIB054",
+      "reference_path": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_6CT7/trimmed_reference.pdb",
+      "reference_sha256": "079e51a132567e04698e5feedf9f3dc08358dc8b584146a25ea3c7f30f62dd19",
+      "heavy_chain": "A",
+      "light_chain": "B",
+      "antigen_chain": "S",
+      "epitope": "MDVFMKGLSK",
+      "h3_positions_1_indexed": [
+        99,
+        102
+      ],
+      "native_h3": "TSAH",
+      "ensemble_provenance": "experimental_nmr_epr_antigen_ensemble",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_6CT7/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_6CT7/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_6CT7/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_6CT7/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/ASYN_6CT7/poses/pose_4.pdb"
+      ]
+    },
+    {
+      "component_id": "TAU_6PXR",
+      "target": "tau",
+      "disease": "tauopathy",
+      "antibody": "gosuranemab",
+      "reference_path": "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6PXR/trimmed_reference.pdb",
+      "reference_sha256": "3930d55192c1f83847e97ed07a8126ad66b030a29c61c85ba610ace36f9ed107",
+      "heavy_chain": "H",
+      "light_chain": "L",
+      "antigen_chain": "A",
+      "epitope": "AGTYGLGD",
+      "h3_positions_1_indexed": [
+        96,
+        105
+      ],
+      "native_h3": "SISWDGAMDY",
+      "ensemble_provenance": "restrained_openmm_local_neighborhood_not_equilibrium_ensemble",
+      "pose_paths": [
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6PXR/poses/pose_0.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6PXR/poses/pose_1.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6PXR/poses/pose_2.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6PXR/poses/pose_3.pdb",
+        "reviewer_outputs/idp_ensemble_expansion_6ref_v1/work/TAU_6PXR/poses/pose_4.pdb"
+      ]
+    }
+  ],
+  "claim_boundary": "internal computational expansion with mixed ensemble provenance; 6PXR is a local synthetic sensitivity component; no experimental binding or external confirmation claim"
+}

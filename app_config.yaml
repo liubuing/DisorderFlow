@@ -1,7 +1,9 @@
 alphafold:
   af2:
+    backend: wsl
+    distribution: Ubuntu-24.04-D
+    environment: venv_wsl
     executable: colabfold_batch
-    venv: ../venv
   defaults:
     calc_extra_ptm: false
     model_type: auto
@@ -146,7 +148,7 @@ misfolding_disease:
   targets_dir: data/misfolding_targets
 models:
   bfn:
-    checkpoint: logs/pretrained/best.pt
+    checkpoint: logs/bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032/checkpoints/best.pt
     config: configs/demo_design.yml
   esmif:
     model_name: esm_if1_gvp4_t16_142M_UR50

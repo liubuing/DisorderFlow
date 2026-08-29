@@ -1,0 +1,98 @@
+[
+  {
+    "source_lmdb_key": "00001289",
+    "pdb_id": "Q09470",
+    "sequence_length": 495,
+    "sequence_sha256": "cbc2a6bf3f8b46c7661c52357530b5801310b5871ee5e87dbc4b8e77356c5ce5",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001290",
+    "pdb_id": "P49802",
+    "sequence_length": 495,
+    "sequence_sha256": "4d13ab193dbb9c71b6c714977e8b45de91c658a825286fc39ae2a618f01f4767",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001291",
+    "pdb_id": "Q96BR1",
+    "sequence_length": 496,
+    "sequence_sha256": "0297752cbbb160a1a2fee4880b98710b630abae0d51abd20970073bd8159c2af",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001292",
+    "pdb_id": "Q15173",
+    "sequence_length": 497,
+    "sequence_sha256": "43867d2f4672d155ef5ab0cc2408c80956999fdcd48f6dd5ef617ddd4e0ebc7a",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001293",
+    "pdb_id": "O60779",
+    "sequence_length": 497,
+    "sequence_sha256": "20d22876a581dc3e6efd3e3c71157d52c6d3d6b2fbda9cc9ff375812e93559a6",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001294",
+    "pdb_id": "O43174",
+    "sequence_length": 497,
+    "sequence_sha256": "90595514e8943fb2a0668dc14ea9841297ca49846d9007639f566f839f2e667d",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001295",
+    "pdb_id": "P30926",
+    "sequence_length": 498,
+    "sequence_sha256": "7b3b725049ac2fb96ebef0cdf164e1481c17175ae62497805f495c610f5c06e2",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001296",
+    "pdb_id": "Q99640",
+    "sequence_length": 499,
+    "sequence_sha256": "2cab22d8399fa58cbfba383aa6374d500b9af78767b6549f78194314ca9287da",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001297",
+    "pdb_id": "Q13557",
+    "sequence_length": 499,
+    "sequence_sha256": "4cd6d2c5f2e848d0b26737fbb8e87d1c46b09a043399076bf735f8ed79a18ec1",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001298",
+    "pdb_id": "P16389",
+    "sequence_length": 499,
+    "sequence_sha256": "d351d858d9c6961dbb7afc241499c7ad4ddd0799d5e6d8bafd7696bf81b00947",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001299",
+    "pdb_id": "P53041",
+    "sequence_length": 499,
+    "sequence_sha256": "f486bd8745bc94336c6ed7b32c34b73eaf0259ff1b489161802856de636d3342",
+    "disorder_source": "folded",
+    "is_idp": null
+  },
+  {
+    "source_lmdb_key": "00001300",
+    "pdb_id": "Q9Y6A2",
+    "sequence_length": 500,
+    "sequence_sha256": "ff4962a4e5c623868caea8a7527dd4bea19a76126d7cdbfa24fe1d4c75fc58a2",
+    "disorder_source": "folded",
+    "is_idp": null
+  }
+]

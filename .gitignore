@@ -67,14 +67,17 @@ af2_wsl_*.py
 # Temp scripts
 _gen_*.py
 
-# Word temp files
+# Office temp files
 ~$*.docx
+~$*.pptx
+~$*.xlsx
 
 # Design results (contain user data)
 design_results/
 idp_design_results/
 results/
 batch_results/
+reviewer_outputs/
 
 # Analysis outputs
 disorder_analysis.txt

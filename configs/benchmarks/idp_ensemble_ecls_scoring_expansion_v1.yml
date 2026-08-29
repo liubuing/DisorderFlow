@@ -1,0 +1,54 @@
+schema_version: 1
+status: expansion_protocol_frozen_before_candidate_ecls_score_access
+classification: prospective_internal_expansion_not_external_confirmation
+
+component_manifest:
+  path: configs/benchmarks/idp_ensemble_expansion_6ref_v1_components.json
+  sha256: 93792cef405e9084d4a2c620ba47d8a4be7877addacfbd2e8f8b7cb762e3d28f
+raw_generation:
+  path: reviewer_outputs/idp_ensemble_matched_generation_expansion_v1/raw_generation.json
+  sha256: 3b2aa48080361d1cabe477b7acc7d5e65fd0b423ee534f2231d1ee9f2af5f639
+preparation:
+  path: reviewer_outputs/idp_ensemble_expansion_6ref_v1/preparation.json
+  sha256: 6328c23cae97414c45a759c86f8ad96ab28eb7421c982e10cb548ab4f98fd848
+pose_source: component_manifest_pose_paths
+
+proteinmpnn:
+  script: ProteinMPNN/protein_mpnn_run.py
+  weights: ProteinMPNN/vanilla_model_weights
+  checkpoint: ProteinMPNN/vanilla_model_weights/v_48_020.pt
+  checkpoint_sha256: c9cb4a671d79604111231f8dbfc7c590e06f1197453b7a6854ac6661a642f5bd
+  model_name: v_48_020
+  seed: 8161
+  conditional_probs_only_backbone: true
+
+candidate_pool:
+  methods: [proteinmpnn, single_conformer_bfn, esm_if]
+  deduplicate_sequences_within_component_method: true
+
+primary:
+  endpoint: epitope_conditioning_gain
+  formula: apo_h3_nll_minus_complex_h3_nll
+  direction: higher_is_better
+  selection_protocol: leave_one_conformer_out
+  ensemble_aggregation:
+    p25_weight: 0.45
+    minimum_weight: 0.25
+    mean_weight: 0.20
+    standard_deviation_penalty: 0.10
+  single_state_comparator: median_heldout_score_of_each_training_conformer_winner
+
+statistics:
+  inference_unit: independent_antibody_reference_component
+  within_component_aggregation: mean_across_five_heldout_conformers
+  bootstrap_trials: 10000
+  bootstrap_seed: 8171
+  exact_paired_sign_flip: true
+
+development_gates:
+  minimum_valid_components_per_generator: 6
+  minimum_positive_component_fraction: 0.6666666666666666
+  require_component_bootstrap_ci95_lower_above_zero: true
+
+output: reviewer_outputs/idp_ensemble_ecls_scoring_expansion_v1/analysis.json
+claim_boundary: outcome-unexposed internal expansion using ProteinMPNN epitope-conditioned likelihood on mixed-provenance computational poses; not external confirmation or experimental binding evidence

@@ -2,7 +2,7 @@
 # V13.1 A2→A3 sequential training + P2 probes
 # Single submission to avoid task cleanup issues
 set -e
-cd /mnt/c/biological/DisorderFlow
+cd /mnt/d/biological/DisorderFlow
 source venv_wsl/bin/activate
 
 V20_CKPT="logs/bfn_v20_amplify_xpu_2026_07_02__21_32_16_v20_win/checkpoints/best.pt"

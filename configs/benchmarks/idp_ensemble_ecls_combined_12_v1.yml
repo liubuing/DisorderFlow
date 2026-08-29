@@ -1,0 +1,30 @@
+schema_version: 1
+status: predeclared_gate_applied_after_expansion_without_retuning
+classification: combined_development_and_internal_expansion_not_external_confirmation
+
+development_analysis:
+  path: reviewer_outputs/idp_ensemble_ecls_scoring_dev_v1/analysis.json
+  sha256: ea40c8e07ed7985a56c13f6a00626485791305effeb2c7749c78fcb840413acf
+expansion_analysis:
+  path: reviewer_outputs/idp_ensemble_ecls_scoring_expansion_v1/analysis.json
+  sha256: ce1ea4ffb61801562ed94a928a46bf5001e65b9c6551a529b12bc99df670916e
+
+primary_method: proteinmpnn
+methods: [proteinmpnn, single_conformer_bfn, esm_if]
+statistics:
+  inference_unit: independent_antibody_reference_component
+  bootstrap_trials: 10000
+  bootstrap_seed: 8181
+  exact_paired_sign_flip: true
+
+predeclared_gates:
+  minimum_valid_components: 12
+  minimum_strictly_positive_components: 8
+  require_component_bootstrap_ci95_lower_above_zero: true
+
+sensitivity:
+  excluded_component: TAU_6PXR
+  reason: synthetic_local_openmm_ensemble
+
+output: reviewer_outputs/idp_ensemble_ecls_combined_12_v1/analysis.json
+claim_boundary: combines six exposed development components with six outcome-unexposed internal expansion components, one with synthetic local ensemble provenance; not an external or experimental confirmation

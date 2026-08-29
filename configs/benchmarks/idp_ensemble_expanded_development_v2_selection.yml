@@ -1,0 +1,21 @@
+schema_version: 1
+status: balanced_selection_frozen_before_coordinate_materialization
+classification: retrospective_balanced_expanded_idp_development_panel
+
+input:
+  registry: reviewer_outputs/idp_ensemble_expanded_development_v2/registry.json
+  registry_sha256: 5f691b445ab71ec7d98838e2cc168387d16bbab025641015d988de163631d4ab
+
+selection:
+  maximum_components_per_target: 6
+  maximum_components_per_lineage_target: 1
+  minimum_targets: 6
+  preference_order: [valid_lower_resolution, pdb_id, heavy_chain]
+  no_score_or_outcome_based_selection: true
+
+output: reviewer_outputs/idp_ensemble_expanded_development_v2/balanced_panel.json
+
+claim_boundary: >-
+  Balanced retrospective method-development panel selected only from exposed
+  registry metadata. It is not independent, untouched, confirmatory, or
+  experimental evidence.

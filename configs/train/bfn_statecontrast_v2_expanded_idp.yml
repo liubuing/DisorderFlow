@@ -1,0 +1,88 @@
+# Development-only StateContrast-v2 contract. Do not point this configuration
+# at final_confirmation_v1 or any untouched cohort.
+lineage:
+  classification: exposed_expanded_idp_development_only
+  allowed_initializer: logs/bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032/checkpoints/best.pt
+  allowed_initializer_sha256: ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252
+  prohibited_evaluation: configs/benchmarks/idp_ensemble_final_confirmation_v1.yml
+
+model:
+  type: antibody_bfn_statecontrast_v2
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+  train_structure: false
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 1.0
+    train_recycles: 1
+    label_smoothing: 0.03
+  statecontrast_v2:
+    hidden_dim: 256
+    apo_margin: 0.10
+    off_target_margin: 0.20
+    off_target_temperature: 0.25
+    minimum_source_mass: 0.10
+    maximum_pose_weight: 0.60
+    teacher_tie_epsilon: 0.0001
+    teacher_temperature: 0.25
+    require_off_target_state: true
+
+train:
+  amp_dtype: bfloat16
+  loss_weights:
+    seq: 1.0
+    state_contrast_v2: 1.0
+    pose_weight_kl: 0.05
+    independent_consistency: 0.20
+  freeze_backbone: false
+  max_iters: 5000
+  val_freq: 250
+  log_freq: 10
+  batch_size: 30
+  warmup_steps: 250
+  seed: 4201
+  max_grad_norm: 1.0
+  ema_decay: 0.999
+  early_stopping_patience: 12
+  optimizer:
+    type: adamw
+    lr: 2.e-5
+    weight_decay: 1.e-4
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 6
+    min_lr: 1.e-7
+
+dataset:
+  readiness_artifact: reviewer_outputs/statecontrast_v2_expanded_readiness_v1/status.json
+  isolation_artifact: reviewer_outputs/statecontrast_v2_cross_validation_v2/isolation_audit.json
+  train:
+    type: statecontrast_v2_pose_manifest
+    manifest_path: reviewer_outputs/statecontrast_v2_expanded_states_v1/training_manifest.json
+    split: train
+    transform:
+      - type: mask_single_cdr
+        selection: H_CDR3
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor
+  val:
+    type: statecontrast_v2_pose_manifest
+    manifest_path: reviewer_outputs/statecontrast_v2_expanded_states_v1/training_manifest.json
+    split: val
+    transform:
+      - type: mask_single_cdr
+        selection: H_CDR3
+        augmentation: false
+      - type: merge_chains
+      - type: patch_around_anchor

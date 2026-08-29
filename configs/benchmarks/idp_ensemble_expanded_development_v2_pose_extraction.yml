@@ -1,0 +1,26 @@
+schema_version: 1
+status: pose_extraction_frozen_before_pdb_materialization
+classification: retrospective_expanded_idp_pose_development
+
+inputs:
+  structural_panel: reviewer_outputs/idp_ensemble_expanded_development_v2/structural_panel.json
+  structural_panel_sha256: f56f32dad7ba62dc3b527717206054b5994235b7cb5580573e3f74ceef38456c
+  scorer_inputs: reviewer_outputs/idp_ensemble_expanded_development_v2/scorer_input_manifest.json
+  scorer_inputs_sha256: 28caa83bdf9029e13c7ef3e5484d4ef7222e8880f0c17f39c2f90f04d3dfe5f9
+  donor_audit: reviewer_outputs/idp_ensemble_expanded_development_v2/donor_sequence_audit.json
+  donor_audit_sha256: 4902438ec7e0816eb37bfdd1a15f6b0ffd2498cd48bc2d6eeaf35d964189e385
+
+contact:
+  cutoff_angstrom: 4.5
+  standard_amino_acids_only: true
+
+outputs:
+  pose_directory: reviewer_outputs/idp_ensemble_expanded_development_v2/experimental_poses
+  manifest: reviewer_outputs/idp_ensemble_expanded_development_v2/experimental_pose_manifest.json
+  sampling_admission: reviewer_outputs/idp_ensemble_expanded_development_v2/sampling_admission.json
+  generation_readiness: reviewer_outputs/idp_ensemble_expanded_development_v2/generation_readiness.json
+
+claim_boundary: >-
+  Experimental and reference pose extraction for exposed retrospective
+  development only. Sampled poses remain computational and cannot support
+  final confirmation.

@@ -234,6 +234,7 @@ def write_standardized_backbone(
     chains: Sequence[str],
     *,
     model_index: int = 0,
+    skip_backbone_check_chains: Optional[Sequence[str]] = None,
 ) -> Dict:
     """Write selected chains with contiguous numbering for inverse-folding tools."""
     parser = PDBParser(QUIET=True)
@@ -252,6 +253,7 @@ def write_standardized_backbone(
     lines = []
     serial = 1
     manifest = {}
+    skip = set(skip_backbone_check_chains) if skip_backbone_check_chains else set()
     for chain_id in chains:
         residues = _chain_residues(available[chain_id], chain_id)
         residue_rows = []
@@ -259,10 +261,12 @@ def write_standardized_backbone(
         for new_resseq, residue in enumerate(residues, 1):
             atoms = dict(residue.atoms)
             missing_backbone = [name for name in ("N", "CA", "C", "O") if name not in atoms]
-            if missing_backbone:
+            if missing_backbone and chain_id not in skip:
                 raise ValueError(
                     f"Incomplete backbone at {residue.residue_id}: {missing_backbone}")
             for atom_name in ("N", "CA", "C", "O"):
+                if atom_name not in atoms:
+                    continue
                 x, y, z = atoms[atom_name]
                 element = atom_name[0]
                 lines.append(

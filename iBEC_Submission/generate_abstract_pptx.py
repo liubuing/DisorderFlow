@@ -315,7 +315,7 @@ def build_pptx():
         ['Metric', 'Value'],
         ['Total structures', '31'],
         ['Torsion hits (target tier)', '26/31 (83.9%)'],
-        ['Valid structures after recovery', '25/26 (96.2%)'],
+        ['Valid structures overall', '25/31 (80.6%)'],
         ['Mean held-out contact recovery', '0.581'],
         ['95% CI', '[0.533, 0.635]'],
         ['Positive recovery fraction', '100%'],
@@ -331,14 +331,14 @@ def build_pptx():
     shape.line.color.rgb = RGBColor(0xDE, 0xE2, 0xE6)
 
     add_text_box(slide, 5.7, 1.9, 3.6, 0.3,
-                 "T2 (failed) vs T2.1 v2 (success)", font_size=11, bold=True, color=DARK_TEXT)
+                 "T2 vs T2.1 v2 (recalibrated)", font_size=11, bold=True, color=DARK_TEXT)
     add_text_box(slide, 5.7, 2.3, 3.6, 1.5,
                  "T2:  3/7 valid, recovery = -0.017\n"
                  "       (high-temp perturbation, poor calibration)\n\n"
-                 "T2.1 v2:  25/26 valid, recovery = 0.581\n"
+                  "T2.1 v2:  25/31 valid, recovery = 0.581\n"
                  "       (deterministic torsion, 100 kJ/mol/nm2)\n\n"
-                 "Root cause: parameter calibration, not\n"
-                 "fundamental method limitation.",
+                  "Random restraint recovery = 0.619;\n"
+                  "contact-specific mechanism unsupported.",
                  font_size=10, color=GRAY)
 
     # Bottom highlight
@@ -349,13 +349,13 @@ def build_pptx():
     shape.fill.fore_color.rgb = GREEN_HL
     shape.line.fill.background()
     add_text_box(slide, 0.9, 4.55, 8.1, 0.4,
-                 "Gate pass: 96.2% valid structures, 100% positive contact recovery, mean recovery 0.581",
+                  "80.6% valid overall; random restraints outperform supplied contacts (0.619 vs 0.581)",
                  font_size=11, bold=True, color=RGBColor(0x15, 0x57, 0x24))
 
     # ==================== SLIDE 7: 4HIX DESIGN ====================
     slide = prs.slides.add_slide(blank_layout)
     set_slide_bg(slide, BG_WHITE)
-    add_section_header(slide, 6, "4HIX IDP Antibody Design Validation")
+    add_section_header(slide, 6, "4HIX ProteinMPNN Computational Case Study")
     add_footer(slide, 7)
 
     add_text_box(slide, 0.7, 1.1, 8.5, 0.5,
@@ -388,7 +388,7 @@ def build_pptx():
     add_bullet_slide(slide, 5.2, 2.1, 4.3, 2.5, [
         "20/20 designs pass AF2 validation",
         "Top 3 exceed native ipTM (0.449)",
-        "Best design: ipTM = 0.462 (+2.9%)",
+        "Best design: ipTM = 0.462 (+2.8%, descriptive difference)",
         "AF2 chain separator fix: VH:VL vs concatenated prevents 4.5x ipTM underestimation",
     ], font_size=11)
 
@@ -407,7 +407,7 @@ def build_pptx():
     evidence = [
         ("1. ECLS Temporal Final", "n=15 clusters, post-2021, sealed", "Positive discrimination (0.172, 80%+)"),
         ("2. ECLS Adaptation", "n=46 clusters, exposed", "Replicates temporal final pattern"),
-        ("3. T2.1 v2 Recovery", "n=31 structures, 96.2% valid", "Physical contact recovery (0.581)"),
+        ("3. T2.1 v2 Recovery", "n=31 structures, 80.6% valid", "Random control higher than supplied"),
         ("4. 4HIX Design", "n=20 designs, 20/20 AF2 pass", "Prospective design (top ipTM 0.462)"),
         ("5. T1 Ensemble", "n=7 clusters", "Single-pose overconfidence (-0.200)"),
         ("6. Generator Calibration", "n=7 clusters, exploratory", "Calibrated reranker works"),
@@ -479,7 +479,7 @@ def build_pptx():
                  "1. Disorder head: training batches never contained disorder_label -> PaddingCollate dropped the field -> loss never fired. "
                  "Fixed with explicit label injection.\n"
                  "2. AF2 chain separator: antibody chains must use VH:VL (not concatenation) or ipTM drops 4.5x.\n"
-                 "3. T2.1 perturbation: peptide restraint 25 -> 100 kJ/mol/nm2 improved valid fraction from 43% to 96.2%.",
+                  "3. T2.1 perturbation: recalibrated protocol reached 80.6% overall validity; mechanism unsupported.",
                  font_size=10, color=RGBColor(0x85, 0x6A, 0x04))
 
     # ==================== SLIDE 10: CONCLUSIONS ====================
@@ -493,7 +493,7 @@ def build_pptx():
     add_bullet_slide(slide, 0.7, 1.5, 8.5, 1.5, [
         "ECLS establishes epitope-conditioned CDR-H3 signal across 46 clusters (mean 0.217, 80.4% positive)",
         "Temporal transfer confirmed on sealed post-2021 data (mean 0.172, 80% positive, P=0.014)",
-        "T2.1 v2 achieves 96.2% valid structures with 100% positive contact recovery (0.581)",
+        "T2.1 v2: 80.6% valid overall; random control 0.619 vs supplied 0.581",
         "4HIX prospective design: 20/20 pass AF2, top 3 exceed native ipTM",
         "Disorder-aware framework provides a principled approach to IDP antibody design",
     ], font_size=12)
@@ -513,7 +513,7 @@ def build_pptx():
     ], font_size=11)
 
     # Save
-    output_path = r"C:\biological\DisorderFlow\iBEC_Submission\28-解析无序-技术摘要.pptx"
+    output_path = r"D:\biological\DisorderFlow\iBEC_Submission\28-解析无序-技术摘要.pptx"
     prs.save(output_path)
     print(f"PPTX saved: {output_path}")
     return output_path

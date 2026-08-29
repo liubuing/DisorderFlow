@@ -1,0 +1,54 @@
+schema_version: 1
+status: amended_after_abeta_sidechain_endpoint_degeneracy_detected
+classification: retrospective_development_not_confirmation
+
+component_manifest:
+  path: configs/benchmarks/idp_ensemble_multimethod_dev_v1_components.json
+  sha256: 47dbc7e817f3e8ea17a3372ffb3a6b133d2c72099d3c000233a3038e3d2a748c
+raw_generation:
+  path: reviewer_outputs/idp_ensemble_matched_generation_dev_v1/raw_generation.json
+  sha256: 8be698c4d6ca577c1903e7c7a43c1a575d365da2f6e1c1d1be7b8fe14f8b1ee8
+pose_audits:
+  abeta:
+    path: outputs/abeta_multiconf_pose_panel_v1/pose_panel_audit.json
+    sha256: efd8fd39c646cd521e936c80d3d4cb2d9679fc21bced970632411fc6f1e0293f
+  nonabeta:
+    path: outputs/non_abeta_idp_pose_panels_v1/pose_panel_audit.json
+    sha256: 31ddce4f7b0da951bcdca7ecd64e970363f5ea4f3a660f655e228feadd2a9273
+
+candidate_pool:
+  methods: [proteinmpnn, single_conformer_bfn, esm_if]
+  expected_slots_per_component_method: 3
+  expected_raw_candidates_per_slot: 8
+  deduplicate_sequences_within_component_method: true
+  retain_native_if_generated: true
+
+scoring:
+  endpoint: h3_contact_chemistry_score
+  direction: higher_is_better
+  contact_cutoff_angstrom: 4.5
+  sidechain_cutoff_angstrom: 5.0
+  minimum_sidechain_contacts_per_conformer: 1
+  conformers_per_component: 5
+  selection_protocol: leave_one_conformer_out
+  ensemble_aggregation:
+    p25_weight: 0.45
+    minimum_weight: 0.25
+    mean_weight: 0.20
+    standard_deviation_penalty: 0.10
+  single_state_comparator: median_heldout_score_of_each_training_conformer_winner
+
+statistics:
+  inference_unit: independent_antibody_reference_component
+  within_component_aggregation: mean_across_five_heldout_conformers
+  bootstrap_trials: 10000
+  bootstrap_seed: 8129
+  exact_paired_sign_flip: true
+
+development_gates:
+  minimum_valid_components_per_generator: 6
+  minimum_positive_component_fraction: 0.6666666666666666
+  require_component_bootstrap_ci95_lower_above_zero: true
+
+output: reviewer_outputs/idp_ensemble_matched_scoring_dev_v1/analysis.json
+claim_boundary: matched-generator H3 contact-chemistry selection where antigen sidechains are resolved; backbone-only A-beta poses are endpoint-invalid; not an ensemble-aware BFN generator, binding, affinity, specificity, efficacy, or confirmatory result

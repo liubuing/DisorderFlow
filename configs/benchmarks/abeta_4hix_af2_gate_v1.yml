@@ -1,0 +1,55 @@
+schema_version: 1
+status: frozen_before_prospective_shortlist_af2
+purpose: multi_seed_af2_and_independent_interface_triage_of_3d6_h3_shortlist
+claim_boundary: internal computational triage only; not binding, affinity, specificity, or independent confirmation
+input:
+  prospective_results: results/prospective/abeta_4hix_prospective_v1/results.json
+  prospective_results_sha256: f883fc0539ea972f71bd2971581a1de47c43abf163ed428820f47fca2bbcecdf
+  scaffold: data/anti_abeta_refs/4HIX.pdb
+  scaffold_sha256: 2bb5404a3b66741f02e89b899f36982fb33f16f042149e3614435f4748004201
+  proteinmpnn_control: results/ablation/4hix_mpnn_matched_v1.json
+  proteinmpnn_control_sha256: 3ec4453668725deacbc689a372f3fc54209d713731c58018960182e680ab43dd
+  expected_candidates: 24
+  native_h3: VRYDHYSGSSDY
+  heavy_chain: H
+  light_chain: L
+  antigen_chain: A
+controls:
+  required: [native, proteinmpnn_best, composition_shuffle]
+  composition_shuffle_seed: 6203
+af2:
+  worker: scripts/utils/af2_wsl_batch.py
+  worker_sha256: 5fdf0227026095ab71a6ea663629e1997d74a3aa95beff3fa90c2f89c347e761
+  wsl_distribution: Ubuntu-24.04-D
+  environment: venv_wsl
+  model_type: alphafold2_multimer_v3
+  model_number: 1
+  msa_mode: single_sequence_two_identical_rows
+  templates: disabled_zero_features
+  seeds: [6101, 6113, 6121]
+  recycles: 3
+  chunk_size: 27
+  retain_full_pae_matrix: false
+  prediction_entities: 27
+  prediction_slots: 81
+selection:
+  require_all_seed_success: true
+  minimum_median_iptm_relative_to_native: -0.03
+  minimum_worst_iptm_relative_to_native: -0.05
+  maximum_iptm_seed_range: 0.12
+  maximum_median_interface_pae_relative_to_native: 2.0
+  maximum_median_prodigy_dg_relative_to_native_kcal_mol: 1.5
+  require_not_below_both_native_and_proteinmpnn_median_iptm: true
+  minimum_pairwise_hamming: 2
+  shortlist_target: 12
+  ranking:
+    median_iptm: 0.4
+    worst_iptm: 0.2
+    median_interface_pae_inverse: 0.2
+    median_prodigy_dg_inverse: 0.2
+output:
+  af2_results: results/prospective/abeta_4hix_af2_gate_v1/af2_results.json
+  structures: results/prospective/abeta_4hix_af2_gate_v1/pdb
+  analysis: results/prospective/abeta_4hix_af2_gate_v1/analysis.json
+  shortlist_csv: results/prospective/abeta_4hix_af2_gate_v1/shortlist_for_expression_prep.csv
+  shortlist_fasta: results/prospective/abeta_4hix_af2_gate_v1/shortlist_for_expression_prep.fasta

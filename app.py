@@ -18,6 +18,7 @@ import misfolding_knowledge_base as mkb
 import misfolding_pipeline as mfp
 import closed_loop_scorer as cls
 import closed_loop_orchestrator as clo
+from runtime_environment import build_colabfold_command, colabfold_environment
 
 PROJECT_DIR = Path(__file__).parent
 CONFIG_FILE = PROJECT_DIR / 'app_config.yaml'
@@ -451,25 +452,16 @@ def run_bfn_protein(pdb_path, region_spec, num_samples, stochastic, eval_mode):
     from disorderflow.utils.data import PaddingCollate
     from disorderflow.utils.transforms import get_transform
 
-    regions = {}
-    for cid, spec in re.findall(r'([A-Za-z0-9]+):([0-9,\-\s]+)', region_spec):
-        indices = []
-        for seg in spec.split(','):
-            seg = seg.strip()
-            if not seg: continue
-            if '-' in seg:
-                a, b = seg.split('-')
-                indices.extend(range(int(a.strip()), int(b.strip())+1))
-            else:
-                indices.append(int(seg))
-        regions[cid] = sorted(set(indices))
+    from modules.bfn_loader import parse_region_spec
 
-    if not regions:
+    try:
+        regions = parse_region_spec(region_spec)
+    except ValueError:
         return f"区域格式错误: {region_spec}", "", []
 
     model, config = load_bfn()
     seed_all(getattr(config.sampling, 'seed', 42))
-    structure = preprocess_protein_structure(pdb_path, chain_ids=list(regions.keys()))
+    structure = preprocess_protein_structure(pdb_path)
     if structure is None:
         return "错误：无法解析结构", "", []
 
@@ -893,7 +885,7 @@ def run_alphafold_prediction(fasta_text, fasta_file,
     cfg = load_app_config()
     af_cfg = cfg.get('alphafold', {})
     default_out = af_cfg.get('output_dir', 'alphafold_results')
-    venv_path = af_cfg.get('af2', {}).get('venv', str(PROJECT_DIR / 'venv'))
+    af2_runtime = af_cfg.get('af2', {})
 
     out_dir = Path(default_out)
     out_dir.mkdir(exist_ok=True)
@@ -906,17 +898,11 @@ def run_alphafold_prediction(fasta_text, fasta_file,
     with open(fasta_path, 'w', encoding='ascii') as f:
         f.write(safe_text)
 
-    colabfold_exe = str(Path(venv_path) / 'Scripts' / 'colabfold_batch.exe')
-    if not os.path.exists(colabfold_exe):
-        colabfold_exe = str(Path(venv_path) / 'Scripts' / 'colabfold_batch')
-
     stop_at = af_cfg.get('defaults', {}).get('stop_at_score', 85)
     model_type = af_cfg.get('defaults', {}).get('model_type', 'auto')
     rank_mode = af_cfg.get('defaults', {}).get('rank', 'auto')
 
-    cmd = [
-        colabfold_exe,
-        str(fasta_path), str(out_dir / pid),
+    arguments = [
         '--num-models', str(int(num_models)),
         '--num-recycle', str(int(num_recycle)),
         '--stop-at-score', str(int(stop_at)),
@@ -924,9 +910,15 @@ def run_alphafold_prediction(fasta_text, fasta_file,
         '--rank', rank_mode,
     ]
     if af_cfg.get('defaults', {}).get('calc_extra_ptm', False):
-        cmd.append('--calc-extra-ptm')
+        arguments.append('--calc-extra-ptm')
     if use_dropout:
-        cmd.append('--use-dropout')
+        arguments.append('--use-dropout')
+
+    try:
+        cmd = build_colabfold_command(
+            af2_runtime, PROJECT_DIR, fasta_path, out_dir / pid, arguments)
+    except FileNotFoundError as exc:
+        return f"AlphaFold2 环境错误: {exc}", None, None
 
     progress(0.05, desc="启动 AlphaFold2 (ColabFold)...")
     log_lines = [f"🔮 AlphaFold2 (ColabFold) 结构预测",
@@ -934,11 +926,10 @@ def run_alphafold_prediction(fasta_text, fasta_file,
                  f"序列: {seqs[0][0]} ({len(seqs[0][1])} aa)",
                  f"模型: {model_type}  |  回收: {int(num_recycle)}  |  达标分: {int(stop_at)}",
                  f"输出: {out_dir / pid}/", f"",
-                 f"⏱ CPU 预测较慢，请耐心等待（小蛋白约 5-15 分钟）"]
+                 f"⏱ 当前使用 WSL2 GPU，首次运行会包含 JAX 编译和模型加载时间"]
 
     try:
-        env = os.environ.copy()
-        env['PATH'] = str(Path(venv_path) / 'Scripts') + os.pathsep + env.get('PATH', '')
+        env = colabfold_environment(af2_runtime, PROJECT_DIR)
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=3600,
                           cwd=str(PROJECT_DIR), env=env)
         out_text = r.stdout[-3000:] if len(r.stdout) > 3000 else r.stdout
@@ -1110,18 +1101,26 @@ def run_target_design(target_pdb, target_chain, epitope_region,
     validation_text = ""
 
     try:
+        complex_chains = None
+        if design_tool == "BFN (抗体CDR设计)":
+            complex_chains = detect_chains(antibody_pdb)
+            if target_chain not in complex_chains:
+                return (
+                    "BFN靶点设计要求抗体PDB本身包含已配准的抗原链；"
+                    f"当前复合物缺少链 {target_chain}。不能合并两个独立坐标系的PDB。",
+                    "", "", None)
         # If constraint mode is on, find antibody residues facing epitope
         design_region = None
         if constraint_mode:
             facing = tdh.find_residues_facing_region(
-                antibody_pdb, ab_heavy, all_epitope_resseqs,
+                antibody_pdb, target_chain, all_epitope_resseqs,
                 ab_heavy, constraint_cutoff
             )
             # Also check light chain if specified
             facing_l = []
             if ab_light and ab_light.strip():
                 facing_l = tdh.find_residues_facing_region(
-                    antibody_pdb, ab_heavy, all_epitope_resseqs,
+                    antibody_pdb, target_chain, all_epitope_resseqs,
                     ab_light, constraint_cutoff
                 )
             design_lines.append(f"距离约束模式 (cutoff={constraint_cutoff}Å):")
@@ -1153,9 +1152,32 @@ def run_target_design(target_pdb, target_chain, epitope_region,
         # Run selected design tool
         results_list = []
         if design_tool == "BFN (抗体CDR设计)":
-            # Use BFN protein mode with computed region
-            text, fasta_str, results_list = run_bfn_protein(antibody_pdb, design_region,
-                                              int(bfn_samples), bool(bfn_stochastic), bool(bfn_eval))
+            from modules.bfn_loader import run_bfn_design
+
+            context_chains = [
+                chain for chain in complex_chains
+                if chain not in {ab_heavy, ab_light}
+            ]
+            if ab_light and ab_light in complex_chains:
+                context_chains.insert(0, ab_light)
+            results_list = run_bfn_design(
+                antibody_pdb,
+                design_region,
+                num_samples=int(bfn_samples),
+                stochastic=bool(bfn_stochastic),
+                context_chains=context_chains,
+                antigen_chains=[target_chain],
+                device=DEVICE,
+            )
+            text = "\n".join(
+                f"#{index + 1}: {row['sequence']} | PPL={row['ppl']:.2f} | "
+                f"ipTM={row['iptm']:.3f}"
+                for index, row in enumerate(results_list)
+            )
+            fasta_str = "\n".join(
+                f">BFN_target_sample_{index + 1}\n{row['sequence']}"
+                for index, row in enumerate(results_list)
+            )
         elif design_tool == "ProteinMPNN":
             ab_chains = ab_heavy
             if ab_light and ab_light.strip():

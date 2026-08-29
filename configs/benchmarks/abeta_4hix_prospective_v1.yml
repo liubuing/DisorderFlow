@@ -1,0 +1,80 @@
+schema_version: 1
+status: frozen_before_prospective_candidate_generation
+purpose: conservative_3d6_h3_optimization_against_abeta_coordinate_panel
+claim_boundary: computational candidate triage only; no binding, affinity, or specificity claim
+design:
+  scaffold: data/anti_abeta_refs/4HIX.pdb
+  scaffold_sha256: 2bb5404a3b66741f02e89b899f36982fb33f16f042149e3614435f4748004201
+  heavy_chain: H
+  light_chain: L
+  deposited_antigen_chain: A
+  region_spec: H:96-107
+  native_h3: VRYDHYSGSSDY
+  mutation_count: {minimum: 1, maximum: 4}
+  h1_h2_design: false
+model:
+  checkpoint: logs/bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032/checkpoints/best.pt
+  checkpoint_sha256: ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252
+  fixed_t: 0.5
+  score_batch_size: 32
+coordinate_panel:
+  - id: deposited_4hix_hexapeptide
+    class: deposited_complex
+    path: data/anti_abeta_refs/4HIX.pdb
+    sha256: 2bb5404a3b66741f02e89b899f36982fb33f16f042149e3614435f4748004201
+    antigen_chain: A
+  - id: template_transfer_seed0
+    class: template_transferred_abeta42_pose
+    path: data/abeta_pose_panels/template_transfer_v1/4HIX/abeta42_seed0_42_pose.pdb
+    sha256: 08f315819f0fadb7808c3ec43cc39b619082a306d451088cd18ed74bae1d34e8
+    antigen_chain: P
+  - id: template_transfer_seed1
+    class: template_transferred_abeta42_pose
+    path: data/abeta_pose_panels/template_transfer_v1/4HIX/abeta42_seed1_42_pose.pdb
+    sha256: eb34315d9fd8f57f6493c4cbefdb319d301e212d312b0175c62d0411fda84fb8
+    antigen_chain: P
+  - id: template_transfer_seed2
+    class: template_transferred_abeta42_pose
+    path: data/abeta_pose_panels/template_transfer_v1/4HIX/abeta42_seed2_42_pose.pdb
+    sha256: c860525be386fdc1fa2effb174f2b5e0b1916f8ce92e70d731565f7d700d106d
+    antigen_chain: P
+  - id: template_transfer_seed3
+    class: template_transferred_abeta42_pose
+    path: data/abeta_pose_panels/template_transfer_v1/4HIX/abeta42_seed3_42_pose.pdb
+    sha256: 88b423faad5aa7e87fb7a5ac62980b541951e521f8a1aa0613c7ca1525f11147
+    antigen_chain: P
+  - id: template_transfer_seed4
+    class: template_transferred_abeta42_pose
+    path: data/abeta_pose_panels/template_transfer_v1/4HIX/abeta42_seed4_42_pose.pdb
+    sha256: 1e9ce7ba4958969d2b4c0031b144ef3981611f12a9f123c5b30b5a628e890810
+    antigen_chain: P
+generation:
+  seeds: [5201, 5213, 5227]
+  bfn_poses: [deposited_4hix_hexapeptide, template_transfer_seed0, template_transfer_seed3]
+  bfn_candidates_per_pose_seed: 24
+  conservative_library_size: 200
+  composition_shuffle_controls: 40
+  conservative_library_seed: 5231
+  shuffle_seed: 5233
+  proteinmpnn_control: results/ablation/4hix_mpnn_matched_v1.json
+  proteinmpnn_control_sha256: 3ec4453668725deacbc689a372f3fc54209d713731c58018960182e680ab43dd
+preflight:
+  minimum_pose_output_range: 1.0e-6
+  minimum_max_complex_minus_stripped_abs: 1.0e-5
+selection:
+  minimum_poses_better_than_native: 4
+  minimum_mean_state_delta_over_native: 0.0
+  maximum_worst_pose_deficit: 0.02
+  require_above_proteinmpnn_median: true
+  minimum_coordinate_sensitive_poses: 4
+  minimum_abs_complex_minus_stripped: 1.0e-5
+  maximum_full_heavy_developability_risk: 0.55
+  maximum_risk_increase_over_native: 0.05
+  maximum_absolute_h3_charge_change: 3
+  maximum_h3_hydrophobic_fraction_increase: 0.15
+  forbid_new_h3_n_glycosylation_motif: true
+  forbid_new_h3_cysteine: true
+  minimum_pairwise_hamming: 2
+  shortlist_minimum: 12
+  shortlist_maximum: 24
+output: results/prospective/abeta_4hix_prospective_v1/results.json

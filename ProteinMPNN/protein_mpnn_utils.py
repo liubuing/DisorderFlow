@@ -375,7 +375,12 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
 
         m_pad = np.pad(m, [[0,L_max-l]], 'constant', constant_values=(0.0, ))
         m_pos_pad = np.pad(m_pos, [[0,L_max-l]], 'constant', constant_values=(0.0, ))
-        omit_AA_mask_pad = np.pad(np.concatenate(omit_AA_mask_list,0), [[0,L_max-l]], 'constant', constant_values=(0.0, ))
+        omit_AA_mask_pad = np.pad(
+            np.concatenate(omit_AA_mask_list, 0),
+            [[0, L_max-l], [0, 0]],
+            'constant',
+            constant_values=(0.0, ),
+        )
         chain_M[i,:] = m_pad
         chain_M_pos[i,:] = m_pos_pad
         omit_AA_mask[i,] = omit_AA_mask_pad
@@ -1099,6 +1104,50 @@ class ProteinMPNN(nn.Module):
         log_probs = F.log_softmax(logits, dim=-1)
         return log_probs
 
+    def prefix_next_log_probs(self, X, S, mask, chain_M, residue_idx,
+                              chain_encoding_all, prefix_positions,
+                              target_position):
+        """Return logits at one position conditioned only on an explicit prefix.
+
+        The decoding order makes all context positions precede the target and
+        every non-prefix design position follow it. This prevents suffix
+        sequence values from entering the target decoder state.
+        """
+        length = X.shape[1]
+        prefix = set(int(position) for position in prefix_positions)
+        target = int(target_position)
+        if target < 0 or target >= length or target in prefix:
+            raise ValueError("Target must be an in-range position outside prefix")
+        if X.shape[0] > 1 and not torch.equal(
+            chain_M, chain_M[0:1].expand_as(chain_M)
+        ):
+            raise ValueError("Batched prefix decoding requires identical chain masks")
+        fixed_context = [
+            position for position in range(length)
+            if chain_M[0, position].item() == 0 and position not in prefix
+        ]
+        order = fixed_context + list(prefix) + [target]
+        order.extend(
+            position for position in range(length)
+            if position not in fixed_context
+            and position not in prefix
+            and position != target
+        )
+        decoding_order = torch.tensor(order, device=X.device, dtype=torch.long)
+        decoding_order = decoding_order.unsqueeze(0).repeat(X.shape[0], 1)
+        log_probs = self.forward(
+            X,
+            S,
+            mask,
+            chain_M,
+            residue_idx,
+            chain_encoding_all,
+            torch.zeros_like(S, dtype=torch.float32),
+            use_input_decoding_order=True,
+            decoding_order=decoding_order,
+        )
+        return log_probs[:, target, :]
+
 
 
     def sample(self, X, randn, S_true, chain_mask, chain_encoding_all, residue_idx, mask=None, temperature=1.0, omit_AAs_np=None, bias_AAs_np=None, chain_M_pos=None, omit_AA_mask=None, pssm_coef=None, pssm_bias=None, pssm_multi=None, pssm_log_odds_flag=None, pssm_log_odds_mask=None, pssm_bias_flag=None, bias_by_res=None):
@@ -1380,4 +1429,3 @@ class ProteinMPNN(nn.Module):
         logits = self.W_out(h_V)
         log_probs = F.log_softmax(logits, dim=-1)
         return log_probs
-

@@ -1,5 +1,5 @@
 import esm,esm.inverse_folding.util as util,torch,numpy as np,os,random,sys
-os.chdir("/mnt/c/biological/DisorderFlow")
+os.chdir("/mnt/d/biological/DisorderFlow")
 model,alphabet=esm.pretrained.esm_if1_gvp4_t16_142M_UR50();model.eval()
 from Bio.PDB import PDBParser
 AA3={"ALA":"A","ARG":"R","ASN":"N","ASP":"D","CYS":"C","GLU":"E","GLN":"Q","GLY":"G","HIS":"H","ILE":"I","LEU":"L","LYS":"K","MET":"M","PHE":"F","PRO":"P","SER":"S","THR":"T","TRP":"W","TYR":"Y","VAL":"V"}

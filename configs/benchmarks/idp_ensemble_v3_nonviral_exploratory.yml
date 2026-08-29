@@ -1,0 +1,35 @@
+schema_version: 1
+status: frozen_before_nonviral_subset_analysis
+classification: nonviral_general_antibody_computational_exploration
+
+source:
+  candidates: reviewer_outputs/idp_ensemble_correction_v3/candidates.json
+  excluded_target_classes: [viral_antigen]
+  included_targets: [BCMA, CD44]
+
+selection:
+  expected_components: 3
+  expected_targets: 2
+  expected_candidates: 24
+  expected_native_controls: 3
+  arm_blind_qc: true
+
+sequence_qc:
+  allowed_amino_acids: ACDEFGHIKLMNPQRSTVWY
+  maximum_hydrophobic_run: 4
+  maximum_absolute_charge_proxy: 8
+  flag_n_linked_glycosylation_motif: true
+  flag_deamidation_motifs: [NG, NS, NN, NQ]
+  flag_isomerization_motifs: [DG, DS, DT, DD]
+  flag_oxidation_residues: [M, W]
+
+claim_boundary: >-
+  Exploratory sequence-QC on three nonviral components only. Experimental
+  measurements are intentionally skipped. This subset cannot establish
+  ensemble improvement, IDP-specific confirmation, binding, efficacy, safety,
+  or therapeutic value.
+
+outputs:
+  subset: reviewer_outputs/idp_ensemble_correction_v3_nonviral/subset.json
+  analysis: reviewer_outputs/idp_ensemble_correction_v3_nonviral/sequence_qc.json
+  experiment_status: reviewer_outputs/idp_ensemble_correction_v3_nonviral/experiment_skipped.json

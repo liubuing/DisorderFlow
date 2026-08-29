@@ -1,0 +1,119 @@
+schema_version: 1
+status: fail_closed_adjudication_contract_v1
+classification: idp_design_level2_computational_validation
+purpose: >-
+  Adjudicate whether the current ensemble-aware design method has reached
+  computational success without changing any existing endpoint or robustness
+  threshold after result access.
+
+evidence:
+  idp_development_endpoint:
+    path: reviewer_outputs/idp_ensemble_endpoint_v3_development_v1/analysis.json
+    sha256: 60bfd1fe590d383adc2ec3724eefd1e81af9bac962a28f5cba6fa4ade10ced38
+  idp_extension_replication:
+    path: reviewer_outputs/idp_ensemble_endpoint_v3_1_extension_v1/analysis.json
+    sha256: d340f856f8296de9ca84b7832d1763345e65b618ab0a5fab1ec49916ead09c80
+  independent_bfn_scoring:
+    path: reviewer_outputs/idp_ensemble_bfn_fixed_scoring_dev_v1/analysis.json
+    sha256: bb278fefeb7c82092f3900d80b02ea406f027cf0ae72ca9f04e291475bcd6fa7
+  source_sensitivity:
+    path: reviewer_outputs/idp_ensemble_correction_v3_robustness/source_sensitivity.json
+    sha256: 161d57d34a0f2ae8d1fe9e4c8ddf4c9cebf6b7877f06873905c8e0f3531ca053
+  leave_one_pose_out:
+    path: reviewer_outputs/idp_ensemble_correction_v3_robustness/leave_one_pose_out.json
+    sha256: 46d188e4318d7a61b29fc05c74536c478e23b57729126e7de45f8e3dbaad5557
+  pose_diversity:
+    path: reviewer_outputs/idp_ensemble_correction_v3_robustness/pose_diversity.json
+    sha256: 2aeca6d53e165fffdc3232d597fb0557f62f83a81676c00525f783755171b819
+  developability:
+    path: reviewer_outputs/idp_ensemble_correction_v3_nonviral/developability_proxy.json
+    sha256: bda586cddd740eff8e34568dbc104b57b75f4fe72e9dda1b5b84b628e571ce0f
+  untouched_idp_readiness:
+    path: reviewer_outputs/idp_ensemble_final_confirmation_v1/readiness.json
+    sha256: 70cfe0e7a99887d9db59a88725d0a21b6fa4396f3e66e684f6a36858428485e4
+  expanded_idp_independent_scorer:
+    path: reviewer_outputs/idp_ensemble_expanded_development_v2/independent_scorer_v2.json
+    sha256: d6cf41689c1fc727d9ea1912bb30d7db53df896feb9e6becb17b5574eb109586
+  expanded_idp_source_sensitivity:
+    path: reviewer_outputs/idp_ensemble_expanded_development_v2/source_sensitivity.json
+    sha256: 397768e011e9e67bee8b8e1fcf6328b291338698b194358ac9339d51010f9472
+
+gates:
+  idp_development_endpoint:
+    source: idp_development_endpoint
+    field: method_summary.proteinmpnn.passed_for_future_freeze
+    expected: true
+    category: existing_evidence
+  idp_extension_replication:
+    source: idp_extension_replication
+    field: method_summary.proteinmpnn.passed_for_future_freeze
+    expected: true
+    category: existing_evidence
+  independent_bfn_scoring:
+    source: independent_bfn_scoring
+    field: method_summary.proteinmpnn.passed
+    expected: true
+    category: existing_evidence
+  source_panel_direction_stability:
+    source: source_sensitivity
+    numerator: source_panel_sign_consistent_pair_count
+    denominator: matched_pair_count
+    minimum_fraction: 0.80
+    category: existing_evidence
+  leave_one_pose_direction_stability:
+    source: leave_one_pose_out
+    numerator: direction_stable_pair_count
+    denominator: matched_bucket_pair_count
+    minimum_fraction: 0.80
+    category: existing_evidence
+  leave_one_pose_rank_stability:
+    source: leave_one_pose_out
+    field: minimum_rank_correlation
+    minimum: 0.70
+    category: existing_evidence
+  pose_panel_diversity:
+    source: pose_diversity
+    numerator: component_with_near_duplicates_count
+    denominator: component_count
+    maximum_fraction: 0.10
+    category: existing_evidence
+  developability_parity:
+    source: developability
+    arm_fraction_at_least:
+      arm: ensemble
+      numerator: proxy_pass_count
+      denominator: candidate_count
+      minimum: 0.80
+      comparator_arm: single_state
+    category: existing_evidence
+  untouched_idp_cohort:
+    source: untouched_idp_readiness
+    field: checks.untouched_idp_cohort_ready
+    expected: true
+    category: missing_evidence
+  expanded_idp_independent_support:
+    source: expanded_idp_independent_scorer
+    numerator: ensemble_favored_pair_count
+    denominator: matched_pair_count
+    minimum_fraction: 0.50
+    category: existing_evidence
+  expanded_idp_source_stability:
+    source: expanded_idp_source_sensitivity
+    numerator: source_panel_sign_consistent_pair_count
+    denominator: matched_pair_count
+    minimum_fraction: 0.80
+    category: existing_evidence
+
+decision:
+  failure_precedence: existing_evidence_before_missing_evidence
+  passed_status: level2_computational_validation_passed
+  failed_status: level2_failed_existing_evidence
+  blocked_status: level2_blocked_missing_evidence
+
+outputs:
+  status: reviewer_outputs/idp_level2_computational_validation_v1/status.json
+  report: reviewer_outputs/idp_level2_computational_validation_v1/report.md
+claim_boundary: >-
+  Passing supports only a computationally validated candidate-prioritization
+  method on the frozen panels. It does not establish binding, affinity,
+  specificity, efficacy, safety, or therapeutic value.

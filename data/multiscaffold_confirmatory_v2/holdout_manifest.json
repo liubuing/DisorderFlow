@@ -1,0 +1,1193 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_new_lineage_training_or_candidate_generation",
+  "classification": "prospective_internal_holdout; not external confirmation",
+  "source_feasibility_audit": "data/multiscaffold_confirmatory_v2/feasibility_audit.json",
+  "scheme": "vhvl_90_pairedcdr_70",
+  "thresholds": {
+    "vh": 0.9,
+    "vl": 0.9,
+    "cdr_h3": 0.5,
+    "paired_cdr": 0.7,
+    "antigen": 0.3
+  },
+  "coverage": 0.8,
+  "n_reference_independent_records": 22,
+  "n_all_axis_components": 20,
+  "n_representatives": 20,
+  "representative_ids": [
+    "pdb_000012qa-H-L",
+    "pdb_000012qb-H-L",
+    "pdb_000012qd-A-B",
+    "pdb_00001f3r-B1-B2",
+    "pdb_000029tj-B1-B2",
+    "pdb_00004ydv-B-A",
+    "pdb_00005e8d-H-L",
+    "pdb_00005fgb-C-A",
+    "pdb_00006n7j-A-B",
+    "pdb_00006p7h-A-B",
+    "pdb_00006pbw-D-C",
+    "pdb_00006zjg-HHH-LLL",
+    "pdb_00007x1u-D1-D2",
+    "pdb_00008jow-A1-A2",
+    "pdb_00008tdx-A-D",
+    "pdb_00009hva-B-C",
+    "pdb_00009rtg-B-A",
+    "pdb_00009tuz-B-C",
+    "pdb_00009wj6-B-A",
+    "pdb_00009zmc-C-D"
+  ],
+  "representative_ids_sha256": "eb520619e539c3cc9c0963f4dfcdca35fb75a960b4b99e31c9079cd9edc1ec7f",
+  "components": [
+    {
+      "component_id": "V2C001",
+      "members": [
+        "pdb_000012qa-H-L"
+      ],
+      "representative_id": "pdb_000012qa-H-L",
+      "representative": {
+        "instance": "pdb_000012qa-H-L",
+        "pdb_id": "12qa",
+        "sabdab_id": "sabdab2_H0660L04MM",
+        "heavy_chain": "H",
+        "light_chain": "L",
+        "antigen_chains": [
+          "P"
+        ],
+        "antigen_name": "GP2 peptide",
+        "deposition_date": "20260701",
+        "update_date": "20260713",
+        "resolution": 1.6,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_000012qa-H-L.cif",
+        "heavy_sequence": "EVQLVESGGGLVRPGGSLRLSCAASGFTFGDYGMHWVRQAPGKGLEWVSTISSGSGYIYYADSVKGRFTISRDNAKNSLSLQMSSLRVEDTAVYYCSRGGIPAGPNRYGLDSWGQGVVVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSC",
+        "light_sequence": "DIVMTQTPLSLPVTPGEPASISCRSSQSLLHSGGKTYLYWYLQKPGQSPQLLIYEVSNRASGVPDRFTGSGSGTDFTLRISRVEAEDVGVYYCMQGIQLPWTFGQGTKVEIKRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFNRGEC",
+        "antigen_chain": "P",
+        "antigen_sequence": "IDFDPIPNT",
+        "vh_sequence": "EVQLVESGGGLVRPGGSLRLSCAASGFTFGDYGMHWVRQAPGKGLEWVSTISSGSGYIYYADSVKGRFTISRDNAKNSLSLQMSSLRVEDTAVYYCSRGGIPAGPNRYGLDSWGQGVVVTVSS",
+        "vl_sequence": "DIVMTQTPLSLPVTPGEPASISCRSSQSLLHSGGKTYLYWYLQKPGQSPQLLIYEVSNRASGVPDRFTGSGSGTDFTLRISRVEAEDVGVYYCMQGIQLPWTFGQGTKVEIK",
+        "cdr_sequences": {
+          "H1": "GFTFGDY",
+          "H2": "SSGSGY",
+          "H3": "SRGGIPAGPNRYGLDS",
+          "L1": "RSSQSLLHSGGKTYLY",
+          "L2": "EVSNRAS",
+          "L3": "MQGIQLPWT"
+        },
+        "paired_cdr_sequence": "GFTFGDYSSGSGYSRGGIPAGPNRYGLDSRSSQSLLHSGGKTYLYEVSNRASMQGIQLPWT",
+        "cdr_h3_sequence": "SRGGIPAGPNRYGLDS",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C002",
+      "members": [
+        "pdb_000012qb-H-L"
+      ],
+      "representative_id": "pdb_000012qb-H-L",
+      "representative": {
+        "instance": "pdb_000012qb-H-L",
+        "pdb_id": "12qb",
+        "sabdab_id": "sabdab2_H065NL04MA",
+        "heavy_chain": "H",
+        "light_chain": "L",
+        "antigen_chains": [
+          "P"
+        ],
+        "antigen_name": "GP2 peptide",
+        "deposition_date": "20260701",
+        "update_date": "20260713",
+        "resolution": 2.3,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_000012qb-H-L.cif",
+        "heavy_sequence": "EVQLVESGGGLVQPGGSLRLSCAASGFTFGDYGMHWVRQAPGKGLEWVSAISSGSGYIYYADSVKGRFTISRDNAKNSLSLQMSSLRAEDTAVYYCTRGREYSGYREFDFWGQGVLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSC",
+        "light_sequence": "SVLTQPPSVSGAPGQRVTISCTGSSSNIGGYYVQWYQQLPGTAPKLLIYENNKRPSGVSDRFSGSQSATSASLTITGLQSEDEADYYCQSYDSSLSAWVFGGGTRLTVLGQPKAAPSVTLFPPSSEELQANKATLVCLISDFYPGAVTVAWKADSSPVKAGVETTTPSKQSNNKYAASSYLSLTPEQWKSHRSYSCQVTHEGSTVEKTVAPTE",
+        "antigen_chain": "P",
+        "antigen_sequence": "IDFDPIPNTK",
+        "vh_sequence": "EVQLVESGGGLVQPGGSLRLSCAASGFTFGDYGMHWVRQAPGKGLEWVSAISSGSGYIYYADSVKGRFTISRDNAKNSLSLQMSSLRAEDTAVYYCTRGREYSGYREFDFWGQGVLVTVSS",
+        "vl_sequence": "SVLTQPPSVSGAPGQRVTISCTGSSSNIGGYYVQWYQQLPGTAPKLLIYENNKRPSGVSDRFSGSQSATSASLTITGLQSEDEADYYCQSYDSSLSAWVFGGGTRLTVL",
+        "cdr_sequences": {
+          "H1": "GFTFGDY",
+          "H2": "SSGSGY",
+          "H3": "TRGREYSGYREFDF",
+          "L1": "TGSSSNIGGYYVQ",
+          "L2": "ENNKRPS",
+          "L3": "QSYDSSLSAWV"
+        },
+        "paired_cdr_sequence": "GFTFGDYSSGSGYTRGREYSGYREFDFTGSSSNIGGYYVQENNKRPSQSYDSSLSAWV",
+        "cdr_h3_sequence": "TRGREYSGYREFDF",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C003",
+      "members": [
+        "pdb_000012qd-A-B"
+      ],
+      "representative_id": "pdb_000012qd-A-B",
+      "representative": {
+        "instance": "pdb_000012qd-A-B",
+        "pdb_id": "12qd",
+        "sabdab_id": "sabdab2_H0663L04MQ",
+        "heavy_chain": "A",
+        "light_chain": "B",
+        "antigen_chains": [
+          "C",
+          "E",
+          "G",
+          "I",
+          "K",
+          "N"
+        ],
+        "antigen_name": "GP2 peptide|CHLORIDE ION|ZINC ION",
+        "deposition_date": "20260701",
+        "update_date": "20260713",
+        "resolution": 2.47,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_000012qd-A-B.cif",
+        "heavy_sequence": "EVQLVETGGGLVQPGGSLKLSCAASGFTFSSYGMSWVRQAPGKGLEWVSSINSGGGSTHYADSVKGRFTISRDNSKNTLSLQMNSLRAEDTAVYYCAKFGWAVPGLDYWGQGVLVTVSSASTKGPSVFPLAPSGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPK",
+        "light_sequence": "DVVMTQSPVSLPVTLGQPASISCRSSQSLVHSDGKTYLNWLQQKPGQPPRRLIYQVSNRDSGVPDRFSGSGAGTDFTLKISRVEAEDVGVYYCMQGTHWPFTFGPGTKLDIKRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFNRGE",
+        "antigen_chain": "C",
+        "antigen_sequence": "IDFDPIPNT",
+        "vh_sequence": "EVQLVETGGGLVQPGGSLKLSCAASGFTFSSYGMSWVRQAPGKGLEWVSSINSGGGSTHYADSVKGRFTISRDNSKNTLSLQMNSLRAEDTAVYYCAKFGWAVPGLDYWGQGVLVTVSS",
+        "vl_sequence": "DVVMTQSPVSLPVTLGQPASISCRSSQSLVHSDGKTYLNWLQQKPGQPPRRLIYQVSNRDSGVPDRFSGSGAGTDFTLKISRVEAEDVGVYYCMQGTHWPFTFGPGTKLDIK",
+        "cdr_sequences": {
+          "H1": "GFTFSSY",
+          "H2": "NSGGGS",
+          "H3": "AKFGWAVPGLDY",
+          "L1": "RSSQSLVHSDGKTYLN",
+          "L2": "QVSNRDS",
+          "L3": "MQGTHWPFT"
+        },
+        "paired_cdr_sequence": "GFTFSSYNSGGGSAKFGWAVPGLDYRSSQSLVHSDGKTYLNQVSNRDSMQGTHWPFT",
+        "cdr_h3_sequence": "AKFGWAVPGLDY",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C004",
+      "members": [
+        "pdb_00001f3r-B1-B2"
+      ],
+      "representative_id": "pdb_00001f3r-B1-B2",
+      "representative": {
+        "instance": "pdb_00001f3r-B1-B2",
+        "pdb_id": "1f3r",
+        "sabdab_id": "sabdab2_H0044L003Y",
+        "heavy_chain": "B1",
+        "light_chain": "B2",
+        "antigen_chains": [
+          "A"
+        ],
+        "antigen_name": "ACETYLCHOLINE RECEPTOR ALPHA",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": null,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00001f3r-B1-B2.cif",
+        "heavy_sequence": "QVQLLESGPGLVRPSETLSLTCTVSGFSLTSFSVSWVRHPSGKGPEWMGRMWYDGYTAYNSALKSRLSISRDTSKNQVFLKMNSLQTDDTGTYYCTRDLYGGYPLGFWYFDFWGPGTMVTVSSGGGGSGGGGSGGGGS",
+        "light_sequence": "DIKLTQSPSLLSASVGDRVTLSCKGSQNINNYLAWYQQKLGEAPKLLIYNTNSLQTGIPSRFSGSGSGTDYTLTISSLQPEDVATYFCYQYNNGYTFGAGTKLELKAAEQKLISEEDLN",
+        "antigen_chain": "A",
+        "antigen_sequence": "WNPGDYGGI",
+        "vh_sequence": "QVQLLESGPGLVRPSETLSLTCTVSGFSLTSFSVSWVRHPSGKGPEWMGRMWYDGYTAYNSALKSRLSISRDTSKNQVFLKMNSLQTDDTGTYYCTRDLYGGYPLGFWYFDFWGPGTMVTVSS",
+        "vl_sequence": "DIKLTQSPSLLSASVGDRVTLSCKGSQNINNYLAWYQQKLGEAPKLLIYNTNSLQTGIPSRFSGSGSGTDYTLTISSLQPEDVATYFCYQYNNGYTFGAGTKLELK",
+        "cdr_sequences": {
+          "H1": "GFSLTSF",
+          "H2": "WYDGY",
+          "H3": "TRDLYGGYPLGFWYFDF",
+          "L1": "KGSQNINNYLA",
+          "L2": "NTNSLQT",
+          "L3": "YQYNNGYT"
+        },
+        "paired_cdr_sequence": "GFSLTSFWYDGYTRDLYGGYPLGFWYFDFKGSQNINNYLANTNSLQTYQYNNGYT",
+        "cdr_h3_sequence": "TRDLYGGYPLGFWYFDF",
+        "h3_heavy_indices_zero_based": [
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C005",
+      "members": [
+        "pdb_000029tj-B1-B2"
+      ],
+      "representative_id": "pdb_000029tj-B1-B2",
+      "representative": {
+        "instance": "pdb_000029tj-B1-B2",
+        "pdb_id": "29tj",
+        "sabdab_id": "sabdab2_H067XL04P8",
+        "heavy_chain": "B1",
+        "light_chain": "B2",
+        "antigen_chains": [
+          "G",
+          "H",
+          "I",
+          "K",
+          "P"
+        ],
+        "antigen_name": "ACETATE ION|NICKEL (II) ION|Envelope glycoprotein GP4",
+        "deposition_date": "20260713",
+        "update_date": "20260713",
+        "resolution": 2.3,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_000029tj-B1-B2.cif",
+        "heavy_sequence": "EVQLQQSGPELLKPGASVRMSCKASGYTFTDYYMKWVKQSHGKSLEWIGDIDPKNGDILYNQKFKGKATLTLDKSSSTAYMQLSSLTSEDSAVYYCARSVDNYYEGFAHWGQGTLVTVSPAGAS",
+        "light_sequence": "DIVMTQSPSSLSVSAGEKVTMRCKSSQSLIHSGNQKNYLAWYQQKPGQPPKMLIYGASTRESGVPDRFTGSGSGTDFTLTITSVQAEDLAVYYCQNDHSYPYTFGGGTKLEIKDDD",
+        "antigen_chain": "P",
+        "antigen_sequence": "ASEAIRKIPQ",
+        "vh_sequence": "EVQLQQSGPELLKPGASVRMSCKASGYTFTDYYMKWVKQSHGKSLEWIGDIDPKNGDILYNQKFKGKATLTLDKSSSTAYMQLSSLTSEDSAVYYCARSVDNYYEGFAHWGQGTLVTVSP",
+        "vl_sequence": "DIVMTQSPSSLSVSAGEKVTMRCKSSQSLIHSGNQKNYLAWYQQKPGQPPKMLIYGASTRESGVPDRFTGSGSGTDFTLTITSVQAEDLAVYYCQNDHSYPYTFGGGTKLEIK",
+        "cdr_sequences": {
+          "H1": "GYTFTDY",
+          "H2": "DPKNGD",
+          "H3": "ARSVDNYYEGFAH",
+          "L1": "KSSQSLIHSGNQKNYLA",
+          "L2": "GASTRES",
+          "L3": "QNDHSYPYT"
+        },
+        "paired_cdr_sequence": "GYTFTDYDPKNGDARSVDNYYEGFAHKSSQSLIHSGNQKNYLAGASTRESQNDHSYPYT",
+        "cdr_h3_sequence": "ARSVDNYYEGFAH",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C006",
+      "members": [
+        "pdb_00004ydv-B-A"
+      ],
+      "representative_id": "pdb_00004ydv-B-A",
+      "representative": {
+        "instance": "pdb_00004ydv-B-A",
+        "pdb_id": "4ydv",
+        "sabdab_id": "sabdab2_H05YVL04G8",
+        "heavy_chain": "B",
+        "light_chain": "A",
+        "antigen_chains": [
+          "Q"
+        ],
+        "antigen_name": "HIV GP41 PEPTIDE GP41(596-606)",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 2.7,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00004ydv-B-A.cif",
+        "heavy_sequence": "QVQLVQSGGGVFKPGGSLRLSCEASGFTFTEYYMTWVRQAPGKGLEWLAYISKNGEYSKYSPSSNGRFTISRDNAKNSVFLQLDRLSADDTAVYYCARADGLTYFSELLQYIFDLWGQGARVTVSSASTKGPSVFPLAPSGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKRVEP",
+        "light_sequence": "IVLAQSPDSLAVSPGERATIHCKSSQHSIAWYQQRPGQPPKLLLYWASMRLSGVPDRFSGSGSGTDFTLTINNLQAEDVAIYYCHQYSSHPPTFGHGTRVELRRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFN",
+        "antigen_chain": "Q",
+        "antigen_sequence": "WGCSGKLICTT",
+        "vh_sequence": "QVQLVQSGGGVFKPGGSLRLSCEASGFTFTEYYMTWVRQAPGKGLEWLAYISKNGEYSKYSPSSNGRFTISRDNAKNSVFLQLDRLSADDTAVYYCARADGLTYFSELLQYIFDLWGQGARVTVSS",
+        "vl_sequence": "IVLAQSPDSLAVSPGERATIHCKSSQHSIAWYQQRPGQPPKLLLYWASMRLSGVPDRFSGSGSGTDFTLTINNLQAEDVAIYYCHQYSSHPPTFGHGTRVELR",
+        "cdr_sequences": {
+          "H1": "GFTFTEY",
+          "H2": "SKNGEY",
+          "H3": "ARADGLTYFSELLQYIFDL",
+          "L1": "KSSQHSIA",
+          "L2": "WASMRLS",
+          "L3": "HQYSSHPPT"
+        },
+        "paired_cdr_sequence": "GFTFTEYSKNGEYARADGLTYFSELLQYIFDLKSSQHSIAWASMRLSHQYSSHPPT",
+        "cdr_h3_sequence": "ARADGLTYFSELLQYIFDL",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C007",
+      "members": [
+        "pdb_00005e8d-H-L"
+      ],
+      "representative_id": "pdb_00005e8d-H-L",
+      "representative": {
+        "instance": "pdb_00005e8d-H-L",
+        "pdb_id": "5e8d",
+        "sabdab_id": "sabdab2_H015SL010A",
+        "heavy_chain": "H",
+        "light_chain": "L",
+        "antigen_chains": [
+          "A"
+        ],
+        "antigen_name": "Proepiregulin",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 2.5,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00005e8d-H-L.cif",
+        "heavy_sequence": "EVQLQQSGAELVKPGASVKLSCTASGFNIKDTYMHWVKQRPEQGLEWIGRIDPLNDKTKYDPKFQGKATITADTSSNSAYLQLSSLTSEDTAVYYCSRGGGDPVFVYWGQGTLVTVSAAKTTPPSVYPLAPGSTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPRD",
+        "light_sequence": "DIQMTQSPSSLSASGKVTITCKASQDINKYIAWYQHKPGKGPRLLIHYTSTLHPGIPSRFSGSGSGRDYSFSISNLEPEDIATYYCLQYDNLRTFGGGTKLEIKRADAAPTVSIFPPSSEQLTSGGASVVCFLNNFYPKDINVKWKIDGSERQNGVLNSWTDQDSKDSTYSMSSTLTLTKDEYERHNSYTCEATHKTSTSPIVKSFNRNE",
+        "antigen_chain": "A",
+        "antigen_sequence": "ITKCSSDMNGYCLHGQCIYLVDMSQNYCRCEVGYTGVRCEHFF",
+        "vh_sequence": "EVQLQQSGAELVKPGASVKLSCTASGFNIKDTYMHWVKQRPEQGLEWIGRIDPLNDKTKYDPKFQGKATITADTSSNSAYLQLSSLTSEDTAVYYCSRGGGDPVFVYWGQGTLVTVSA",
+        "vl_sequence": "DIQMTQSPSSLSASGKVTITCKASQDINKYIAWYQHKPGKGPRLLIHYTSTLHPGIPSRFSGSGSGRDYSFSISNLEPEDIATYYCLQYDNLRTFGGGTKLEIK",
+        "cdr_sequences": {
+          "H1": "GFNIKDT",
+          "H2": "DPLNDK",
+          "H3": "SRGGGDPVFVY",
+          "L1": "KASQDINKYIA",
+          "L2": "YTSTLHP",
+          "L3": "LQYDNLRT"
+        },
+        "paired_cdr_sequence": "GFNIKDTDPLNDKSRGGGDPVFVYKASQDINKYIAYTSTLHPLQYDNLRT",
+        "cdr_h3_sequence": "SRGGGDPVFVY",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C008",
+      "members": [
+        "pdb_00005fgb-C-A"
+      ],
+      "representative_id": "pdb_00005fgb-C-A",
+      "representative": {
+        "instance": "pdb_00005fgb-C-A",
+        "pdb_id": "5fgb",
+        "sabdab_id": "sabdab2_H013TL00YR",
+        "heavy_chain": "C",
+        "light_chain": "A",
+        "antigen_chains": [
+          "E",
+          "F",
+          "N",
+          "O",
+          "P"
+        ],
+        "antigen_name": "Anti-HCV E2 Fab HC84-1 heavy chain|Genome polyprotein|GLYCEROL|SULFATE ION",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 1.65,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00005fgb-C-A.cif",
+        "heavy_sequence": "EVQLVQSGGGLVQPGGSLRLSCAASGFTFSSYAMSWVRQAPGKGLEWVSAISGSGGSTYYADSVKGRFTISRDNSKNILYLQMNSLKAEDTATYYCARAVVFYYSKYFDYWSQGTLVTVSSASTKGPSVFPLAPGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKAEPK",
+        "light_sequence": "SYELTQLPSLSVSLGQTASITCSGDNLGDKFVCWYQQKPGQTPVLVMYEDTKRPSGIPERFAGSNSGNTATLTITGTQAMDEADYYCQTWDSSTDVVFGGGTKLTVLRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFNRGE",
+        "antigen_chain": "F",
+        "antigen_sequence": "NGSWH",
+        "vh_sequence": "EVQLVQSGGGLVQPGGSLRLSCAASGFTFSSYAMSWVRQAPGKGLEWVSAISGSGGSTYYADSVKGRFTISRDNSKNILYLQMNSLKAEDTATYYCARAVVFYYSKYFDYWSQGTLVTVSS",
+        "vl_sequence": "SYELTQLPSLSVSLGQTASITCSGDNLGDKFVCWYQQKPGQTPVLVMYEDTKRPSGIPERFAGSNSGNTATLTITGTQAMDEADYYCQTWDSSTDVVFGGGTKLTVL",
+        "cdr_sequences": {
+          "H1": "GFTFSSY",
+          "H2": "SGSGGS",
+          "H3": "ARAVVFYYSKYFDY",
+          "L1": "SGDNLGDKFVC",
+          "L2": "EDTKRPS",
+          "L3": "QTWDSSTDVV"
+        },
+        "paired_cdr_sequence": "GFTFSSYSGSGGSARAVVFYYSKYFDYSGDNLGDKFVCEDTKRPSQTWDSSTDVV",
+        "cdr_h3_sequence": "ARAVVFYYSKYFDY",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C009",
+      "members": [
+        "pdb_00006n7j-A-B"
+      ],
+      "representative_id": "pdb_00006n7j-A-B",
+      "representative": {
+        "instance": "pdb_00006n7j-A-B",
+        "pdb_id": "6n7j",
+        "sabdab_id": "sabdab2_H029ZL01V8",
+        "heavy_chain": "A",
+        "light_chain": "B",
+        "antigen_chains": [
+          "D"
+        ],
+        "antigen_name": "Envelope glycoprotein",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 3.684,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00006n7j-A-B.cif",
+        "heavy_sequence": "QVQLQQWGAGLLKPSETLSLTCAVYGGSFTTTYWNWIRQPPGKGLEWIGEVNYSGNANYNPSLKGRVAISVDTSKNQFSLRLNSVTAADTAIYYCTSRIRSHIAYSWKGDVWGKGTTVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPK",
+        "light_sequence": "EIVMTQSPGTLSLSPGERATLSCRASQSVPRNYIGWFQQKPGQAPRLLIYGASSRAAGFPDRFSGSGSGTDFTLTITRLEPEDFAMYYCHQYDRLPYTFGQGTKLEIKRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLRSPVTKSFNRGE",
+        "antigen_chain": "D",
+        "antigen_sequence": "TDKIDQIIHDFIDKP",
+        "vh_sequence": "QVQLQQWGAGLLKPSETLSLTCAVYGGSFTTTYWNWIRQPPGKGLEWIGEVNYSGNANYNPSLKGRVAISVDTSKNQFSLRLNSVTAADTAIYYCTSRIRSHIAYSWKGDVWGKGTTVTVSS",
+        "vl_sequence": "EIVMTQSPGTLSLSPGERATLSCRASQSVPRNYIGWFQQKPGQAPRLLIYGASSRAAGFPDRFSGSGSGTDFTLTITRLEPEDFAMYYCHQYDRLPYTFGQGTKLEIK",
+        "cdr_sequences": {
+          "H1": "GGSFTTT",
+          "H2": "NYSGN",
+          "H3": "TSRIRSHIAYSWKGDV",
+          "L1": "RASQSVPRNYIG",
+          "L2": "GASSRAA",
+          "L3": "HQYDRLPYT"
+        },
+        "paired_cdr_sequence": "GGSFTTTNYSGNTSRIRSHIAYSWKGDVRASQSVPRNYIGGASSRAAHQYDRLPYT",
+        "cdr_h3_sequence": "TSRIRSHIAYSWKGDV",
+        "h3_heavy_indices_zero_based": [
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C010",
+      "members": [
+        "pdb_00006p7h-A-B"
+      ],
+      "representative_id": "pdb_00006p7h-A-B",
+      "representative": {
+        "instance": "pdb_00006p7h-A-B",
+        "pdb_id": "6p7h",
+        "sabdab_id": "sabdab2_H02B4L01W9",
+        "heavy_chain": "A",
+        "light_chain": "B",
+        "antigen_chains": [
+          "C"
+        ],
+        "antigen_name": "HIV fusion peptide residues (512-519)",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 1.782,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00006p7h-A-B.cif",
+        "heavy_sequence": "QLQESGPGVVKPSETLSLTCAVSGGTISSGSYYWSWIRQPPGKGLEWIGGIYINNKSINYNPSLRGRVTISIDTSKNQFSLKLSAVTAADTAVYYCRRDPISSTIEEFDYWGQGVLVTVSSASTKGPSVFPLAPSSTAALGCLVKDYFPEPVTVSWNSGSLTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYVCNVNHKPSNTKVDKRVEI",
+        "light_sequence": "IVMTQLSLSVTPGEPASISCRSSQSLLHSNGHTYLHWYLQKPGHSPQLLIYEVSNRASGVPDRFSGSGSGTDFTLKISRVEAEDVGVYYCEQTLQTPLTFGGGTRVQIKRTVAAPSVFIFPPSEDQVKSGTVSVVCLLNNFYPREASVKWKVDGVLKTGNSQESVTEQDSKDNTYSLSSTLTLSNTDYQSHNVYACEVTHQGLSSPVTKSFNRG",
+        "antigen_chain": "C",
+        "antigen_sequence": "AVGIGAVF",
+        "vh_sequence": "QLQESGPGVVKPSETLSLTCAVSGGTISSGSYYWSWIRQPPGKGLEWIGGIYINNKSINYNPSLRGRVTISIDTSKNQFSLKLSAVTAADTAVYYCRRDPISSTIEEFDYWGQGVLVTVSS",
+        "vl_sequence": "IVMTQLSLSVTPGEPASISCRSSQSLLHSNGHTYLHWYLQKPGHSPQLLIYEVSNRASGVPDRFSGSGSGTDFTLKISRVEAEDVGVYYCEQTLQTPLTFGGGTRVQIK",
+        "cdr_sequences": {
+          "H1": "GGTISSGSY",
+          "H2": "YINNKS",
+          "H3": "RRDPISSTIEEFDY",
+          "L1": "RSSQSLLHSNGHTYLH",
+          "L2": "EVSNRAS",
+          "L3": "EQTLQTPLT"
+        },
+        "paired_cdr_sequence": "GGTISSGSYYINNKSRRDPISSTIEEFDYRSSQSLLHSNGHTYLHEVSNRASEQTLQTPLT",
+        "cdr_h3_sequence": "RRDPISSTIEEFDY",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C011",
+      "members": [
+        "pdb_00006pbw-D-C"
+      ],
+      "representative_id": "pdb_00006pbw-D-C",
+      "representative": {
+        "instance": "pdb_00006pbw-D-C",
+        "pdb_id": "6pbw",
+        "sabdab_id": "sabdab2_H021WL01NC",
+        "heavy_chain": "D",
+        "light_chain": "C",
+        "antigen_chains": [
+          "B",
+          "E"
+        ],
+        "antigen_name": "GLYCEROL|NPNANPNANPNA peptide",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 2.058,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00006pbw-D-C.cif",
+        "heavy_sequence": "QVQLVQSGAEVKKPGASVKVSCRASGYTFTNYAMHWVRQAPGQRLEWMGWINAGNGYTKYSQKFQDRVTITRDTSATTAYMELSSLRSEDTAMYYCARDSFYDILSPVYHYYGMDVWGQGTTVTVSSASTKGPSVFPLAPGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPK",
+        "light_sequence": "SALTQPDSVSGSPGQSITISCTGTSNDVGIYNHVSWYQQHPGKAPKLMIYDVNKRPSGISNRFSGSKSGDTASLTISGLQAEDEADYYCCSYAGSSAWVFGGGTKLTVLGQPKAAPSVTLFPPSSEELQANKATLVCLISDFYPGAVTVAWKADSSPVKAGVETTTPSKQSNNKYAASSYLSLTPEQWKSHRSYSCQVTHEGSTVEKTVAP",
+        "antigen_chain": "E",
+        "antigen_sequence": "NPNANPNA",
+        "vh_sequence": "QVQLVQSGAEVKKPGASVKVSCRASGYTFTNYAMHWVRQAPGQRLEWMGWINAGNGYTKYSQKFQDRVTITRDTSATTAYMELSSLRSEDTAMYYCARDSFYDILSPVYHYYGMDVWGQGTTVTVSS",
+        "vl_sequence": "SALTQPDSVSGSPGQSITISCTGTSNDVGIYNHVSWYQQHPGKAPKLMIYDVNKRPSGISNRFSGSKSGDTASLTISGLQAEDEADYYCCSYAGSSAWVFGGGTKLTVL",
+        "cdr_sequences": {
+          "H1": "GYTFTNY",
+          "H2": "NAGNGY",
+          "H3": "ARDSFYDILSPVYHYYGMDV",
+          "L1": "TGTSNDVGIYNHVS",
+          "L2": "DVNKRPS",
+          "L3": "CSYAGSSAWV"
+        },
+        "paired_cdr_sequence": "GYTFTNYNAGNGYARDSFYDILSPVYHYYGMDVTGTSNDVGIYNHVSDVNKRPSCSYAGSSAWV",
+        "cdr_h3_sequence": "ARDSFYDILSPVYHYYGMDV",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C012",
+      "members": [
+        "pdb_00006zjg-HHH-LLL"
+      ],
+      "representative_id": "pdb_00006zjg-HHH-LLL",
+      "representative": {
+        "instance": "pdb_00006zjg-HHH-LLL",
+        "pdb_id": "6zjg",
+        "sabdab_id": "sabdab2_H02ETL01ZE",
+        "heavy_chain": "HHH",
+        "light_chain": "LLL",
+        "antigen_chains": [
+          "B"
+        ],
+        "antigen_name": "CII-C-48-CIT",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 2.45,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00006zjg-HHH-LLL.cif",
+        "heavy_sequence": "VQLEESGPGLVRPSETLSLSCTVSGFPMNESYFWGWIRQSPGKGLEWLGSVIHTGTTYYRPSLESRLTIAMDPSKNQVSLSLTSVTVADSAMYYCVRIRGGSSNWLDPWGPGIVVTASSAKTTPPSVYPLAPGCGDTTGSSVTLGCLVKGYFPESVTVTWNSGSVHTFPALLQSGLYTMSSSVTVPSSTWPSQTVTCSVAHPASSTTVDKKIEPRP",
+        "light_sequence": "QSVWTQPPSVSAAPGQNVTISCSDSILRSAFVSWYQQVPGSAPKLVIFDDRQRPSGIPARFSGSNSGTTATLDIAGLQRGDEADYYCAAWNGRLSAFVFGSGTKLTVLGQPKSSPSVTLFPPSSEELETNKATLVCTITDFYPGVVTVDWKVDGTPVTQGMETTQPSKQSNNKYMASSYLTLTARAWERHSSYSCQVTHEGHTVEKSLSRAD",
+        "antigen_chain": "B",
+        "antigen_sequence": "EPGEGLKG",
+        "vh_sequence": "VQLEESGPGLVRPSETLSLSCTVSGFPMNESYFWGWIRQSPGKGLEWLGSVIHTGTTYYRPSLESRLTIAMDPSKNQVSLSLTSVTVADSAMYYCVRIRGGSSNWLDPWGPGIVVTASS",
+        "vl_sequence": "QSVWTQPPSVSAAPGQNVTISCSDSILRSAFVSWYQQVPGSAPKLVIFDDRQRPSGIPARFSGSNSGTTATLDIAGLQRGDEADYYCAAWNGRLSAFVFGSGTKLTVL",
+        "cdr_sequences": {
+          "H1": "GFPMNESY",
+          "H2": "IHTGT",
+          "H3": "VRIRGGSSNWLDP",
+          "L1": "SDSILRSAFVS",
+          "L2": "DDRQRPS",
+          "L3": "AAWNGRLSAFV"
+        },
+        "paired_cdr_sequence": "GFPMNESYIHTGTVRIRGGSSNWLDPSDSILRSAFVSDDRQRPSAAWNGRLSAFV",
+        "cdr_h3_sequence": "VRIRGGSSNWLDP",
+        "h3_heavy_indices_zero_based": [
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C013",
+      "members": [
+        "pdb_00007x1u-D1-D2"
+      ],
+      "representative_id": "pdb_00007x1u-D1-D2",
+      "representative": {
+        "instance": "pdb_00007x1u-D1-D2",
+        "pdb_id": "7x1u",
+        "sabdab_id": "sabdab2_H01TTL01FP",
+        "heavy_chain": "D1",
+        "light_chain": "D2",
+        "antigen_chains": [
+          "B",
+          "C",
+          "F"
+        ],
+        "antigen_name": "mini-G alpha q prtoein|Guanine nucleotide-binding protein G(I)/G(S)/G(T) subunit beta-1|Guanine nucleotide-binding protein G(I)/G(S)/G(O) subunit gamma-2",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 3.19,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00007x1u-D1-D2.cif",
+        "heavy_sequence": "VQLVESGGGLVQPGGLSCSASGFAFSSFGMHWVRQAPEKGLEWVAYISSGSGTIYYADTVKGRFTISRDDPKNTLFSLRSEDTAMYYCVRSIYYYGSSPFDFWGQGTTLT",
+        "light_sequence": "DIVMTQATSSVPVTPGESVSISCRSSKSLLHSNGNTYLYWFLQRPGQSPQLLINLASGVPDRFSGSGTAFTLTISRLEAEDVYYCMQHLEYPTFGAGT",
+        "antigen_chain": "F",
+        "antigen_sequence": "ARKLVEQLKMEANIDRIKVSKAAADLMAYCEAHAKEDPLLTPVPASENP",
+        "vh_sequence": "VQLVESGGGLVQPGGLSCSASGFAFSSFGMHWVRQAPEKGLEWVAYISSGSGTIYYADTVKGRFTISRDDPKNTLFSLRSEDTAMYYCVRSIYYYGSSPFDFWGQGTTLT",
+        "vl_sequence": "DIVMTQATSSVPVTPGESVSISCRSSKSLLHSNGNTYLYWFLQRPGQSPQLLINLASGVPDRFSGSGTAFTLTISRLEAEDVYYCMQHLEYPTFGAGT",
+        "cdr_sequences": {
+          "H1": "GFAFSSF",
+          "H2": "SSGSGT",
+          "H3": "VRSIYYYGSSPFDF",
+          "L1": "RSSKSLLHSNGNTYLY",
+          "L2": "LAS",
+          "L3": "MQHLEYPT"
+        },
+        "paired_cdr_sequence": "GFAFSSFSSGSGTVRSIYYYGSSPFDFRSSKSLLHSNGNTYLYLASMQHLEYPT",
+        "cdr_h3_sequence": "VRSIYYYGSSPFDF",
+        "h3_heavy_indices_zero_based": [
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C014",
+      "members": [
+        "pdb_00008jow-A1-A2"
+      ],
+      "representative_id": "pdb_00008jow-A1-A2",
+      "representative": {
+        "instance": "pdb_00008jow-A1-A2",
+        "pdb_id": "8jow",
+        "sabdab_id": "sabdab2_H04BEL03BT",
+        "heavy_chain": "A1",
+        "light_chain": "A2",
+        "antigen_chains": [
+          "B",
+          "G"
+        ],
+        "antigen_name": "ARG-PRO-HIS-PHE-PRO-GLN-PHE-SEP-TYR-SER-ALA-SER|CHLORIDE ION",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 1.4,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00008jow-A1-A2.cif",
+        "heavy_sequence": "QLMESGGRLVTPGTPLTLTCTASDISTYSISWVRQAPGKGLEWIGHIGSSGTQYYASWAKGRFAISRASTTVDLRITGPTTEDTATYFCARRGVGYNLYYNMWGPGTLVTVSLG",
+        "light_sequence": "AIDMTQTPSPVSAAVGGTVTINCQASQSVYNSKNLAWYQQKPGQPPKLLIYDSSTLASGVSSRFRGSGSGTQFTLTISGVQSDDAATYYCQGEFSCSSGDCAGFGGGTEVVVE",
+        "antigen_chain": "B",
+        "antigen_sequence": "RPHFPQFYSAS",
+        "vh_sequence": "QLMESGGRLVTPGTPLTLTCTASDISTYSISWVRQAPGKGLEWIGHIGSSGTQYYASWAKGRFAISRASTTVDLRITGPTTEDTATYFCARRGVGYNLYYNMWGPGTLVTVSL",
+        "vl_sequence": "AIDMTQTPSPVSAAVGGTVTINCQASQSVYNSKNLAWYQQKPGQPPKLLIYDSSTLASGVSSRFRGSGSGTQFTLTISGVQSDDAATYYCQGEFSCSSGDCAGFGGGTEVVVE",
+        "cdr_sequences": {
+          "H1": "DISTY",
+          "H2": "GSSGT",
+          "H3": "ARRGVGYNLYYNM",
+          "L1": "QASQSVYNSKNLA",
+          "L2": "DSSTLAS",
+          "L3": "QGEFSCSSGDCAG"
+        },
+        "paired_cdr_sequence": "DISTYGSSGTARRGVGYNLYYNMQASQSVYNSKNLADSSTLASQGEFSCSSGDCAG",
+        "cdr_h3_sequence": "ARRGVGYNLYYNM",
+        "h3_heavy_indices_zero_based": [
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C015",
+      "members": [
+        "pdb_00008tdx-A-D"
+      ],
+      "representative_id": "pdb_00008tdx-A-D",
+      "representative": {
+        "instance": "pdb_00008tdx-A-D",
+        "pdb_id": "8tdx",
+        "sabdab_id": "sabdab2_H04FQL03EP",
+        "heavy_chain": "A",
+        "light_chain": "D",
+        "antigen_chains": [
+          "E"
+        ],
+        "antigen_name": "Env Fusion Peptide",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 2.09,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00008tdx-A-D.cif",
+        "heavy_sequence": "VQLQESGPGVVKPSETLSLTCEVSLRVGSYYWSWIRQSQGQRPEWMGGLYSDTGNTDYNPSLKSRVSLSRDMSKKQFFLNLRSVTATDTAVYFCVSRYVDHWTNRRFDVWGPGAQVTVTSASTKGPSVFPLAPSSRSTSESTAALGCLVKDYFPEPVTVSWNSGSLTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYVCNVNHKPSNTKVDKRVEIKTC",
+        "light_sequence": "DIQMTQSPSSLSASVGDRVTVTCRASLDINKDLNWYQQKPGKAPALLIYAASTLQTGVSSRFSGSGSGTQFTLTISSLQPEDFATYYCLQDYSFPLTFGGGTKIDLKRTVAAPSVFIFPPSEDQVKSGTVSVVCLLNNFYPREASVKWKVDGALKTGNSQESVTEQDSKDNTYSLSSTLTLSSTEYQSHKVYACEVTHQGLSSPVTKSFNR",
+        "antigen_chain": "E",
+        "antigen_sequence": "AVGIGAVF",
+        "vh_sequence": "VQLQESGPGVVKPSETLSLTCEVSLRVGSYYWSWIRQSQGQRPEWMGGLYSDTGNTDYNPSLKSRVSLSRDMSKKQFFLNLRSVTATDTAVYFCVSRYVDHWTNRRFDVWGPGAQVTVTS",
+        "vl_sequence": "DIQMTQSPSSLSASVGDRVTVTCRASLDINKDLNWYQQKPGKAPALLIYAASTLQTGVSSRFSGSGSGTQFTLTISSLQPEDFATYYCLQDYSFPLTFGGGTKIDLK",
+        "cdr_sequences": {
+          "H1": "LRVGSY",
+          "H2": "YSDTGN",
+          "H3": "VSRYVDHWTNRRFDV",
+          "L1": "RASLDINKDLN",
+          "L2": "AASTLQT",
+          "L3": "LQDYSFPLT"
+        },
+        "paired_cdr_sequence": "LRVGSYYSDTGNVSRYVDHWTNRRFDVRASLDINKDLNAASTLQTLQDYSFPLT",
+        "cdr_h3_sequence": "VSRYVDHWTNRRFDV",
+        "h3_heavy_indices_zero_based": [
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C016",
+      "members": [
+        "pdb_00009hva-B-C"
+      ],
+      "representative_id": "pdb_00009hva-B-C",
+      "representative": {
+        "instance": "pdb_00009hva-B-C",
+        "pdb_id": "9hva",
+        "sabdab_id": "sabdab2_H04Z5L03SX",
+        "heavy_chain": "B",
+        "light_chain": "C",
+        "antigen_chains": [
+          "D"
+        ],
+        "antigen_name": "Capsid protein VP1",
+        "deposition_date": "20260605",
+        "update_date": "20260713",
+        "resolution": 3.89,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00009hva-B-C.cif",
+        "heavy_sequence": "QVQLRESGPSLVKPSQTLSLTCTVSGFSLTDVHVGWVRQTPGKALEWVGVICNRGAIGYNPALESRLSITEDNSKSQVSLSLSSVTTADTATYYCASSCRTEGDVGGDCDSDHFFCAWGQGLLVTVSSASTTAPKVYPLSSCCSSTVTLGCLVSSYMPEPVTVTWNSGALKSGVHTFPAVLQSSGLYSLSSMVTVPGTQTFTCNVAHPASSTKVDKAVDPR",
+        "light_sequence": "YELTQPTSVSVALGQTAKITCSGDLLDRQYAQWYQQKPGQGPVRVIYKDSERPSGISDRFSGSSSGKTATLTVSGAQTEDEADYYCHSADSSHYPVFGSGSTLTVLGQPKSPPSVTLFPPSTEELNGNKATLVCLISDFYPGSVTVVWKADGSTITRNVETTRASKQSNSKYAASSYLSLTSSDWKSKGSYSCEVTHEGSTVTKTVKPSEC",
+        "antigen_chain": "D",
+        "antigen_sequence": "HKQKIVAPVKQ",
+        "vh_sequence": "QVQLRESGPSLVKPSQTLSLTCTVSGFSLTDVHVGWVRQTPGKALEWVGVICNRGAIGYNPALESRLSITEDNSKSQVSLSLSSVTTADTATYYCASSCRTEGDVGGDCDSDHFFCAWGQGLLVTVSS",
+        "vl_sequence": "YELTQPTSVSVALGQTAKITCSGDLLDRQYAQWYQQKPGQGPVRVIYKDSERPSGISDRFSGSSSGKTATLTVSGAQTEDEADYYCHSADSSHYPVFGSGSTLTVL",
+        "cdr_sequences": {
+          "H1": "GFSLTDV",
+          "H2": "CNRGA",
+          "H3": "ASSCRTEGDVGGDCDSDHFFCA",
+          "L1": "SGDLLDRQYAQ",
+          "L2": "KDSERPS",
+          "L3": "HSADSSHYPV"
+        },
+        "paired_cdr_sequence": "GFSLTDVCNRGAASSCRTEGDVGGDCDSDHFFCASGDLLDRQYAQKDSERPSHSADSSHYPV",
+        "cdr_h3_sequence": "ASSCRTEGDVGGDCDSDHFFCA",
+        "h3_heavy_indices_zero_based": [
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C017",
+      "members": [
+        "pdb_00009rtg-B-A"
+      ],
+      "representative_id": "pdb_00009rtg-B-A",
+      "representative": {
+        "instance": "pdb_00009rtg-B-A",
+        "pdb_id": "9rtg",
+        "sabdab_id": "sabdab2_H065ZL04MK",
+        "heavy_chain": "B",
+        "light_chain": "A",
+        "antigen_chains": [
+          "I",
+          "J",
+          "K",
+          "L",
+          "X"
+        ],
+        "antigen_name": "D08 IgE Fab fragment, L-chain|D08 IgE Fab fragment, H-chain|Conglutin-7",
+        "deposition_date": "20260701",
+        "update_date": "20260713",
+        "resolution": 3.19,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00009rtg-B-A.cif",
+        "heavy_sequence": "QVQLVESGGGVVQPGKSLRLSCAASAFTFRRFAMHWVRQAPGKGLEWVAVISDNGLREDYEDSVKGRFTISRDNSQNTLYLQMNGLRAEDTAVYYCAKVLDYNEYSLYFGMDVWGQGTTVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKAEPKSC",
+        "light_sequence": "EVVLTQSPATLSLSPGERATLSCRTSQAISNNFLAWYQQRPGQPPRLLIYASSRRATDTPDRFTGSGSGTDFTLTITRLEPEDFAVYFCQYYSDSPPYTFGPGTKLEIKRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFNRGEC",
+        "antigen_chain": "X",
+        "antigen_sequence": "DPYSPSQDPYSPSQDPDRRDPYSPSP",
+        "vh_sequence": "QVQLVESGGGVVQPGKSLRLSCAASAFTFRRFAMHWVRQAPGKGLEWVAVISDNGLREDYEDSVKGRFTISRDNSQNTLYLQMNGLRAEDTAVYYCAKVLDYNEYSLYFGMDVWGQGTTVTVSS",
+        "vl_sequence": "EVVLTQSPATLSLSPGERATLSCRTSQAISNNFLAWYQQRPGQPPRLLIYASSRRATDTPDRFTGSGSGTDFTLTITRLEPEDFAVYFCQYYSDSPPYTFGPGTKLEIK",
+        "cdr_sequences": {
+          "H1": "AFTFRRF",
+          "H2": "SDNGLR",
+          "H3": "AKVLDYNEYSLYFGMDV",
+          "L1": "RTSQAISNNFLA",
+          "L2": "ASSRRAT",
+          "L3": "QYYSDSPPYT"
+        },
+        "paired_cdr_sequence": "AFTFRRFSDNGLRAKVLDYNEYSLYFGMDVRTSQAISNNFLAASSRRATQYYSDSPPYT",
+        "cdr_h3_sequence": "AKVLDYNEYSLYFGMDV",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C018",
+      "members": [
+        "pdb_00009tuz-B-C"
+      ],
+      "representative_id": "pdb_00009tuz-B-C",
+      "representative": {
+        "instance": "pdb_00009tuz-B-C",
+        "pdb_id": "9tuz",
+        "sabdab_id": "sabdab2_H067NL04P1",
+        "heavy_chain": "B",
+        "light_chain": "C",
+        "antigen_chains": [
+          "A"
+        ],
+        "antigen_name": "Rh5-interacting protein",
+        "deposition_date": "20260713",
+        "update_date": "20260713",
+        "resolution": 3.4,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00009tuz-B-C.cif",
+        "heavy_sequence": "VQLVEFGGGLVQPGGSLRLSCEGSGFIFSQYWMSWIRQAPGKGLEWVGNIKQDGTEKNYVDSVKGRFTISRDNTNNFLYLQMDSLRAEDTGVYFCARNTFYFDSSGYPLGQGALVAVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPK",
+        "light_sequence": "AIQMTQSPSTLSASVGDSVTISCRASQSISSWLAWYQQKPGKAPNLLIYKASILESGVPSRFSGSGSGTEFTLTISSLQPDDFATYYCQKYDSYPYSFGPGTKLDIKRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFNRGEC",
+        "antigen_chain": "A",
+        "antigen_sequence": "NKCKRKEYENICTNPNEMCAYNEETDIVKCECKECYYRSSRGECILND",
+        "vh_sequence": "VQLVEFGGGLVQPGGSLRLSCEGSGFIFSQYWMSWIRQAPGKGLEWVGNIKQDGTEKNYVDSVKGRFTISRDNTNNFLYLQMDSLRAEDTGVYFCARNTFYFDSSGYPLGQGALVAVSS",
+        "vl_sequence": "AIQMTQSPSTLSASVGDSVTISCRASQSISSWLAWYQQKPGKAPNLLIYKASILESGVPSRFSGSGSGTEFTLTISSLQPDDFATYYCQKYDSYPYSFGPGTKLDIK",
+        "cdr_sequences": {
+          "H1": "GFIFSQY",
+          "H2": "KQDGTE",
+          "H3": "ARNTFYFDSSGYP",
+          "L1": "RASQSISSWLA",
+          "L2": "KASILES",
+          "L3": "QKYDSYPYS"
+        },
+        "paired_cdr_sequence": "GFIFSQYKQDGTEARNTFYFDSSGYPRASQSISSWLAKASILESQKYDSYPYS",
+        "cdr_h3_sequence": "ARNTFYFDSSGYP",
+        "h3_heavy_indices_zero_based": [
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C019",
+      "members": [
+        "pdb_00009wj6-B-A"
+      ],
+      "representative_id": "pdb_00009wj6-B-A",
+      "representative": {
+        "instance": "pdb_00009wj6-B-A",
+        "pdb_id": "9wj6",
+        "sabdab_id": "sabdab2_H0667L04MR",
+        "heavy_chain": "B",
+        "light_chain": "A",
+        "antigen_chains": [
+          "E",
+          "I"
+        ],
+        "antigen_name": "HLA class I antigen|Peptide from GTPase KRas, N-terminally processed",
+        "deposition_date": "20260701",
+        "update_date": "20260713",
+        "resolution": 4.54,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00009wj6-B-A.cif",
+        "heavy_sequence": "EVQLVESGGGLVQPGRSLRLSCAASGFTFDQYAMHWVRQAPGKGLEWVSGISAYSLSIGYADSVKGRFTISRDNAKNSLYLQMNSLRAEDTAVYYCARGRSEGVYMDGMDIWGSGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPK",
+        "light_sequence": "SYVLTQPPSVSVAPGQTARITCGGNNIKYRDVHWYQQKPGQAPVLVVYQDTLRPQGIPERFSGSNSGNMATLTISRVEAGDEADYYCQVWDWDTDHWVFGGGTDLTVLRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHQGLSSPVTKSFNRGEC",
+        "antigen_chain": "I",
+        "antigen_sequence": "GADGVGKSAL",
+        "vh_sequence": "EVQLVESGGGLVQPGRSLRLSCAASGFTFDQYAMHWVRQAPGKGLEWVSGISAYSLSIGYADSVKGRFTISRDNAKNSLYLQMNSLRAEDTAVYYCARGRSEGVYMDGMDIWGSGTLVTVSS",
+        "vl_sequence": "SYVLTQPPSVSVAPGQTARITCGGNNIKYRDVHWYQQKPGQAPVLVVYQDTLRPQGIPERFSGSNSGNMATLTISRVEAGDEADYYCQVWDWDTDHWVFGGGTDLTVL",
+        "cdr_sequences": {
+          "H1": "GFTFDQY",
+          "H2": "SAYSLS",
+          "H3": "ARGRSEGVYMDGMDI",
+          "L1": "GGNNIKYRDVH",
+          "L2": "QDTLRPQ",
+          "L3": "QVWDWDTDHWV"
+        },
+        "paired_cdr_sequence": "GFTFDQYSAYSLSARGRSEGVYMDGMDIGGNNIKYRDVHQDTLRPQQVWDWDTDHWV",
+        "cdr_h3_sequence": "ARGRSEGVYMDGMDI",
+        "h3_heavy_indices_zero_based": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    },
+    {
+      "component_id": "V2C020",
+      "members": [
+        "pdb_00009zfz-A-B",
+        "pdb_00009zmb-C-D",
+        "pdb_00009zmc-C-D"
+      ],
+      "representative_id": "pdb_00009zmc-C-D",
+      "representative": {
+        "instance": "pdb_00009zmc-C-D",
+        "pdb_id": "9zmc",
+        "sabdab_id": "sabdab2_H0636L00BW",
+        "heavy_chain": "C",
+        "light_chain": "D",
+        "antigen_chains": [
+          "A"
+        ],
+        "antigen_name": "Circumsporozoite protein",
+        "deposition_date": "20260701",
+        "update_date": "20260713",
+        "resolution": 2.0,
+        "cif_path": "data/multiscaffold_confirmatory_v1/cif/pdb_00009zmc-C-D.cif",
+        "heavy_sequence": "EVQVVESGGGVVQPGRSLRLSCTASGFTFGDYAMSWFRQAPGKGLEWVGFIRSEANGGAPEYAASVKGRFTISRDDFKSIAYLQMNSLKTEDTAAYYCTRVRTNDFRDMDVWGKGTTVAVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPK",
+        "light_sequence": "DIVMTQTPLSLSVTPGQPASISCKSTESLLHRDGKTYLYWYLQKPGQPPQLLIYEVSNRFSGVPDRFSGSGSVTDFTLKISRVEAEDIGVYYCMQTIDLPWTFGQGTKVEIKRTVAAPSVFIFPPSDEQLKSGTASVVCLLNNFYPREAKVQWKVDNALQSGNSQESVTEQDSKDSTYSLSSTLTLSKADYEKHKVYACEVTHSSPVTKSFNRGE",
+        "antigen_chain": "A",
+        "antigen_sequence": "ANPNANPNANPNANPNANPN",
+        "vh_sequence": "EVQVVESGGGVVQPGRSLRLSCTASGFTFGDYAMSWFRQAPGKGLEWVGFIRSEANGGAPEYAASVKGRFTISRDDFKSIAYLQMNSLKTEDTAAYYCTRVRTNDFRDMDVWGKGTTVAVSS",
+        "vl_sequence": "DIVMTQTPLSLSVTPGQPASISCKSTESLLHRDGKTYLYWYLQKPGQPPQLLIYEVSNRFSGVPDRFSGSGSVTDFTLKISRVEAEDIGVYYCMQTIDLPWTFGQGTKVEIK",
+        "cdr_sequences": {
+          "H1": "GFTFGDY",
+          "H2": "RSEANGGA",
+          "H3": "TRVRTNDFRDMDV",
+          "L1": "KSTESLLHRDGKTYLY",
+          "L2": "EVSNRFS",
+          "L3": "MQTIDLPWT"
+        },
+        "paired_cdr_sequence": "GFTFGDYRSEANGGATRVRTNDFRDMDVKSTESLLHRDGKTYLYEVSNRFSMQTIDLPWT",
+        "cdr_h3_sequence": "TRVRTNDFRDMDV",
+        "h3_heavy_indices_zero_based": [
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "h3_definition": "Chothia positions 93-102, bounded by Cys92 and Trp103"
+      }
+    }
+  ],
+  "prohibitions": [
+    "no use in training, calibration, threshold selection, or early stopping",
+    "no generator or scorer output before training lineage and candidate rules are frozen",
+    "do not describe as a new external dataset"
+  ]
+}

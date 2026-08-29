@@ -2,9 +2,9 @@
 Paradigm shift: from scaffold backbone to folded CDR coordinates.
 If this also fails, pure computational metrics have reached their limit."""
 import sys,os,json,time,numpy as np,random
-os.chdir("/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow/modules")
+os.chdir("/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow/modules")
 from af2_jax_runner import run_multimer_prediction
 import esm,esm.inverse_folding.util as util
 from scipy.stats import kendalltau

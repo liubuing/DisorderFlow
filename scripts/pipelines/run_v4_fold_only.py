@@ -1,8 +1,8 @@
 """V4 Step 1: AF2-fold 10 designs + 4 native/scram controls, save CDR coords."""
 import sys,os,json,time,numpy as np,random
-os.chdir("/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow/modules")
+os.chdir("/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow/modules")
 from af2_jax_runner import run_multimer_prediction
 from Bio.PDB import PDBParser
 AA3={"ALA":"A","ARG":"R","ASN":"N","ASP":"D","CYS":"C","GLU":"E","GLN":"Q","GLY":"G","HIS":"H","ILE":"I","LEU":"L","LYS":"K","MET":"M","PHE":"F","PRO":"P","SER":"S","THR":"T","TRP":"W","TYR":"Y","VAL":"V"}

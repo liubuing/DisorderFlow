@@ -1,0 +1,13 @@
+schema_version: 1
+status: expanded_pose_protocol_frozen_before_merge
+classification: retrospective_expanded_idp_pose_development
+
+requirements:
+  minimum_poses_per_component: 2
+  target_poses_per_component: 5
+  distinct_coordinate_sha256_required: true
+  identical_coordinate_duplication: forbidden
+
+claim_boundary: >-
+  Mixed experimental and restrained-sampled pose panel for exposed retrospective
+  IDP method development only. No final-confirmation or experimental claim.

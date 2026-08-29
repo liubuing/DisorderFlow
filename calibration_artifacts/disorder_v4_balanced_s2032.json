@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "method": "weighted_platt_scaling",
+  "inference_path": "model.sample deterministic num_recycles=1",
+  "checkpoint": "logs\\bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032\\checkpoints\\best.pt",
+  "checkpoint_sha256": "ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252",
+  "calibration_split": "uniref50_disjoint_dev",
+  "lookup": "data\\disorder_supervision\\dev_afdb_balanced_v3.pkl",
+  "negative_evidence": "AFDB pLDDT >= 0.90 ordered proxy",
+  "warning": "Absolute probability calibration depends on proxy ordered labels.",
+  "n_proteins": 97,
+  "n_residues": 15113,
+  "positive_rate": 0.5350360616687619,
+  "evidence_weighted_positive_rate": 0.8215183764699906,
+  "parameters": {
+    "scale": 0.8278852704210062,
+    "bias": 1.5500925138133907
+  },
+  "threshold": 0.9121511644495124,
+  "discrimination": {
+    "disorder_auc_roc": 0.8974938051213437,
+    "disorder_auc_pr": 0.9302435516088966,
+    "disorder_mcc": 0.6669540236430952,
+    "disorder_positive_rate": 0.46992655329848476,
+    "disorder_n_residues": 15113
+  },
+  "uncalibrated_weighted": {
+    "brier": 0.14059016252541812,
+    "ece": 0.16258027562511496
+  },
+  "uncalibrated_operating_point_at_0_5": {
+    "mcc": 0.6669540236430952,
+    "threshold": 0.5,
+    "positive_rate": 0.46992655329848476,
+    "tp": 6309,
+    "tn": 6234,
+    "fp": 793,
+    "fn": 1777
+  },
+  "calibrated_weighted": {
+    "brier": 0.09871179148838961,
+    "ece": 0.030910573509104224
+  },
+  "calibrated_operating_point": {
+    "mcc": 0.6798150695806837,
+    "threshold": 0.9121511644495124,
+    "positive_rate": 0.39456097399589757,
+    "tp": 5695,
+    "tn": 6759,
+    "fp": 268,
+    "fn": 2391
+  },
+  "grouped_cross_validation": {
+    "folds": [
+      {
+        "fold": 0,
+        "n_proteins": 15,
+        "n_residues": 2423,
+        "scale": 0.8065918104111646,
+        "bias": 1.4933294370760433,
+        "threshold": 0.9053736675065951
+      },
+      {
+        "fold": 1,
+        "n_proteins": 19,
+        "n_residues": 3044,
+        "scale": 0.8283201935201046,
+        "bias": 1.6927644673470186,
+        "threshold": 0.8901543229965763
+      },
+      {
+        "fold": 2,
+        "n_proteins": 18,
+        "n_residues": 2657,
+        "scale": 0.7982105546821712,
+        "bias": 1.4784815729832528,
+        "threshold": 0.9032661797450914
+      },
+      {
+        "fold": 3,
+        "n_proteins": 21,
+        "n_residues": 3325,
+        "scale": 0.9192104309478109,
+        "bias": 1.5454007556937706,
+        "threshold": 0.8953517799325574
+      },
+      {
+        "fold": 4,
+        "n_proteins": 24,
+        "n_residues": 3664,
+        "scale": 0.805634113051194,
+        "bias": 1.549077683515359,
+        "threshold": 0.9020523767062576
+      }
+    ],
+    "oof_weighted_calibration": {
+      "brier": 0.1001674983594148,
+      "ece": 0.029826159113401224
+    },
+    "oof_operating_point": {
+      "mcc": 0.6693170274431707,
+      "threshold": 0.5,
+      "positive_rate": 0.4075961093098657,
+      "tp": 5775,
+      "tn": 6642,
+      "fp": 385,
+      "fn": 2311
+    }
+  }
+}

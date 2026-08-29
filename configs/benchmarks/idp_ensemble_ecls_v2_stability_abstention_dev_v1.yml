@@ -1,0 +1,43 @@
+schema_version: 1
+status: stability_abstention_defined_after_lower_envelope_failure_for_exposed_development
+classification: post_v2_failure_development_diagnostic_not_confirmation
+
+inputs:
+  development:
+    path: reviewer_outputs/idp_ensemble_ecls_scoring_dev_v1/analysis.json
+    sha256: ea40c8e07ed7985a56c13f6a00626485791305effeb2c7749c78fcb840413acf
+  expansion:
+    path: reviewer_outputs/idp_ensemble_ecls_scoring_expansion_v1/analysis.json
+    sha256: ce1ea4ffb61801562ed94a928a46bf5001e65b9c6551a529b12bc99df670916e
+
+methods: [proteinmpnn, single_conformer_bfn, esm_if]
+primary_method: proteinmpnn
+selector:
+  name: inner_jackknife_consensus_or_abstain
+  outer_evaluation: leave_one_conformer_out
+  inner_panels: delete_each_additional_training_conformer
+  requirement: all_inner_robust_score_winners_identical_with_strict_positive_margin
+  candidate_tie_break: lexicographically_greatest_sequence
+  robust_aggregation:
+    p25_weight: 0.45
+    minimum_weight: 0.25
+    mean_weight: 0.20
+    standard_deviation_penalty: 0.10
+  single_state_comparator: unchanged_v1_median_heldout_score_of_training_conformer_winners
+
+secondary_abstention:
+  selector_identity: consensus_winner_equals_all_training_single_state_winners
+  minimum_median_training_candidate_range: 1.0e-4
+  abstentions_are_missing_not_zero: true
+
+development_decision:
+  lower_envelope_selector: not_promoted_due_to_unchanged_5CSZ_negative_transfer
+  stability_abstention: safety_filter_only_not_primary_selector
+  reason: removes_5CSZ_output_but_strict_coverage_and_residual_negative_folds_are_unacceptable
+  next_priority: localize_5CSZ_and_TAU_6LRA_negative_transfer_to_conformer_and_H3_position_contributions
+
+output:
+  json: reviewer_outputs/idp_ensemble_ecls_v2_stability_abstention_dev_v1/analysis.json
+  report: reviewer_outputs/idp_ensemble_ecls_v2_stability_abstention_dev_v1/report.md
+
+claim_boundary: exploratory abstention coverage and conditional effect on 12 exposed components after lower-envelope failure; cannot license confirmation without a newly frozen untouched evaluation

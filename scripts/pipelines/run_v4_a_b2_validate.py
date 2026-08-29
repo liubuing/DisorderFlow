@@ -8,9 +8,9 @@ Key question: do native seeds score HIGHER than variants?
 Usage (WSL): python run_v4_a_b2_validate.py
 """
 import sys,os,json,time,random
-os.chdir("/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow")
-sys.path.insert(0,"/mnt/c/biological/DisorderFlow/modules")
+os.chdir("/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow")
+sys.path.insert(0,"/mnt/d/biological/DisorderFlow/modules")
 import numpy as np
 from af2_jax_runner import run_multimer_prediction
 from Bio.PDB import PDBParser

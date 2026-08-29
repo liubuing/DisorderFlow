@@ -1,0 +1,52 @@
+schema_version: 1
+status: frozen_before_ibec_e1_behavior_analysis_after_raw_generation
+purpose: matched_generator_behavior_audit_on_20_antibody_peptide_components
+classification: retrospective_analysis_of_frozen_prospective_internal_generation
+claim_boundary: generator behavior and failure-mode characterization only; diversity is not binding quality
+inputs:
+  raw_generation: results/multiscaffold_confirmatory_v2/raw_generation.json
+  raw_generation_sha256: bc61c7dfb8b00b562dba9b77f2d91f0113a72932cf55d34b0b1c30645a9afeca
+  raw_generation_audit: results/multiscaffold_confirmatory_v2/raw_generation_audit.json
+  raw_generation_audit_sha256: bb7187fd8a139a94413b40a52eb4569d7745ecd77297a79e7b28436c611d3205
+  holdout_manifest: data/multiscaffold_confirmatory_v2/holdout_manifest.json
+  holdout_manifest_sha256: b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380
+panel:
+  components: 20
+  seeds: [2609, 2617, 2621]
+  candidates_per_seed: 8
+  attempts_per_arm: 480
+comparison:
+  primary_bfn_arm: current_bfn_disorder_on
+  primary_baseline: proteinmpnn
+  descriptive_arms:
+    - current_bfn_disorder_off
+    - stage_a_antibody_bfn
+    - esm_if
+  self_perplexity_comparison_forbidden: true
+metrics:
+  diversity:
+    - unique_fraction
+    - mean_position_entropy_nats
+    - mean_pairwise_hamming_fraction
+  quality_control:
+    - developability_pass_fraction_at_0_55
+    - mean_full_heavy_developability_risk
+    - mean_native_recovery
+  seed_stability:
+    - unique_fraction_seed_std
+    - position_entropy_seed_std
+statistics:
+  inference_unit: component
+  bootstrap_trials: 10000
+  bootstrap_seed: 6601
+  paired_difference: primary_bfn_minus_proteinmpnn
+interpretation:
+  diversity_advantage_requires_metrics: 2
+  developability_noninferiority_margin: -0.05
+  no_composite_success_counting: true
+  no_binding_or_affinity_interpretation: true
+outputs:
+  directory: results/ibec/e1_generator_behavior_v1
+  component_metrics: component_metrics.csv
+  summary: summary.json
+  report: report.md

@@ -1,0 +1,27 @@
+schema_version: 1
+status: scorer_input_audit_frozen_before_independent_scoring
+classification: retrospective_expanded_idp_scorer_input_development
+
+inputs:
+  structural_panel: reviewer_outputs/idp_ensemble_expanded_development_v2/structural_panel.json
+  structural_panel_sha256: f56f32dad7ba62dc3b527717206054b5994235b7cb5580573e3f74ceef38456c
+  pose_source_audit: reviewer_outputs/idp_ensemble_expanded_development_v2/pose_source_audit.json
+  pose_source_audit_sha256: 7bae6d5b7317fbc5dd72ad3a680683b6ce898887680e1476ab71068d6f99520e
+  donor_manifest: reviewer_outputs/idp_ensemble_expanded_development_v2/pose_donor_coordinates/manifest.json
+  donor_manifest_sha256: 5d77b72b68210dc0186f7d16d9d0c9cc4c96b9d4a2f76cfd680698815c1322d3
+  registry: reviewer_outputs/idp_ensemble_expanded_development_v2/registry.json
+
+donor_admission:
+  minimum_heavy_sequence_identity: 0.98
+  exact_h3_sequence_required: true
+  observed_protein_or_peptide_antigen_required: true
+  minimum_experimental_poses: 2
+
+outputs:
+  donor_audit: reviewer_outputs/idp_ensemble_expanded_development_v2/donor_sequence_audit.json
+  scorer_inputs: reviewer_outputs/idp_ensemble_expanded_development_v2/scorer_input_manifest.json
+
+claim_boundary: >-
+  Sequence-verified structural inputs for independent scorer development on
+  exposed retrospective components. They cannot support final confirmation or
+  experimental claims.

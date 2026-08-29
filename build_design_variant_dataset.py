@@ -129,7 +129,7 @@ def real_af2_labels(full_aa_tensor, epitope_seq=DEFAULT_EPITOPE, num_recycle=2, 
     if use_wsl:
         # One-by-one WSL worker for backward compat (batch mode preferred)
         cmd = [
-            'wsl', '-d', 'Debian', '--', 'bash', '-c',
+            'wsl', '-d', os.environ.get('DISORDERFLOW_AF2_WSL_DISTRO', 'Ubuntu-24.04-D'), '--', 'bash', '-c',
             f'source venv_wsl/bin/activate && python af2_wsl_worker.py "$1" "$2" "$3"',
             '--', seq, epitope_seq, str(num_recycle),
         ]
@@ -209,10 +209,10 @@ def _batch_af2_wsl(seqs, epitope_seq, num_recycle, warmup_seq=None, output_dir=N
     CHUNK_SIZE = 30
     jobs_path = os.path.join(PROJECT_ROOT, '.af2_wsl_jobs.jsonl')
     results_path = os.path.join(PROJECT_ROOT, '.af2_wsl_results.jsonl')
-    wsl_jobs = '/mnt/c/biological/DisorderFlow/.af2_wsl_jobs.jsonl'
-    wsl_results = '/mnt/c/biological/DisorderFlow/.af2_wsl_results.jsonl'
+    wsl_jobs = '/mnt/d/biological/DisorderFlow/.af2_wsl_jobs.jsonl'
+    wsl_results = '/mnt/d/biological/DisorderFlow/.af2_wsl_results.jsonl'
     epitope_arg = f'--epitope {epitope_seq}'
-    wsl_distribution = os.environ.get('DISORDERFLOW_AF2_WSL_DISTRO', 'Ubuntu-24.04')
+    wsl_distribution = os.environ.get('DISORDERFLOW_AF2_WSL_DISTRO', 'Ubuntu-24.04-D')
 
     all_results = [None] * len(seqs)
     output_dir_wsl = None
