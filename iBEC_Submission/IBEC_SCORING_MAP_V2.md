@@ -5,7 +5,7 @@
 - ECLS native-versus-counterfactual structural sequence contrast.
 - Position-sensitive antigen disorder routing in a BFN receiver.
 - Fail-closed binder-confidence design that abstains without experimental labels.
-- Explicit separation of generator, scorer, validator, and evidence class.
+- Explicit separation of generator, scorer, structural triage, and evidence class.
 - Frozen 20-component analysis establishes broader BFN exploration with an explicit quality tradeoff.
 
 ## Technical Rigor - 25%
@@ -37,6 +37,6 @@
 ## Reproducibility and Transparency - 10%
 
 - Frozen YAML contracts and SHA256 manifests.
-- Full CPU test suite passing.
-- ECLS release lineage validates 449 artifacts.
+- Focused workflow tests and package-integrity checks passing.
+- Frozen ECLS reviewer manifest lists 68 checksummed files.
 - Null binder probability is reported when experimental labels are absent.

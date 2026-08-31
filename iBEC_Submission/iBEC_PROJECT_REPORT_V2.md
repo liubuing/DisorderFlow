@@ -12,19 +12,19 @@
 
 Intrinsically disordered proteins and flexible peptide epitopes are central to Alzheimer's disease, Parkinson's disease, and other protein-misfolding disorders. Their conformational heterogeneity creates a difficult engineering problem: a candidate antibody sequence should not be judged from one rigid antigen pose or one uncalibrated confidence score.
 
-DisorderFlow is an auditable computational platform for structure-conditioned CDR-H3 analysis and candidate prioritization against flexible peptide antigens. It integrates a Bayesian Flow Network (BFN), epitope-conditioned likelihood shift (ECLS), multi-conformation scoring, ProteinMPNN and ESM-IF baselines, AlphaFold-Multimer validation, developability filters, and frozen evidence contracts in a Gradio application and command-line workflow.
+DisorderFlow is an auditable computational platform for structure-conditioned CDR-H3 analysis and candidate prioritization against flexible peptide antigens. It integrates a Bayesian Flow Network (BFN), epitope-conditioned likelihood shift (ECLS), multi-conformation scoring, ProteinMPNN and ESM-IF baselines, AlphaFold-Multimer structural triage, developability filters, and frozen evidence contracts in a Gradio application and command-line workflow.
 
 The strongest general result is a one-time temporal ECLS final on 31 antibody-peptide structures aggregated into 15 antigen clusters. Native CDR-H3 sequences achieved a mean advantage of 0.1723 over 200 composition-matched shuffles per record, with a cluster-bootstrap 95% confidence interval of [0.0592, 0.2919] and 12/15 positive clusters. The result supports a bounded structural sequence-scoring claim, not experimental binding.
 
-We also completed an end-to-end amyloid-beta engineering case study. A frozen funnel consolidated 352 unique hypotheses, retained 77 after computational gates, selected 24 diverse candidates, completed 81/81 three-seed AlphaFold-Multimer predictions for 24 candidates and three controls, and produced 12 sequence-diverse final computational candidates. All 12 were converted into auditable secreted scFv construct plans. Because no wet-lab labels are available, the binder-confidence module correctly abstains instead of converting AF2 or PRODIGY scores into false binding probabilities.
+We also completed an end-to-end amyloid-beta engineering case study. A frozen funnel consolidated 352 unique candidates including the native control, retained 77 after computational gates, selected 24 diverse candidates, completed 81/81 three-seed AlphaFold-Multimer predictions for 24 candidates and three controls, and produced 12 sequence-diverse final computational candidates. All 12 were converted into auditable secreted scFv construct plans. Because no wet-lab labels are available, the binder-confidence module correctly abstains instead of converting AF2 or PRODIGY scores into false binding probabilities.
 
-Two iBEC-specific audits further strengthened the project. A frozen 20-component analysis of 2,400 completed generation attempts showed that disorder-aware BFN substantially increased position entropy and pairwise Hamming diversity relative to ProteinMPNN, but reduced the developability pass fraction by 16.5 percentage points. We therefore report broader exploration with a quality tradeoff, not unconditional superiority. Evidence auditing of the 1,289-record, five-conformation dataset found 219 records with exact-sequence DisProt disorder-region evidence; prediction and AF2 proxy labels are reported separately. A correctly masked Tau/5MP3 extension then evaluated 275 unique H3 hypotheses across five poses, retained 163 after all preregistered gates, and produced eight diverse computational candidates.
+Two iBEC-specific audits further strengthened the project. A frozen 20-component analysis of 2,400 completed generation attempts showed that the BFN arm substantially increased position entropy and pairwise Hamming diversity relative to ProteinMPNN, but reduced the developability pass fraction by 16.5 percentage points. We therefore report broader exploration with a quality tradeoff, not unconditional superiority or an isolated disorder-conditioning effect. Evidence auditing of the 1,289-record, five-conformation dataset found 219 records with exact-sequence DisProt disorder-region evidence; prediction and AF2 proxy labels are reported separately. A correctly masked Tau/5MP3 extension then evaluated 275 unique H3 candidates including the native control across five poses, retained 163 after all preregistered gates, and produced eight diverse computational candidates.
 
 ## 2. Challenge and Significance
 
 Many antibody-design systems assume a stable antigen structure. This assumption is poorly matched to disordered or conformationally heterogeneous peptide targets such as amyloid-beta, tau, and alpha-synuclein. The core challenge is not merely generating diverse sequences. It is preserving antigen context, comparing multiple conformations, preventing evaluator leakage, and reporting uncertainty when computational evidence is insufficient.
 
-DisorderFlow addresses this gap as an engineering platform rather than a single score. The platform separates generation, structural conditioning, counterfactual controls, multi-seed validation, developability, evidence classification, and experimental handoff. This separation is important for safe AI-assisted life-science discovery because it prevents software availability from being mistaken for biological validation.
+DisorderFlow addresses this gap as an engineering platform rather than a single score. The platform separates generation, structural conditioning, counterfactual controls, multi-seed structural triage, developability, evidence classification, and experimental handoff. This separation is important for safe AI-assisted life-science discovery because it prevents software availability from being mistaken for biological validation.
 
 ## 3. Originality and Innovation
 
@@ -57,7 +57,7 @@ DisorderFlow provides the following modules:
 3. ECLS native-versus-counterfactual benchmarking.
 4. ProteinMPNN and ESM-IF matched baselines.
 5. Multi-pose and multi-seed aggregation.
-6. AlphaFold-Multimer and PRODIGY computational validation.
+6. AlphaFold-Multimer and PRODIGY computational structural triage.
 7. Sequence developability, glycosylation, charge, hydrophobicity, and diversity gates.
 8. Gradio interface, batch processing, command-line runners, frozen YAML contracts, and SHA256 manifests.
 9. Experimental-handoff schemas and binder-confidence abstention.
@@ -148,7 +148,7 @@ The source LMDB contained 1,301 records. The missing 12 records were source keys
 
 The 5MP3 DC8E8 Fab-Tau complex provided a real bound geometry. Independent IMGT and structural-anchor checks identified the complete 13-residue H3 `ARDYYGTSFAMDY`. Five transferred Tau NMR poses passed geometry checks with zero severe clashes and 19-27 contacts per pose. All five showed antigen-conditioned BFN response; mean complex-minus-stripped state compatibility was 0.0634 and the across-pose output range was 0.0480. Historical candidates using an incorrect 10-position mask were invalidated.
 
-The frozen extension combined 200 conservative variants, 40 composition-shuffled controls, three-seed ProteinMPNN generation, and three-seed BFN generation. It yielded 275 unique sequences; 163 passed all source, 1-4 mutation, five-pose BFN noninferiority, contact-map, and developability gates. Diversity selection produced eight candidates with minimum pairwise Hamming distance 2. Their mean complex-minus-stripped scores ranged from 0.0615 to 0.0779, compared with 0.0634 for native. All eight came from the conservative library, so this is a second-target computational prioritization result, not evidence that either generator improves binding.
+The frozen extension combined 200 conservative variants, 40 composition-shuffled controls, three-seed ProteinMPNN generation, and three-seed BFN generation. It yielded 275 unique sequences including native; 163 passed all source, 1-4 mutation, five-pose BFN noninferiority, contact-map, and developability gates. Diversity selection produced eight candidates with minimum pairwise Hamming distance 2. Their mean complex-minus-stripped scores ranged from 0.0615 to 0.0779, compared with 0.0634 for native. All eight came from the conservative library, so this is a second-target computational prioritization result, not evidence that either generator improves binding.
 
 ## 10. Engineering Design and Translation Potential
 
@@ -160,8 +160,8 @@ These artifacts demonstrate a complete computational-to-experimental handoff, al
 
 - Frozen YAML contracts define every prospective run.
 - SHA256 hashes bind checkpoints, structures, configs, scripts, and outputs.
-- The full CPU test suite passes.
-- The frozen ECLS release lineage validates 449 artifacts.
+- Focused workflow tests and package-integrity checks pass.
+- The frozen ECLS reviewer manifest lists 68 checksummed files.
 - GPU and external-tool runs preserve one result row per requested prediction slot.
 - The 81-slot AF2 panel completed with zero missing results.
 - `binder_confidence_v1` currently reports zero experimental labels, null probability output, and `abstain_not_trained`.
@@ -174,7 +174,7 @@ There is no wet-lab validation. AF2 and PRODIGY are computational plausibility f
 
 Current deliverables include the Gradio platform, BFN and baseline runners, frozen ECLS benchmark, Aβ candidate funnel, 81 AF2 structures, 12 scFv-ready protein designs, the eight-candidate Tau computational shortlist, reproducibility manifests, and a fail-closed experimental feedback schema.
 
-The evidence-tier audit, 20-component generator benchmark, and correctly masked Tau second-target candidate protocol are complete. If selected for the final, we will prepare a 5-8 minute live software demonstration using the validated 4HIX workflow and cached results.
+The evidence-tier audit, 20-component generator benchmark, and correctly masked Tau second-target candidate protocol are complete. If selected for the final, we will prepare a 5-8 minute live software demonstration using the frozen 4HIX workflow and cached results.
 
 ## References
 

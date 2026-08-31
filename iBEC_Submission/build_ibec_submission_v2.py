@@ -204,7 +204,7 @@ SLIDES = [
     },
     {
         "title": "3. End-to-End Platform",
-        "subtitle": "Structure → generation → multi-state scoring → filtering → validation → handoff",
+        "subtitle": "Structure → generation → multi-state scoring → filtering → triage → handoff",
         "bullets": [
             "BFN, ProteinMPNN and ESM-IF matched workflows",
             "Gradio interface plus reproducible command-line runners",
@@ -226,14 +226,14 @@ SLIDES = [
         "title": "5. Aβ Candidate Engineering Funnel",
         "subtitle": "A frozen, auditable 3D6/4HIX case study",
         "bullets": [
-            "481 source memberships → 352 unique hypotheses",
+            "481 source memberships → 352 unique candidates including native",
             "77 pass computational gates → 24 diverse candidates",
             "27 entities × 3 AF2 seeds = 81/81 successful predictions",
             "16 pass AF2/PRODIGY gates → 12 final computational candidates",
         ],
     },
     {
-        "title": "6. Multi-Seed Structural Validation",
+        "title": "6. Multi-Seed Structural Triage",
         "subtitle": "Small score changes are reported with uncertainty",
         "bullets": [
             "Native median ipTM: 0.4762",
@@ -248,7 +248,7 @@ SLIDES = [
         "bullets": [
             "1,289 records × 5 conformations; 219 have exact DisProt disorder-region evidence",
             "The unsupported phrase '800+ natural IDPs' has been removed",
-            "Tau/5MP3: correct 13-aa H3, five poses, 275 unique hypotheses, 163 pass all gates",
+            "Tau/5MP3: correct 13-aa H3, five poses, 275 candidates including native",
             "Eight diverse Tau candidates; minimum pairwise Hamming distance 2",
         ],
     },
@@ -267,7 +267,7 @@ SLIDES = [
         "subtitle": "Primary track: AI-driven Life Science Discovery",
         "bullets": [
             "Runnable platform and 4HIX demonstration workflow",
-            "Frozen ECLS benchmark and 449-artifact release lineage",
+            "Frozen ECLS benchmark and 68-file checksummed evidence manifest",
             "Aβ 352→24→12 case study with 81 hashed AF2 structures",
             "Completed audits and Tau 275→163→8 second-target extension",
             "Current boundary: no experimental binding, affinity or therapeutic claim",
@@ -292,6 +292,9 @@ def add_ppt_text(slide, x, y, w, h, text, size, color, bold=False, align=PP_ALIG
 
 def build_abstract_pptx(output_path):
     prs = Presentation()
+    prs.core_properties.author = "DisorderFlow"
+    prs.core_properties.last_modified_by = "DisorderFlow"
+    prs.core_properties.title = "DisorderFlow iBEC Technical Abstract"
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
     blank = prs.slide_layouts[6]
@@ -384,14 +387,16 @@ def write_lightweight_artifacts(supplement):
     supplement.mkdir(parents=True, exist_ok=True)
     sources = {
         "ecls_final_decision.json": ROOT / "results/publication/h3_ecls_temporal_final_v1/final_decision.json",
+        "ecls_evidence_manifest.json": ROOT / "results/publication/h3_submission_package_v1/evidence_manifest.json",
         "abeta_candidate_summary.json": ROOT / "results/prospective/abeta_4hix_af2_gate_v1/analysis.json",
         "abeta_final_shortlist.csv": ROOT / "results/prospective/abeta_4hix_af2_gate_v1/shortlist_for_expression_prep.csv",
         "binder_confidence_status.json": ROOT / "results/prospective/binder_confidence_v1/measurement_status.json",
         "e1_generator_behavior_summary.json": ROOT / "results/ibec/e1_generator_behavior_v1/summary.json",
         "e2_idp_evidence_summary.json": ROOT / "results/ibec/e2_idp_evidence_audit_v1/summary.json",
+        "caid3_external_analysis.json": ROOT / "results/ablation/caid3_external_analysis_v1.json",
         "tau_sanity_status.json": ROOT / "results/ibec/tau_sanity_v1/status.json",
         "tau_candidate_results.json": ROOT / "results/ibec/tau_candidates_v1/results.json",
-        "REPRODUCIBILITY.md": ROOT / "publication/REPRODUCIBILITY.md",
+        "REPRODUCIBILITY.md": SOURCE / "REPRODUCIBILITY_V2.md",
     }
     for name, source in sources.items():
         if name == "abeta_candidate_summary.json":
@@ -472,6 +477,7 @@ def main():
     build_abstract_pptx(abstract_pptx)
     write_lightweight_artifacts(PACKAGE / "Supplementary_Materials")
     shutil.copy2(SOURCE / "SUBMISSION_CHECKLIST_V2.md", PACKAGE / "SUBMISSION_CHECKLIST.md")
+    shutil.copy2(SOURCE / "verify_ibec_package.py", PACKAGE / "VERIFY_PACKAGE.py")
     logo = SOURCE / "logo/28-解析无序-logo.png"
     if logo.exists():
         shutil.copy2(logo, PACKAGE / "28-AnalyzingDisorder-logo.png")

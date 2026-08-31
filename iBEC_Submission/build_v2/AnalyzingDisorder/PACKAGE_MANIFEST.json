@@ -6,23 +6,23 @@
   },
   {
     "path": "28-AnalyzingDisorder-ProjectReport.pdf",
-    "bytes": 51898,
-    "sha256": "6816d9fdcad1b55da0da47171e362eae7e840b26a1753c2e2f9a7d986c21a960"
+    "bytes": 51974,
+    "sha256": "fddea6eb6792be6cbef9b51813afe17bed7236a84cf56f1ebd21add2df029ffe"
   },
   {
     "path": "28-AnalyzingDisorder-TechnicalAbstract.pdf",
-    "bytes": 48444,
-    "sha256": "cc7b50137a5832e235cc80ceb23b6ce366f0c22b6c0bd8e8db4a0de19be0b69b"
+    "bytes": 48442,
+    "sha256": "5f808fa1e063c544dffd2d16dd8750d174ba4b51e2e821f0ed75796ac9546e42"
   },
   {
     "path": "28-AnalyzingDisorder-TechnicalAbstract.pptx",
-    "bytes": 44918,
-    "sha256": "83e7c15727bed36fe29846f7f3ac261479f47850a3b0215ddc9f01685c2b560d"
+    "bytes": 44945,
+    "sha256": "d7d818d501c475e8cada90e8f93582cecfe034810013e04dca4563d199895a67"
   },
   {
     "path": "SUBMISSION_CHECKLIST.md",
-    "bytes": 1156,
-    "sha256": "a95c03248738760cbd04bf5d8d4357ee4012ae22e3b93cb394d90de9eaf2045f"
+    "bytes": 1322,
+    "sha256": "8bfe53546447a8f256b9f86d50ee23be8f537a1c4ab370d7c0c33de496bb9256"
   },
   {
     "path": "Supplementary_Materials/abeta_candidate_summary.json",
@@ -40,6 +40,11 @@
     "sha256": "85099f7182705913ac5c752d766b72d139367e5044b81630f2723252f9bad1a3"
   },
   {
+    "path": "Supplementary_Materials/caid3_external_analysis.json",
+    "bytes": 34137,
+    "sha256": "a518bd6540ad44e1310f628873bd7e192b6df7bdb13abb236c93064396ba29ea"
+  },
+  {
     "path": "Supplementary_Materials/e1_generator_behavior_summary.json",
     "bytes": 9827,
     "sha256": "e54104e2de020cf5b92c10c4f450b92d0e4704a179583b129b3caa13a11e803d"
@@ -50,14 +55,19 @@
     "sha256": "3b274b18fa5cac76466ed5aa1459c4f305c48555e46e5fdfcf2df7479b729d5b"
   },
   {
+    "path": "Supplementary_Materials/ecls_evidence_manifest.json",
+    "bytes": 13322,
+    "sha256": "86c9cb9430f5a6cd1fc9aa2a5086f64498d0ca0a3131b38c813a4607c03d5628"
+  },
+  {
     "path": "Supplementary_Materials/ecls_final_decision.json",
     "bytes": 1638,
     "sha256": "0e32c22ceaddd829497011708445b136f4f0a1f13f061bcbfdd76d68bacd8cb0"
   },
   {
     "path": "Supplementary_Materials/IBEC_SCORING_MAP.md",
-    "bytes": 1996,
-    "sha256": "f0afa064a87c2a656693528aa948ccd72dc1716baedfb2fbd37d46c27fe7526b"
+    "bytes": 2048,
+    "sha256": "2b1b898c8a0dc7609da31147f49a87089cbe6b72b705c36fc22a0463065ef3eb"
   },
   {
     "path": "Supplementary_Materials/IBEC_TRACK_DECISION.md",
@@ -66,18 +76,18 @@
   },
   {
     "path": "Supplementary_Materials/MANIFEST.json",
-    "bytes": 1849,
-    "sha256": "832bb691e7251ace56b8867e62ad8ffbe98b376af85b45cdb8f4a326bd35be2b"
+    "bytes": 2166,
+    "sha256": "8f3c2ee3499000fde95bd8d8427f4e49f669d171ff986443c6d12acae0278f08"
   },
   {
     "path": "Supplementary_Materials/README.md",
-    "bytes": 2261,
-    "sha256": "b229854e49247cb012de61b11dae734a915e12297f4526f79d2f02860db4603e"
+    "bytes": 2665,
+    "sha256": "ab28dfc4b40a543ea3bba7028b6d8ae67571d4fb68bf23571a09f3dd6688be87"
   },
   {
     "path": "Supplementary_Materials/REPRODUCIBILITY.md",
-    "bytes": 4790,
-    "sha256": "096884f3cec69251dbddc71eabe0fbba85c696c355b82751968e4aceea10912d"
+    "bytes": 2026,
+    "sha256": "41c332e0a20bd98c91e1040aaee7827fe24df435cd77efc8fcc1298641f2e43d"
   },
   {
     "path": "Supplementary_Materials/tau_candidate_results.json",
@@ -88,5 +98,10 @@
     "path": "Supplementary_Materials/tau_sanity_status.json",
     "bytes": 5927,
     "sha256": "c924557817ff4b4fc984dbcef79f79849565b3ee6a4cd763724d49b0fd362079"
+  },
+  {
+    "path": "VERIFY_PACKAGE.py",
+    "bytes": 1293,
+    "sha256": "5820b49056263d1f0bca06eaedd01420ff0aa3036795fd6edac8007bf222a3bf"
   }
 ]

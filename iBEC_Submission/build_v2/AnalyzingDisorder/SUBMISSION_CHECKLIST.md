@@ -27,6 +27,7 @@
 ## Manual Review Before Upload
 
 - [ ] Confirm team name and member spelling against the registration system.
+- [ ] Confirm whether unified blind review permits names/institution in reviewer-visible files. The current build is identified and must be anonymized if prohibited.
 - [ ] Confirm the selected competition track in the online form.
 - [ ] Visually inspect every PDF page and the PPTX on the submission computer.
 - [ ] Confirm no private blinding key, model weight, licensed database, or secret is included.
