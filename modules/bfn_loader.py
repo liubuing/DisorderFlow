@@ -29,6 +29,22 @@ _bfn_model = None
 _bfn_config = None
 
 
+def _validate_candidate_interface_checkpoint(model, checkpoint_state):
+    receiver = model.bfn.receiver
+    if receiver.confidence_head_kind != "candidate_interface_v1":
+        return
+    required = [
+        key for key in model.state_dict()
+        if ".candidate_interface_" in key
+    ]
+    missing = [key for key in required if key not in checkpoint_state]
+    if missing:
+        raise RuntimeError(
+            "candidate_interface_v1 checkpoint is missing confidence weights: "
+            + ", ".join(missing[:5])
+        )
+
+
 def _get_checkpoint_path():
     """Read checkpoint path from app_config.yaml."""
     override = os.environ.get("DISORDERFLOW_CHECKPOINT")
@@ -75,6 +91,7 @@ def load_bfn(device=None):
     model = get_model(mc).to(device)
 
     ckpt_state = ckpt["model"]
+    _validate_candidate_interface_checkpoint(model, ckpt_state)
     # Skip ipTM head keys if architecture mismatches
     if any("head_iptm" in k for k in ckpt_state):
         new_iptm_keys = [k for k in model.state_dict() if "head_iptm" in k]
@@ -223,6 +240,30 @@ def inject_candidate_sequence(batch, candidate_sequence):
     return batch
 
 
+def _score_exact_candidate_confidence(model, batch, candidate_sequence, fixed_t=0.5):
+    """Post-score an emitted sequence for candidate-interface confidence."""
+    score_batch = {
+        key: value.clone() if isinstance(value, torch.Tensor) else value
+        for key, value in batch.items()
+    }
+    inject_candidate_sequence(score_batch, candidate_sequence)
+    candidate_mask = score_batch["generate_flag"].bool()
+    antigen_mask = model.bfn._mask_antigen(score_batch, candidate_mask)
+    if antigen_mask is None or not antigen_mask.any():
+        raise ValueError("candidate_interface_v1 requires explicit antigen context")
+    score_batch["mask_antigen"] = antigen_mask
+    scored = model.score(score_batch, fixed_t=fixed_t)
+    interface_mask = candidate_mask.unsqueeze(-1) & antigen_mask.unsqueeze(-2)
+    candidate_plddt = scored["plddt"][candidate_mask]
+    return {
+        "plddt": candidate_plddt.mean().item(),
+        "plddt_std": candidate_plddt.std(unbiased=False).item(),
+        "iptm": scored["iptm"].mean().item(),
+        "pae": scored["pae"][interface_mask].mean().item(),
+        "pae_scope": "candidate_to_antigen",
+    }
+
+
 def score_bfn_candidate(
     pdb_path,
     region_spec,
@@ -367,6 +408,9 @@ def run_bfn_design(
             "iptm": iptm_val,
             "pae": pae_val,
         }
+        if model.bfn.receiver.confidence_head_kind == "candidate_interface_v1":
+            result.update(_score_exact_candidate_confidence(model, batch, seq))
+            result["confidence_head_kind"] = "candidate_interface_v1"
 
         contact = traj.get("contact")
         if contact is not None:

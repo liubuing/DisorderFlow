@@ -6,16 +6,20 @@ from .misc import BlackHole
 
 
 def get_optimizer(cfg, model):
+    parameters = [parameter for parameter in model.parameters()
+                  if parameter.requires_grad]
+    if not parameters:
+        raise ValueError('Optimizer requires at least one trainable parameter')
     if cfg.type == 'adam':
         return torch.optim.Adam(
-            model.parameters(),
+            parameters,
             lr=cfg.lr,
             weight_decay=cfg.get('weight_decay', 0.0),
             betas=(cfg.get('beta1', 0.9), cfg.get('beta2', 0.999)),
         )
     elif cfg.type == 'adamw':
         return torch.optim.AdamW(
-            model.parameters(),
+            parameters,
             lr=cfg.lr,
             weight_decay=cfg.get('weight_decay', 1e-4),
             betas=(cfg.get('beta1', 0.9), cfg.get('beta2', 0.999)),

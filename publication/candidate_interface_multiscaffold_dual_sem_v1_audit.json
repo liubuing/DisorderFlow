@@ -1,0 +1,48 @@
+{
+  "schema_version": "candidate_interface_multiscaffold_dual_sem_audit_v1",
+  "classification": "development_only",
+  "deployment_gate_passed": false,
+  "final_test_evaluated": false,
+  "split_manifest_sha256": "f524411f8a975349a837f9f29ffd8565a6be950dbb5fbae52b400cba339cef58",
+  "dataset_manifest_sha256": "c38c1a20670a7e25ae4e217dc2598bd7d05d95c3f7fef78978339c5c7ebb7e2d",
+  "selection_summary_sha256": "77f9bdebc830f6dc6cce1fed69e50e9297ee9468fa434b5f148ded9b39c5d8ad",
+  "pairwise_noise_contract": "sqrt(SEM_i^2+SEM_j^2), SEM=replicate_std/sqrt(6)",
+  "af2_results": {
+    "model_1_sha256": "755c05c732219b3478730d64657577014d4ba46aefa4701fedbd1b1d70bf679c",
+    "model_2_sha256": "cfd4401ad99ffef64bfaa62e6cb9024f4a9629f551300b31c2a98d4d08b66b48",
+    "predictions_per_protocol": 960,
+    "failures": 0
+  },
+  "dataset": {
+    "train_records": 1440,
+    "train_components": 15,
+    "calibration_records": 192,
+    "calibration_components": 2,
+    "replicates_per_entity": 6
+  },
+  "selected_checkpoints": [
+    {
+      "seed": 2041,
+      "iteration": 400,
+      "sha256": "0db66dde0ad5465730d4ccada7c0b5ebecc2e0da59cbad3a119e4f23e47a2c50"
+    },
+    {
+      "seed": 2053,
+      "iteration": 200,
+      "sha256": "3a0b05e592dd69f56a8b8e2dfa9d577e3aed4b9e86d35cc7ded1a9ee66f7277a"
+    },
+    {
+      "seed": 2069,
+      "iteration": 400,
+      "sha256": "a77f7cd7176080597c2ebd8f6bef89d9c3b8925bf04873a43a4248de80ac65ea"
+    }
+  ],
+  "failed_gate_summary": [
+    "candidate pLDDT median calibration-scaffold Spearman is below 0.50 for all seeds",
+    "candidate pLDDT entity prediction-to-target standard-deviation ratio is below 0.50 for all seeds",
+    "only two independent calibration ipTM pairs exceed the aggregate-mean uncertainty threshold",
+    "PAE entity prediction-to-target standard-deviation ratio is below 0.50 for all seeds",
+    "three-of-three model-seed deployment gate is not met"
+  ],
+  "claim_boundary": "AF2-derived development confidence only; not binding, affinity, specificity, efficacy, or binder probability"
+}

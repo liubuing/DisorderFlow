@@ -14,12 +14,15 @@ N, L, D, P = 2, 16, 64, 32  # batch, length, res_feat_dim, pair_feat_dim
 NUM_CLASSES = 20
 
 
-def _make_receiver(confidence_version="v12", seq_only=True):
+def _make_receiver(
+        confidence_version="v12", seq_only=True,
+        confidence_head_kind="legacy_v12"):
     return AntibodyBFN_Receiver(
         res_feat_dim=D, pair_feat_dim=P, num_layers=2,
         num_classes=NUM_CLASSES, seq_only=seq_only,
         head_dropout=0.0, disorder_head=False,
         confidence_version=confidence_version,
+        confidence_head_kind=confidence_head_kind,
     )
 
 
@@ -58,6 +61,19 @@ def test_v12_confidence_outputs_in_unit_interval():
     assert torch.all(pred_pae >= 0) and torch.all(pred_pae <= 1)
 
 
+def test_default_confidence_head_is_legacy_equivalent():
+    default = _make_receiver()
+    explicit = _make_receiver(confidence_head_kind="legacy_v12")
+    explicit.load_state_dict(default.state_dict())
+    default.eval()
+    explicit.eval()
+    inputs = _inputs()
+    default_out = default(*inputs)
+    explicit_out = explicit(*inputs)
+    for index in (4, 5, 6):
+        assert torch.equal(default_out[index], explicit_out[index])
+
+
 def test_v11_backbone_plus_bypass_shapes():
     """V11 head (backbone + seq bypass) produces the same shapes."""
     recv = _make_receiver("v11", seq_only=True)
@@ -93,3 +109,66 @@ def test_recycle_feedback_forward_runs():
                prev_seq_emb=prev_seq_emb)
     pred_plddt = out[4]
     assert pred_plddt.shape == (N, L)
+
+
+def _interface_masks():
+    candidate = torch.zeros(N, L, dtype=torch.bool)
+    antigen = torch.zeros(N, L, dtype=torch.bool)
+    candidate[:, 2:6] = True
+    antigen[:, 10:14] = True
+    return candidate, antigen
+
+
+def test_candidate_interface_head_is_sequence_sensitive():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
+    recv.eval()
+    inputs = list(_inputs())
+    candidate, antigen = _interface_masks()
+    baseline = recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    inputs[0] = inputs[0].clone()
+    inputs[0][:, 2:6] = -20.0
+    inputs[0][:, 2:6, 7] = 20.0
+    variant = recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    assert not torch.allclose(baseline[4][:, 2:6], variant[4][:, 2:6])
+    assert not torch.allclose(baseline[5], variant[5])
+    assert not torch.allclose(baseline[6], variant[6])
+
+
+def test_candidate_interface_head_is_interface_sensitive():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
+    recv.eval()
+    inputs = list(_inputs())
+    candidate, antigen = _interface_masks()
+    baseline = recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    inputs[5] = inputs[5].clone()
+    inputs[5][:, 2:6, 10:14] += 5.0
+    variant = recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    assert not torch.allclose(baseline[4][:, 2:6], variant[4][:, 2:6])
+    assert not torch.allclose(baseline[5], variant[5])
+    assert not torch.allclose(baseline[6], variant[6])
+
+
+def test_candidate_interface_head_requires_both_masks():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
+    inputs = _inputs()
+    candidate, antigen = _interface_masks()
+    with pytest.raises(ValueError, match="candidate and antigen masks"):
+        recv(*inputs)
+    with pytest.raises(ValueError, match="antigen residues"):
+        recv(*inputs, mask_gen=candidate, mask_antigen=torch.zeros_like(antigen))
+
+
+def test_candidate_interface_outputs_backpropagate_to_sequence_and_pairs():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
+    candidate, antigen = _interface_masks()
+    logits = torch.randn(N, L, NUM_CLASSES, requires_grad=True)
+    pairs = torch.randn(N, L, L, P, requires_grad=True)
+    plddt, iptm, pae, _ = recv._candidate_interface_confidence(
+        torch.softmax(logits, dim=-1), pairs,
+        torch.ones(N, L, dtype=torch.bool), candidate, antigen,
+    )
+    interface_pae = pae[candidate.unsqueeze(-1) & antigen.unsqueeze(-2)]
+    (plddt[candidate].mean() + iptm.mean() + interface_pae.mean()).backward()
+    assert logits.grad[candidate].abs().sum() > 0
+    interface_mask = candidate.unsqueeze(-1) & antigen.unsqueeze(-2)
+    assert pairs.grad[interface_mask].abs().sum() > 0

@@ -19,13 +19,18 @@ def aggregate_pair_contact_logits(pair_logits, antigen_mask):
 
 
 class AntibodyBFN_Receiver(nn.Module):
-    def __init__(self, res_feat_dim, pair_feat_dim, num_layers, encoder_opt={}, num_classes=20, seq_only=False, head_dropout=0.1, disorder_head=False, encoder_dropout=0.0, confidence_version='v12'):
+    def __init__(self, res_feat_dim, pair_feat_dim, num_layers, encoder_opt={}, num_classes=20, seq_only=False, head_dropout=0.1, disorder_head=False, encoder_dropout=0.0, confidence_version='v12', confidence_head_kind='legacy_v12'):
         super().__init__()
         self.res_feat_dim = res_feat_dim
         self.num_classes = num_classes
         self.seq_only = seq_only
         self.disorder_head = disorder_head
         self.confidence_version = confidence_version
+        self.confidence_head_kind = confidence_head_kind
+        if confidence_head_kind not in {'legacy_v12', 'candidate_interface_v1'}:
+            raise ValueError(f'Unsupported confidence head: {confidence_head_kind}')
+        if confidence_head_kind == 'candidate_interface_v1' and confidence_version != 'v12':
+            raise ValueError('candidate_interface_v1 requires confidence_version v12')
         self.contrastive_order_sensitive = encoder_opt.get(
             'contrastive_order_sensitive', False)
         self.disorder_condition_scale = float(encoder_opt.get(
@@ -215,6 +220,25 @@ class AntibodyBFN_Receiver(nn.Module):
                 nn.Linear(3, 64), nn.LayerNorm(64), nn.ReLU(), nn.Dropout(head_dropout),
                 nn.Linear(64, 32), nn.ReLU(), nn.Linear(32, 1),
             )
+            if self.confidence_head_kind == 'candidate_interface_v1':
+                self.candidate_interface_pair = nn.Linear(pair_feat_dim, 64)
+                self.candidate_interface_seq = nn.Linear(64, 64)
+                self.candidate_interface_norm = nn.LayerNorm(64)
+                self.candidate_interface_plddt = nn.Sequential(
+                    nn.Linear(64, 32), nn.ReLU(), nn.Dropout(head_dropout),
+                    nn.Linear(32, 1),
+                )
+                self.candidate_interface_iptm = nn.Sequential(
+                    nn.Linear(64, 32), nn.ReLU(), nn.Dropout(head_dropout),
+                    nn.Linear(32, 1),
+                )
+                self.candidate_interface_pae_i = nn.Linear(64, 32)
+                self.candidate_interface_pae_j = nn.Linear(64, 32)
+                self.candidate_interface_pae_pair = nn.Linear(pair_feat_dim, 32)
+                self.candidate_interface_pae_out = nn.Sequential(
+                    nn.LayerNorm(32), nn.ReLU(), nn.Dropout(head_dropout),
+                    nn.Linear(32, 1),
+                )
             # Legacy backbone heads for V12 checkpoint compatibility
             self.head_plddt = ResidualMLP(res_feat_dim, res_feat_dim, 1, num_blocks=3, dropout=head_dropout)
             self.head_iptm = ResidualMLP(res_feat_dim, res_feat_dim // 2, 1, num_blocks=2, dropout=head_dropout)
@@ -468,7 +492,11 @@ class AntibodyBFN_Receiver(nn.Module):
             pred_ori_6d = torch.zeros(N, L, 6, device=device)
             pred_ang_sc = self.head_ang(features)
 
-            if self.confidence_version == 'v12':
+            if self.confidence_head_kind == 'candidate_interface_v1':
+                pred_plddt, pred_iptm, pred_pae, seq_emb = (
+                    self._candidate_interface_confidence(
+                        probs_seq, pair_feat, mask_res, mask_gen, mask_antigen))
+            elif self.confidence_version == 'v12':
                 plddt_seq = self.v12_plddt(probs_seq)
                 pred_plddt = torch.sigmoid(plddt_seq).squeeze(-1)
                 seq_emb = self.v12_seq_emb(probs_seq)
@@ -524,7 +552,11 @@ class AntibodyBFN_Receiver(nn.Module):
             pred_ori_6d = self.head_ori(features)
             pred_ang_sc = self.head_ang(features)
 
-            if self.confidence_version == 'v12':
+            if self.confidence_head_kind == 'candidate_interface_v1':
+                pred_plddt, pred_iptm, pred_pae, seq_emb = (
+                    self._candidate_interface_confidence(
+                        probs_seq, pair_feat, mask_res, mask_gen, mask_antigen))
+            elif self.confidence_version == 'v12':
                 plddt_seq = self.v12_plddt(probs_seq)
                 pred_plddt = torch.sigmoid(plddt_seq).squeeze(-1)
                 seq_emb = self.v12_seq_emb(probs_seq)
@@ -575,6 +607,47 @@ class AntibodyBFN_Receiver(nn.Module):
                 pred_pae = torch.sigmoid(pae_backbone + pae_seq)
 
         return pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder, pred_contact, pred_contrastive
+
+    def _candidate_interface_confidence(
+            self, probs_seq, pair_feat, mask_res, mask_gen, mask_antigen):
+        """Predict confidence from candidate identity and antigen interface features."""
+        if mask_gen is None or mask_antigen is None:
+            raise ValueError(
+                'candidate_interface_v1 requires candidate and antigen masks')
+        candidate_mask = mask_gen.bool() & mask_res.bool()
+        antigen_mask = mask_antigen.bool() & mask_res.bool()
+        if not candidate_mask.any(dim=1).all():
+            raise ValueError('Every sample requires candidate residues')
+        if not antigen_mask.any(dim=1).all():
+            raise ValueError('Every sample requires antigen residues')
+
+        seq_emb = self.v12_seq_emb(probs_seq)
+        antigen_count = antigen_mask.sum(dim=1, keepdim=True).clamp(min=1).unsqueeze(-1)
+        interface_pair = (
+            pair_feat * antigen_mask.unsqueeze(1).unsqueeze(-1)
+        ).sum(dim=2) / antigen_count
+        token = self.candidate_interface_norm(
+            self.candidate_interface_seq(seq_emb)
+            + self.candidate_interface_pair(interface_pair)
+        )
+        pred_plddt = torch.sigmoid(
+            self.candidate_interface_plddt(token)).squeeze(-1)
+
+        candidate_count = candidate_mask.sum(dim=1, keepdim=True).clamp(min=1)
+        pooled_candidate = (
+            token * candidate_mask.unsqueeze(-1)
+        ).sum(dim=1) / candidate_count
+        pred_iptm = torch.sigmoid(
+            self.candidate_interface_iptm(pooled_candidate)).squeeze(-1)
+
+        pae_hidden = (
+            self.candidate_interface_pae_i(seq_emb).unsqueeze(2)
+            + self.candidate_interface_pae_j(seq_emb).unsqueeze(1)
+            + self.candidate_interface_pae_pair(pair_feat)
+        )
+        pred_pae = torch.sigmoid(
+            self.candidate_interface_pae_out(pae_hidden)).squeeze(-1)
+        return pred_plddt, pred_iptm, pred_pae, seq_emb
 
     def _position_disorder_context(self, pair_feat, profile, mask_antigen):
         """Route residue-level antigen disorder through CDR-antigen pair features."""

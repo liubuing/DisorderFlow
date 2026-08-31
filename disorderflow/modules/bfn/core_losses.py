@@ -40,7 +40,9 @@ def grouped_std(values, scaffold_id):
     return torch.stack(stds).mean()
 
 
-def grouped_margin_ranking(pred_iptm, af2_iptm, scaffold_id, margin=0.05):
+def grouped_margin_ranking(
+        pred_iptm, af2_iptm, scaffold_id, margin=0.05,
+        target_noise=None, sample_weight=None):
     """Pairwise margin-ranking of predicted ipTM against REAL af2_iptm labels,
     restricted to designs sharing a scaffold.
 
@@ -53,7 +55,8 @@ def grouped_margin_ranking(pred_iptm, af2_iptm, scaffold_id, margin=0.05):
         return torch.zeros((), device=pred_iptm.device)
     device = pred_iptm.device
     sid = scaffold_id.to(device).view(-1)
-    total, count = torch.zeros((), device=device), 0
+    total = torch.zeros((), device=device)
+    weight_total = torch.zeros((), device=device)
     for g in torch.unique(sid):
         idx = (sid == g).nonzero(as_tuple=True)[0]
         if idx.numel() < 2:
@@ -65,15 +68,25 @@ def grouped_margin_ranking(pred_iptm, af2_iptm, scaffold_id, margin=0.05):
         p_i, p_j = p.unsqueeze(1), p.unsqueeze(0)
         sign = torch.sign(a_i - a_j)
         valid = sign != 0
+        if target_noise is not None:
+            noise = target_noise.to(device).view(-1)[idx]
+            threshold = torch.sqrt(
+                noise.unsqueeze(1).square() + noise.unsqueeze(0).square())
+            valid = valid & ((a_i - a_j).abs() > threshold)
         if valid.sum() == 0:
             continue
         # margin ranking loss: max(0, -sign * (p_i - p_j) + margin)
         loss = torch.clamp(-sign * (p_i - p_j) + margin, min=0.0)
-        total = total + (loss * valid.float()).sum()
-        count += int(valid.sum().item())
-    if count == 0:
+        pair_weight = valid.float()
+        if sample_weight is not None:
+            weights = sample_weight.to(device).view(-1)[idx]
+            pair_weight = pair_weight * torch.minimum(
+                weights.unsqueeze(1), weights.unsqueeze(0))
+        total = total + (loss * pair_weight).sum()
+        weight_total = weight_total + pair_weight.sum()
+    if weight_total <= 0:
         return torch.zeros((), device=device)
-    return total / count
+    return total / weight_total
 
 
 def within_protein_disorder_ranking(

@@ -71,6 +71,7 @@ _MODEL_CONFIG = None
 _CACHED_PARAMS = None
 _CACHED_FORWARD = None
 _CACHED_CFG = None
+_CACHED_MODEL_NUMBER = None
 
 
 def _load_model(data_dir=None):
@@ -230,7 +231,7 @@ def build_multimer_features(ab_seq, epi_seq):
 
 def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
                             num_recycle=3, jax_random_seed=42,
-                            return_structure=False):
+                            return_structure=False, model_number=1):
     """Run AlphaFold multimer prediction on antibody-epitope complex.
 
     Uses direct Haiku model application, bypassing the TF feature processing
@@ -263,7 +264,7 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     jnp.clip = _compat_clip
     import haiku as hk
 
-    global _CACHED_PARAMS, _CACHED_FORWARD, _CACHED_CFG
+    global _CACHED_PARAMS, _CACHED_FORWARD, _CACHED_CFG, _CACHED_MODEL_NUMBER
 
     if data_dir is None:
         data_dir = os.path.expanduser('~/.cache/colabfold')
@@ -273,7 +274,9 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
     from alphafold.model.utils import flat_params_to_haiku
 
     model_type = 'alphafold2_multimer_v3'
-    model_number = 1
+    model_number = int(model_number)
+    if model_number not in range(1, 6):
+        raise ValueError("AF2-Multimer model_number must be between 1 and 5")
 
     # Reuse cached config/params/forward to avoid JAX memory accumulation (crashes
     # after ~40 calls when re-creating Haiku transforms every time).
@@ -314,7 +317,11 @@ def run_multimer_prediction(ab_seq, epi_seq, data_dir=None,
         _CACHED_FORWARD = hk.transform(forward_fn)
         _CACHED_PARAMS = params
         _CACHED_CFG = cfg
+        _CACHED_MODEL_NUMBER = model_number
     else:
+        if model_number != _CACHED_MODEL_NUMBER:
+            raise RuntimeError(
+                "A worker cannot switch AF2 model_number after model loading")
         cfg = _CACHED_CFG
         # Update num_recycle in case it changed between calls
         cfg.model.num_recycle = num_recycle

@@ -31,7 +31,7 @@ def sequence_cross_entropy_20(logits, targets, label_smoothing=0.0):
 
 
 class AntibodyBFN_Core(nn.Module):
-    def __init__(self, res_feat_dim, pair_feat_dim, num_steps, eps_net_opt={}, position_mean=[0.0, 0.0, 0.0], position_scale=[10.0], loss_weight={}, ot_opt={}, beta=1.0, schedule='linear'):
+    def __init__(self, res_feat_dim, pair_feat_dim, num_steps, eps_net_opt={}, position_mean=[0.0, 0.0, 0.0], position_scale=[10.0], loss_weight={}, ot_opt={}, beta=1.0, schedule='linear', confidence_head_kind='legacy_v12'):
         super().__init__()
         self.num_steps = num_steps
         self.beta = beta  # Configurable BFN precision
@@ -58,7 +58,13 @@ class AntibodyBFN_Core(nn.Module):
         disorder_head = (loss_weight.get('disorder', 0) > 0
                          or loss_weight.get('disorder_rank', 0) > 0) if loss_weight else False
         encoder_dropout = loss_weight.get('encoder_dropout', 0.0) if loss_weight else 0.0
-        self.receiver = AntibodyBFN_Receiver(res_feat_dim, pair_feat_dim, num_layers=6, encoder_opt=eps_net_opt, num_classes=self.num_classes, seq_only=seq_only, head_dropout=head_dropout, disorder_head=disorder_head, encoder_dropout=encoder_dropout)
+        self.receiver = AntibodyBFN_Receiver(
+            res_feat_dim, pair_feat_dim, num_layers=6, encoder_opt=eps_net_opt,
+            num_classes=self.num_classes, seq_only=seq_only,
+            head_dropout=head_dropout, disorder_head=disorder_head,
+            encoder_dropout=encoder_dropout,
+            confidence_head_kind=confidence_head_kind,
+        )
         
         ot_iters = ot_opt.get('num_iters', 10)
         ot_eps = ot_opt.get('epsilon', 2.0)
@@ -460,6 +466,10 @@ class AntibodyBFN_Core(nn.Module):
         # V10: Huber loss for robustness against outliers (especially IDP regions).
         # Per-residue confidence weighting for pLDDT.
         huber_beta = self.loss_weight.get('huber_beta', 0.1)
+        sample_weight = batch.get('confidence_sample_weight')
+        if sample_weight is None:
+            sample_weight = torch.ones(N, device=pred_iptm.device)
+        sample_weight = sample_weight.to(pred_iptm.device).float().view(-1).clamp(min=0.0)
 
         if 'af2_plddt' in batch and 'plddt' in self.loss_weight and self.loss_weight['plddt'] > 0:
             af2_plddt = batch['af2_plddt']
@@ -469,31 +479,68 @@ class AntibodyBFN_Core(nn.Module):
             else:
                 af2_plddt = af2_plddt[:, :pred_len]
             mask_plddt = mask_res[:, :pred_len]
+            if self.receiver.confidence_head_kind == 'candidate_interface_v1':
+                mask_plddt = mask_plddt & mask_gen[:, :pred_len]
             # Per-residue confidence weight: higher AF2 pLDDT -> more reliable target
             conf_weight = 0.5 + 0.5 * af2_plddt  # [0.5, 1.0]
             huber = nn.SmoothL1Loss(reduction='none', beta=huber_beta)
             loss_plddt = huber(pred_plddt, af2_plddt)
-            losses['plddt'] = (loss_plddt * conf_weight * mask_plddt).sum() / (mask_plddt.sum() + 1e-8)
+            residue_weight = sample_weight.unsqueeze(1) * mask_plddt
+            losses['plddt'] = (
+                (loss_plddt * conf_weight * residue_weight).sum()
+                / (residue_weight.sum() + 1e-8))
 
         if 'af2_iptm' in batch and 'iptm' in self.loss_weight and self.loss_weight['iptm'] > 0:
             af2_iptm = batch['af2_iptm'].float()
-            huber_iptm = nn.SmoothL1Loss(beta=huber_beta)
-            losses['iptm'] = huber_iptm(pred_iptm, af2_iptm)
+            huber_iptm = nn.SmoothL1Loss(beta=huber_beta, reduction='none')
+            loss_iptm = huber_iptm(pred_iptm, af2_iptm)
+            losses['iptm'] = (
+                (loss_iptm * sample_weight).sum()
+                / (sample_weight.sum() + 1e-8))
 
         if 'af2_pae_matrix' in batch and 'pae' in self.loss_weight and self.loss_weight['pae'] > 0:
             af2_pae = batch['af2_pae_matrix']
             pred_len = pred_pae.shape[1]
+            candidate_interface = (
+                self.receiver.confidence_head_kind == 'candidate_interface_v1')
+            if candidate_interface and af2_pae.shape[1:] != (pred_len, pred_len):
+                raise ValueError(
+                    'candidate_interface_v1 requires a full-complex PAE matrix')
+            if candidate_interface and (
+                    not torch.isfinite(af2_pae).all()
+                    or (af2_pae.amax(dim=(1, 2)) - af2_pae.amin(dim=(1, 2)) <= 0).any()):
+                raise ValueError(
+                    'candidate_interface_v1 requires finite, nonconstant PAE labels')
             if af2_pae.shape[1] < pred_len or af2_pae.shape[2] < pred_len:
                 af2_pae = F.pad(af2_pae, (0, pred_len - af2_pae.shape[2], 0, pred_len - af2_pae.shape[1]))
             else:
                 af2_pae = af2_pae[:, :pred_len, :pred_len]
-            mask_row = mask_res[:, :pred_len].unsqueeze(-1)
-            mask_col = mask_res[:, :pred_len].unsqueeze(1)
-            mask_pair = mask_row & mask_col
-            pae_target = af2_pae / 31.0
+            if candidate_interface:
+                candidate = mask_gen[:, :pred_len].bool()
+                antigen = batch['mask_antigen'][:, :pred_len].bool()
+                mask_pair = (
+                    candidate.unsqueeze(-1) & antigen.unsqueeze(1)
+                ) | (
+                    antigen.unsqueeze(-1) & candidate.unsqueeze(1)
+                )
+                if 'af2_pae_normalized' not in batch:
+                    raise ValueError(
+                        'candidate_interface_v1 requires af2_pae_normalized')
+                normalized = torch.as_tensor(
+                    batch['af2_pae_normalized'], device=af2_pae.device,
+                    dtype=torch.bool).reshape(-1, 1, 1)
+                pae_target = torch.where(normalized, af2_pae, af2_pae / 31.0)
+            else:
+                mask_row = mask_res[:, :pred_len].unsqueeze(-1)
+                mask_col = mask_res[:, :pred_len].unsqueeze(1)
+                mask_pair = mask_row & mask_col
+                pae_target = af2_pae / 31.0
             huber_pae = nn.SmoothL1Loss(reduction='none', beta=huber_beta)
             loss_pae = huber_pae(pred_pae, pae_target)
-            losses['pae'] = (loss_pae * mask_pair).sum() / (mask_pair.sum() + 1e-8)
+            pair_weight = sample_weight.view(-1, 1, 1) * mask_pair
+            losses['pae'] = (
+                (loss_pae * pair_weight).sum()
+                / (pair_weight.sum() + 1e-8))
 
         # === Disorder Loss (class-balanced BCE on confidence-weighted labels) ===
         if 'disorder_label' in batch and 'disorder' in self.loss_weight and self.loss_weight['disorder'] > 0:
@@ -629,7 +676,45 @@ class AntibodyBFN_Core(nn.Module):
                 and 'af2_iptm' in batch):
             losses['conf_grouped_margin'] = (
                 grouped_margin_w * _grouped_margin_ranking(
-                    pred_iptm, batch['af2_iptm'].float().view(-1), scaffold_id, margin=0.05)
+                    pred_iptm, batch['af2_iptm'].float().view(-1), scaffold_id,
+                    margin=0.05, target_noise=batch.get('af2_iptm_sem'),
+                    sample_weight=sample_weight)
+            )
+
+        grouped_plddt_w = self.loss_weight.get('grouped_plddt_margin', 0.0)
+        if (grouped_plddt_w > 0 and group_mask is not None
+                and 'af2_plddt' in batch):
+            candidate = mask_gen.bool()
+            denominator = candidate.sum(dim=1).clamp(min=1)
+            pred_summary = (pred_plddt * candidate).sum(dim=1) / denominator
+            target_summary = (
+                batch['af2_plddt'].float() * candidate).sum(dim=1) / denominator
+            losses['conf_grouped_plddt_margin'] = (
+                grouped_plddt_w * _grouped_margin_ranking(
+                    pred_summary, target_summary, scaffold_id, margin=0.02,
+                    target_noise=batch.get('af2_candidate_plddt_sem'),
+                    sample_weight=sample_weight)
+            )
+
+        grouped_pae_w = self.loss_weight.get('grouped_pae_margin', 0.0)
+        if (grouped_pae_w > 0 and group_mask is not None
+                and 'af2_pae_matrix' in batch):
+            candidate = mask_gen.bool()
+            antigen = batch['mask_antigen'].bool()
+            interface = candidate.unsqueeze(-1) & antigen.unsqueeze(1)
+            denominator = interface.sum(dim=(1, 2)).clamp(min=1)
+            pred_summary = (pred_pae * interface).sum(dim=(1, 2)) / denominator
+            target_pae = batch['af2_pae_matrix'].float()
+            normalized = torch.as_tensor(
+                batch['af2_pae_normalized'], device=target_pae.device,
+                dtype=torch.bool).reshape(-1, 1, 1)
+            target_pae = torch.where(normalized, target_pae, target_pae / 31.0)
+            target_summary = (target_pae * interface).sum(dim=(1, 2)) / denominator
+            losses['conf_grouped_pae_margin'] = (
+                grouped_pae_w * _grouped_margin_ranking(
+                    -pred_summary, -target_summary, scaffold_id, margin=0.02,
+                    target_noise=batch.get('af2_interface_pae_normalized_sem'),
+                    sample_weight=sample_weight)
             )
 
 

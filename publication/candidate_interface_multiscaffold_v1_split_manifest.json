@@ -1,0 +1,24 @@
+{
+  "schema_version": "candidate_interface_multiscaffold_split_v1",
+  "status": "frozen_before_full_pae_rerun",
+  "classification": "new exploratory successor lineage; does not alter multiscaffold_confirmatory_v2",
+  "source_holdout_manifest": "data/multiscaffold_confirmatory_v2/holdout_manifest.json",
+  "source_holdout_manifest_sha256": "b2e743763dd5361faa083c0e6861760e5696751bb95852b1db2c40d726aca380",
+  "source_selection": "results/multiscaffold_confirmatory_v2/pre_af2_selection.json",
+  "source_selection_sha256": "26a63c6a2f3e8860cfc4ffac79579678c59d48bd0d8b647bba234116cec067d7",
+  "split_policy": "antigen-family-disjoint 15/2/3 component split",
+  "mask_contract": "H3-only using h3_heavy_indices_zero_based from the frozen source manifest",
+  "train": [
+    "V2C004", "V2C005", "V2C006", "V2C007", "V2C008",
+    "V2C009", "V2C011", "V2C012", "V2C013", "V2C014",
+    "V2C016", "V2C017", "V2C018", "V2C019", "V2C020"
+  ],
+  "calibration": ["V2C010", "V2C015"],
+  "test": ["V2C001", "V2C002", "V2C003"],
+  "held_together_antigen_families": {
+    "GP2": ["V2C001", "V2C002", "V2C003"],
+    "AVGIGAVF": ["V2C010", "V2C015"],
+    "NANP_motif": ["V2C011", "V2C020"]
+  },
+  "test_usage_policy": "test components may be evaluated once only after training and calibration are frozen"
+}

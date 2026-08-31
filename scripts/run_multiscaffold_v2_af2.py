@@ -108,7 +108,8 @@ def run_chunk(jobs, config, timeout):
         f"cd {shlex.quote(windows_to_wsl(ROOT))} && "
         f"source {shlex.quote(af2['environment'])}/bin/activate && "
         "python scripts/utils/af2_wsl_batch.py "
-        f"--recycle {int(af2['recycles'])}"
+        f"--recycle {int(af2['recycles'])} "
+        f"--model-number {int(af2['model_number'])}"
     )
     # JSONL over stdin avoids shell-quoting amino-acid sequences and preserves
     # one explicit result row per prediction slot.
@@ -137,7 +138,9 @@ def main():
         "--config", default="configs/benchmarks/multiscaffold_confirmatory_v2_af2.yml")
     parser.add_argument("--out", default=None)
     parser.add_argument("--structures", default=None)
+    parser.add_argument("--pae-sidecars", default=None)
     parser.add_argument("--components", nargs="*")
+    parser.add_argument("--split", choices=("train", "calibration", "test"))
     parser.add_argument("--max-entities", type=int)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--retry-failures", action="store_true")
@@ -150,6 +153,8 @@ def main():
     holdout_path = ROOT / config["holdout_manifest"]
     selection_config_path = ROOT / config["selection_config"]
     parameter_path = Path(config["af2"]["model_parameters"])
+    split_manifest_path = (
+        ROOT / config["split_manifest"] if config.get("split_manifest") else None)
     cache_root = os.environ.get("COLABFOLD_CACHE")
     if cache_root:
         parameter_path = Path(cache_root) / "params" / parameter_path.name
@@ -163,6 +168,11 @@ def main():
     ]:
         if sha256(path) != expected:
             raise ValueError(f"Frozen hash mismatch: {path}")
+    split_manifest = None
+    if split_manifest_path:
+        if sha256(split_manifest_path) != config["split_manifest_sha256"]:
+            raise ValueError(f"Frozen hash mismatch: {split_manifest_path}")
+        split_manifest = json.loads(split_manifest_path.read_text(encoding="utf-8"))
     selection = json.loads(selection_path.read_text(encoding="utf-8"))
     holdout = json.loads(holdout_path.read_text(encoding="utf-8"))
     entities = build_entities(
@@ -170,6 +180,12 @@ def main():
     if args.components:
         requested = set(args.components)
         entities = [row for row in entities if row["component_id"] in requested]
+    if args.split:
+        if split_manifest is None:
+            raise ValueError("--split requires split_manifest in the AF2 config")
+        requested_split = set(split_manifest[args.split])
+        entities = [
+            row for row in entities if row["component_id"] in requested_split]
     entities.sort(key=lambda row: (
         len(row["heavy_sequence"]) + len(row["light_sequence"]) + len(row["antigen_sequence"]),
         row["component_id"], row["entity_id"]))
@@ -179,10 +195,15 @@ def main():
     output_path = ROOT / (args.out or config["output"]["results"])
     structure_dir = ROOT / (args.structures or config["output"]["structures"])
     structure_dir.mkdir(parents=True, exist_ok=True)
+    pae_dir = ROOT / (args.pae_sidecars or config["output"].get(
+        "pae_sidecars", str(structure_dir.parent / "pae")))
+    if bool(config["af2"]["retain_full_pae_matrix"]):
+        pae_dir.mkdir(parents=True, exist_ok=True)
     requested = {
         "entities": [row["entity_id"] for row in entities],
         "seeds": seeds,
         "prediction_slots": len(entities) * len(seeds),
+        "split": args.split,
     }
     output = {
         "schema_version": 1,
@@ -190,6 +211,13 @@ def main():
         "config": args.config,
         "config_sha256": sha256(config_path),
         "selection_sha256": sha256(selection_path),
+        "split_manifest_sha256": (
+            sha256(split_manifest_path) if split_manifest_path else None),
+        "af2_protocol": {
+            "model_type": config["af2"]["model_type"],
+            "model_number": int(config["af2"]["model_number"]),
+            "model_parameters_sha256": config["af2"]["model_parameters_sha256"],
+        },
         "requested": requested,
         "entities": entities,
         "results": [],
@@ -216,6 +244,7 @@ def main():
                 continue
             safe_name = hashlib.sha256(prediction_id.encode("ascii")).hexdigest()[:20]
             pdb_path = structure_dir / f"{safe_name}.pdb"
+            pae_path = pae_dir / f"{safe_name}.npz"
             jobs.append({
                 "id": prediction_id,
                 "seq": f"{entity['heavy_sequence']}:{entity['light_sequence']}",
@@ -223,7 +252,10 @@ def main():
                 "seed": seed,
                 "recycle": int(config["af2"]["recycles"]),
                 "output_pdb": windows_to_wsl(pdb_path),
-                "return_pae": bool(config["af2"]["retain_full_pae_matrix"]),
+                "output_pae": (
+                    windows_to_wsl(pae_path)
+                    if bool(config["af2"]["retain_full_pae_matrix"])
+                    else None),
             })
 
     chunk_size = args.chunk_size or int(config["af2"]["chunk_size"])
@@ -283,6 +315,24 @@ def main():
             if success and pdb_path.exists():
                 row["pdb"] = pdb_path.relative_to(ROOT).as_posix()
                 row["pdb_sha256"] = sha256(pdb_path)
+            output_pae = job.get("output_pae")
+            if success and output_pae:
+                pae_path = Path(output_pae)
+                if output_pae.startswith("/mnt/"):
+                    drive = output_pae[5].upper()
+                    pae_path = Path(f"{drive}:/{output_pae[7:]}")
+                if not pae_path.exists():
+                    row["status"] = "failed"
+                    row["error"] = "missing PAE sidecar"
+                else:
+                    actual_pae_sha256 = sha256(pae_path)
+                    if actual_pae_sha256 != result.get("pae_sha256"):
+                        row["status"] = "failed"
+                        row["error"] = "PAE sidecar SHA-256 mismatch"
+                    row["pae_npz"] = pae_path.relative_to(ROOT).as_posix()
+                    row["pae_sha256"] = actual_pae_sha256
+                    row["pae_shape"] = result.get("pae_shape")
+                    row["pae_dtype"] = result.get("pae_dtype")
             output["results"].append(row)
         atomic_json(output_path, output)
         successes = sum(row["status"] == "success" for row in output["results"])

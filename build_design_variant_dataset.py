@@ -149,7 +149,7 @@ def real_af2_labels(full_aa_tensor, epitope_seq=DEFAULT_EPITOPE, num_recycle=2, 
         if plddt.dim() == 0:
             plddt = plddt.unsqueeze(0).expand(len(seq))
         iptm = torch.tensor(float(res.get('iptm', 0.0)), dtype=torch.float32)
-        pae = torch.tensor(np.array(res.get('pae', [[0.0]])), dtype=torch.float32) / 31.0
+        pae = torch.tensor(np.array(res.get('pae', [[0.0]])), dtype=torch.float32)
         return {'af2_plddt': plddt, 'af2_iptm': iptm, 'af2_pae_matrix': pae}
 
     # Legacy: local JAX (CPU on Windows)
@@ -166,7 +166,7 @@ def real_af2_labels(full_aa_tensor, epitope_seq=DEFAULT_EPITOPE, num_recycle=2, 
     if plddt.dim() == 0:
         plddt = plddt.unsqueeze(0).expand(len(seq))
     iptm = torch.tensor(float(res.get('iptm', 0.0)), dtype=torch.float32)
-    pae = torch.tensor(np.array(res.get('pae', [[0.0]])), dtype=torch.float32) / 31.0
+    pae = torch.tensor(np.array(res.get('pae', [[0.0]])), dtype=torch.float32)
     return {'af2_plddt': plddt, 'af2_iptm': iptm, 'af2_pae_matrix': pae}
 
 
@@ -189,6 +189,7 @@ def _write_entry(env, key_idx, scaffold_id, design_idx, batch, af2_labels):
         'af2_plddt': plddt,
         'af2_iptm': af2_labels['af2_iptm'],
         'af2_pae_matrix': pae,
+        'af2_pae_normalized': False,
         'is_idp': batch.get('is_idp', False),
         'source': 'design_variant_v14',
     }
@@ -235,7 +236,8 @@ def _batch_af2_wsl(seqs, epitope_seq, num_recycle, warmup_seq=None, output_dir=N
             for local_i, global_i in enumerate(range(start, end)):
                 job = {
                     'seq': seqs[global_i], 'epi_seq': epitope_seq,
-                    'id': global_i, 'recycle': num_recycle
+                    'id': global_i, 'recycle': num_recycle,
+                    'return_pae': True,
                 }
                 if output_dir_wsl:
                     job['output_pdb'] = f'{output_dir_wsl}/{global_i:03d}.pdb'
@@ -393,7 +395,8 @@ def build(src_lmdb, dst_dir, n_scaffolds, k_variants, device, num_recycle, smoke
         labels = {
             'af2_plddt': torch.tensor(np.array(af2_r.get('plddt_seq', [0.5])), dtype=torch.float32),
             'af2_iptm': torch.tensor(float(af2_r.get('iptm', 0.0)), dtype=torch.float32),
-            'af2_pae_matrix': torch.tensor(np.array(af2_r.get('pae', [[0.0]])), dtype=torch.float32) / 31.0,
+            'af2_pae_matrix': torch.tensor(
+                np.array(af2_r.get('pae', [[0.0]])), dtype=torch.float32),
         }
         _write_entry(train_env, key_idx, s_idx, d_idx, var_batch, labels)
         key_idx += 1

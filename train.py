@@ -70,6 +70,34 @@ class ScaffoldGroupedBatchSampler(torch.utils.data.Sampler):
         return len(self.batches)
 
 
+def configure_trainable_parameters(model, config, logger):
+    if not config.train.get('freeze_backbone', False):
+        return
+    logger.info('Freezing backbone for confidence head fine-tuning...')
+    trainable_suffixes = config.train.get('trainable_modules', [
+        'head_plddt', 'head_iptm', 'head_pae', 'head_disorder', 'conf_embed',
+        'iptm_embed', 'pae_embed', 'pair_proj', 'v12_plddt', 'v12_iptm',
+        'v12_pae', 'v12_seq_emb', 'v13_seq_feedback', 'head_seq',
+        'head_seq_fixbb', 'disorder_proj', 'head_pos', 'head_ori', 'head_ang',
+    ])
+    unfreeze_encoder_layers = config.train.get('unfreeze_encoder_layers', 0)
+    if unfreeze_encoder_layers > 0:
+        logger.info('Also unfreezing last %d encoder layers...',
+                    unfreeze_encoder_layers)
+    for name, parameter in model.named_parameters():
+        if any(suffix in name for suffix in trainable_suffixes):
+            parameter.requires_grad = True
+            continue
+        parameter.requires_grad = any(
+            f'encoder.blocks.{layer_idx}' in name
+            for layer_idx in range(6 - unfreeze_encoder_layers, 6)
+        ) if unfreeze_encoder_layers > 0 else False
+    n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    n_total = sum(p.numel() for p in model.parameters())
+    logger.info('Trainable: %d/%d (%.1f%%)',
+                n_trainable, n_total, 100 * n_trainable / n_total)
+
+
 if __name__ == '__main__':
     # Fix for macOS shared memory issue
     import torch.multiprocessing
@@ -102,6 +130,20 @@ if __name__ == '__main__':
     config, config_name = load_config(args.config)
     allowed_initializer_sha256 = config.get('lineage', {}).get(
         'allowed_initializer_sha256')
+    dataset_manifest_sha256 = config.get('lineage', {}).get(
+        'dataset_manifest_sha256')
+    if dataset_manifest_sha256:
+        dataset_manifest = config.get('lineage', {}).get('dataset_manifest')
+        if not dataset_manifest:
+            raise RuntimeError(
+                'dataset_manifest_sha256 requires a dataset_manifest path')
+        with open(dataset_manifest, 'rb') as manifest_handle:
+            actual_manifest_sha256 = hashlib.file_digest(
+                manifest_handle, 'sha256').hexdigest()
+        if actual_manifest_sha256 != dataset_manifest_sha256:
+            raise RuntimeError(
+                'Dataset manifest SHA-256 does not match the frozen lineage '
+                f'contract: {actual_manifest_sha256}')
     if allowed_initializer_sha256:
         if args.finetune is not None:
             raise RuntimeError(
@@ -234,7 +276,8 @@ if __name__ == '__main__':
         logger.info('Enabled cross-sample CDR negatives for train and validation')
     
     # Custom Sampler for CDR-type consistency
-    if getattr(train_dataset, 'requires_complete_groups', False):
+    if (getattr(train_dataset, 'requires_complete_groups', False)
+            and not getattr(train_dataset, 'candidate_interface_v1', False)):
         batch_sampler = CompleteGroupBatchSampler(
             train_dataset, config.train.batch_size, shuffle=True,
             seed=config.train.seed)
@@ -295,8 +338,10 @@ if __name__ == '__main__':
         
     train_iterator = inf_iterator(train_loader)
     if getattr(val_dataset, 'requires_complete_groups', False):
+        val_batch_size = int(config.train.get(
+            'val_batch_size', config.train.batch_size))
         val_batch_sampler = CompleteGroupBatchSampler(
-            val_dataset, config.train.batch_size, shuffle=False,
+            val_dataset, val_batch_size, shuffle=False,
             seed=config.train.seed)
         val_loader = DataLoader(
             val_dataset,
@@ -312,6 +357,7 @@ if __name__ == '__main__':
     logger.info('Building model...')
     model = get_model(config.model).to(args.device)
     logger.info('Number of parameters: %d' % count_parameters(model))
+    configure_trainable_parameters(model, config, logger)
 
     # Optimizer & scheduler
     optimizer = get_optimizer(config.train.optimizer, model)
@@ -421,53 +467,6 @@ if __name__ == '__main__':
                 logger.info('  + %s', key)
         if unexpected_keys:
             logger.info('Deprecated parameters (skipped): %d', len(unexpected_keys))
-
-    # Freeze backbone for confidence head fine-tuning
-    if config.train.get('freeze_backbone', False):
-        logger.info('Freezing backbone for confidence head fine-tuning...')
-        trainable_suffixes = config.train.get('trainable_modules', [
-            'head_plddt',
-            'head_iptm',
-            'head_pae',
-            'head_disorder',
-            'conf_embed',
-            'iptm_embed',
-            'pae_embed',
-            'pair_proj',
-            'v12_plddt',      # V12 pure-sequence confidence heads
-            'v12_iptm',
-            'v12_pae',
-            'v12_seq_emb',
-            'v13_seq_feedback',  # V13 sequence embedding feedback
-            'head_seq',        # V7+ CDR sequence head (disorder-conditioned)
-            'head_seq_fixbb',  # V7+ fixbb fallback head
-            'disorder_proj',   # V7+ epitope disorder projection
-            'head_pos',        # V7+ position head
-            'head_ori',        # V7+ orientation head
-            'head_ang',        # V7+ angle head
-        ])
-        # Optionally unfreeze the last N encoder layers (GAEncoder blocks)
-        unfreeze_encoder_layers = config.train.get('unfreeze_encoder_layers', 0)
-        if unfreeze_encoder_layers > 0:
-            logger.info(f'Also unfreezing last {unfreeze_encoder_layers} encoder layers...')
-
-        for name, param in model.named_parameters():
-            if any(suffix in name for suffix in trainable_suffixes):
-                param.requires_grad = True
-            elif unfreeze_encoder_layers > 0:
-                # Check if this param belongs to the last N encoder blocks
-                should_unfreeze = False
-                for layer_idx in range(6 - unfreeze_encoder_layers, 6):
-                    if f'encoder.blocks.{layer_idx}' in name:
-                        should_unfreeze = True
-                        break
-                param.requires_grad = should_unfreeze
-            else:
-                param.requires_grad = False
-
-        n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
-        n_total = sum(p.numel() for p in model.parameters())
-        logger.info(f'Trainable: {n_trainable:,}/{n_total:,} ({100*n_trainable/n_total:.1f}%)')
 
     # EMA
     ema_decay = config.train.get('ema_decay', 0.0)

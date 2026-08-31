@@ -11,6 +11,7 @@ import torch
 from torch.utils.data import Dataset
 
 from disorderflow.datasets._base import register_dataset
+from disorderflow.utils.protein.constants import Fragment
 
 _LMDB_ENV_CACHE = {}
 
@@ -57,6 +58,8 @@ class ConfidenceRegressionDataset(Dataset):
             cfg = {}
         else:
             self.db_path = cfg.db_path if hasattr(cfg, "db_path") else cfg["db_path"]
+        self.candidate_interface_v1 = bool(
+            cfg.get("candidate_interface_v1", False))
         self.max_residues = cfg.get("max_residues", 0) if isinstance(cfg, dict) else 0
         self.idp_sample_weight = cfg.get("idp_sample_weight", 1.0) if isinstance(cfg, dict) else 1.0
         # transform is ignored —data is already preprocessed in the LMDB
@@ -176,6 +179,13 @@ class ConfidenceRegressionDataset(Dataset):
                     entry = pickle.load(f)
             self._scaffold_ids.append(int(entry.get("scaffold_id", idx)))
 
+        self.requires_complete_groups = bool(self.candidate_interface_v1)
+        if self.requires_complete_groups:
+            groups = {}
+            for dataset_index, scaffold_id in enumerate(self._scaffold_ids):
+                groups.setdefault(scaffold_id, []).append(dataset_index)
+            self.group_indices = list(groups.values())
+
     def __len__(self):
         return len(self._valid_indices)
 
@@ -193,18 +203,54 @@ class ConfidenceRegressionDataset(Dataset):
         # Reconstruct batch and attach AF2 ground truth
         batch = entry["batch"]
         aa_len = batch["aa"].shape[0]
-        # AF2 multimer runs on antibody + epitope → plddt/pae cover the FULL
-        # complex. Truncate to the antibody portion for training.
-        af2_plddt = entry["af2_plddt"]
-        if af2_plddt.shape[0] > aa_len:
-            af2_plddt = af2_plddt[:aa_len]
-        batch["af2_plddt"] = af2_plddt
-        batch["af2_iptm"] = entry["af2_iptm"]
-        af2_pae = entry["af2_pae_matrix"]
-        if af2_pae.dim() >= 2 and af2_pae.shape[0] > aa_len:
-            af2_pae = af2_pae[:aa_len, :aa_len]
-        batch["af2_pae_matrix"] = af2_pae
+        if self.candidate_interface_v1:
+            if entry.get("schema_version") != "candidate_interface_confidence_v1":
+                raise ValueError(
+                    "candidate_interface_v1 requires successor dataset schema")
+            generate_flag = batch.get("generate_flag")
+            fragment_type = batch.get("fragment_type")
+            if generate_flag is None or not generate_flag.bool().any():
+                raise ValueError(
+                    "candidate_interface_v1 requires a nonempty candidate mask")
+            if (fragment_type is None
+                    or not (fragment_type == int(Fragment.Antigen)).any()):
+                raise ValueError(
+                    "candidate_interface_v1 requires explicit antigen residues")
+            af2_plddt = entry["af2_plddt"]
+            af2_pae = entry["af2_pae_matrix"]
+            if af2_plddt.shape[0] != aa_len:
+                raise ValueError(
+                    "candidate_interface_v1 pLDDT must cover the full complex")
+            if af2_pae.shape != (aa_len, aa_len):
+                raise ValueError(
+                    "candidate_interface_v1 PAE must cover the full complex")
+            batch["af2_plddt"] = af2_plddt
+            batch["af2_iptm"] = entry["af2_iptm"]
+            batch["af2_pae_matrix"] = af2_pae
+            batch["af2_pae_normalized"] = torch.tensor(
+                bool(entry["af2_pae_normalized"]), dtype=torch.bool)
+            batch["confidence_sample_weight"] = torch.tensor(
+                float(entry.get("confidence_sample_weight", 1.0)),
+                dtype=torch.float32)
+            for key in (
+                    "af2_iptm_std", "af2_candidate_plddt_std",
+                    "af2_interface_pae_normalized_std", "af2_iptm_sem",
+                    "af2_candidate_plddt_sem",
+                    "af2_interface_pae_normalized_sem"):
+                if key in entry:
+                    batch[key] = torch.tensor(float(entry[key]), dtype=torch.float32)
+        else:
+            self._attach_legacy_confidence_targets(batch, entry, aa_len)
+            # Legacy confidence regression treats the complete structure as context.
+            batch["generate_flag"] = torch.zeros(
+                batch["aa"].shape[0], dtype=torch.bool)
+
         batch["pdb_id"] = entry.get("pdb_id", "")
+        batch["construct_id"] = entry.get("construct_id", "")
+        batch["protocol_id"] = entry.get("protocol_id", "")
+        batch["af2_seed"] = torch.tensor(
+            int(entry.get("af2_seed", -1)), dtype=torch.long)
+        batch["scaffold_family"] = entry.get("scaffold_family", "")
         batch["is_idp"] = entry.get("is_idp", False)
         batch["source"] = entry.get("source", "")
 
@@ -216,12 +262,6 @@ class ConfidenceRegressionDataset(Dataset):
         batch["scaffold_id"] = torch.tensor(
             int(entry.get("scaffold_id", real_idx)), dtype=torch.long
         )
-
-        # For confidence regression, all residues are "context" (not generated).
-        # This allows the encoder to see full structural information, which is
-        # the correct setting for predicting confidence from structure features.
-        # The generate_flag from the saved batch is overridden here.
-        batch["generate_flag"] = torch.zeros(batch["aa"].shape[0], dtype=torch.bool)
 
         # Per-residue disorder labels from EBI MobiDB-lite (Phase 2).
         # Falls back to AF2 pLDDT < 50 for entries where API was unavailable.
@@ -241,6 +281,20 @@ class ConfidenceRegressionDataset(Dataset):
             )
 
         return batch
+
+    @staticmethod
+    def _attach_legacy_confidence_targets(batch, entry, aa_len):
+        # AF2 multimer runs on antibody + epitope → plddt/pae cover the FULL
+        # complex. Truncate to the antibody portion for training.
+        af2_plddt = entry["af2_plddt"]
+        if af2_plddt.shape[0] > aa_len:
+            af2_plddt = af2_plddt[:aa_len]
+        batch["af2_plddt"] = af2_plddt
+        batch["af2_iptm"] = entry["af2_iptm"]
+        af2_pae = entry["af2_pae_matrix"]
+        if af2_pae.dim() >= 2 and af2_pae.shape[0] > aa_len:
+            af2_pae = af2_pae[:aa_len, :aa_len]
+        batch["af2_pae_matrix"] = af2_pae
 
     def set_max_residues(self, max_residues):
         """Dynamically update the max_residues filter (for length curriculum).

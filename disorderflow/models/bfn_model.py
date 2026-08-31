@@ -69,6 +69,7 @@ class AntibodyBFN(nn.Module):
             ot_opt=cfg.get('ot_opt', {}), # Pass OT options
             beta=cfg.diffusion.get('beta', 1.0),  # BFN precision (default 1.0)
             schedule=cfg.diffusion.get('schedule', 'linear'),  # 'linear' or 'cosine'
+            confidence_head_kind=cfg.get('confidence_head_kind', 'legacy_v12'),
         )
 
     def encode(self, batch, remove_structure, remove_sequence):
