@@ -1,0 +1,139 @@
+{
+  "schema_version": "candidate_interface_pae_deployment_v1",
+  "classification": "development_only",
+  "status": "frozen_pae_single_axis_deployment",
+  "scope": "PAE single-axis candidate-interface confidence (normalized candidate-to-antigen PAE)",
+  "abstentions": {
+    "plddt": "non-transferable across scaffolds; five head/loss ablations falsified",
+    "iptm": "insufficient reliable pairs (2/6 contributing scaffolds)"
+  },
+  "calibration": {
+    "method": "variance-matching affine target = slope*pred + intercept, slope = target_std/pred_std",
+    "fit_domain": "6 independent external calibration scaffolds (84 entity records)",
+    "monotonic": true,
+    "ranking_invariant": true,
+    "not_model_training": true
+  },
+  "deployment_gates": {
+    "mae": {
+      "threshold": 0.1,
+      "metric": "corrected_mae"
+    },
+    "median_scaffold_spearman": {
+      "threshold": 0.5
+    },
+    "variance_ratio": {
+      "range": [
+        0.5,
+        2.0
+      ],
+      "post_calibration_value": 1.0
+    },
+    "pair_evidence": {
+      "min_pairs": 30,
+      "min_scaffolds": 3,
+      "max_scaffold_fraction": 0.5
+    },
+    "pair_accuracy": {
+      "threshold": 0.65
+    },
+    "pair_bootstrap_lower": {
+      "threshold": 0.5
+    }
+  },
+  "seeds": [
+    {
+      "seed": "2041",
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_13_52_dual_sem_v2_s2041\\checkpoints\\1000.pt",
+      "checkpoint_sha256": "8f04ac0996872ab03d318ba5065eda7ecc7438f299fcc809de24d5c053a0436c",
+      "calibration": {
+        "slope": 2.1124768640390075,
+        "intercept": -0.9093360481074079
+      },
+      "corrected_mae": 0.02449795152355938,
+      "corrected_variance_ratio": 1.0000000000000004,
+      "median_scaffold_spearman": 0.865934065934066,
+      "pairwise": {
+        "reliable_pairs": 236,
+        "contributing_scaffolds": 6,
+        "max_scaffold_pair_fraction": 0.25,
+        "accuracy": 0.9533898305084746,
+        "bootstrap_95_lower": 0.8727237627237627
+      },
+      "gates": {
+        "mae": true,
+        "median_scaffold_spearman": true,
+        "variance_ratio": true,
+        "pair_evidence": true,
+        "pair_accuracy": true,
+        "pair_bootstrap_lower": true
+      },
+      "gates_passed": true
+    },
+    {
+      "seed": "2053",
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_29_06_dual_sem_v2_s2053\\checkpoints\\800.pt",
+      "checkpoint_sha256": "8e1187e4c0b47839e031c6e73b047c65b9a7d1edb8c6902ae32083f861e39d3a",
+      "calibration": {
+        "slope": 1.3531379685586638,
+        "intercept": -0.22794449016121854
+      },
+      "corrected_mae": 0.022268506259363434,
+      "corrected_variance_ratio": 0.9999999999999993,
+      "median_scaffold_spearman": 0.7252747252747254,
+      "pairwise": {
+        "reliable_pairs": 236,
+        "contributing_scaffolds": 6,
+        "max_scaffold_pair_fraction": 0.25,
+        "accuracy": 0.885593220338983,
+        "bootstrap_95_lower": 0.7448239178283199
+      },
+      "gates": {
+        "mae": true,
+        "median_scaffold_spearman": true,
+        "variance_ratio": true,
+        "pair_evidence": true,
+        "pair_accuracy": true,
+        "pair_bootstrap_lower": true
+      },
+      "gates_passed": true
+    },
+    {
+      "seed": "2069",
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__21_10_10_dual_sem_v2_s2069_retry\\checkpoints\\800.pt",
+      "checkpoint_sha256": "46a21204b4ac656a2c3bde1a21c0f324cab0bfd01e492749bacaa9d41769f486",
+      "calibration": {
+        "slope": 2.949075200752401,
+        "intercept": -1.588157711014043
+      },
+      "corrected_mae": 0.028708128517087896,
+      "corrected_variance_ratio": 1.0,
+      "median_scaffold_spearman": 0.7296703296703297,
+      "pairwise": {
+        "reliable_pairs": 236,
+        "contributing_scaffolds": 6,
+        "max_scaffold_pair_fraction": 0.25,
+        "accuracy": 0.8432203389830508,
+        "bootstrap_95_lower": 0.6827309236947792
+      },
+      "gates": {
+        "mae": true,
+        "median_scaffold_spearman": true,
+        "variance_ratio": true,
+        "pair_evidence": true,
+        "pair_accuracy": true,
+        "pair_bootstrap_lower": true
+      },
+      "gates_passed": true
+    }
+  ],
+  "deployment_gate_passed": true,
+  "multi_seed_stable": true,
+  "sealed_test_policy": "test split remains sealed; this PAE single-axis deployment does not unseal it",
+  "dataset_manifest_sha256": "2b1da0c48b38c089ecdb393d4d871273c4337573a8acd7189c6b4b0560d3ae16",
+  "checkpoint_reselection_sha256": "9845028d8d544095a5879da87b2fa3fa0d9e1067e0373c8fece657e40207eef6",
+  "provenance": {
+    "reselection": "results/candidate_interface_multiscaffold_calibration_ext/checkpoint_reselection.json",
+    "dataset_manifest": "data/confidence_candidate_interface_multiscaffold_calibration_ext_dual_sem_v1/manifest.json"
+  }
+}
