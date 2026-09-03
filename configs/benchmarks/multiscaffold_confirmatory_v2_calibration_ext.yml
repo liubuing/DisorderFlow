@@ -1,0 +1,64 @@
+schema_version: 2
+status: frozen_before_calibration_extension_generation
+classification: prospective_internal_calibration_extension
+isolation_audit: data/candidate_interface_external_calibration_v1/isolation_audit_consolidated.json
+isolation_audit_sha256: 657dcba23d37f9efcf3e859de669999c1ab1258fd7144c8d0690e7a7902a3873
+holdout_manifest: data/candidate_interface_multiscaffold_calibration_ext_v1/holdout_manifest.json
+holdout_manifest_sha256: c0ee9fb1dea452fcb8ba507e0937e758793de6677cea5c3fb0c25f583537b096
+isolation:
+  coverage: 0.8
+  hard_axes:
+    pdb_id: exact
+    antigen:
+      minimum_identity: 0.3
+      coverage_mode: 0
+    cdr_h3:
+      minimum_identity: 0.5
+      coverage_mode: 0
+    paired_cdr:
+      minimum_identity: 0.7
+      coverage_mode: 0
+    vh:
+      minimum_identity: 0.9
+      coverage_mode: 0
+    vl:
+      minimum_identity: 0.9
+      coverage_mode: 0
+  cdr_definition:
+    scheme: chothia
+    h1: 26-32
+    h2: 52-56
+    h3: 93-102_anchor_bounded
+    l1: 24-34
+    l2: 50-56
+    l3: 89-97
+holdout:
+  reference_independent_records: 6
+  all_axis_components: 6
+  representatives: 6
+  minimum_required_components: 5
+training_lineage:
+  stage_a: random_initialization_filtered_antibody_pretraining
+  stage_b: stage_a_only_initialization_disorder_supervision
+  prohibited_initializers:
+  - balanced_v4
+  - parent_bfn
+  - legacy_disorderflow
+generation:
+  seeds:
+  - 2609
+  - 2617
+  - 2621
+  candidates_per_seed: 8
+  arms:
+  - current_bfn_disorder_on
+  - current_bfn_disorder_off
+  - stage_a_antibody_bfn
+  - proteinmpnn
+  failed_candidates_remain_failures: true
+selection:
+  freeze_before_af2: true
+  candidates_per_arm_per_component: 3
+claim_boundary: 'calibration extension: AF2-derived development labels only; not binding
+  or external confirmation'
+

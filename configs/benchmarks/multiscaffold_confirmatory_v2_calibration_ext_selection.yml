@@ -1,0 +1,28 @@
+schema_version: 1
+status: frozen_before_calibration_extension_selection
+generation_config: configs/benchmarks/multiscaffold_confirmatory_v2_calibration_ext_generation.yml
+generation_config_sha256: fe3653bc5de9da4546e5fde1649a2cb16f52f713c983d6acd48137d74388a85f
+raw_generation: results/candidate_interface_multiscaffold_calibration_ext/raw_generation.json
+raw_generation_sha256: b464564caab6e0b896d8a78cfebf7883859c88517886f32055f518e04feca366
+raw_generation_audit: results/candidate_interface_multiscaffold_calibration_ext/raw_generation_audit.json
+raw_generation_audit_sha256: 30d9600a3cc6d0de8b4d5f8849e5d4cb6a89ad74505c9429b43ef7679c700648
+selection:
+  slots_per_arm_component: 3
+  require_unique_h3_within_arm_component: true
+  insufficient_unique_candidates: retain_failed_selection_slots
+  objective_priority:
+  - maximize_distinct_generation_seeds
+  - maximize_minimum_pairwise_hamming_distance
+  - maximize_total_pairwise_hamming_distance
+  - minimize_sum_sample_indices
+  - lexicographic_attempt_id_tiebreak
+  prohibited_inputs:
+  - generator_score
+  - bfn_confidence
+  - af2_outputs
+  - interface_scores
+  - native_recovery
+output: results/candidate_interface_multiscaffold_calibration_ext/pre_af2_selection.json
+expected_slots: 72
+claim_boundary: sequence-diversity selection only; no structural or performance evidence
+

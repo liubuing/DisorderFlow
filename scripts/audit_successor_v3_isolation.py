@@ -208,6 +208,8 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--mmseqs", default="mmseqs")
     parser.add_argument("--threads", type=int, default=8)
+    parser.add_argument("--minimum-components", type=int, default=MINIMUM_COMPONENTS)
+    parser.add_argument("--component-prefix", default="SV3C")
     args = parser.parse_args()
     candidate_path = ROOT / args.candidate_manifest
     reference_path = ROOT / args.reference_manifest
@@ -263,11 +265,11 @@ def main() -> None:
     independent = [row for row in exact_eligible if row["instance"] not in failed_by_id]
     components = connected_components(
         [row["instance"] for row in independent], self_hits) if independent else []
-    gate_passed = len(components) >= MINIMUM_COMPONENTS
+    gate_passed = len(components) >= args.minimum_components
 
     by_id = {row["instance"]: row for row in independent}
     component_by_id = {
-        member: f"SV3C{index:03d}"
+        member: f"{args.component_prefix}{index:03d}"
         for index, members in enumerate(components, 1) for member in members
     }
     representatives = [select_representative([by_id[value] for value in members])
@@ -277,7 +279,7 @@ def main() -> None:
         donor = (select_donor(representative, representatives, component_by_id)
                  if len(components) >= 2 else None)
         frozen_components.append({
-            "component_id": f"SV3C{index:03d}",
+            "component_id": f"{args.component_prefix}{index:03d}",
             "members": members,
             "representative_id": representative["instance"],
             "donor_id": donor["instance"] if donor else None,
@@ -333,7 +335,8 @@ def main() -> None:
         },
         "excluded_by_axis": dict(sorted(Counter(
             axis for axes in failed_by_id.values() for axis in axes).items())),
-        "minimum_required_components": MINIMUM_COMPONENTS,
+        "minimum_required_components": args.minimum_components,
+        "component_prefix": args.component_prefix,
         "gate_passed": gate_passed,
         "decision": ("eligible_for_one_shot_confirmatory_evaluation"
                      if gate_passed

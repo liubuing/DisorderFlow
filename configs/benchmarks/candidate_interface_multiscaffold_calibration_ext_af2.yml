@@ -1,0 +1,49 @@
+schema_version: 1
+status: frozen_before_calibration_extension_af2
+protocol_id: alphafold2_multimer_v3_model_1_single_sequence
+selection_config: configs/benchmarks/multiscaffold_confirmatory_v2_calibration_ext_selection.yml
+selection_config_sha256: 0c4d63a667cf94c6b22b79b506a074c2d7cc74036a801f9f1f04a4f4aab2161a
+selection: results/candidate_interface_multiscaffold_calibration_ext/pre_af2_selection.json
+selection_sha256: bf53767b9a1f5940162134be2c17e195bbc1797cd8332d3308244226c6ac46fc
+holdout_manifest: data/candidate_interface_multiscaffold_calibration_ext_v1/holdout_manifest.json
+holdout_manifest_sha256: c0ee9fb1dea452fcb8ba507e0937e758793de6677cea5c3fb0c25f583537b096
+split_manifest: data/candidate_interface_multiscaffold_calibration_ext_v1/split_manifest.json
+split_manifest_sha256: 84403ca6aab01086d4de1fc961ceee5795c140e4d0ffa51c38b117ac39548f1a
+controls:
+  per_component:
+  - native
+  - composition_shuffle
+  composition_shuffle_seed: 7307
+  require_non_native_shuffle: true
+af2:
+  backend: modules.af2_jax_runner.run_multimer_prediction
+  wsl_distribution: Ubuntu-24.04-D
+  environment: venv_wsl
+  model_type: alphafold2_multimer_v3
+  model_number: 1
+  model_parameters: C:/Users/34342/.cache/colabfold/params/params_model_1_multimer_v3.npz
+  model_parameters_sha256: 611da8fc7478928f68de12e8b226260ef1f4ce62bcc29b008572e52f4f212959
+  seeds:
+  - 7103
+  - 7111
+  - 7121
+  recycles: 3
+  msa_mode: single_sequence_two_identical_rows
+  templates: disabled_zero_features
+  models_per_seed: 1
+  chunk_size: 24
+  return_structures: true
+  retain_full_pae_matrix: true
+expected:
+  selected_candidates: 72
+  selection_failed_slots: 0
+  controls: 12
+  prediction_entities: 84
+  prediction_slots: 252
+output:
+  results: results/candidate_interface_multiscaffold_calibration_ext/af2/results.json
+  structures: results/candidate_interface_multiscaffold_calibration_ext/af2/pdb
+  pae_sidecars: results/candidate_interface_multiscaffold_calibration_ext/af2/pae
+claim_boundary: AF2-derived development labels for the calibration extension; not
+  binding or external confirmation
+

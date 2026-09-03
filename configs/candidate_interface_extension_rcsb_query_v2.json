@@ -1,0 +1,29 @@
+{
+  "query": {
+    "type": "group",
+    "logical_operator": "and",
+    "nodes": [
+      {
+        "type": "group",
+        "logical_operator": "or",
+        "nodes": [
+          {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_polymer_entity.pdbx_description", "operator": "contains_words", "value": "antibody"}},
+          {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_polymer_entity.pdbx_description", "operator": "contains_words", "value": "Fab"}},
+          {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_polymer_entity.pdbx_description", "operator": "contains_words", "value": "nanobody"}},
+          {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_polymer_entity.pdbx_description", "operator": "contains_words", "value": "VHH"}}
+        ]
+      },
+      {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_accession_info.initial_release_date", "operator": "range", "value": {"from": "2018-01-01", "to": "2024-12-31", "include_lower": true, "include_upper": true}}},
+      {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_entry_info.polymer_entity_count_protein", "operator": "greater_or_equal", "value": 2}},
+      {"type": "terminal", "service": "text", "parameters": {"attribute": "rcsb_entry_info.resolution_combined", "operator": "less_or_equal", "value": 4.0}},
+      {"type": "terminal", "service": "text", "parameters": {"attribute": "exptl.method", "operator": "in", "value": ["X-RAY DIFFRACTION", "ELECTRON MICROSCOPY"]}}
+    ]
+  },
+  "return_type": "entry",
+  "request_options": {
+    "paginate": {"start": 0, "rows": 10000},
+    "sort": [{"sort_by": "rcsb_accession_info.initial_release_date", "direction": "desc"}],
+    "results_content_type": ["experimental"],
+    "results_verbosity": "compact"
+  }
+}

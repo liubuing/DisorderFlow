@@ -1,0 +1,130 @@
+{
+  "schema_version": "candidate_interface_calibration_extension_v1",
+  "classification": "preregistered_development_only",
+  "frozen_split_manifest_sha256": "f524411f8a975349a837f9f29ffd8565a6be950dbb5fbae52b400cba339cef58",
+  "frozen_v2_dataset_manifest_sha256": "fea7df3cb91d1aa30fce9b8b2846eb8e98285db169fed834bf946c9f4d29a83c",
+  "purpose": "Resolve calibration pair-evidence insufficiency without training or test reuse.",
+  "discovery_contract": {
+    "source": "RCSB PDB Search API and Data API",
+    "query_config": "configs/candidate_interface_extension_rcsb_query_v1.json",
+    "query_config_sha256": "fbc767bdaa2e1852b431b6e7a5699daf68d135ea03e041486729fcae91aa0fca",
+    "query_window_utc": ["2025-01-01", "2026-09-01"],
+    "experimental_methods": ["X-RAY DIFFRACTION", "ELECTRON MICROSCOPY"],
+    "maximum_resolution_angstrom": 4.0,
+    "antibody_forms": ["paired_heavy_light", "vhh", "nanobody"],
+    "antigen_polymer_length_residues": [5, 50],
+    "minimum_antibody_antigen_heavy_atom_contact_angstrom": 4.5,
+    "require_h3_contact": true,
+    "exact_pdb_overlap_allowed": false,
+    "metadata_access_before_freeze": "RCSB IDs, release dates, descriptions, chain IDs, lengths, resolution, and sequence-cluster IDs only; no coordinates or confidence targets",
+    "coordinate_selection_after_freeze": "retain every structurally eligible and isolation-passing component; deterministic representative by resolution then release date then PDB ID"
+  },
+  "isolation_contract": {
+    "minimum_coverage": 0.8,
+    "coverage_mode": 0,
+    "maximum_identity_to_reference": {
+      "vh": 0.9,
+      "vl": 0.9,
+      "paired_cdr": 0.7,
+      "cdr_h3": 0.5,
+      "antigen": 0.3
+    },
+    "reference_sets": [
+      "data/phase3_v5_1_pair_clustered/train.lmdb",
+      "data/sabdab2_abag_project_pool_v2/all.lmdb",
+      "data/peptide_h3_temporal_split_v3/sealed_final.lmdb",
+      "data/multiscaffold_confirmatory_v1/structural_manifest.json",
+      "data/multiscaffold_confirmatory_v2/holdout_manifest.json"
+    ]
+  },
+  "discovery_round_v2": {
+    "query_config": "configs/candidate_interface_extension_rcsb_query_v2.json",
+    "query_config_sha256": "a5ffe1fb1c75a2e349844143bef251e76a426554998530be77e6d3333aeeff85",
+    "query_window_utc": ["2018-01-01", "2024-12-31"],
+    "rationale": "round-1 (2025+) window yielded 1/5 independent scaffolds because the successor-v3 exploratory exposure already covers recent entries; recall expansion to earlier releases with unchanged eligibility and isolation thresholds",
+    "thresholds_changed": false,
+    "cross_round_isolation": {
+      "reference_union": "data/candidate_interface_external_calibration_v1/reference_union_extension_v1.json",
+      "policy": "exact-exclude all round-1 snapshot entry IDs and five-axis-exclude all round-1 structurally eligible sequences",
+      "round1_independent_component": "EXT001",
+      "round1_independent_instance": "33CI_E_D_C"
+    },
+    "audit": {
+      "minimum_components": 4,
+      "component_prefix": "EX2C",
+      "rationale": "4 additional independent scaffolds plus frozen round-1 component EXT001 satisfy the 5-scaffold extension membership contract"
+    }
+  },
+  "discovery_round_v3": {
+    "scope": "deferred_viral_antigen_pool_enablement",
+    "thresholds_changed": false,
+    "viral_pool_sources": [
+      "round-1 snapshot (2025+) deferred viral entries",
+      "round-2 snapshot (2018-2024) deferred viral entries"
+    ],
+    "policy": "promote deferred_viral_antigen entries to candidates; eligibility, contact, and five-axis isolation thresholds unchanged",
+    "consolidated_audit": {
+      "candidate_sources": [
+        "round-1 non-viral structurally eligible records",
+        "round-2 non-viral structurally eligible records",
+        "round-3 viral structurally eligible records (round-1 snapshot)",
+        "round-3 viral structurally eligible records (round-2 snapshot)"
+      ],
+      "reference_manifest": "data/successor_v3_confirmatory/reference_union_manifest_v3.json",
+      "minimum_components": 5,
+      "component_prefix": "EXT",
+      "rationale": "single consolidated five-axis isolation audit over the full extension pool against the frozen base reference union; self-clustering merges same-scaffold candidates across rounds"
+    }
+  },
+  "extension_membership": {
+    "minimum_independent_scaffolds": 5,
+    "exclude_existing_components": [
+      "V2C001",
+      "V2C002",
+      "V2C003",
+      "V2C004",
+      "V2C005",
+      "V2C006",
+      "V2C007",
+      "V2C008",
+      "V2C009",
+      "V2C010",
+      "V2C011",
+      "V2C012",
+      "V2C013",
+      "V2C014",
+      "V2C015",
+      "V2C016",
+      "V2C017",
+      "V2C018",
+      "V2C019",
+      "V2C020"
+    ],
+    "training_allowed": false,
+    "checkpoint_selection_allowed": false,
+    "sealed_test_membership_allowed": false
+  },
+  "measurement_contract": {
+    "af2_models": [1, 2],
+    "seeds_per_model": 3,
+    "sem_estimator": "crossed_model_seed_component",
+    "pae_direction": "candidate_to_antigen",
+    "pae_residue_set": "intersection_across_all_six_conditions"
+  },
+  "reliable_pair_rule": {
+    "comparison_unit": "entities_within_scaffold",
+    "criterion": "absolute_target_delta_strictly_exceeds_joint_sem",
+    "minimum_total_pairs": 30,
+    "minimum_contributing_scaffolds": 3,
+    "maximum_fraction_from_one_scaffold": 0.5
+  },
+  "decision_contract": {
+    "pair_accuracy_minimum": 0.65,
+    "cluster_bootstrap_95_lower_strictly_above": 0.5,
+    "bootstrap_unit": "scaffold_then_entity",
+    "insufficient_evidence_action": "abstain",
+    "abstention_counts_as_deployment_pass": false,
+    "threshold_changes_after_target_access_allowed": false,
+    "sealed_test_evaluation_allowed_before_calibration_pass": false
+  }
+}

@@ -1,0 +1,56 @@
+schema_version: 1
+status: frozen_before_calibration_extension_candidate_generation
+protocol: configs/benchmarks/multiscaffold_confirmatory_v2_calibration_ext.yml
+protocol_sha256: c6fde9d774e1e6ff5ca1bb0f2919e6971ae9f952f4e5e924f1994e2dad039026
+holdout_manifest: data/candidate_interface_multiscaffold_calibration_ext_v1/holdout_manifest.json
+holdout_manifest_sha256: c0ee9fb1dea452fcb8ba507e0937e758793de6677cea5c3fb0c25f583537b096
+checkpoint_lineage: publication/multiscaffold_v2_calibration_ext_checkpoint_lineage.json
+generation:
+  seeds:
+  - 2609
+  - 2617
+  - 2621
+  candidates_per_seed: 8
+  preserve_native_h3_length: true
+  canonical_chain_map:
+    heavy: H
+    light: L
+    antigen: P
+  raw_attempts_expected: 576
+  retain_native_candidates: true
+  retain_duplicate_candidates: true
+  failed_candidates_remain_failures: true
+  arms:
+    current_bfn_disorder_on:
+      type: bfn
+      checkpoint: logs/bfn_multiscaffold_v2_stage_b_disorder_2026_08_06__19_00_50_multiscaffold_v2_stagea100k_s2657/checkpoints/best.pt
+      checkpoint_sha256: 5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3
+      stochastic: true
+      disorder_profile: stage_b_head_raw_sigmoid_latent_routing
+      disorder_guided_strength: 1.0
+    current_bfn_disorder_off:
+      type: bfn
+      checkpoint: logs/bfn_multiscaffold_v2_stage_b_disorder_2026_08_06__19_00_50_multiscaffold_v2_stagea100k_s2657/checkpoints/best.pt
+      checkpoint_sha256: 5cf0516f076492c46a73e0c5d53814d8cd9cf427472cc4e76aff42f5a584a8c3
+      stochastic: true
+      disorder_profile: none
+    stage_a_antibody_bfn:
+      type: bfn
+      checkpoint: logs/bfn_multiscaffold_v2_stage_a_random_2026_08_06__08_43_37_multiscaffold_v2_random_s2647/checkpoints/best.pt
+      checkpoint_sha256: 00ae022962bb35bd1ab65e4fea912715d3e99d09c0858ed6b8452ece32e9678f
+      stochastic: true
+      disorder_profile: none
+    proteinmpnn:
+      type: proteinmpnn
+      script: ProteinMPNN/protein_mpnn_run.py
+      weights: ProteinMPNN/vanilla_model_weights
+      model_name: v_48_020
+      model_weights_sha256: c9cb4a671d79604111231f8dbfc7c590e06f1197453b7a6854ac6661a642f5bd
+      temperature: 0.1
+output:
+  path: results/candidate_interface_multiscaffold_calibration_ext/raw_generation.json
+  schema: one_row_per_attempt
+  candidate_selection_permitted: false
+claim_boundary: raw prospective internal calibration-extension generation; no candidate
+  selection or confirmatory endpoint
+
