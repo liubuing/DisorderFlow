@@ -95,21 +95,52 @@ def design_candidates(model, config, target_pdb, target_chain, scaffold_pdb,
 
 
 def validate(designs, epitope_sequence, num_recycle=3):
-    from af2_jax_runner import validate_antibody_epitope
+    import subprocess
 
-    out = []
-    for design in designs:
+    jobs = []
+    for index, design in enumerate(designs):
         ab_seq = design.get("full_heavy_sequence") or design.get("sequence")
         if not ab_seq:
-            out.append({"interface_pae": None, "error": "missing sequence"})
+            jobs.append(None)
             continue
-        result = validate_antibody_epitope(
-            ab_seq, epitope_sequence, num_recycle=num_recycle)
+        jobs.append({
+            "seq": ab_seq,
+            "epi_seq": epitope_sequence,
+            "id": index,
+            "recycle": num_recycle,
+            "seed": 42,
+        })
+    payload = "".join(
+        json.dumps(job) + "\n" for job in jobs if job is not None)
+    command = (
+        "cd /mnt/d/biological/DisorderFlow && "
+        "source venv_wsl/bin/activate && "
+        f"python scripts/utils/af2_wsl_batch.py --recycle {num_recycle} "
+        "--model-number 1"
+    )
+    completed = subprocess.run(
+        ["wsl.exe", "-d", "Ubuntu-24.04-D", "--", "bash", "-lc", command],
+        input=payload, capture_output=True, text=True,
+        timeout=600 + 600 * len(jobs))
+    if completed.returncode:
+        raise RuntimeError(completed.stderr[-4000:])
+    results = {}
+    for line in completed.stdout.splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if "id" in row:
+            results[row["id"]] = row
+
+    out = []
+    for index, design in enumerate(designs):
+        row = results.get(index, {})
         out.append({
-            "interface_pae": result.get("interface_pae"),
-            "iptm_reported": result.get("iptm"),
-            "plddt_reported": result.get("plddt"),
-            "success": result.get("success"),
+            "interface_pae": row.get("interface_pae"),
+            "iptm_reported": row.get("iptm"),
+            "plddt_reported": row.get("plddt"),
+            "success": row.get("success"),
         })
     return out
 
