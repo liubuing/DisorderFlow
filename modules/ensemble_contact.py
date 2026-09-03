@@ -54,17 +54,24 @@ def per_conformation_contacts(
         epitope_residues: Sequence[int],
         ab_chain: str = "H",
         antigen_chain: str = "A",
+        cdr_regions: Sequence[tuple[int, int]] | None = None,
         contact_cutoff: float = 8.0,
         reference_index: int = 0) -> list[int | None]:
     """Heavy-atom contacts between an antibody and each antigen conformation.
 
     Each conformation is Kabsch-aligned onto the reference conformation over
     the epitope residues before counting contacts, so only epitope-relative
-    geometry drives the score.
+    geometry drives the score. ``cdr_regions`` restricts the antibody side to
+    the design (CDR) residues.
     """
     ab = _cb_positions(antibody_pdb, ab_chain)
     if ab is None:
         return [None] * len(conformation_pdbs)
+    if cdr_regions:
+        cdr_mask = np.zeros(len(ab), dtype=bool)
+        for start, end in cdr_regions:
+            cdr_mask[start - 1:end] = True
+        ab = ab[cdr_mask]
     antigen = [_cb_positions(p, antigen_chain) for p in conformation_pdbs]
     if any(a is None for a in antigen) or not antigen:
         return [None] * len(conformation_pdbs)
