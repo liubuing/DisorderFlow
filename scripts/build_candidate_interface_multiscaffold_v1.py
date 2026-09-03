@@ -26,6 +26,7 @@ from scripts.build_candidate_interface_confidence_v1 import (  # noqa: E402
     sha256,
     unbatch_and_trim,
 )
+from disorderflow.utils.data import update_lmdb_record_digest  # noqa: E402
 
 
 NOISE_SCALES = {"plddt": 0.05, "iptm": 0.05, "pae_normalized": 0.10}
@@ -83,10 +84,13 @@ def load_prediction_arrays(result):
     return plddt / 100.0, pae, observed
 
 
-def aggregate_targets(result_sets, entities, components):
+def aggregate_targets(result_sets, entities, components, allowed_components=None):
     rows_by_entity = {}
     for results in result_sets:
         for row in results["results"]:
+            if (allowed_components is not None
+                    and row["component_id"] not in allowed_components):
+                continue
             rows_by_entity.setdefault(row["entity_id"], []).append(row)
     expected_replicates = sum(len(results["requested"]["seeds"])
                               for results in result_sets)
@@ -139,7 +143,9 @@ def aggregate_targets(result_sets, entities, components):
     return aggregates
 
 
-def build_entry(result, entity, component, scaffold_id, protocol_id, target):
+def build_entry(
+        result, entity, component, scaffold_id, protocol_id, target,
+        uncertainty_version="v1"):
     from modules.bfn_loader import build_region_batch
 
     pdb_path = ROOT / result["pdb"]
@@ -165,7 +171,10 @@ def build_entry(result, entity, component, scaffold_id, protocol_id, target):
     }
     batch = build_region_batch(
         str(pdb_path), region_spec(positions), context_chains=["B", "C"],
-        antigen_chains=["C"], device="cpu")
+        antigen_chains=["C"],
+        antigen_context_cap=(16 if uncertainty_version == "v2" else 0),
+        preserve_context_chain_order=(uncertainty_version == "v2"),
+        device="cpu")
     patch_idx = batch["patch_idx"][0][batch["mask"][0].bool()].long().numpy()
     model_batch, valid_length = unbatch_and_trim(batch)
     if len(patch_idx) != valid_length:
@@ -173,7 +182,7 @@ def build_entry(result, entity, component, scaffold_id, protocol_id, target):
     if int(model_batch["generate_flag"].sum()) != len(positions["A"]):
         raise ValueError("H3 candidate mask was truncated")
 
-    return {
+    entry = {
         "schema_version": "candidate_interface_confidence_v1",
         "pdb_id": result["prediction_id"],
         "sequence": "".join(expected.values()),
@@ -205,16 +214,119 @@ def build_entry(result, entity, component, scaffold_id, protocol_id, target):
         "source_pdb_path": result["pdb"],
         "source_pdb_sha256": result["pdb_sha256"],
     }
+    if uncertainty_version == "v2":
+        h3 = np.asarray(component["h3_heavy_indices_zero_based"])
+        antigen_start = len(entity["heavy_sequence"]) + len(entity["light_sequence"])
+        patch_antigen = patch_idx[patch_idx >= antigen_start]
+        if not len(patch_antigen):
+            raise ValueError("Candidate-interface patch has no antigen residues")
+        entry["_replicate_candidate_plddt"] = float(plddt[h3].mean())
+        entry["_replicate_iptm"] = float(result["iptm"])
+        entry["_replicate_candidate_to_antigen_pae"] = {
+            int(index): float(pae[np.ix_(h3, [index])].mean() / 31.0)
+            for index in patch_antigen
+        }
+        entry["_patch_global_indices"] = patch_idx.tolist()
+    return entry
+
+
+def hierarchical_sem(rows, key):
+    """Conservative crossed model/seed component estimate for the mean."""
+    protocols = sorted({row["protocol_id"] for row in rows})
+    seeds = sorted({int(row["af2_seed"]) for row in rows})
+    grid = {
+        (row["protocol_id"], int(row["af2_seed"])): float(row[key])
+        for row in rows
+    }
+    if len(protocols) < 2 or len(seeds) < 2 or len(grid) != len(protocols) * len(seeds):
+        values = np.asarray([float(row[key]) for row in rows])
+        return float(values.std(ddof=1) / np.sqrt(len(values)))
+    matrix = np.asarray([
+        [grid[(protocol, seed)] for seed in seeds] for protocol in protocols
+    ])
+    grand_mean = matrix.mean()
+    model_means = matrix.mean(axis=1)
+    seed_means = matrix.mean(axis=0)
+    residual = matrix - model_means[:, None] - seed_means[None, :] + grand_mean
+    model_component = model_means.std(ddof=1) / np.sqrt(len(protocols))
+    seed_component = seed_means.std(ddof=1) / np.sqrt(len(seeds))
+    residual_component = residual.std(ddof=1) / np.sqrt(matrix.size)
+    return float(np.sqrt(
+        model_component ** 2 + seed_component ** 2 + residual_component ** 2))
+
+
+def apply_v2_uncertainty(entries):
+    """Attach sample SD and hierarchical SEM on one shared antigen patch."""
+    by_construct = {}
+    for entry in entries:
+        by_construct.setdefault(entry["construct_id"], []).append(entry)
+    summary_keys = {
+        "plddt": "_replicate_candidate_plddt",
+        "iptm": "_replicate_iptm",
+    }
+    for rows in by_construct.values():
+        replicate_count = len(rows)
+        if replicate_count < 2:
+            raise ValueError("v2 uncertainty requires at least two replicates")
+        common_antigen = set.intersection(*(
+            set(row["_replicate_candidate_to_antigen_pae"]) for row in rows))
+        if not common_antigen:
+            raise ValueError("Replicate antigen patches have no shared residues")
+        for row in rows:
+            pae_by_residue = row["_replicate_candidate_to_antigen_pae"]
+            row["_replicate_interface_pae_normalized"] = float(np.mean([
+                pae_by_residue[index] for index in common_antigen
+            ]))
+            patch_indices = row["_patch_global_indices"]
+            row["batch"]["pae_supervision_antigen_mask"] = torch.tensor(
+                [index in common_antigen for index in patch_indices],
+                dtype=torch.bool)
+        all_summary_keys = {
+            **summary_keys,
+            "pae_normalized": "_replicate_interface_pae_normalized",
+        }
+        uncertainty = {}
+        sem = {}
+        for name, key in all_summary_keys.items():
+            values = np.asarray([row[key] for row in rows], dtype=np.float64)
+            uncertainty[name] = float(values.std(ddof=1))
+            sem[name] = hierarchical_sem(rows, key)
+        scaled_variance = np.mean([
+            (uncertainty[name] / NOISE_SCALES[name]) ** 2
+            for name in all_summary_keys
+        ])
+        weight = float(np.clip(1.0 / (1.0 + scaled_variance), 0.1, 1.0))
+        for row in rows:
+            row["af2_candidate_plddt_std"] = uncertainty["plddt"]
+            row["af2_iptm_std"] = uncertainty["iptm"]
+            row["af2_interface_pae_normalized_std"] = uncertainty["pae_normalized"]
+            row["af2_candidate_plddt_sem"] = sem["plddt"]
+            row["af2_iptm_sem"] = sem["iptm"]
+            row["af2_interface_pae_normalized_sem"] = sem["pae_normalized"]
+            row["confidence_sample_weight"] = weight
+            row["af2_replicate_count"] = replicate_count
+            for key in all_summary_keys.values():
+                del row[key]
+            del row["_replicate_candidate_to_antigen_pae"]
+            del row["_patch_global_indices"]
 
 
 def write_lmdb(path, entries):
     env = lmdb.open(str(path), map_size=1 << 34)
+    digest = hashlib.sha256()
     with env.begin(write=True) as transaction:
         for index, entry in enumerate(entries):
-            transaction.put(f"{index:08d}".encode(), pickle.dumps(entry))
-        transaction.put(b"__len__", pickle.dumps(len(entries)))
+            key = f"{index:08d}".encode()
+            value = pickle.dumps(entry)
+            transaction.put(key, value)
+            update_lmdb_record_digest(digest, key, value)
+        length_key = b"__len__"
+        length_value = pickle.dumps(len(entries))
+        transaction.put(length_key, length_value)
+        update_lmdb_record_digest(digest, length_key, length_value)
     env.sync()
     env.close()
+    return digest.hexdigest()
 
 
 def main():
@@ -228,6 +340,9 @@ def main():
         "--split-manifest", default="data/candidate_interface_multiscaffold_v1/split_manifest.json")
     parser.add_argument(
         "--out", default="data/confidence_candidate_interface_multiscaffold_dual_sem_v1")
+    parser.add_argument(
+        "--uncertainty-version", choices=("v1", "v2"), default="v1",
+        help="v2 uses sample SD and each replicate's evaluated antigen patch")
     parser.add_argument(
         "--include-test", action="store_true",
         help="Explicitly unseal and export the final-test split")
@@ -260,10 +375,13 @@ def main():
         row["component_id"]: row["representative"]
         for row in source_manifest["components"]
     }
-    aggregates = aggregate_targets(result_sets, entities, components)
     selected_splits = ["train", "calibration"]
     if args.include_test:
         selected_splits.append("test")
+    allowed_components = set().union(*(
+        set(split[split_name]) for split_name in selected_splits))
+    aggregates = aggregate_targets(
+        result_sets, entities, components, allowed_components)
 
     summaries = {}
     records = {}
@@ -286,10 +404,12 @@ def main():
             build_entry(
                 row, entities[row["entity_id"]], components[row["component_id"]],
                 group_ids[(row["component_id"], protocol_id, row["af2_seed"])],
-                protocol_id, aggregates[row["entity_id"]])
+                protocol_id, aggregates[row["entity_id"]], args.uncertainty_version)
             for row, protocol_id in tagged_rows
         ]
-        write_lmdb(output / f"{split_name}.lmdb", entries)
+        if args.uncertainty_version == "v2":
+            apply_v2_uncertainty(entries)
+        lmdb_sha256 = write_lmdb(output / f"{split_name}.lmdb", entries)
         counts = Counter(entry["scaffold_family"] for entry in entries)
         summaries[split_name] = {
             "records": len(entries),
@@ -297,6 +417,8 @@ def main():
             "groups": len(group_keys),
             "records_by_component": dict(sorted(counts.items())),
         }
+        if args.uncertainty_version == "v2":
+            summaries[split_name]["lmdb_records_sha256"] = lmdb_sha256
         records[split_name] = [{
             key: entry[key] for key in (
                 "construct_id", "scaffold_family", "protocol_id", "af2_seed", "scaffold_id",
@@ -307,7 +429,10 @@ def main():
         } for entry in entries]
 
     manifest = {
-        "schema_version": "candidate_interface_multiscaffold_dual_dataset_v2",
+        "schema_version": (
+            "candidate_interface_multiscaffold_dual_dataset_v3"
+            if args.uncertainty_version == "v2"
+            else "candidate_interface_multiscaffold_dual_dataset_v2"),
         "classification": "development_only",
         "source_results": [{
             "path": path_name,
@@ -320,10 +445,17 @@ def main():
         "target_aggregation": "mean over 2 AF2 models x 3 seeds per entity",
         "noise_scales": NOISE_SCALES,
         "stability_weight": "clip(1/(1+mean((std/noise_scale)^2)), 0.1, 1.0)",
-        "pairwise_noise_threshold": "sqrt(SEM_i^2+SEM_j^2), with SEM=replicate_std/sqrt(6)",
+        "pairwise_noise_threshold": (
+            "sqrt(SEM_i^2+SEM_j^2), with hierarchical model/seed SEM"
+            if args.uncertainty_version == "v2"
+            else "sqrt(SEM_i^2+SEM_j^2), with SEM=replicate_std/sqrt(6)"),
         "summary": summaries,
         "records": records,
     }
+    if args.uncertainty_version == "v2":
+        manifest["uncertainty_estimator"] = (
+            "sample SD (ddof=1); crossed model/seed component SEM; PAE uses the "
+            "antigen-residue intersection shared by all six replicate patches")
     (output / "manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n", encoding="ascii")
     print(json.dumps(summaries, indent=2))

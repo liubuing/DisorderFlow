@@ -1,0 +1,40 @@
+{
+  "schema_version": "candidate_interface_checkpoint_selection_v1",
+  "classification": "development_only",
+  "deployment_gate_passed": false,
+  "checkpoint": "logs/bfn_candidate_interface_confidence_v1_2026_08_30__13_27_28_candidate_interface_v1b_ranked_s2041/checkpoints/200.pt",
+  "checkpoint_sha256": "94817ed8b8d06d8ec7a5708416df8e1930f3896d0001cc833396bdb413e935c3",
+  "checkpoint_bytes": 45982657,
+  "iteration": 200,
+  "weights_kind": "raw",
+  "confidence_head_kind": "candidate_interface_v1",
+  "candidate_interface_weight_tensors": 24,
+  "initializer_sha256": "9bc6d00a80ca07faaba2176a6b7cbdd48b24072b9640aab763c4ffe36867f2e7",
+  "dataset_manifest_sha256": "b1a000db65eef5e004d2e3f43e643975bd66cc2cdee8c289712d32c286a227bb",
+  "heldout_scaffold": "5MP3",
+  "heldout_records": 52,
+  "heldout_groups": 23,
+  "selection_basis": "balanced exact fixed-sequence metrics across pLDDT, ipTM, and candidate-to-antigen PAE",
+  "metrics": {
+    "plddt": {
+      "mae": 0.10357310107121101,
+      "within_group_spearman": 0.391304347826087,
+      "pairwise_ordering_accuracy": 0.5714285714285714
+    },
+    "iptm": {
+      "mae": 0.11527040600776672,
+      "within_group_spearman": 0.8849001794597505,
+      "pairwise_ordering_accuracy": 0.9333333333333333
+    },
+    "pae": {
+      "mae_normalized": 0.2809902419551061,
+      "within_group_spearman": -0.021739130434782594,
+      "pairwise_ordering_accuracy": 0.5428571428571428
+    }
+  },
+  "failed_gates": [
+    "pLDDT within-group ranking is not reliable on the held-out 5MP3 scaffold",
+    "candidate-to-antigen PAE within-group ranking is not reliable on the held-out 5MP3 scaffold",
+    "absolute calibration has not been validated on a second independent scaffold"
+  ]
+}

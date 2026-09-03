@@ -5,6 +5,7 @@ import pytest
 import torch
 
 from disorderflow.datasets.confidence_dataset import ConfidenceRegressionDataset
+from disorderflow.utils.data import CompleteGroupBatchSampler
 from disorderflow.utils.protein.constants import Fragment
 
 
@@ -104,3 +105,35 @@ def test_candidate_interface_dataset_rejects_legacy_schema(tmp_path):
         "db_path": str(path), "candidate_interface_v1": True})
     with pytest.raises(ValueError, match="successor dataset schema"):
         dataset[0]
+
+
+def test_complete_group_sampler_keeps_every_group_and_record():
+    dataset = type("GroupedDataset", (), {
+        "group_indices": [list(range(15)), list(range(15, 32)), list(range(32, 48))]
+    })()
+    sampler = CompleteGroupBatchSampler(
+        dataset, max_batch_records=20, shuffle=False)
+    batches = list(sampler)
+    assert batches == dataset.group_indices
+    assert sorted(index for batch in batches for index in batch) == list(range(48))
+
+
+def test_complete_group_sampler_rejects_insufficient_capacity():
+    dataset = type("GroupedDataset", (), {
+        "group_indices": [list(range(17))]
+    })()
+    with pytest.raises(ValueError, match="exceeds batch capacity"):
+        CompleteGroupBatchSampler(dataset, max_batch_records=4)
+
+
+def test_complete_group_sampler_advances_shuffle_epoch():
+    dataset = type("GroupedDataset", (), {
+        "group_indices": [[index] for index in range(8)]
+    })()
+    sampler = CompleteGroupBatchSampler(
+        dataset, max_batch_records=2, shuffle=True, seed=11)
+    first = list(sampler)
+    second = list(sampler)
+    assert first != second
+    assert sorted(index for batch in first for index in batch) == list(range(8))
+    assert sorted(index for batch in second for index in batch) == list(range(8))

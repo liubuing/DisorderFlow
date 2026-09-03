@@ -7,9 +7,11 @@ from disorderflow.modules.bfn.orientation import OrientationBFN
 from disorderflow.modules.bfn.sidechain import SidechainBFN
 from disorderflow.modules.bfn.receiver import AntibodyBFN_Receiver
 from disorderflow.modules.bfn.core_losses import (
+    candidate_antigen_pair_mask as _candidate_antigen_pair_mask,
     within_group_pair_mask as _within_group_pair_mask,
     grouped_std as _grouped_std,
     grouped_margin_ranking as _grouped_margin_ranking,
+    grouped_pair_difference as _grouped_pair_difference,
     within_protein_disorder_ranking as _within_protein_disorder_ranking,
 )
 from disorderflow.modules.bfn.contrastive_losses import grouped_contrastive_margin
@@ -258,6 +260,8 @@ class AntibodyBFN_Core(nn.Module):
             prev_plddt, prev_iptm, prev_pae = pred_plddt, pred_iptm, pred_pae
             prev_seq_emb = self.receiver.v12_seq_emb(F.softmax(pred_seq.detach(), dim=-1))
         pred_contact_pair = getattr(self.receiver, 'last_pair_contact_logits', None)
+        candidate_summaries = getattr(
+            self.receiver, 'last_candidate_interface_summaries', None)
         # --- End Recycling ---
         
         # 4. Training Losses
@@ -479,7 +483,7 @@ class AntibodyBFN_Core(nn.Module):
             else:
                 af2_plddt = af2_plddt[:, :pred_len]
             mask_plddt = mask_res[:, :pred_len]
-            if self.receiver.confidence_head_kind == 'candidate_interface_v1':
+            if self.receiver.is_candidate_interface:
                 mask_plddt = mask_plddt & mask_gen[:, :pred_len]
             # Per-residue confidence weight: higher AF2 pLDDT -> more reliable target
             conf_weight = 0.5 + 0.5 * af2_plddt  # [0.5, 1.0]
@@ -489,11 +493,25 @@ class AntibodyBFN_Core(nn.Module):
             losses['plddt'] = (
                 (loss_plddt * conf_weight * residue_weight).sum()
                 / (residue_weight.sum() + 1e-8))
+            if (candidate_summaries is not None
+                    and self.loss_weight.get('candidate_plddt_summary', 0) > 0):
+                candidate = mask_gen[:, :pred_len].bool()
+                denominator = candidate.sum(dim=1).clamp(min=1)
+                target_summary = (
+                    af2_plddt * candidate).sum(dim=1) / denominator
+                summary_loss = huber(
+                    candidate_summaries['plddt'], target_summary)
+                losses['candidate_plddt_summary'] = (
+                    (summary_loss * sample_weight).sum()
+                    / (sample_weight.sum() + 1e-8))
 
         if 'af2_iptm' in batch and 'iptm' in self.loss_weight and self.loss_weight['iptm'] > 0:
             af2_iptm = batch['af2_iptm'].float()
             huber_iptm = nn.SmoothL1Loss(beta=huber_beta, reduction='none')
-            loss_iptm = huber_iptm(pred_iptm, af2_iptm)
+            iptm_prediction = (
+                candidate_summaries['iptm']
+                if candidate_summaries is not None else pred_iptm)
+            loss_iptm = huber_iptm(iptm_prediction, af2_iptm)
             losses['iptm'] = (
                 (loss_iptm * sample_weight).sum()
                 / (sample_weight.sum() + 1e-8))
@@ -501,31 +519,32 @@ class AntibodyBFN_Core(nn.Module):
         if 'af2_pae_matrix' in batch and 'pae' in self.loss_weight and self.loss_weight['pae'] > 0:
             af2_pae = batch['af2_pae_matrix']
             pred_len = pred_pae.shape[1]
-            candidate_interface = (
-                self.receiver.confidence_head_kind == 'candidate_interface_v1')
+            candidate_interface = self.receiver.is_candidate_interface
             if candidate_interface and af2_pae.shape[1:] != (pred_len, pred_len):
                 raise ValueError(
-                    'candidate_interface_v1 requires a full-complex PAE matrix')
+                    f'{self.receiver.confidence_head_kind} requires a full-complex PAE matrix')
             if candidate_interface and (
                     not torch.isfinite(af2_pae).all()
                     or (af2_pae.amax(dim=(1, 2)) - af2_pae.amin(dim=(1, 2)) <= 0).any()):
                 raise ValueError(
-                    'candidate_interface_v1 requires finite, nonconstant PAE labels')
+                    f'{self.receiver.confidence_head_kind} requires finite, nonconstant PAE labels')
             if af2_pae.shape[1] < pred_len or af2_pae.shape[2] < pred_len:
                 af2_pae = F.pad(af2_pae, (0, pred_len - af2_pae.shape[2], 0, pred_len - af2_pae.shape[1]))
             else:
                 af2_pae = af2_pae[:, :pred_len, :pred_len]
             if candidate_interface:
                 candidate = mask_gen[:, :pred_len].bool()
-                antigen = batch['mask_antigen'][:, :pred_len].bool()
-                mask_pair = (
-                    candidate.unsqueeze(-1) & antigen.unsqueeze(1)
-                ) | (
-                    antigen.unsqueeze(-1) & candidate.unsqueeze(1)
-                )
+                antigen = batch.get(
+                    'pae_supervision_antigen_mask',
+                    batch['mask_antigen'])[:, :pred_len].bool()
+                mask_pair = _candidate_antigen_pair_mask(
+                    candidate, antigen,
+                    bidirectional=(
+                        self.receiver.confidence_head_kind
+                        == 'candidate_interface_v1'))
                 if 'af2_pae_normalized' not in batch:
                     raise ValueError(
-                        'candidate_interface_v1 requires af2_pae_normalized')
+                        f'{self.receiver.confidence_head_kind} requires af2_pae_normalized')
                 normalized = torch.as_tensor(
                     batch['af2_pae_normalized'], device=af2_pae.device,
                     dtype=torch.bool).reshape(-1, 1, 1)
@@ -541,6 +560,16 @@ class AntibodyBFN_Core(nn.Module):
             losses['pae'] = (
                 (loss_pae * pair_weight).sum()
                 / (pair_weight.sum() + 1e-8))
+            if (candidate_summaries is not None
+                    and self.loss_weight.get('candidate_pae_summary', 0) > 0):
+                denominator = mask_pair.sum(dim=(1, 2)).clamp(min=1)
+                target_summary = (
+                    pae_target * mask_pair).sum(dim=(1, 2)) / denominator
+                summary_loss = huber_pae(
+                    candidate_summaries['pae'], target_summary)
+                losses['candidate_pae_summary'] = (
+                    (summary_loss * sample_weight).sum()
+                    / (sample_weight.sum() + 1e-8))
 
         # === Disorder Loss (class-balanced BCE on confidence-weighted labels) ===
         if 'disorder_label' in batch and 'disorder' in self.loss_weight and self.loss_weight['disorder'] > 0:
@@ -686,7 +715,10 @@ class AntibodyBFN_Core(nn.Module):
                 and 'af2_plddt' in batch):
             candidate = mask_gen.bool()
             denominator = candidate.sum(dim=1).clamp(min=1)
-            pred_summary = (pred_plddt * candidate).sum(dim=1) / denominator
+            pred_summary = (
+                candidate_summaries['plddt']
+                if candidate_summaries is not None
+                else (pred_plddt * candidate).sum(dim=1) / denominator)
             target_summary = (
                 batch['af2_plddt'].float() * candidate).sum(dim=1) / denominator
             losses['conf_grouped_plddt_margin'] = (
@@ -700,10 +732,14 @@ class AntibodyBFN_Core(nn.Module):
         if (grouped_pae_w > 0 and group_mask is not None
                 and 'af2_pae_matrix' in batch):
             candidate = mask_gen.bool()
-            antigen = batch['mask_antigen'].bool()
-            interface = candidate.unsqueeze(-1) & antigen.unsqueeze(1)
+            antigen = batch.get(
+                'pae_supervision_antigen_mask', batch['mask_antigen']).bool()
+            interface = _candidate_antigen_pair_mask(candidate, antigen)
             denominator = interface.sum(dim=(1, 2)).clamp(min=1)
-            pred_summary = (pred_pae * interface).sum(dim=(1, 2)) / denominator
+            pred_summary = (
+                candidate_summaries['pae']
+                if candidate_summaries is not None
+                else (pred_pae * interface).sum(dim=(1, 2)) / denominator)
             target_pae = batch['af2_pae_matrix'].float()
             normalized = torch.as_tensor(
                 batch['af2_pae_normalized'], device=target_pae.device,
@@ -716,6 +752,73 @@ class AntibodyBFN_Core(nn.Module):
                     target_noise=batch.get('af2_interface_pae_normalized_sem'),
                     sample_weight=sample_weight)
             )
+
+        plddt_difference_w = self.loss_weight.get(
+            'grouped_plddt_difference', 0.0)
+        normalize_grouped_difference = self.loss_weight.get(
+            'grouped_difference_normalize', False)
+        grouped_difference_normalized_beta = self.loss_weight.get(
+            'grouped_difference_normalized_beta', 0.5)
+        if (plddt_difference_w > 0 and group_mask is not None
+                and 'af2_plddt' in batch):
+            candidate = mask_gen.bool()
+            denominator = candidate.sum(dim=1).clamp(min=1)
+            pred_summary = (
+                candidate_summaries['plddt']
+                if candidate_summaries is not None
+                else (pred_plddt * candidate).sum(dim=1) / denominator)
+            target_summary = (
+                batch['af2_plddt'].float() * candidate
+            ).sum(dim=1) / denominator
+            losses['conf_grouped_plddt_difference'] = (
+                plddt_difference_w * _grouped_pair_difference(
+                    pred_summary, target_summary, scaffold_id,
+                    target_noise=batch.get('af2_candidate_plddt_sem'),
+                    sample_weight=sample_weight,
+                    normalize_by_target_rms=normalize_grouped_difference,
+                    normalized_beta=grouped_difference_normalized_beta))
+
+        iptm_difference_w = self.loss_weight.get(
+            'grouped_iptm_difference', 0.0)
+        if (iptm_difference_w > 0 and group_mask is not None
+                and 'af2_iptm' in batch):
+            losses['conf_grouped_iptm_difference'] = (
+                iptm_difference_w * _grouped_pair_difference(
+                    pred_iptm, batch['af2_iptm'].float(), scaffold_id,
+                    target_noise=batch.get('af2_iptm_sem'),
+                    sample_weight=sample_weight,
+                    normalize_by_target_rms=normalize_grouped_difference,
+                    normalized_beta=grouped_difference_normalized_beta))
+
+        pae_difference_w = self.loss_weight.get(
+            'grouped_pae_difference', 0.0)
+        if (pae_difference_w > 0 and group_mask is not None
+                and 'af2_pae_matrix' in batch):
+            candidate = mask_gen.bool()
+            antigen = batch.get(
+                'pae_supervision_antigen_mask', batch['mask_antigen']).bool()
+            interface = _candidate_antigen_pair_mask(candidate, antigen)
+            denominator = interface.sum(dim=(1, 2)).clamp(min=1)
+            pred_summary = (
+                candidate_summaries['pae']
+                if candidate_summaries is not None
+                else (pred_pae * interface).sum(dim=(1, 2)) / denominator)
+            target_pae = batch['af2_pae_matrix'].float()
+            normalized = torch.as_tensor(
+                batch['af2_pae_normalized'], device=target_pae.device,
+                dtype=torch.bool).reshape(-1, 1, 1)
+            target_pae = torch.where(
+                normalized, target_pae, target_pae / 31.0)
+            target_summary = (
+                target_pae * interface).sum(dim=(1, 2)) / denominator
+            losses['conf_grouped_pae_difference'] = (
+                pae_difference_w * _grouped_pair_difference(
+                    pred_summary, target_summary, scaffold_id,
+                    target_noise=batch.get(
+                        'af2_interface_pae_normalized_sem'),
+                    sample_weight=sample_weight,
+                    normalize_by_target_rms=normalize_grouped_difference,
+                    normalized_beta=grouped_difference_normalized_beta))
 
 
         # === WAY4 V6: Disorder-Aligned Entropy Loss (§P1) ===
@@ -826,11 +929,13 @@ class AntibodyBFN_Core(nn.Module):
         (_, _, _, _, pred_plddt, pred_iptm, pred_pae, pred_disorder,
          pred_contact, pred_contrastive) = result
         pred_contact_pair = getattr(self.receiver, 'last_pair_contact_logits', None)
+        candidate_summaries = getattr(
+            self.receiver, 'last_candidate_interface_summaries', None)
 
         residue_mask = mask_res.to(pred_plddt.dtype)
         pair_mask = (mask_res.unsqueeze(-1) & mask_res.unsqueeze(-2)).to(pred_pae.dtype)
         sample_mask = mask_res.any(dim=1).to(pred_iptm.dtype)
-        return {
+        output = {
             'plddt': pred_plddt * residue_mask,
             'iptm': pred_iptm * sample_mask,
             'pae': pred_pae * pair_mask,
@@ -841,6 +946,13 @@ class AntibodyBFN_Core(nn.Module):
                              if pred_contact_pair is not None else None),
             'state_compatibility': pred_contrastive * sample_mask,
         }
+        if candidate_summaries is not None:
+            output.update({
+                'candidate_plddt_summary': candidate_summaries['plddt'],
+                'candidate_iptm_summary': candidate_summaries['iptm'],
+                'candidate_pae_summary': candidate_summaries['pae'],
+            })
+        return output
 
     @torch.no_grad()
     def sample(self, batch, sample_opt={}):

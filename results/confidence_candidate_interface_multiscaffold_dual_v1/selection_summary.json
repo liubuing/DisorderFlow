@@ -1,0 +1,249 @@
+{
+  "schema_version": "candidate_interface_multiseed_selection_v1",
+  "classification": "development_only",
+  "deployment_gate_passed": false,
+  "selection_rule": "raw periodic checkpoints only; lexicographically maximize minimum output scaffold Spearman, mean output scaffold Spearman, number of absolute MAE gates passed, then minimize normalized MAE",
+  "dataset_manifest_sha256": "d26d87276dda3a81e47c7c3c81b8b96b57d3726b4c5181d14a8088c89ed83cc4",
+  "evaluation_sources": [
+    {
+      "path": "results/confidence_candidate_interface_multiscaffold_dual_v1/evaluation_s2041.json",
+      "sha256": "6094609ec33aedb60c572de8e1a58ed6df3afbcedaafc37022d6092fdfe67e2f"
+    },
+    {
+      "path": "results/confidence_candidate_interface_multiscaffold_dual_v1/evaluation_s2053.json",
+      "sha256": "be1634519b624bf14aff66107656455d03db100bdbd38d05cebf3596dcab4dce"
+    },
+    {
+      "path": "results/confidence_candidate_interface_multiscaffold_dual_v1/evaluation_s2069.json",
+      "sha256": "55e7e1558dabf022f36b15098292d0884c256764c20e48c5d7ac08105d873a12"
+    }
+  ],
+  "selections": [
+    {
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_v1_2026_08_31__16_46_34_dual_v1_s2041\\checkpoints\\500.pt",
+      "checkpoint_sha256": "08b5ba02c3fa3013c0ba0a24490b5049987694e4bf3c9fb44b1567e5964f2556",
+      "iteration": 500,
+      "weights_kind": "raw",
+      "metrics": {
+        "plddt": {
+          "mae": 0.012477511772885919,
+          "pairwise": {
+            "pairs": 110,
+            "accuracy": 0.7090909090909091,
+            "bootstrap_95_lower": 0.6270454545454548
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.4607843137254902,
+            "V2C015": 0.37857142857142856
+          },
+          "median_scaffold_spearman": 0.4196778711484594,
+          "cross_condition_prediction_to_target_std_ratio": 0.5889081036688643,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": true,
+            "pair_bootstrap_lower": true,
+            "median_scaffold_spearman": false,
+            "variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        },
+        "iptm": {
+          "mae": 0.03401063817242781,
+          "pairwise": {
+            "pairs": 0,
+            "accuracy": null,
+            "bootstrap_95_lower": null
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.6102941176470589,
+            "V2C015": 0.18214285714285713
+          },
+          "median_scaffold_spearman": 0.396218487394958,
+          "cross_condition_prediction_to_target_std_ratio": 0.22973915394948802,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        },
+        "pae": {
+          "mae": 0.1083137346431613,
+          "pairwise": {
+            "pairs": 13,
+            "accuracy": 1.0,
+            "bootstrap_95_lower": 1.0
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.6421568627450981,
+            "V2C015": 0.7
+          },
+          "median_scaffold_spearman": 0.6710784313725491,
+          "cross_condition_prediction_to_target_std_ratio": 0.08067195412706162,
+          "gates": {
+            "mae": false,
+            "pair_accuracy": true,
+            "pair_bootstrap_lower": true,
+            "median_scaffold_spearman": true,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        }
+      },
+      "deployment_gates_passed": false
+    },
+    {
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_v1_2026_08_31__16_53_27_dual_v1_s2053\\checkpoints\\200.pt",
+      "checkpoint_sha256": "59902ba9c497694cd9b67fc733ec0c122131e13e2833196d55c82b3a78cb0aed",
+      "iteration": 200,
+      "weights_kind": "raw",
+      "metrics": {
+        "plddt": {
+          "mae": 0.009502628430103265,
+          "pairwise": {
+            "pairs": 110,
+            "accuracy": 0.5727272727272728,
+            "bootstrap_95_lower": 0.4818181818181818
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.22303921568627455,
+            "V2C015": 0.3142857142857143
+          },
+          "median_scaffold_spearman": 0.26866246498599444,
+          "cross_condition_prediction_to_target_std_ratio": 0.29714418174831275,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        },
+        "iptm": {
+          "mae": 0.01548718102276325,
+          "pairwise": {
+            "pairs": 0,
+            "accuracy": null,
+            "bootstrap_95_lower": null
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.4068627450980392,
+            "V2C015": 0.20357142857142854
+          },
+          "median_scaffold_spearman": 0.30521708683473386,
+          "cross_condition_prediction_to_target_std_ratio": 0.09995141393455025,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        },
+        "pae": {
+          "mae": 0.12018246793498595,
+          "pairwise": {
+            "pairs": 13,
+            "accuracy": 1.0,
+            "bootstrap_95_lower": 1.0
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.5294117647058825,
+            "V2C015": 0.7
+          },
+          "median_scaffold_spearman": 0.6147058823529412,
+          "cross_condition_prediction_to_target_std_ratio": 0.1705088961299309,
+          "gates": {
+            "mae": false,
+            "pair_accuracy": true,
+            "pair_bootstrap_lower": true,
+            "median_scaffold_spearman": true,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        }
+      },
+      "deployment_gates_passed": false
+    },
+    {
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_v1_2026_08_31__16_59_54_dual_v1_s2069\\checkpoints\\700.pt",
+      "checkpoint_sha256": "09e62e0f8a1802d3f95830b16590adfa57894851db98de80b78a5950ead22bad",
+      "iteration": 700,
+      "weights_kind": "raw",
+      "metrics": {
+        "plddt": {
+          "mae": 0.010106650025894243,
+          "pairwise": {
+            "pairs": 110,
+            "accuracy": 0.5727272727272728,
+            "bootstrap_95_lower": 0.4818181818181818
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.3504901960784314,
+            "V2C015": 0.21071428571428572
+          },
+          "median_scaffold_spearman": 0.28060224089635855,
+          "cross_condition_prediction_to_target_std_ratio": 0.3024228332831804,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        },
+        "iptm": {
+          "mae": 0.023956555873155587,
+          "pairwise": {
+            "pairs": 0,
+            "accuracy": null,
+            "bootstrap_95_lower": null
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.5857843137254902,
+            "V2C015": 0.2928571428571428
+          },
+          "median_scaffold_spearman": 0.4393207282913165,
+          "cross_condition_prediction_to_target_std_ratio": 0.24966271520088015,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        },
+        "pae": {
+          "mae": 0.09012555393079917,
+          "pairwise": {
+            "pairs": 13,
+            "accuracy": 1.0,
+            "bootstrap_95_lower": 1.0
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.625,
+            "V2C015": 0.7035714285714285
+          },
+          "median_scaffold_spearman": 0.6642857142857143,
+          "cross_condition_prediction_to_target_std_ratio": 0.07987817998373471,
+          "gates": {
+            "mae": true,
+            "pair_accuracy": true,
+            "pair_bootstrap_lower": true,
+            "median_scaffold_spearman": true,
+            "variance_ratio": false,
+            "no_negative_scaffold": true
+          }
+        }
+      },
+      "deployment_gates_passed": false
+    }
+  ],
+  "final_test_evaluated": false
+}

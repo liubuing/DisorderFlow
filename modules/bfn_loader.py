@@ -152,7 +152,8 @@ def parse_region_spec(region_spec):
 
 
 def build_region_batch(
-    pdb_path, region_spec, context_chains=None, device=None, antigen_chains=None
+    pdb_path, region_spec, context_chains=None, device=None, antigen_chains=None,
+    antigen_context_cap=0, preserve_context_chain_order=False,
 ):
     """Build the masked model batch shared by generation and fixed scoring."""
     from disorderflow.datasets.protein import preprocess_protein_structure
@@ -177,21 +178,34 @@ def build_region_batch(
     overlap = set(context_chains) & set(design_chains)
     if overlap:
         raise ValueError(f"Context chains cannot also be design chains: {sorted(overlap)}")
-    all_chains = sorted(
-        set(design_chains + context_chains),
-        key=lambda chain: design_chains.index(chain) if chain in design_chains else 999,
-    )
+    if preserve_context_chain_order:
+        all_chains = list(dict.fromkeys(design_chains + context_chains))
+    else:
+        all_chains = sorted(
+            set(design_chains + context_chains),
+            key=lambda chain: (
+                design_chains.index(chain) if chain in design_chains else 999),
+        )
 
     structure = preprocess_protein_structure(pdb_path, chain_ids=all_chains)
     if structure is None:
         raise ValueError(f"Cannot parse structure: {pdb_path}")
-    transform = get_transform(
-        [
-            {"type": "mask_region", "regions": regions},
-            {"type": "merge_protein"},
-            {"type": "patch_protein"},
-        ]
-    )
+    missing_chains = set(all_chains) - set(structure["all_chain_ids"])
+    if missing_chains:
+        raise ValueError(
+            f"Requested chains are absent from structure: {sorted(missing_chains)}")
+    patch_options = {"type": "patch_protein"}
+    if antigen_chains is not None and antigen_context_cap > 0:
+        patch_options.update({
+            "required_fragment_types": [
+                all_chains.index(chain) for chain in antigen_chains],
+            "required_context_cap": int(antigen_context_cap),
+        })
+    transform = get_transform([
+        {"type": "mask_region", "regions": regions},
+        {"type": "merge_protein"},
+        patch_options,
+    ])
     batch = recursive_to(PaddingCollate()([transform(structure)]), device)
     if antigen_chains is not None:
         from disorderflow.utils.protein.constants import Fragment

@@ -1,0 +1,244 @@
+{
+  "schema_version": "candidate_interface_grouped_baselines_v1",
+  "classification": "train_only_development_diagnostic",
+  "dataset_manifest_sha256": "fea7df3cb91d1aa30fce9b8b2846eb8e98285db169fed834bf946c9f4d29a83c",
+  "entities": 240,
+  "scaffolds": 15,
+  "folds": [
+    {
+      "fold": 1,
+      "train_scaffolds": [
+        "V2C006",
+        "V2C007",
+        "V2C008",
+        "V2C009",
+        "V2C011",
+        "V2C012",
+        "V2C013",
+        "V2C014",
+        "V2C016",
+        "V2C017",
+        "V2C018",
+        "V2C019"
+      ],
+      "validation_scaffolds": [
+        "V2C004",
+        "V2C005",
+        "V2C020"
+      ]
+    },
+    {
+      "fold": 2,
+      "train_scaffolds": [
+        "V2C004",
+        "V2C005",
+        "V2C006",
+        "V2C007",
+        "V2C008",
+        "V2C009",
+        "V2C011",
+        "V2C013",
+        "V2C014",
+        "V2C017",
+        "V2C019",
+        "V2C020"
+      ],
+      "validation_scaffolds": [
+        "V2C012",
+        "V2C016",
+        "V2C018"
+      ]
+    },
+    {
+      "fold": 3,
+      "train_scaffolds": [
+        "V2C004",
+        "V2C005",
+        "V2C006",
+        "V2C007",
+        "V2C008",
+        "V2C011",
+        "V2C012",
+        "V2C013",
+        "V2C016",
+        "V2C018",
+        "V2C019",
+        "V2C020"
+      ],
+      "validation_scaffolds": [
+        "V2C009",
+        "V2C014",
+        "V2C017"
+      ]
+    },
+    {
+      "fold": 4,
+      "train_scaffolds": [
+        "V2C004",
+        "V2C005",
+        "V2C006",
+        "V2C009",
+        "V2C012",
+        "V2C013",
+        "V2C014",
+        "V2C016",
+        "V2C017",
+        "V2C018",
+        "V2C019",
+        "V2C020"
+      ],
+      "validation_scaffolds": [
+        "V2C007",
+        "V2C008",
+        "V2C011"
+      ]
+    },
+    {
+      "fold": 5,
+      "train_scaffolds": [
+        "V2C004",
+        "V2C005",
+        "V2C007",
+        "V2C008",
+        "V2C009",
+        "V2C011",
+        "V2C012",
+        "V2C014",
+        "V2C016",
+        "V2C017",
+        "V2C018",
+        "V2C020"
+      ],
+      "validation_scaffolds": [
+        "V2C006",
+        "V2C013",
+        "V2C019"
+      ]
+    }
+  ],
+  "feature_contract": "candidate/antigen composition and length plus candidate-to-antigen CA minimum-distance summaries, averaged over six AF2 conditions",
+  "ridge_alpha": 1.0,
+  "metrics": {
+    "fold_train_mean": {
+      "plddt": {
+        "mae": 0.010119259307918432,
+        "prediction_std": 0.0010693015271026867,
+        "target_std": 0.012135315766866873,
+        "std_ratio": 0.08811484988484661,
+        "variance_ratio": 0.007764226770229052,
+        "median_scaffold_spearman": null,
+        "scaffolds_with_defined_spearman": 0
+      },
+      "iptm": {
+        "mae": 0.10616793558117468,
+        "prediction_std": 0.011045788839343868,
+        "target_std": 0.11097599983351353,
+        "std_ratio": 0.09953313199173504,
+        "variance_ratio": 0.00990684436408415,
+        "median_scaffold_spearman": null,
+        "scaffolds_with_defined_spearman": 0
+      },
+      "pae": {
+        "mae": 0.05409829810269232,
+        "prediction_std": 0.005142396648293812,
+        "target_std": 0.06268322785601121,
+        "std_ratio": 0.08203784049070258,
+        "variance_ratio": 0.006730207272377959,
+        "median_scaffold_spearman": null,
+        "scaffolds_with_defined_spearman": 0
+      }
+    },
+    "ridge": {
+      "plddt": {
+        "mae": 0.015174170831839244,
+        "prediction_std": 0.018400775148055624,
+        "target_std": 0.012135315766866873,
+        "std_ratio": 1.5162996580851547,
+        "variance_ratio": 2.2991646531091567,
+        "median_scaffold_spearman": 0.5710784313725491,
+        "scaffolds_with_defined_spearman": 15
+      },
+      "iptm": {
+        "mae": 0.10302844742933909,
+        "prediction_std": 0.09696399536531346,
+        "target_std": 0.11097599983351353,
+        "std_ratio": 0.8737384255224471,
+        "variance_ratio": 0.7634188362344448,
+        "median_scaffold_spearman": 0.5499999999999999,
+        "scaffolds_with_defined_spearman": 15
+      },
+      "pae": {
+        "mae": 0.051861872027317686,
+        "prediction_std": 0.07854837812820842,
+        "target_std": 0.06268322785601121,
+        "std_ratio": 1.2531004036461049,
+        "variance_ratio": 1.570260621618031,
+        "median_scaffold_spearman": 0.8186274509803922,
+        "scaffolds_with_defined_spearman": 15
+      }
+    }
+  },
+  "separate_evaluation": {
+    "dataset": "data/confidence_candidate_interface_multiscaffold_dual_sem_v2_final6/calibration.lmdb",
+    "metrics": {
+      "train_mean": {
+        "plddt": {
+          "mae": 0.010560477447385593,
+          "prediction_std": 0.0,
+          "target_std": 0.012017768116548276,
+          "std_ratio": 0.0,
+          "variance_ratio": 0.0,
+          "median_scaffold_spearman": null,
+          "scaffolds_with_defined_spearman": 0
+        },
+        "iptm": {
+          "mae": 0.01641858316337069,
+          "prediction_std": 0.0,
+          "target_std": 0.018040214935514803,
+          "std_ratio": 0.0,
+          "variance_ratio": 0.0,
+          "median_scaffold_spearman": null,
+          "scaffolds_with_defined_spearman": 0
+        },
+        "pae": {
+          "mae": 0.064435681157435,
+          "prediction_std": 0.0,
+          "target_std": 0.040691765283816655,
+          "std_ratio": 0.0,
+          "variance_ratio": 0.0,
+          "median_scaffold_spearman": null,
+          "scaffolds_with_defined_spearman": 0
+        }
+      },
+      "ridge": {
+        "plddt": {
+          "mae": 0.01552354171872139,
+          "prediction_std": 0.0076362701850963815,
+          "target_std": 0.012017768116548276,
+          "std_ratio": 0.6354150047695927,
+          "variance_ratio": 0.4037522282863415,
+          "median_scaffold_spearman": 0.6035364145658264,
+          "scaffolds_with_defined_spearman": 2
+        },
+        "iptm": {
+          "mae": 0.028660506010055542,
+          "prediction_std": 0.013589395930158227,
+          "target_std": 0.018040214935514803,
+          "std_ratio": 0.7532834824160278,
+          "variance_ratio": 0.5674360048808181,
+          "median_scaffold_spearman": 0.649719887955182,
+          "scaffolds_with_defined_spearman": 2
+        },
+        "pae": {
+          "mae": 0.037245938554406166,
+          "prediction_std": 0.045009928260136965,
+          "target_std": 0.040691765283816655,
+          "std_ratio": 1.1061188411513243,
+          "variance_ratio": 1.2234988907499487,
+          "median_scaffold_spearman": 0.8611344537815127,
+          "scaffolds_with_defined_spearman": 2
+        }
+      }
+    }
+  }
+}

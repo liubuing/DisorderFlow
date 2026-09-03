@@ -2,6 +2,7 @@
 import shutil
 import argparse
 import hashlib
+import json
 import pickle
 import torch
 from torch.nn.utils import clip_grad_norm_
@@ -144,6 +145,24 @@ if __name__ == '__main__':
             raise RuntimeError(
                 'Dataset manifest SHA-256 does not match the frozen lineage '
                 f'contract: {actual_manifest_sha256}')
+        with open(dataset_manifest, encoding='utf-8') as manifest_handle:
+            manifest_document = json.load(manifest_handle)
+        for config_split, manifest_split in (
+                ('train', 'train'), ('val', 'calibration')):
+            expected_lmdb_sha256 = manifest_document.get(
+                'summary', {}).get(manifest_split, {}).get(
+                    'lmdb_records_sha256')
+            if expected_lmdb_sha256 is None:
+                if config.model.get('confidence_head_kind') in {
+                        'candidate_interface_v2', 'candidate_interface_v3'}:
+                    raise RuntimeError(
+                        f'V2 manifest does not bind the {manifest_split} LMDB')
+                continue
+            db_path = config.dataset[config_split].db_path
+            actual_lmdb_sha256 = lmdb_records_sha256(db_path)
+            if actual_lmdb_sha256 != expected_lmdb_sha256:
+                raise RuntimeError(
+                    f'{manifest_split} LMDB does not match the frozen manifest')
     if allowed_initializer_sha256:
         if args.finetune is not None:
             raise RuntimeError(
@@ -157,6 +176,15 @@ if __name__ == '__main__':
                     != allowed_initializer_sha256):
                 raise RuntimeError(
                     'Resume checkpoint does not belong to the configured lineage')
+            if (resume_lineage.get('dataset_manifest_sha256')
+                    != dataset_manifest_sha256):
+                raise RuntimeError(
+                    'Resume checkpoint uses a different dataset manifest')
+            resume_model = resume_metadata.get('config', {}).get('model', {})
+            if (resume_model.get('confidence_head_kind')
+                    != config.model.get('confidence_head_kind')):
+                raise RuntimeError(
+                    'Resume checkpoint uses a different confidence head')
             del resume_metadata
         else:
             if args.init is None:
@@ -277,7 +305,8 @@ if __name__ == '__main__':
     
     # Custom Sampler for CDR-type consistency
     if (getattr(train_dataset, 'requires_complete_groups', False)
-            and not getattr(train_dataset, 'candidate_interface_v1', False)):
+            and (not getattr(train_dataset, 'candidate_interface_v1', False)
+                 or config.train.get('complete_group_batches', False))):
         batch_sampler = CompleteGroupBatchSampler(
             train_dataset, config.train.batch_size, shuffle=True,
             seed=config.train.seed)

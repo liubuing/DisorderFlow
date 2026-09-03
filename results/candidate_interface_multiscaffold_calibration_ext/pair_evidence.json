@@ -1,0 +1,62 @@
+{
+  "schema_version": "candidate_interface_calibration_extension_pair_evidence_v1",
+  "classification": "development_only",
+  "dataset_manifest_sha256": "2b1da0c48b38c089ecdb393d4d871273c4337573a8acd7189c6b4b0560d3ae16",
+  "reliable_pair_rule": {
+    "comparison_unit": "entities_within_scaffold",
+    "criterion": "absolute_target_delta_strictly_exceeds_joint_sem",
+    "minimum_total_pairs": 30,
+    "minimum_contributing_scaffolds": 3,
+    "maximum_fraction_from_one_scaffold": 0.5
+  },
+  "counts": {
+    "replicate_records": 504,
+    "entity_aggregated_records": 84,
+    "scaffolds": 6
+  },
+  "metrics": {
+    "plddt": {
+      "reliable_pairs": 195,
+      "contributing_scaffolds": 6,
+      "max_scaffold_pair_fraction": 0.24615384615384617,
+      "pairs_by_scaffold": {
+        "EXT001": 19,
+        "EXT002": 19,
+        "EXT003": 48,
+        "EXT004": 42,
+        "EXT005": 25,
+        "EXT006": 42
+      },
+      "gate_passed": true
+    },
+    "iptm": {
+      "reliable_pairs": 53,
+      "contributing_scaffolds": 2,
+      "max_scaffold_pair_fraction": 0.7169811320754716,
+      "pairs_by_scaffold": {
+        "EXT001": 38,
+        "EXT002": 15,
+        "EXT003": 0,
+        "EXT004": 0,
+        "EXT005": 0,
+        "EXT006": 0
+      },
+      "gate_passed": false
+    },
+    "pae": {
+      "reliable_pairs": 236,
+      "contributing_scaffolds": 6,
+      "max_scaffold_pair_fraction": 0.25,
+      "pairs_by_scaffold": {
+        "EXT001": 38,
+        "EXT002": 33,
+        "EXT003": 59,
+        "EXT004": 46,
+        "EXT005": 45,
+        "EXT006": 15
+      },
+      "gate_passed": true
+    }
+  },
+  "pair_evidence_gate_passed": false
+}

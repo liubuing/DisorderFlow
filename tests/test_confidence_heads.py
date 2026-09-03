@@ -8,7 +8,10 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from disorderflow.modules.bfn.receiver import AntibodyBFN_Receiver
+from disorderflow.modules.bfn.receiver import (
+    AntibodyBFN_Receiver,
+    candidate_antigen_geometry,
+)
 
 N, L, D, P = 2, 16, 64, 32  # batch, length, res_feat_dim, pair_feat_dim
 NUM_CLASSES = 20
@@ -134,6 +137,84 @@ def test_candidate_interface_head_is_sequence_sensitive():
     assert not torch.allclose(baseline[6], variant[6])
 
 
+def test_candidate_interface_v2_does_not_soften_probabilities_twice():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v2")
+    recv.eval()
+    inputs = list(_inputs())
+    inputs[0] = torch.nn.functional.one_hot(
+        torch.arange(L).remainder(NUM_CLASSES), NUM_CLASSES).float()
+    inputs[0] = inputs[0].unsqueeze(0).expand(N, -1, -1).clone()
+    candidate, antigen = _interface_masks()
+    observed = []
+    handle = recv.seq_embed.register_forward_pre_hook(
+        lambda _module, args: observed.append(args[0].detach().clone()))
+    try:
+        recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    finally:
+        handle.remove()
+    assert torch.equal(observed[0], inputs[0])
+
+
+def test_candidate_interface_v1_retains_historical_second_softmax():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
+    recv.eval()
+    inputs = list(_inputs())
+    inputs[0] = torch.nn.functional.one_hot(
+        torch.arange(L).remainder(NUM_CLASSES), NUM_CLASSES).float()
+    inputs[0] = inputs[0].unsqueeze(0).expand(N, -1, -1).clone()
+    candidate, antigen = _interface_masks()
+    observed = []
+    handle = recv.seq_embed.register_forward_pre_hook(
+        lambda _module, args: observed.append(args[0].detach().clone()))
+    try:
+        recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    finally:
+        handle.remove()
+    assert torch.allclose(observed[0], torch.softmax(inputs[0], dim=-1))
+
+
+def test_candidate_interface_v2_exposes_trainable_entity_summaries():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v2")
+    candidate, antigen = _interface_masks()
+    inputs = list(_inputs())
+    inputs[0] = torch.softmax(inputs[0], dim=-1).requires_grad_()
+    recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    summaries = recv.last_candidate_interface_summaries
+    assert set(summaries) == {"plddt", "iptm", "pae"}
+    assert all(value.shape == (N,) for value in summaries.values())
+    sum(value.mean() for value in summaries.values()).backward()
+    assert inputs[0].grad[candidate].abs().sum() > 0
+    assert recv.candidate_interface_plddt_summary[-1].weight.grad is not None
+    assert recv.candidate_interface_pae_summary[-1].weight.grad is not None
+
+
+def test_candidate_interface_geometry_is_frame_invariant():
+    inputs = _inputs()
+    candidate, antigen = _interface_masks()
+    baseline = candidate_antigen_geometry(inputs[1], candidate, antigen)
+    shifted = candidate_antigen_geometry(
+        inputs[1] + torch.tensor([10.0, -4.0, 7.0]), candidate, antigen)
+    assert torch.allclose(baseline, shifted, atol=1e-6)
+
+
+def test_candidate_interface_v3_summaries_use_explicit_geometry():
+    recv = _make_receiver(confidence_head_kind="candidate_interface_v3")
+    recv.eval()
+    candidate, antigen = _interface_masks()
+    inputs = list(_inputs())
+    inputs[0] = torch.softmax(inputs[0], dim=-1)
+    recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    baseline = {
+        key: value.detach().clone()
+        for key, value in recv.last_candidate_interface_summaries.items()}
+    inputs[1] = inputs[1].clone()
+    inputs[1][antigen] += torch.tensor([20.0, 0.0, 0.0])
+    recv(*inputs, mask_gen=candidate, mask_antigen=antigen)
+    changed = recv.last_candidate_interface_summaries
+    assert set(changed) == {"plddt", "iptm", "pae"}
+    assert all(not torch.allclose(baseline[key], changed[key]) for key in baseline)
+
+
 def test_candidate_interface_head_is_interface_sensitive():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
     recv.eval()
@@ -164,7 +245,7 @@ def test_candidate_interface_outputs_backpropagate_to_sequence_and_pairs():
     logits = torch.randn(N, L, NUM_CLASSES, requires_grad=True)
     pairs = torch.randn(N, L, L, P, requires_grad=True)
     plddt, iptm, pae, _ = recv._candidate_interface_confidence(
-        torch.softmax(logits, dim=-1), pairs,
+        torch.softmax(logits, dim=-1), pairs, _inputs()[1],
         torch.ones(N, L, dtype=torch.bool), candidate, antigen,
     )
     interface_pae = pae[candidate.unsqueeze(-1) & antigen.unsqueeze(-2)]

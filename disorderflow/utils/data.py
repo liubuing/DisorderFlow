@@ -1,4 +1,6 @@
 import math
+import hashlib
+import lmdb
 import torch
 import numpy as np
 from torch.utils.data._utils.collate import default_collate
@@ -16,6 +18,27 @@ DEFAULT_NO_PADDING = {
     'patch_global_rotation',
     'af2_iptm',
 }
+
+
+def update_lmdb_record_digest(digest, key, value):
+    digest.update(len(key).to_bytes(8, "big"))
+    digest.update(key)
+    digest.update(len(value).to_bytes(8, "big"))
+    digest.update(value)
+
+
+def lmdb_records_sha256(path):
+    digest = hashlib.sha256()
+    environment = lmdb.open(
+        str(path), readonly=True, lock=False, readahead=False,
+        meminit=False, subdir=True)
+    try:
+        with environment.begin() as transaction:
+            for key, value in transaction.cursor():
+                update_lmdb_record_digest(digest, key, value)
+    finally:
+        environment.close()
+    return digest.hexdigest()
 
 # Keys that contain 2D matrices (L x L) that should be padded on both dims
 MATRIX_KEYS = {
@@ -185,7 +208,9 @@ class CompleteGroupBatchSampler(torch.utils.data.Sampler):
         return batches
 
     def __iter__(self):
-        yield from self._batches()
+        batches = self._batches()
+        self.epoch += 1
+        yield from batches
 
     def __len__(self):
         return len(self._batches())

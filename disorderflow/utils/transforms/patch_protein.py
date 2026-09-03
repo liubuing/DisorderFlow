@@ -11,11 +11,16 @@ class PatchProtein(object):
     Configurable reference chain for alignment (no heavy-chain hardcoding).
     """
 
-    def __init__(self, initial_patch_size=128, context_size=128, reference_fragment_type=0):
+    def __init__(
+            self, initial_patch_size=128, context_size=128,
+            reference_fragment_type=0, required_fragment_types=None,
+            required_context_cap=0):
         super().__init__()
         self.initial_patch_size = initial_patch_size
         self.context_size = context_size
         self.reference_fragment_type = reference_fragment_type
+        self.required_fragment_types = tuple(required_fragment_types or ())
+        self.required_context_cap = int(required_context_cap)
 
     def _align(self, data):
         from .align_utils import kabsch_rotation
@@ -87,6 +92,19 @@ class PatchProtein(object):
         patch_mask = torch.zeros(n_total, dtype=torch.bool)
         patch_mask[initial_patch_idx] = True
         patch_mask[context_patch_idx] = True
+        for fragment_type in self.required_fragment_types:
+            required_mask = data['fragment_type'] == fragment_type
+            required_indices = required_mask.nonzero(as_tuple=True)[0]
+            if required_indices.numel() == 0:
+                raise ValueError(
+                    f'Required context fragment {fragment_type} is absent')
+            required_distances = dist_anchor[required_indices]
+            keep = torch.topk(
+                required_distances,
+                k=min(self.required_context_cap, required_indices.numel()),
+                largest=False,
+            )[1]
+            patch_mask[required_indices[keep]] = True
         patch_mask[data['generate_flag']] = True
         patch_mask[anchor_flag] = True
 

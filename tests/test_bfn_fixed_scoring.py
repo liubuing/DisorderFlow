@@ -120,3 +120,23 @@ def test_pair_contact_noisy_or_aggregation_and_empty_antigen():
         torch.full((1, 2, 200), 10.0, dtype=torch.bfloat16),
         torch.ones((1, 200), dtype=torch.bool))
     assert torch.isfinite(saturated).all()
+
+
+def test_patch_protein_guarantees_required_context_fragment():
+    from disorderflow.utils.transforms.patch_protein import PatchProtein
+
+    length = 20
+    data = {
+        'aa': torch.zeros(length, dtype=torch.long),
+        'fragment_type': torch.tensor([0] * 5 + [1] * 10 + [2] * 5),
+        'anchor_flag': torch.tensor([True] + [False] * (length - 1)),
+        'generate_flag': torch.tensor([True] + [False] * (length - 1)),
+        'pos_heavyatom': torch.zeros(length, 15, 3),
+        'mask_heavyatom': torch.ones(length, 15, dtype=torch.bool),
+    }
+    data['pos_heavyatom'][:, :, 1] = torch.arange(length).view(-1, 1)
+    transform = PatchProtein(
+        initial_patch_size=2, context_size=2,
+        required_fragment_types=[2], required_context_cap=3)
+    patched = transform(data)
+    assert (patched['fragment_type'] == 2).sum().item() == 3

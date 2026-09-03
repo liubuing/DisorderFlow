@@ -1,0 +1,321 @@
+{
+  "schema_version": "candidate_interface_multiseed_selection_v2",
+  "classification": "development_only",
+  "deployment_gate_passed": false,
+  "selection_rule": "raw periodic checkpoints only; lexicographically maximize minimum output scaffold Spearman, mean output scaffold Spearman, number of absolute MAE gates passed, then minimize normalized MAE",
+  "dataset_manifest_sha256": "fea7df3cb91d1aa30fce9b8b2846eb8e98285db169fed834bf946c9f4d29a83c",
+  "evaluation_sources": [
+    {
+      "path": "results/confidence_candidate_interface_v2/s2041_all_evaluation.json",
+      "sha256": "fa6620ea04a70f6ba2637bb6ccbe882fd5b8cc79ac0c42cb7c8da27b458bcfb7"
+    },
+    {
+      "path": "results/confidence_candidate_interface_v2/s2053_all_evaluation.json",
+      "sha256": "895d4020fc4ceb8a11f26d9202d5405da69dbf7512b198e46b8103c22ae808d7"
+    },
+    {
+      "path": "results/confidence_candidate_interface_v2/s2069_all_evaluation.json",
+      "sha256": "22bece8bc654353c34b38084fbcf3a3de2f58b9c834a8b8a777bb3a5a6920729"
+    }
+  ],
+  "selections": [
+    {
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_13_52_dual_sem_v2_s2041\\checkpoints\\100.pt",
+      "checkpoint_sha256": "aba29aa188bde1a1b5800244ae677b5f7c4053591124ccd0a26a06ce59e8c9d1",
+      "iteration": 100,
+      "weights_kind": "raw",
+      "metrics": {
+        "plddt": {
+          "mae": 0.14496458135545254,
+          "pairwise": {
+            "pairs": 109,
+            "contributing_scaffolds": 2,
+            "max_scaffold_pair_fraction": 0.5321100917431193,
+            "accuracy": 0.4954128440366973,
+            "bootstrap_95_lower": 0.24107142857142858,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.21078431372549022,
+            "V2C015": 0.04285714285714285
+          },
+          "median_scaffold_spearman": 0.12682072829131655,
+          "entity_prediction_to_target_std_ratio": 0.7347608161756248,
+          "entity_prediction_to_target_variance_ratio": 0.5398734569870703,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.7424696971232935,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.5512612511463552,
+          "gates": {
+            "mae": false,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": true,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        },
+        "iptm": {
+          "mae": 0.07263003786404927,
+          "pairwise": {
+            "pairs": 0,
+            "contributing_scaffolds": 0,
+            "max_scaffold_pair_fraction": null,
+            "accuracy": null,
+            "bootstrap_95_lower": null,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.661764705882353,
+            "V2C015": 0.09285714285714285
+          },
+          "median_scaffold_spearman": 0.37731092436974795,
+          "entity_prediction_to_target_std_ratio": 0.624239922660059,
+          "entity_prediction_to_target_variance_ratio": 0.38967548104263644,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.08763896428513238,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.007680588060970708,
+          "gates": {
+            "mae": false,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        },
+        "pae": {
+          "mae": 0.08243539215375979,
+          "pairwise": {
+            "pairs": 132,
+            "contributing_scaffolds": 2,
+            "max_scaffold_pair_fraction": 0.5227272727272727,
+            "accuracy": 0.5833333333333334,
+            "bootstrap_95_lower": 0.36028676470588233,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.12254901960784316,
+            "V2C015": 0.16785714285714282
+          },
+          "median_scaffold_spearman": 0.14520308123249298,
+          "entity_prediction_to_target_std_ratio": 0.10009705988792879,
+          "entity_prediction_to_target_variance_ratio": 0.010019421398207603,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.17342267202558084,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.03007542317249218,
+          "gates": {
+            "mae": true,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        }
+      },
+      "deployment_gates_passed": false
+    },
+    {
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_29_06_dual_sem_v2_s2053\\checkpoints\\300.pt",
+      "checkpoint_sha256": "86d9dc18460f8d99742aa245c92efd35730d5c72269cf5a371d69c7c32a987ab",
+      "iteration": 300,
+      "weights_kind": "raw",
+      "metrics": {
+        "plddt": {
+          "mae": 0.029507022739077612,
+          "pairwise": {
+            "pairs": 109,
+            "contributing_scaffolds": 2,
+            "max_scaffold_pair_fraction": 0.5321100917431193,
+            "accuracy": 0.6238532110091743,
+            "bootstrap_95_lower": 0.296875,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.5416666666666667,
+            "V2C015": 0.06785714285714285
+          },
+          "median_scaffold_spearman": 0.3047619047619048,
+          "entity_prediction_to_target_std_ratio": 0.38370504680946904,
+          "entity_prediction_to_target_variance_ratio": 0.14722956294705683,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.3948619756854458,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.1559159798422136,
+          "gates": {
+            "mae": true,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        },
+        "iptm": {
+          "mae": 0.01845810112232963,
+          "pairwise": {
+            "pairs": 0,
+            "contributing_scaffolds": 0,
+            "max_scaffold_pair_fraction": null,
+            "accuracy": null,
+            "bootstrap_95_lower": null,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": -0.09313725490196079,
+            "V2C015": 0.7428571428571428
+          },
+          "median_scaffold_spearman": 0.324859943977591,
+          "entity_prediction_to_target_std_ratio": 0.4608474199177495,
+          "entity_prediction_to_target_variance_ratio": 0.21238034444484655,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.10184613167424633,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.010372634537007921,
+          "gates": {
+            "mae": true,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": false
+          }
+        },
+        "pae": {
+          "mae": 0.07605233167608579,
+          "pairwise": {
+            "pairs": 132,
+            "contributing_scaffolds": 2,
+            "max_scaffold_pair_fraction": 0.5227272727272727,
+            "accuracy": 0.803030303030303,
+            "bootstrap_95_lower": 0.6382887013939839,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.573529411764706,
+            "V2C015": 0.5964285714285712
+          },
+          "median_scaffold_spearman": 0.5849789915966386,
+          "entity_prediction_to_target_std_ratio": 0.3513783983466168,
+          "entity_prediction_to_target_variance_ratio": 0.12346677882463374,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.3380685055774197,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.11429031446334985,
+          "gates": {
+            "mae": true,
+            "pair_evidence": false,
+            "pair_accuracy": true,
+            "pair_bootstrap_lower": true,
+            "median_scaffold_spearman": true,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        }
+      },
+      "deployment_gates_passed": false
+    },
+    {
+      "checkpoint": "D:\\biological\\DisorderFlow\\logs\\bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__21_10_10_dual_sem_v2_s2069_retry\\checkpoints\\400.pt",
+      "checkpoint_sha256": "995c1dac919c5629c2d7c4ef71f5dd935f9c6e5642d9cc485343f39c79dc0dd3",
+      "iteration": 400,
+      "weights_kind": "raw",
+      "metrics": {
+        "plddt": {
+          "mae": 0.019159538981815178,
+          "pairwise": {
+            "pairs": 109,
+            "contributing_scaffolds": 2,
+            "max_scaffold_pair_fraction": 0.5321100917431193,
+            "accuracy": 0.44036697247706424,
+            "bootstrap_95_lower": 0.15384615384615385,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.13970588235294118,
+            "V2C015": -0.19999999999999998
+          },
+          "median_scaffold_spearman": -0.030147058823529402,
+          "entity_prediction_to_target_std_ratio": 0.34604229065658815,
+          "entity_prediction_to_target_variance_ratio": 0.11974526692285863,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.24215939655503074,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.058641173339896636,
+          "gates": {
+            "mae": true,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": false
+          }
+        },
+        "iptm": {
+          "mae": 0.06233758588011066,
+          "pairwise": {
+            "pairs": 0,
+            "contributing_scaffolds": 0,
+            "max_scaffold_pair_fraction": null,
+            "accuracy": null,
+            "bootstrap_95_lower": null,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.4191176470588236,
+            "V2C015": 0.028571428571428564
+          },
+          "median_scaffold_spearman": 0.2238445378151261,
+          "entity_prediction_to_target_std_ratio": 0.7300104763146266,
+          "entity_prediction_to_target_variance_ratio": 0.532915295529108,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.12422370493424319,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.015431528867589915,
+          "gates": {
+            "mae": false,
+            "pair_evidence": false,
+            "pair_accuracy": false,
+            "pair_bootstrap_lower": false,
+            "median_scaffold_spearman": false,
+            "entity_variance_ratio": true,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        },
+        "pae": {
+          "mae": 0.06709361728280783,
+          "pairwise": {
+            "pairs": 132,
+            "contributing_scaffolds": 2,
+            "max_scaffold_pair_fraction": 0.5227272727272727,
+            "accuracy": 0.7954545454545454,
+            "bootstrap_95_lower": 0.5789473684210527,
+            "bootstrap_unit": "scaffold_then_entity"
+          },
+          "scaffold_spearman": {
+            "V2C010": 0.6102941176470589,
+            "V2C015": 0.6214285714285712
+          },
+          "median_scaffold_spearman": 0.615861344537815,
+          "entity_prediction_to_target_std_ratio": 0.16287637616664727,
+          "entity_prediction_to_target_variance_ratio": 0.026528713913179184,
+          "cross_condition_prediction_to_replicate_std_ratio": 0.23512733531617463,
+          "cross_condition_prediction_to_replicate_variance_ratio": 0.055284863812884825,
+          "gates": {
+            "mae": true,
+            "pair_evidence": false,
+            "pair_accuracy": true,
+            "pair_bootstrap_lower": true,
+            "median_scaffold_spearman": true,
+            "entity_variance_ratio": false,
+            "cross_condition_variance_ratio": true,
+            "no_negative_scaffold": true
+          }
+        }
+      },
+      "deployment_gates_passed": false
+    }
+  ],
+  "final_test_evaluated": false
+}

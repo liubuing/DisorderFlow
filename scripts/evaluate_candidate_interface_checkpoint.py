@@ -22,6 +22,7 @@ if str(ROOT) not in sys.path:
 from disorderflow.datasets.confidence_dataset import ConfidenceRegressionDataset
 from disorderflow.models import get_model
 from disorderflow.utils.data import CompleteGroupBatchSampler, PaddingCollate
+from disorderflow.utils.data import lmdb_records_sha256
 from disorderflow.utils.train import recursive_to
 
 
@@ -114,7 +115,8 @@ def pose_stability(records, prediction_key, target_key, noise_key=None):
     prediction_std = []
     target_std = []
     for rows in constructs.values():
-        prediction_std.append(float(np.std([row[prediction_key] for row in rows])))
+        prediction_std.append(float(np.std(
+            [row[prediction_key] for row in rows], ddof=1)))
         if noise_key:
             target_std.append(float(np.mean([row[noise_key] for row in rows])))
         else:
@@ -148,8 +150,15 @@ def aggregate_conditions(records):
     return output
 
 
-def evaluate_checkpoint(path, loader, device):
+def evaluate_checkpoint(path, loader, device, expected_manifest_sha256=None):
     checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+    configured_manifest_sha256 = checkpoint.get("config", {}).get(
+        "lineage", {}).get("dataset_manifest_sha256")
+    if (expected_manifest_sha256 is not None
+            and configured_manifest_sha256 != expected_manifest_sha256):
+        raise ValueError(
+            "Checkpoint dataset lineage does not match the evaluation manifest: "
+            f"{configured_manifest_sha256}")
     model = get_model(checkpoint["config"].model)
     model.load_state_dict(checkpoint["model"], strict=True)
     model.to(device).eval()
@@ -166,9 +175,12 @@ def evaluate_checkpoint(path, loader, device):
             scores = model.bfn.score_fixed(batch, fixed_t=0.5)
             candidate = batch["generate_flag"].bool() & batch["mask"].bool()
             antigen = batch["mask_antigen"].bool() & batch["mask"].bool()
+            pae_antigen = batch.get(
+                "pae_supervision_antigen_mask", antigen).bool() & batch["mask"].bool()
             for index in range(batch["aa"].shape[0]):
                 candidate_index = candidate[index]
                 antigen_index = antigen[index]
+                pae_antigen_index = pae_antigen[index]
                 normalized = bool(batch["af2_pae_normalized"][index].item())
                 target_pae = batch["af2_pae_matrix"][index]
                 if not normalized:
@@ -180,12 +192,20 @@ def evaluate_checkpoint(path, loader, device):
                     "protocol_id": batch["protocol_id"][index],
                     "af2_seed": int(batch["af2_seed"][index].item()),
                     "scaffold_id": int(batch["scaffold_id"][index].item()),
-                    "pred_plddt": float(scores["plddt"][index][candidate_index].mean()),
+                    "pred_plddt": float(
+                        scores["candidate_plddt_summary"][index]
+                        if "candidate_plddt_summary" in scores
+                        else scores["plddt"][index][candidate_index].mean()),
                     "target_plddt": float(batch["af2_plddt"][index][candidate_index].mean()),
-                    "pred_iptm": float(scores["iptm"][index]),
+                    "pred_iptm": float(
+                        scores.get("candidate_iptm_summary", scores["iptm"])[index]),
                     "target_iptm": float(batch["af2_iptm"][index]),
-                    "pred_pae": float(scores["pae"][index][candidate_index][:, antigen_index].mean()),
-                    "target_pae": float(target_pae[candidate_index][:, antigen_index].mean()),
+                    "pred_pae": float(
+                        scores["candidate_pae_summary"][index]
+                        if "candidate_pae_summary" in scores
+                        else scores["pae"][index][candidate_index][:, pae_antigen_index].mean()),
+                    "target_pae": float(
+                        target_pae[candidate_index][:, pae_antigen_index].mean()),
                     "noise_plddt": float(batch["af2_candidate_plddt_sem"][index]),
                     "noise_iptm": float(batch["af2_iptm_sem"][index]),
                     "noise_pae": float(
@@ -236,6 +256,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("checkpoint_dir")
     parser.add_argument(
+        "--checkpoint-name",
+        help="Evaluate only this checkpoint filename, for example best.pt")
+    parser.add_argument(
         "--dataset",
         default="data/confidence_candidate_interface_multiscaffold_dual_sem_v1/calibration.lmdb")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
@@ -245,28 +268,57 @@ def main():
         default="data/confidence_candidate_interface_multiscaffold_dual_sem_v1/manifest.json")
     args = parser.parse_args()
 
+    checkpoint_dir = Path(args.checkpoint_dir)
+    if args.checkpoint_name:
+        checkpoints = [checkpoint_dir / args.checkpoint_name]
+        if not checkpoints[0].is_file():
+            raise FileNotFoundError(checkpoints[0])
+    else:
+        checkpoints = sorted(
+            checkpoint_dir.glob("*.pt"),
+            key=lambda path: (
+                path.name == "best.pt",
+                int(path.stem) if path.stem.isdigit() else 0,
+            ),
+        )
+    manifest_path = ROOT / args.dataset_manifest
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    dataset_path = ROOT / args.dataset
+    split_name = dataset_path.stem
+    expected_lmdb_sha256 = manifest.get("summary", {}).get(
+        split_name, {}).get("lmdb_records_sha256")
+    checkpoint_heads = {
+        torch.load(path, map_location="cpu", weights_only=False)
+        .get("config", {}).get("model", {}).get("confidence_head_kind")
+        for path in checkpoints
+    }
+    if checkpoint_heads & {"candidate_interface_v2", "candidate_interface_v3"}:
+        if expected_lmdb_sha256 is None:
+            raise ValueError("v2 evaluation manifest does not bind the LMDB")
+        actual_lmdb_sha256 = lmdb_records_sha256(dataset_path)
+        if actual_lmdb_sha256 != expected_lmdb_sha256:
+            raise ValueError("Evaluation LMDB does not match its manifest")
+    manifest_sha256 = sha256(manifest_path)
     dataset = ConfidenceRegressionDataset({
-        "db_path": str(ROOT / args.dataset),
+        "db_path": str(dataset_path),
         "candidate_interface_v1": True,
         "max_residues": 0,
     })
     sampler = CompleteGroupBatchSampler(dataset, 20, shuffle=False)
     loader = DataLoader(
         dataset, batch_sampler=sampler, collate_fn=PaddingCollate(), num_workers=0)
-    checkpoint_dir = Path(args.checkpoint_dir)
-    checkpoints = sorted(
-        checkpoint_dir.glob("*.pt"),
-        key=lambda path: (path.name == "best.pt", int(path.stem) if path.stem.isdigit() else 0),
-    )
     evaluations = [
-        evaluate_checkpoint(path, loader, args.device) for path in checkpoints
+        evaluate_checkpoint(
+            path, loader, args.device,
+            expected_manifest_sha256=manifest_sha256)
+        for path in checkpoints
     ]
     output = ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     result = {
-        "schema_version": "candidate_interface_checkpoint_evaluation_v1",
+        "schema_version": "candidate_interface_checkpoint_evaluation_v2",
         "classification": "development_only",
-        "dataset_manifest_sha256": sha256(ROOT / args.dataset_manifest),
+        "dataset_manifest_sha256": manifest_sha256,
         "evaluations": evaluations,
     }
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="ascii")

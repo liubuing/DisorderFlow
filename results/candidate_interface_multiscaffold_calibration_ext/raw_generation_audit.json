@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "status": "raw_generation_integrity_passed",
+  "raw_generation": "results/candidate_interface_multiscaffold_calibration_ext/raw_generation.json",
+  "raw_generation_sha256": "b464564caab6e0b896d8a78cfebf7883859c88517886f32055f518e04feca366",
+  "config_sha256": "fe3653bc5de9da4546e5fde1649a2cb16f52f713c983d6acd48137d74388a85f",
+  "expected_attempts": 576,
+  "observed_attempts": 576,
+  "unique_attempt_ids": 576,
+  "duplicate_attempt_ids": [],
+  "missing_attempt_ids": [],
+  "unexpected_attempt_ids": [],
+  "invalid_sequences": [],
+  "fixed_position_violations": [],
+  "status_by_arm": {
+    "current_bfn_disorder_on": {
+      "success": 144,
+      "failed": 0
+    },
+    "current_bfn_disorder_off": {
+      "success": 144,
+      "failed": 0
+    },
+    "stage_a_antibody_bfn": {
+      "success": 144,
+      "failed": 0
+    },
+    "proteinmpnn": {
+      "success": 144,
+      "failed": 0
+    }
+  },
+  "unique_h3_sequences_by_arm": {
+    "current_bfn_disorder_on": 120,
+    "current_bfn_disorder_off": 120,
+    "stage_a_antibody_bfn": 120,
+    "proteinmpnn": 103
+  },
+  "component_arm_unique_h3": {
+    "EXT001|current_bfn_disorder_on": 20,
+    "EXT001|current_bfn_disorder_off": 20,
+    "EXT001|stage_a_antibody_bfn": 20,
+    "EXT001|proteinmpnn": 19,
+    "EXT002|current_bfn_disorder_on": 20,
+    "EXT002|current_bfn_disorder_off": 20,
+    "EXT002|stage_a_antibody_bfn": 20,
+    "EXT002|proteinmpnn": 15,
+    "EXT003|current_bfn_disorder_on": 20,
+    "EXT003|current_bfn_disorder_off": 20,
+    "EXT003|stage_a_antibody_bfn": 20,
+    "EXT003|proteinmpnn": 23,
+    "EXT004|current_bfn_disorder_on": 20,
+    "EXT004|current_bfn_disorder_off": 20,
+    "EXT004|stage_a_antibody_bfn": 20,
+    "EXT004|proteinmpnn": 18,
+    "EXT005|current_bfn_disorder_on": 20,
+    "EXT005|current_bfn_disorder_off": 20,
+    "EXT005|stage_a_antibody_bfn": 20,
+    "EXT005|proteinmpnn": 20,
+    "EXT006|current_bfn_disorder_on": 20,
+    "EXT006|current_bfn_disorder_off": 20,
+    "EXT006|stage_a_antibody_bfn": 20,
+    "EXT006|proteinmpnn": 8
+  },
+  "native_candidates_by_arm": {},
+  "claim_boundary": "raw generation integrity and descriptive diversity only; no selection or performance endpoint"
+}
