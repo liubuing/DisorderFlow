@@ -1,0 +1,75 @@
+{
+  "schema_version": "idp_platform_capability_v1",
+  "classification": "development_only",
+  "status": "frozen_honest_capability_manifest",
+  "purpose": "Map the IDP-antibody-design platform vision to real assets and their evidence level, so tool existence is never conflated with design effectiveness.",
+  "vision_components": [
+    {
+      "component": "bfn_sequence_design",
+      "claim": "Bayesian Flow Network (Geometric Transformer) conditional sequence generation",
+      "assets": [
+        "modules/bfn_loader.py::run_bfn_design",
+        "modules/bfn_loader.py::run_bfn_design (disorder_guided / epitope_disorder_profile)",
+        "V6 Phase 2 confidence checkpoint (ipTM r=0.950 on 2032 general proteins)"
+      ],
+      "evidence_level": "deployment_grade_for_fixed_backbone_design",
+      "honest_boundary": "Fixed-backbone sequence design is operational. Multiscaffold antibody de novo design was a terminal negative internal benchmark. 'Higher diversity / lower perplexity than autoregressive' is not independently validated."
+    },
+    {
+      "component": "disorder_aware_conformation_modeling",
+      "claim": "AF2 multi-conformation dataset of natural IDPs + residue-level disorder detection head",
+      "assets": [
+        "data/confidence_conformation_v5 (1289 conformations, 863 IDPs x 5 seeds, RMSF labels)",
+        "data/abeta_conformations (5 Abeta42 seeds)",
+        "data/non_abeta_idp/ensembles_v1 (tau, alpha-synuclein conformers)",
+        "modules/idp_disorder_analysis.py::predict_disorder / find_ordered_segments"
+      ],
+      "evidence_level": "exploratory",
+      "honest_boundary": "The conformation library exists. The disorder head is externally discriminative but below metapredict (CAID3 0.755 vs 0.793) and poorly calibrated; 'residue-level precision' is overstated. De novo IDP design has NOT surpassed the AF2 folding ceiling (A-beta42 ipTM 0.12-0.14 vs >0.3 viable-binder target)."
+    },
+    {
+      "component": "conformation_sequence_confidence_validation_loop",
+      "claim": "Closed loop: conformation -> sequence -> confidence -> validation",
+      "assets": [
+        "modules/idp_antibody_design.py::run_idp_antibody_design (disorder->segment->design->rank)",
+        "modules/iterative_refiner.py::IterativeRefiner (design->AF2->filter->redesign)",
+        "publication/candidate_interface_pae_deployment_v1.json (frozen PAE single-axis confidence)"
+      ],
+      "evidence_level": "infrastructure_present",
+      "honest_boundary": "The loop is wired end-to-end but has produced no validated IDP binder. The only deployment-grade confidence signal is interface PAE; pLDDT and ipTM are explicitly abstained (non-transferable / insufficient pair evidence)."
+    },
+    {
+      "component": "disease_target_module",
+      "claim": "12 misfolding-disease targets with epitope scoring, interface analysis, iterative refinement",
+      "assets": [
+        "modules/misfolding_knowledge_base.py (12 targets, 8 IDP)",
+        "modules/misfolding_pipeline.py::MisfoldingDesignPipeline",
+        "data/misfolding_targets (only Abeta 2NAO and Tau 5O3L materialized)"
+      ],
+      "evidence_level": "infrastructure_present",
+      "honest_boundary": "Targets are defined (8 of 12 flagged IDP) but only 2 have local structures. No validated design result exists for any disease target."
+    }
+  ],
+  "confidence_policy": {
+    "deployment_grade": ["pae"],
+    "reported_but_abstained": ["plddt", "iptm"],
+    "abstention_reasons": {
+      "plddt": "non-transferable across scaffolds; five head/loss ablations falsified",
+      "iptm": "insufficient reliable pairs (2/6 contributing scaffolds)"
+    },
+    "contract": "publication/candidate_interface_pae_deployment_v1.json"
+  },
+  "key_negative_results": [
+    "multiscaffold antibody de novo design: terminal negative (2400 attempts, all gates failed)",
+    "de novo IDP binder ceiling not broken (ipTM 0.12-0.14 vs >0.3 target)",
+    "disorder head below metapredict (CAID3 0.755 vs 0.793) and poorly calibrated",
+    "pLDDT cross-scaffold transfer: five ablation directions falsified",
+    "cross-generator ECLS reranking: negative"
+  ],
+  "key_bounded_positive": [
+    "ECLS native-vs-shuffle contrast (15 antigen clusters temporal final)",
+    "V6 general-protein confidence (ipTM r=0.950, pLDDT r=0.825)",
+    "PAE single-axis candidate-interface confidence (frozen deployment contract)"
+  ],
+  "claim_boundary": "This platform is a research tool for IDP-targeted antibody design exploration. It does not claim to produce validated IDP binders. No wet-lab validation has been performed."
+}
