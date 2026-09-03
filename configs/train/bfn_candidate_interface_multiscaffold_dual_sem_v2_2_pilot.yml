@@ -1,0 +1,115 @@
+# Candidate-interface v2.2 pilot: single-linear LayerNorm pLDDT summary head.
+# Hypothesis: the v2 pLDDT summary (2-layer MLP, H3-only pooling) overfits;
+# PAE summary (single linear + LayerNorm, interface pooling) transfers. v2.2
+# reduces the pLDDT summary to a single linear + LayerNorm, mirroring PAE.
+
+lineage:
+  classification: development_only
+  allowed_initializer_sha256: 9bc6d00a80ca07faaba2176a6b7cbdd48b24072b9640aab763c4ffe36867f2e7
+  dataset_manifest: ./data/confidence_candidate_interface_multiscaffold_dual_sem_v2_final6/manifest.json
+  dataset_manifest_sha256: fea7df3cb91d1aa30fce9b8b2846eb8e98285db169fed834bf946c9f4d29a83c
+  split_manifest_sha256: f524411f8a975349a837f9f29ffd8565a6be950dbb5fbae52b400cba339cef58
+  af2_model_1_results_sha256: 755c05c732219b3478730d64657577014d4ba46aefa4701fedbd1b1d70bf679c
+  af2_model_2_results_sha256: cfd4401ad99ffef64bfaa62e6cb9024f4a9629f551300b31c2a98d4d08b66b48
+  training_seeds: [2041]
+  final_test_exported: false
+
+model:
+  type: antibody_bfn
+  confidence_head_kind: candidate_interface_v2_2
+  res_feat_dim: 256
+  pair_feat_dim: 128
+  diffusion:
+    num_steps: 20
+    beta: 1.0
+    schedule: cosine
+    eps_net_opt:
+      num_layers: 6
+      pair_routing: true
+  train_structure: true
+  train_sequence: true
+  ot_opt:
+    num_iters: 5
+  loss_weight:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 1.0
+    iptm: 1.5
+    pae: 0.5
+    candidate_plddt_summary: 1.0
+    candidate_pae_summary: 1.0
+    disorder: 0.0
+    conf_variance: 0.0
+    conf_ranking: 0.0
+    grouped_margin: 0.0
+    grouped_plddt_margin: 0.0
+    grouped_pae_margin: 0.0
+    conf_anticollapse: 0.0
+    grouped_plddt_difference: 1.0
+    grouped_iptm_difference: 1.0
+    grouped_pae_difference: 1.0
+    huber_beta: 0.1
+    train_recycles: 1
+    mask_aug_prob: 0.0
+    encoder_dropout: 0.05
+
+train:
+  loss_weights:
+    seq: 0.0
+    dist: 0.0
+    ang: 0.0
+    plddt: 0.1
+    iptm: 1.0
+    pae: 0.1
+    candidate_plddt_summary: 1.0
+    candidate_pae_summary: 1.0
+    disorder: 0.0
+    conf_variance: 0.0
+    conf_ranking: 0.0
+    conf_grouped_margin: 0.0
+    conf_grouped_plddt_margin: 0.0
+    conf_grouped_pae_margin: 0.0
+    conf_anticollapse: 0.0
+    conf_grouped_plddt_difference: 0.5
+    conf_grouped_iptm_difference: 0.5
+    conf_grouped_pae_difference: 0.5
+  freeze_backbone: true
+  trainable_modules:
+    - candidate_interface
+  unfreeze_encoder_layers: 0
+  complete_group_batches: true
+  fixed_t: 0.5
+  val_fixed_t: 0.5
+  max_iters: 400
+  val_freq: 100
+  log_freq: 10
+  batch_size: 20
+  val_batch_size: 20
+  warmup_steps: 100
+  seed: 2041
+  max_grad_norm: 1.0
+  ema_decay: 0.99
+  optimizer:
+    type: adamw
+    lr: 1.e-4
+    weight_decay: 1.0e-4
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 10
+    min_lr: 1.e-7
+
+dataset:
+  train:
+    type: confidence_regression
+    db_path: ./data/confidence_candidate_interface_multiscaffold_dual_sem_v2_final6/train.lmdb
+    candidate_interface_v1: true
+    max_residues: 0
+  val:
+    type: confidence_regression
+    db_path: ./data/confidence_candidate_interface_multiscaffold_dual_sem_v2_final6/calibration.lmdb
+    candidate_interface_v1: true
+    max_residues: 0

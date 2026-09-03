@@ -53,6 +53,7 @@ class AntibodyBFN_Receiver(nn.Module):
         self.confidence_head_kind = confidence_head_kind
         candidate_interface_heads = {
             'candidate_interface_v1', 'candidate_interface_v2',
+            'candidate_interface_v2_2', 'candidate_interface_v2_3',
             'candidate_interface_v3'}
         if confidence_head_kind not in {'legacy_v12', *candidate_interface_heads}:
             raise ValueError(f'Unsupported confidence head: {confidence_head_kind}')
@@ -268,11 +269,24 @@ class AntibodyBFN_Receiver(nn.Module):
                     nn.LayerNorm(32), nn.ReLU(), nn.Dropout(head_dropout),
                     nn.Linear(32, 1),
                 )
-                if self.confidence_head_kind == 'candidate_interface_v2':
-                    self.candidate_interface_plddt_summary = nn.Sequential(
-                        nn.Linear(64, 32), nn.ReLU(), nn.Dropout(head_dropout),
-                        nn.Linear(32, 1),
-                    )
+                if self.confidence_head_kind in {
+                        'candidate_interface_v2', 'candidate_interface_v2_2',
+                        'candidate_interface_v2_3'}:
+                    if self.confidence_head_kind == 'candidate_interface_v2_2':
+                        self.candidate_interface_plddt_summary = nn.Sequential(
+                            nn.LayerNorm(64), nn.ReLU(), nn.Dropout(head_dropout),
+                            nn.Linear(64, 1),
+                        )
+                    elif self.confidence_head_kind == 'candidate_interface_v2_3':
+                        self.candidate_interface_plddt_summary = nn.Sequential(
+                            nn.LayerNorm(96), nn.ReLU(), nn.Dropout(head_dropout),
+                            nn.Linear(96, 1),
+                        )
+                    else:
+                        self.candidate_interface_plddt_summary = nn.Sequential(
+                            nn.Linear(64, 32), nn.ReLU(), nn.Dropout(head_dropout),
+                            nn.Linear(32, 1),
+                        )
                     self.candidate_interface_pae_summary = nn.Sequential(
                         nn.LayerNorm(32), nn.ReLU(), nn.Dropout(head_dropout),
                         nn.Linear(32, 1),
@@ -708,7 +722,8 @@ class AntibodyBFN_Receiver(nn.Module):
         pred_pae = torch.sigmoid(
             self.candidate_interface_pae_out(pae_hidden)).squeeze(-1)
         if self.confidence_head_kind in {
-                'candidate_interface_v2', 'candidate_interface_v3'}:
+                'candidate_interface_v2', 'candidate_interface_v2_2',
+                'candidate_interface_v2_3', 'candidate_interface_v3'}:
             interface_mask = (
                 candidate_mask.unsqueeze(-1) & antigen_mask.unsqueeze(1))
             interface_count = interface_mask.sum(dim=(1, 2)).clamp(min=1).unsqueeze(-1)
@@ -732,10 +747,14 @@ class AntibodyBFN_Receiver(nn.Module):
                             pae_geometry)).squeeze(-1),
                 }
             else:
+                plddt_input = pooled_candidate
+                if self.confidence_head_kind == 'candidate_interface_v2_3':
+                    plddt_input = torch.cat(
+                        (pooled_candidate, pooled_pae), dim=-1)
                 self.last_candidate_interface_summaries = {
                     'plddt': torch.sigmoid(
                         self.candidate_interface_plddt_summary(
-                            pooled_candidate)).squeeze(-1),
+                            plddt_input)).squeeze(-1),
                     'iptm': pred_iptm,
                     'pae': torch.sigmoid(
                         self.candidate_interface_pae_summary(

@@ -154,7 +154,8 @@ if __name__ == '__main__':
                     'lmdb_records_sha256')
             if expected_lmdb_sha256 is None:
                 if config.model.get('confidence_head_kind') in {
-                        'candidate_interface_v2', 'candidate_interface_v3'}:
+                        'candidate_interface_v2', 'candidate_interface_v2_2',
+                        'candidate_interface_v2_3', 'candidate_interface_v3'}:
                     raise RuntimeError(
                         f'V2 manifest does not bind the {manifest_split} LMDB')
                 continue

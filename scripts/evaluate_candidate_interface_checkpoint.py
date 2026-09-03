@@ -292,7 +292,8 @@ def main():
         .get("config", {}).get("model", {}).get("confidence_head_kind")
         for path in checkpoints
     }
-    if checkpoint_heads & {"candidate_interface_v2", "candidate_interface_v3"}:
+    if checkpoint_heads & {"candidate_interface_v2", "candidate_interface_v2_2",
+                           "candidate_interface_v2_3", "candidate_interface_v3"}:
         if expected_lmdb_sha256 is None:
             raise ValueError("v2 evaluation manifest does not bind the LMDB")
         actual_lmdb_sha256 = lmdb_records_sha256(dataset_path)
