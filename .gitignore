@@ -125,6 +125,34 @@ iBEC_Submission_Template_Package.zip
 QLU_NATBIOTECH_ROADMAP_V1.md
 configs/benchmarks/ibec_*.yml
 
+# Legacy operational scripts and scattered artifacts (keep local only)
+/_*
+/.v5_build_stopped
+/*.bat
+/*.ps1
+/*.bak
+/train_disorder_*.py
+/train_statecontrast_v2.py
+/train_idp_disorder_head.py
+/build_design_variant_dataset.py
+/build_plddt_lookup.py
+/monitor_v5_progress.py
+/run_idp_targets.py
+/preprocess_idp_for_bfn.py
+/generate_project_history_doc.py
+/test_hdock_pipeline.sh
+/way4_s5_fallback_pipeline.py
+/HANDOFF_V5.md
+/INTEGRATIVE_ANALYSIS.md
+/SYNTHESIS_SPECS.md
+/V5_1_TRAINING_PLAN.md
+/ablation_disorder_results.json
+/dataset_split_audit.json
+/results_t2.1_*.json
+/commit_p*.txt
+/p0_msg.txt
+/p1_msg.txt
+
 # Third-party model weights (use scripts/download_assets.py)
 ProteinMPNN/ca_model_weights/
 ProteinMPNN/soluble_model_weights/
