@@ -154,7 +154,7 @@ def build_pptx():
                  "Team 28 — Analyzing Disorder",
                  font_size=14, color=ACCENT, alignment=PP_ALIGN.CENTER, bold=True)
     add_text_box(slide, 1, 3.8, 8, 0.3,
-                 "Chen Haoyang, Hu Jing, Yu Jiarui  |  Qilu University of Technology",
+                 "Chen Haoyang (Captain), Hu Jing, Dai Tanyu, Sun Yuchao  |  Qilu University of Technology",
                  font_size=12, color=GRAY, alignment=PP_ALIGN.CENTER)
     add_text_box(slide, 1, 4.2, 8, 0.3,
                  "iBEC 2026 — International Bioinformatics Engineering Competition",

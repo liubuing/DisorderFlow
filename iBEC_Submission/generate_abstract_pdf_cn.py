@@ -160,7 +160,7 @@ def build_abstract_pdf():
     c.setFont('MSYH', 11)
     c.setFillColor(GRAY)
     c.drawCentredString(PAGE_W / 2, PAGE_H - 300,
-                        "陈昊阳、胡静、余家瑞  |  齐鲁工业大学")
+                        "陈昊阳（队长）、胡静、戴谭宇、孙宇超  |  齐鲁工业大学")
     c.setFont('MSYH', 10)
     c.setFillColor(LIGHT_GRAY)
     c.drawCentredString(PAGE_W / 2, PAGE_H - 325,

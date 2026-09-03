@@ -2,7 +2,7 @@
 
 ## Team 28 - Analyzing Disorder
 
-**Members:** Chen Haoyang, Hu Jing, Yu Jiarui  
+**Members:** Chen Haoyang (Captain), Hu Jing, Dai Tanyu, Sun Yuchao  
 **Institution:** Qilu University of Technology  
 **Primary track:** Bioinformatics Resources / Platforms  
 **Secondary alignment:** AI-driven Life Science Discovery  

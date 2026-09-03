@@ -112,7 +112,7 @@ def build_report():
     elements.append(Spacer(1, 1*cm))
     elements.append(Paragraph("Team 28 &mdash; Analyzing Disorder", styles['ReportSubtitle']))
     elements.append(Spacer(1, 0.5*cm))
-    elements.append(Paragraph("Members: Chen Haoyang, Hu Jing, Yu Jiarui", styles['ReportSubtitle']))
+    elements.append(Paragraph("Members: Chen Haoyang (Captain), Hu Jing, Dai Tanyu, Sun Yuchao", styles['ReportSubtitle']))
     elements.append(Paragraph("Institution: Qilu University of Technology", styles['ReportSubtitle']))
     elements.append(Spacer(1, 0.5*cm))
     elements.append(Paragraph("iBEC 2026 &mdash; International Bioinformatics Engineering Competition", styles['ReportSubtitle']))
@@ -457,9 +457,10 @@ def build_report():
     elements.append(Paragraph("11. Team and Contributions", styles['SectionHead']))
     t5_data = [
         ['Member', 'Role', 'Contribution'],
-        ['Chen Haoyang', 'Team Lead', 'Project design, BFN architecture, ECLS methodology, manuscript'],
+        ['Chen Haoyang', 'Captain', 'Project design, BFN architecture, ECLS methodology, manuscript'],
         ['Hu Jing', 'Comp. Biology', 'IDP pipeline, AF2 validation, disorder head training'],
-        ['Yu Jiarui', 'Software Eng.', 'Training infrastructure, benchmarks, reproducibility'],
+        ['Dai Tanyu', 'Software Eng.', 'Training infrastructure, benchmarks, reproducibility'],
+        ['Sun Yuchao', 'Software Eng.', 'Platform integration, testing, submission packaging'],
     ]
     t5 = Table(t5_data, colWidths=[80, 80, 200])
     t5.setStyle(TableStyle([

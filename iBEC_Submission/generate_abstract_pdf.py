@@ -101,7 +101,7 @@ def build_abstract_pdf():
     c.setFont('Helvetica', 11)
     c.setFillColor(GRAY)
     c.drawCentredString(PAGE_W / 2, PAGE_H - 290,
-                        "Chen Haoyang, Hu Jing, Yu Jiarui  |  Qilu University of Technology")
+                        "Chen Haoyang (Captain), Hu Jing, Dai Tanyu, Sun Yuchao  |  Qilu University of Technology")
     c.setFont('Helvetica', 10)
     c.setFillColor(LIGHT_GRAY)
     c.drawCentredString(PAGE_W / 2, PAGE_H - 315,

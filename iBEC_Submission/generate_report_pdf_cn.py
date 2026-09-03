@@ -180,7 +180,7 @@ def build_report():
     elements.append(Spacer(1, 1*cm))
     elements.append(Paragraph("第 28 号队伍 — 解析无序", styles['CNSubtitle']))
     elements.append(Spacer(1, 0.5*cm))
-    elements.append(Paragraph("成员：陈昊阳、胡静、余家瑞", styles['CNSubtitle']))
+    elements.append(Paragraph("成员：陈昊阳（队长）、胡静、戴谭宇、孙宇超", styles['CNSubtitle']))
     elements.append(Paragraph("单位：齐鲁工业大学", styles['CNSubtitle']))
     elements.append(Spacer(1, 0.5*cm))
     elements.append(Paragraph("iBEC 2026 — 国际生物信息学工程竞赛", styles['CNSubtitle']))
@@ -558,7 +558,8 @@ def build_report():
         ['成员', '角色', '贡献'],
         ['陈昊阳', '队长', '项目设计、BFN 架构、ECLS 方法论、稿件撰写'],
         ['胡静', '计算生物学', 'IDP 管线、AF2 验证、无序头训练'],
-        ['余家瑞', '软件工程', '训练基础设施、基准测试、可复现性'],
+        ['戴谭宇', '软件工程', '训练基础设施、基准测试、可复现性'],
+        ['孙宇超', '软件工程', '平台集成、测试、提交打包'],
     ]
     t5 = Table(t5_data, colWidths=[60, 70, 230])
     t5.setStyle(TableStyle([
