@@ -1,0 +1,28 @@
+{
+  "schema_version": "idp_rd_c1_preregistration_v1",
+  "classification": "development_only",
+  "status": "frozen_before_rd_execution",
+  "problem": "De novo IDP-targeted antibody design has not broken the interface-confidence ceiling (A-beta42 ipTM ~0.12-0.14 vs >0.3 aspirational binder target). The existing production path designs and scores against a single extracted ordered window and uses contact counting, not confidence.",
+  "hypotheses": {
+    "h1_ensemble_robust_ranking": "Ensemble-robust interface PAE (25th percentile across K conformations) ranks candidates more stably than single-conformation scoring, because it rejects candidates that score well in only one conformation.",
+    "h2_disorder_guided_design": "Injecting the per-residue disorder profile into BFN sampling (epitope_disorder_profile / disorder_guided, currently exploratory and unwired in production) plus ensemble scoring raises achievable interface confidence relative to disorder-agnostic design."
+  },
+  "protocol": {
+    "target": "A-beta42 (5 AF2-seed conformations in data/abeta_conformations/pdbs)",
+    "scaffold": "5IMK nanobody (chain B)",
+    "design": "CDR redesign via run_bfn_design (Complex mode), disorder-guided ON vs OFF (H2 factor)",
+    "validation": "AF2 multimer interface PAE against all 5 conformations (single-sequence, 3 recycle)",
+    "scoring": "robust interface PAE = 25th percentile across 5 conformations (lower is better)",
+    "confidence_policy": "PAE only; ipTM and pLDDT are abstained per publication/candidate_interface_pae_deployment_v1.json",
+    "controls": "composition-shuffled CDR-H3 controls per scaffold"
+  },
+  "success_gates": {
+    "g1_robust_pair_accuracy": "robust-PAE ranking separates designed vs composition-shuffle controls with pair accuracy >= 0.65 and cluster-bootstrap 95% lower bound > 0.5",
+    "g2_ensemble_improvement": "ensemble-robust (p25) ranking is more stable than single-conformation ranking, measured by higher control-vs-design separation or lower bootstrap dispersion"
+  },
+  "abstentions": {
+    "iptm": "insufficient reliable pair evidence (abstained)",
+    "plddt": "non-transferable across scaffolds (abstained)"
+  },
+  "claim_boundary": "This is an exploratory R&D experiment. Success of H1/H2 does not establish a validated IDP binder; it only establishes whether ensemble-aware design and robust scoring improve the interface-confidence signal. Wet-lab validation remains required for any binding claim."
+}
