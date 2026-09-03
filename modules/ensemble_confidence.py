@@ -1,8 +1,13 @@
-"""PAE-based ensemble-robust confidence scoring (C1 R&D).
+"""Per-conformation confidence reducer (generic; see note below).
 
-Generalizes the A-beta-only contact scorer to deployment-grade confidence:
-rank candidates by the robust (percentile) interface PAE across multiple
-conformations. ipTM and pLDDT are abstained; only interface PAE is used.
+NOTE: In this project's AF2 setup (single-sequence, templates disabled), AF2
+returns a single interface PAE per (design, antigen) that does NOT vary across
+target conformations. Per-conformation PAE is therefore not a valid ensemble
+signal; the conformational ensemble enters only through structure-based contact
+robustness (see ``modules.ensemble_contact``). This module is retained as a
+generic reducer for the case where per-conformation confidence is available
+(e.g. template-enabled AF2), and its ranking uses PAE only, with pLDDT/ipTM
+abstained.
 """
 
 from __future__ import annotations
