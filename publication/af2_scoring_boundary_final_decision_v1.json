@@ -1,0 +1,43 @@
+{
+  "schema_version": "af2_scoring_boundary_final_decision_v1",
+  "classification": "development_only",
+  "status": "frozen_final_decision_record",
+  "question": "Can a de novo antibody design pipeline targeting intrinsically disordered proteins be validated computationally by AF2-derived confidence?",
+  "findings_chain": [
+    {
+      "id": "confidence_head_transfer",
+      "conclusion": "Only interface PAE transfers across independent scaffolds; pLDDT and ipTM do not.",
+      "evidence": "External 6-scaffold transfer evaluation: PAE median scaffold Spearman 0.70-0.87; pLDDT Spearman ~0 (five head/loss ablations falsified); ipTM insufficient reliable pairs (2/6 scaffolds).",
+      "artifact": "publication/candidate_interface_pae_deployment_v1.json"
+    },
+    {
+      "id": "single_sequence_af2_artifact",
+      "conclusion": "Single-sequence AF2 (no MSA) cannot recapitulate a real antibody-peptide binding interface; its low scores are an MSA-absence artifact, not a design failure.",
+      "evidence": "Native 6YXM crystal complex (ACPA Fab H:L + LPGQGERG): single-sequence interface PAE 27.66, ipTM 0.22, pLDDT 0.18 - classified as non-binding despite being a bound crystal structure.",
+      "artifact": "results/idp_rd_c1 (WSL af2_jax_runner single-sequence)"
+    },
+    {
+      "id": "msa_fixes_antibody_not_peptide",
+      "conclusion": "MSA-based AF2 restores the antibody chain's fold confidence but does NOT discriminate native vs scrambled short peptides via ipTM.",
+      "evidence": "With MSA (colabfold multimer v3, recycle 0): native ipTM 0.753, scrambled peptide ipTM 0.755 - statistically indistinguishable. ipTM is whole-complex and dominated by the 435-residue antibody, so the 8-residue peptide interface carries negligible weight.",
+      "artifact": "results/idp_rd_c1/msa_contrast_r0"
+    },
+    {
+      "id": "pae_is_the_discriminating_signal",
+      "conclusion": "The only discriminating signal for candidate-interface quality is the local candidate-to-antigen interface PAE, not whole-complex ipTM.",
+      "evidence": "candidate-to-antigen PAE transfers across scaffolds (Spearman 0.70-0.87) and is the deployment-grade signal; ipTM abstained per the frozen deployment contract.",
+      "artifact": "publication/candidate_interface_pae_deployment_v1.json"
+    }
+  ],
+  "assets_delivered": [
+    "V6 general-protein confidence model (ipTM Pearson r=0.950)",
+    "PAE single-axis candidate-interface confidence (3-seed, 6-gate deployment contract)",
+    "External scaffold calibration methodology (6 independent scaffolds, 3 preregistered discovery rounds, five-axis isolation)",
+    "IDP research platform with honest capability manifest (publication/idp_platform_capability_v1.json)",
+    "C1 R&D preregistration + H1/H2 experiment scripts + generalized ensemble contact scorer (publication/idp_rd_c1_preregistration.json)",
+    "ECLS bounded positive claim (native-vs-shuffle)"
+  ],
+  "honest_end_state": "The computational validation loop is closed: single-sequence AF2 cannot fold the antibody (no MSA), MSA cannot discriminate the short peptide (ipTM is antibody-dominated), and only interface PAE provides a relative ranking signal. The question of whether a de novo designed antibody actually binds a disordered target cannot be answered computationally in this setting.",
+  "recommended_next_step": "Wet-lab validation (SPR/BLI) of 3-5 designed candidates is the only remaining path to answer the binding question. The PAE single-axis model provides the candidate ranking; wet-lab provides the absolute validation.",
+  "claim_boundary": "This record documents why AF2-derived whole-complex confidence (ipTM) and single-sequence AF2 are unsuitable for validating short antibody-peptide interfaces. It does not claim antibody design success. No wet-lab validation has been performed."
+}
