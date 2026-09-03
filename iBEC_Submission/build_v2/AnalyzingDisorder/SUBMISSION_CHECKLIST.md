@@ -28,7 +28,7 @@
 
 - [ ] Confirm team name and member spelling against the registration system.
 - [ ] Confirm whether unified blind review permits names/institution in reviewer-visible files. The current build is identified and must be anonymized if prohibited.
-- [ ] Confirm the selected competition track in the online form.
+- [ ] Confirm the selected competition track in the online form: **Bioinformatics Resources / Platforms** (changed from AI-driven Life Science Discovery; see IBEC_TRACK_DECISION.md).
 - [ ] Visually inspect every PDF page and the PPTX on the submission computer.
 - [ ] Confirm no private blinding key, model weight, licensed database, or secret is included.
 - [ ] Upload `AnalyzingDisorder.zip`, then verify the submitted-file record on the website.

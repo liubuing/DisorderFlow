@@ -6,23 +6,23 @@
   },
   {
     "path": "28-AnalyzingDisorder-ProjectReport.pdf",
-    "bytes": 51974,
-    "sha256": "fddea6eb6792be6cbef9b51813afe17bed7236a84cf56f1ebd21add2df029ffe"
+    "bytes": 51976,
+    "sha256": "2a9cf7f8adfe801a42720c8b6e7287fc982968efb84dd13447406a0b1a520712"
   },
   {
     "path": "28-AnalyzingDisorder-TechnicalAbstract.pdf",
-    "bytes": 48442,
-    "sha256": "5f808fa1e063c544dffd2d16dd8750d174ba4b51e2e821f0ed75796ac9546e42"
+    "bytes": 48434,
+    "sha256": "a0fae10e894076f4198348cacbf7258ea809ffbc2740d707d57104394fcb6a85"
   },
   {
     "path": "28-AnalyzingDisorder-TechnicalAbstract.pptx",
-    "bytes": 44945,
-    "sha256": "d7d818d501c475e8cada90e8f93582cecfe034810013e04dca4563d199895a67"
+    "bytes": 44938,
+    "sha256": "8605dbfa7c2a174a87b56242f9751e50dc5738d0d57a983940ffd9e3ba069049"
   },
   {
     "path": "SUBMISSION_CHECKLIST.md",
-    "bytes": 1322,
-    "sha256": "8bfe53546447a8f256b9f86d50ee23be8f537a1c4ab370d7c0c33de496bb9256"
+    "bytes": 1440,
+    "sha256": "6c5b65ce9ed9b48e090943e7868d460b70b9130165c9f7deb7d1c4922ea6e6d7"
   },
   {
     "path": "Supplementary_Materials/abeta_candidate_summary.json",
@@ -66,23 +66,23 @@
   },
   {
     "path": "Supplementary_Materials/IBEC_SCORING_MAP.md",
-    "bytes": 2048,
-    "sha256": "2b1b898c8a0dc7609da31147f49a87089cbe6b72b705c36fc22a0463065ef3eb"
+    "bytes": 3259,
+    "sha256": "2428344e2f64c880db5b255b5a972d97ee07f7d083fe3148b9af143657686ff2"
   },
   {
     "path": "Supplementary_Materials/IBEC_TRACK_DECISION.md",
-    "bytes": 2287,
-    "sha256": "fae304c8c917af442378c27bd7ccd476c7f8f5c25cc17bdf4cff7e86a660b5b4"
+    "bytes": 4019,
+    "sha256": "d0eb9b0ab757790a8cd456f48f3589bc7b279b1eb30904bd123169e18498df8e"
   },
   {
     "path": "Supplementary_Materials/MANIFEST.json",
     "bytes": 2166,
-    "sha256": "8f3c2ee3499000fde95bd8d8427f4e49f669d171ff986443c6d12acae0278f08"
+    "sha256": "7262d943d580ae74ee6d5e93cb9c69ee204ebc621bc0792aafbe209154978522"
   },
   {
     "path": "Supplementary_Materials/README.md",
-    "bytes": 2665,
-    "sha256": "ab28dfc4b40a543ea3bba7028b6d8ae67571d4fb68bf23571a09f3dd6688be87"
+    "bytes": 2720,
+    "sha256": "45ae66bc231f61500f92515f54db5b28cb911308424237596a15f68d3a6ef890"
   },
   {
     "path": "Supplementary_Materials/REPRODUCIBILITY.md",

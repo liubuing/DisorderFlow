@@ -1,10 +1,10 @@
 {
   "status": "ibec_preliminary_package_built",
   "archive": "iBEC_Submission/build_v2/AnalyzingDisorder.zip",
-  "archive_bytes": 1786730,
-  "archive_megabytes": 1.704,
+  "archive_bytes": 1788139,
+  "archive_megabytes": 1.705,
   "under_50_mb": true,
-  "archive_sha256": "b0b0f696fcfd8e12b399e1abee805f8377330cf4cff7b41666eb65eedba05b6a",
+  "archive_sha256": "64a4026ff76719f36420914f2b2bd1beb9457127f41fcd688b838e232e8040c7",
   "required_files": {
     "project_report_pdf": true,
     "technical_abstract_pdf": true

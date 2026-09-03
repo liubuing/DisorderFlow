@@ -180,7 +180,7 @@ SLIDES = [
         "title": "DisorderFlow",
         "subtitle": "An Auditable Platform for Antibody Design against Disordered Epitopes",
         "bullets": ["Team 28 - Analyzing Disorder", "Qilu University of Technology",
-                    "AI-driven Life Science Discovery | iBEC 2026"],
+                    "Bioinformatics Resources / Platforms | iBEC 2026"],
     },
     {
         "title": "1. Why Disordered Epitopes?",
@@ -264,7 +264,7 @@ SLIDES = [
     },
     {
         "title": "9. iBEC Deliverables",
-        "subtitle": "Primary track: AI-driven Life Science Discovery",
+        "subtitle": "Primary track: Bioinformatics Resources / Platforms",
         "bullets": [
             "Runnable platform and 4HIX demonstration workflow",
             "Frozen ECLS benchmark and 68-file checksummed evidence manifest",

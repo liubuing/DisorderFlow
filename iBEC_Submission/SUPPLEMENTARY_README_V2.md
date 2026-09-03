@@ -2,7 +2,7 @@
 
 ## Scope
 
-This lightweight package documents the current computational platform and frozen evidence. It does not contain third-party model weights, licensed databases, wet-lab results, or a binding claim.
+This lightweight package documents the current computational platform and frozen evidence for the **Bioinformatics Resources / Platforms** track. It does not contain third-party model weights, licensed databases, wet-lab results, or a binding claim.
 
 ## Key Evidence
 

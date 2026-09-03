@@ -4,8 +4,8 @@
 
 **Members:** Chen Haoyang, Hu Jing, Yu Jiarui  
 **Institution:** Qilu University of Technology  
-**Primary track:** AI-driven Life Science Discovery  
-**Engineering alignment:** Bioinformatics Resources / Platforms  
+**Primary track:** Bioinformatics Resources / Platforms  
+**Secondary alignment:** AI-driven Life Science Discovery  
 **Submission date:** September 2026
 
 ## 1. Executive Summary

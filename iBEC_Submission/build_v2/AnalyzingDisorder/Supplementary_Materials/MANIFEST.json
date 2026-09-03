@@ -41,18 +41,18 @@
   },
   {
     "path": "IBEC_SCORING_MAP.md",
-    "bytes": 2048,
-    "sha256": "2b1b898c8a0dc7609da31147f49a87089cbe6b72b705c36fc22a0463065ef3eb"
+    "bytes": 3259,
+    "sha256": "2428344e2f64c880db5b255b5a972d97ee07f7d083fe3148b9af143657686ff2"
   },
   {
     "path": "IBEC_TRACK_DECISION.md",
-    "bytes": 2287,
-    "sha256": "fae304c8c917af442378c27bd7ccd476c7f8f5c25cc17bdf4cff7e86a660b5b4"
+    "bytes": 4019,
+    "sha256": "d0eb9b0ab757790a8cd456f48f3589bc7b279b1eb30904bd123169e18498df8e"
   },
   {
     "path": "README.md",
-    "bytes": 2665,
-    "sha256": "ab28dfc4b40a543ea3bba7028b6d8ae67571d4fb68bf23571a09f3dd6688be87"
+    "bytes": 2720,
+    "sha256": "45ae66bc231f61500f92515f54db5b28cb911308424237596a15f68d3a6ef890"
   },
   {
     "path": "REPRODUCIBILITY.md",
