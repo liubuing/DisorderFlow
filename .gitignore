@@ -119,6 +119,18 @@ docs/*.pdf
 publication/*.md
 publication/*.tex
 publication/figures/
+publication/*.aux
+publication/*.out
+publication/*.pdf
+
+# Manuscript-prep scripts (unpublished manuscript only, keep local)
+/scripts/regenerate_manuscript_figures.py
+/scripts/swap_pdf_figures.py
+/scripts/update_pdf_affiliation.py
+/scripts/update_pdf_authors.py
+
+# Local tooling cache
+/.tools/
 
 # Exploration decision records (keep local only)
 /publication/idp_platform_capability_v1.json
