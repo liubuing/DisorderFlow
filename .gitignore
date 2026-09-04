@@ -117,6 +117,7 @@ docs/*.pdf
 
 # Manuscript drafts (unpublished, keep local only)
 publication/*.md
+publication/figures/
 
 # Exploration decision records (keep local only)
 /publication/idp_platform_capability_v1.json
