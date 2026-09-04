@@ -118,6 +118,23 @@ docs/*.pdf
 # Manuscript drafts (unpublished, keep local only)
 publication/*.md
 
+# Exploration decision records (keep local only)
+/publication/idp_platform_capability_v1.json
+/publication/idp_rd_c1_preregistration.json
+/publication/af2_scoring_boundary_final_decision_v1.json
+/publication/final_honest_positioning_v1.json
+
+# IDP design exploration (removed from tracking, keep local only)
+/modules/honest_confidence.py
+/modules/ensemble_confidence.py
+/modules/ensemble_contact.py
+/scripts/pipelines/run_idp_platform.py
+/scripts/pipelines/run_c1_ensemble_experiment.py
+/scripts/pipelines/run_c1_h2_experiment.py
+/tests/test_honest_confidence.py
+/tests/test_ensemble_confidence.py
+/tests/test_ensemble_contact.py
+
 # Competition / submission materials (keep local only)
 iBEC_Submission/
 iBEC_Submission_Template_Package/
