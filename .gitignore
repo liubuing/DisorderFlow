@@ -117,6 +117,7 @@ docs/*.pdf
 
 # Manuscript drafts (unpublished, keep local only)
 publication/*.md
+publication/*.tex
 publication/figures/
 
 # Exploration decision records (keep local only)
