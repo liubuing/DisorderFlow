@@ -216,3 +216,22 @@ outputs/
 # Docx project docs (local only)
 DisOrderFlow_完整说明书.docx
 WETLAB_VALIDATION_PLAN_V15.docx
+
+# Unpublished manuscript bibliography and LaTeX build outputs (keep local only)
+publication/refs/*.bib
+publication/*.bbl
+publication/*.blg
+
+# Surrogate-manuscript preparation scripts (unpublished, keep local)
+/scripts/regenerate_surrogate_figures.py
+/scripts/check_surrogate_manuscript_consistency.py
+
+# Local DOI deposit staging (unpublished manuscript, >100MB bundles)
+/release/zenodo_v1/upload/
+/release/zenodo_v1/archive/
+
+# Internal journal-submission strategy (keep local only)
+/docs/SUBMISSION_STRATEGY.md
+
+# Local agent tooling state
+/.zcode/

@@ -1,105 +1,73 @@
-﻿# DisorderFlow — Candidate-Interface Confidence & BFN Sequence Design
+# DisorderFlow — ECLS Structural Sequence Scoring
 
-Structure-conditioned protein and antibody design powered by Bayesian Flow
-Networks (BFN), with a reproducible **candidate-interface confidence** line
-that ranks antibody-peptide candidates by interface PAE.
+DisorderFlow is a research repository for antibody–peptide sequence scoring
+and related BFN design experiments. **The current primary manuscript and
+release are ECLS v1**, targeting a computational structural sequence-scoring
+paper in Bioinformatics. The project is in manuscript consolidation and local
+release preparation; journal submission and remote publication are unconfirmed.
 
-This repository contains two things:
+## Primary paper: ECLS
 
-1. **Candidate-interface PAE confidence** — a reproducible, deployment-grade
-   relative ranking signal for antibody-peptide interfaces (the focus of the
-   `candidate_interface_*` scripts and configs).
-2. **BFN confidence model** — the main-line model that predicts AF2-derived
-   pLDDT / ipTM / PAE for protein structures.
+Epitope-conditioned likelihood shift compares the same H3 sequence in two
+coordinate contexts:
 
-> Availability of a feature does not imply it has passed biological validation.
-> The candidate-interface line provides a *ranking* signal, not a binding claim.
+```text
+ECLS = H3 NLL(complex backbone)
+     - H3 NLL(peptide-stripped, complex-derived Fab backbone)
+advantage = mean ECLS(composition-matched shuffled H3) - ECLS(native H3)
+```
 
-## Reproducing the PAE deployment
+The frozen primary claim is that deposited native H3 sequences have a more
+favorable contrast than composition-matched shuffles on the temporal structure
+panel. It is not a binding/affinity prediction or a general generated-candidate
+reranking claim.
 
-The candidate-interface PAE deployment is fully reproducible. See
-[`docs/CANDIDATE_INTERFACE_PAE_REPRODUCIBILITY.md`](docs/CANDIDATE_INTERFACE_PAE_REPRODUCIBILITY.md)
-for the pipeline, scripts, prerequisites, and frozen contract.
+| Frozen temporal-final endpoint | Result |
+|---|---:|
+| Structures / antigen-cluster inference units | 31 / 15 |
+| Mean ECLS advantage | 0.172281 |
+| Cluster-bootstrap 95% CI | [0.059156, 0.291920] |
+| Positive antigen clusters | 12 / 15 |
 
-The frozen deployment contract is
-[`publication/candidate_interface_pae_deployment_v1.json`](publication/candidate_interface_pae_deployment_v1.json).
+The result passed the prespecified internal gates. This does not mean journal
+acceptance. The final evaluation is terminal and must not be rerun or retuned.
 
-**Summary of the reproducible result** (six independent antibody-peptide scaffolds,
-three training seeds):
+Current entry points:
 
-| Metric | Value | Gate |
+- [Publication protocol](PUBLICATION_PROTOCOL.md): claim, exclusions and target venue.
+- [Frozen ECLS scope](publication/ECLS_SCOPE_FREEZE.yml): immutable evidence contract.
+- [Publication map](docs/PUBLICATION_MAP.md): primary and separate research branches.
+- [ECLS reproducibility](release/ecls_v1/REPRODUCIBILITY.md): local verification and release status.
+- Local manuscript: `publication/MANUSCRIPT_DRAFT.md` (unpublished; not tracked in Git).
+- Local upload preparation: `release/zenodo_v1/DEPOSIT_INSTRUCTIONS.md`.
+
+## Other research branches
+
+| Branch | Status | Relationship to ECLS v1 |
 |---|---|---|
-| Interface PAE median scaffold Spearman | 0.725–0.866 | ≥ 0.5 |
-| Post-calibration MAE | 0.022–0.029 | ≤ 0.10 |
-| Post-calibration variance ratio | 1.0 | [0.5, 2.0] |
-| Pair accuracy | 0.843–0.953 | ≥ 0.65 |
-| Bootstrap 95% lower | 0.683–0.873 | > 0.5 |
+| PAE surrogate | Separate revision; input-provenance and baseline issues audited; complex-model advantage not established | Not the ECLS manuscript or its primary evidence |
+| Successor/contact-v2 | Frozen development candidate awaiting at least 12 independent components | Supplementary/development provenance only |
+| Disorder-aware BFN design | Generation and scoring infrastructure; no experimentally validated binder | Research platform, not evidence of successful antibody design |
+| T1/T2 and multiscaffold design | Bounded exploratory or negative computational findings | Limitations/supporting history only |
 
-Deployment-grade signals: **interface PAE only**. pLDDT and ipTM are abstained.
+PAE entry points are the [v4 report](docs/PAE_SURROGATE_REVISION_V4.md) and local
+`publication/af2_interface_pae_surrogate_manuscript_v4.md`. Earlier PAE contracts
+are historical. The old evaluation consumed AF2 output coordinates; its results
+do not establish pre-AF2 screening. That branch's limitations do not invalidate
+the separate frozen ECLS result.
 
-## BFN confidence model (main line)
+## Software and verification
 
-The BFN confidence model predicts AF2-derived confidence (pLDDT, ipTM, PAE) from
-single-sequence input.
+`disorderflow/` holds the core models and datasets, `modules/` the runtime
+interfaces, `scripts/` the research workflows, and `tests/` the scientific
+contracts. Related fixed-backbone BFN sequence generation remains available via
+`modules.bfn_loader.run_bfn_design`; feature availability does not establish
+binding, specificity or efficacy.
 
-| Version | Dataset | Best val loss | ipTM r | pLDDT r |
-|---|---|---|---|---|
-| V5 Phase 5 | 1,149 proteins | 0.0521 | 0.957 | 0.817 |
-| **V6 Phase 2** | **2,032 proteins** | **0.0494** | **0.950** | **0.825** |
-
-- Model checkpoint: [liubuing/disorderflow](https://huggingface.co/liubuing/disorderflow/)
-- Training dataset: [liubuing/bfn-confidence-general-proteins](https://huggingface.co/datasets/liubuing/bfn-confidence-general-proteins)
-
-Set `DISORDERFLOW_CHECKPOINT` to the checkpoint path, or set `models.bfn.checkpoint`
-in `app_config.yaml`.
-
-### BFN design from the command line
-
-`run_bfn_design` (in `modules/bfn_loader.py`) samples sequences for masked
-regions of a fixed backbone:
-
-```python
-from bfn_loader import run_bfn_design
-
-designs = run_bfn_design(
-    pdb_path="data/misfolding_targets/5IMK.pdb",
-    region_spec="B:26-33,51-58,97-113",
-    num_samples=10, stochastic=True,
-)
-# → list of {sequence, ppl, entropy, plddt, iptm, pae, ...}
+```bash
+python scripts/validate_release_lineage.py --source-only
+python scripts/validate_publication_alignment.py
 ```
 
-## Directory structure
-
-```
-├── disorderflow/        # Core BFN package (models, modules, datasets, utils)
-├── modules/             # Loader, design, and validation entry points
-├── scripts/             # Discovery, calibration, and evaluation pipelines
-│   ├── build/           #   RCSB discovery, isolation, and pipeline config builders
-│   └── pipelines/       #   Generation, selection, and AF2 runners
-├── configs/             # Training, benchmark, and frozen protocol configs
-├── publication/         # Frozen contracts and preregistration artifacts
-├── docs/                # Reproducibility and protocol documents
-├── tests/               # Unit tests
-├── train.py             # Training entry point
-└── ProteinMPNN/         # ProteinMPNN reference implementation
-```
-
-## Evidence status (honest)
-
-| Capability | Evidence | Allowed interpretation |
-|---|---|---|
-| Candidate-interface PAE ranking | Deployment-grade, 3 seeds pass 6 gates | Relative ranking signal, not binding |
-| Interface PAE transfer | Spearman 0.725–0.866 across 6 independent scaffolds | PAE transfers; pLDDT/ipTM do not |
-| BFN confidence (V6) | ipTM r=0.950, pLDDT r=0.825 on general proteins | AF2 confidence is learnable |
-| Binding / efficacy | No wet-lab measurements | No binding claim |
-
-## Claim boundary
-
-This repository provides a relative candidate ranking signal and a confidence
-model. It does not claim that generated antibodies bind their targets; absolute
-binding validation requires wet-lab measurement (SPR/BLI).
-
-## License
-
-MIT License. See [`LICENSE.md`](LICENSE.md).
+The local publication bundle has not been verified as remotely published. No
+wet-lab binding measurements are claimed. License: [MIT](LICENSE.md).

@@ -9,7 +9,8 @@ include:
   - pyproject.toml
   - publication/MANUSCRIPT_DRAFT.md
   - publication/ECLS_SCOPE_FREEZE.yml
-  - publication/*.json
+  # Contact-v2 records are supporting development provenance, not primary claims.
+  - publication/successor_v3*.json
   - configs/benchmarks/successor_v3*.yml
   - configs/train/bfn_successor_v3*.yml
   - disorderflow/**/*.py
@@ -47,3 +48,10 @@ exclude:
   - '**/__pycache__/**'
   - '**/*.pyc'
   - release/ecls_v1/source_manifest.json
+  - '# deliberately untracked private materials (removed from Git tracking in ce3f65d8)'
+  - publication/MANUSCRIPT_DRAFT.md
+  - publication/af2_scoring_boundary_final_decision_v1.json
+  - publication/final_honest_positioning_v1.json
+  - publication/idp_platform_capability_v1.json
+  - publication/idp_rd_c1_preregistration.json
+  - '**/*_frozen_v1.json'

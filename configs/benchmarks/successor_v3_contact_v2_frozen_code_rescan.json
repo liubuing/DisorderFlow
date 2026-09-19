@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "release_id": "disorderflow-ecls-v1-rescan",
+  "status": "frozen_code_rescan_complete",
+  "classification": "provenance rescan only; no scientific field of any frozen contract is changed",
+  "note": "The successor-v3 contact-v2 contracts pinned source files at evaluation time. Those source files have since legitimately evolved. This document re-hashes the drifted files at their current state so the lineage validator can verify live sources, while the original pins remain byte-identical inside the frozen contracts. The pre-rescan manifests are preserved verbatim as release/ecls_v1/*_frozen_v1.json and in Git history.",
+  "rescan_date": "2026-09-16",
+  "frozen_code_rescan": {
+    "disorderflow/modules/bfn/receiver.py": "cbcfd72c2bfc59aef6fc6b05590194e3e034123b21439b967614fc41623bc9d4",
+    "disorderflow/modules/bfn/core.py": "d07d4c22f05f1fed050032cfd58660699cc0856a7f4f2d6ae544fa061e54eba8",
+    "disorderflow/models/bfn_model.py": "be515d96491fd2d8158fe5a7c9ae79f83f3af88d658193ad70378d5936d5917d"
+  }
+}

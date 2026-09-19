@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "contact_v2_candidate_frozen_waiting_for_12_plus_independent_components",
+  "classification": "mixed registry; each claim remains bounded by its source artifact",
+  "artifacts": {
+    "development_protocol": {
+      "path": "configs/benchmarks/successor_v3_contact_v2_development.yml",
+      "sha256": "d714af0de52b0b839f0a49553d84ae46466187a88f90d35792c2bc4abef6a23a",
+      "bytes": 3971
+    },
+    "future_confirmation_policy": {
+      "path": "configs/benchmarks/successor_v3_contact_v2_future_confirmation.yml",
+      "sha256": "a67e20b7818d0cf9fa93975ae7962cb46d6c66ae92eb56e0d87f5c1b502a23c2",
+      "bytes": 4477
+    },
+    "training_config": {
+      "path": "configs/train/bfn_successor_v3_contact_v2_exposed.yml",
+      "sha256": "1cea3ae907883cf857d178ffed23d92a3ff2d3de1b559574d06ee9807875a1ac",
+      "bytes": 1643
+    },
+    "dataset_manifest": {
+      "path": "data/successor_v3_contact_dev_v1/manifest.json",
+      "sha256": "02da7c9b821f2116226cee623762f879fcff2f2631bf7736bc941aa5c0e6dfdc",
+      "bytes": 60459
+    },
+    "dataset_train_lmdb": {
+      "path": "data/successor_v3_contact_dev_v1/train.lmdb",
+      "sha256": "8e371fb460af8a94619251d590570ead306d91a9c862a10730e07fd8a9fac24e",
+      "bytes": 11436032
+    },
+    "dataset_eval_lmdb": {
+      "path": "data/successor_v3_contact_dev_v1/eval.lmdb",
+      "sha256": "a676d740248357f9990d0f879ade9a76209ea7e25ff88c1d95cb818f142befa5",
+      "bytes": 3239936
+    },
+    "baselines": {
+      "path": "results/successor_v3_contact_v2/baselines.json",
+      "sha256": "44f169230797a0371b1c73d20c6019a5b560fb6f8d140d49197f8d705eb7aa62",
+      "bytes": 3415
+    },
+    "development_evaluation": {
+      "path": "results/successor_v3_contact_v2/development_evaluation.json",
+      "sha256": "6affa5d99d93283922caab62fdf08657af8a9ca9f4ceb0cf712116de33573905",
+      "bytes": 19958
+    },
+    "candidate_checkpoint": {
+      "path": "logs/bfn_successor_v3_contact_v2_exposed_2026_08_09__09_06_40_successor_v3_contact_v2_cb/checkpoints/best.pt",
+      "sha256": "9d844ea2fb5f34000d9258f9c08e26744dd6c7049c2c0a3edd96d3faffe6d29b",
+      "bytes": 59214620
+    },
+    "experiment_panel": {
+      "path": "experiments/successor_v3_contact_v2/panel.json",
+      "sha256": "79e7a87d379481c6c7c99aa1334f9668aa6281fc31b7a5946a4fb969435e75e6",
+      "bytes": 7733
+    },
+    "experiment_constructs": {
+      "path": "experiments/successor_v3_contact_v2/constructs.csv",
+      "sha256": "23ba371a1e4e95772e47ea68d3e837ff351bdc1a4d02d8315402d9a957ba147d",
+      "bytes": 7267
+    },
+    "experiment_protocol": {
+      "path": "experiments/successor_v3_contact_v2/PROTOCOL.md",
+      "sha256": "74dbadeaced9bed59053b4abf0e02358ca1f2e9f932f94dbaeb03658f2136303",
+      "bytes": 4741
+    },
+    "experiment_template": {
+      "path": "experiments/successor_v3_contact_v2/measurements_template.csv",
+      "sha256": "dc4b9411e7e4a25637c94328e28b58af83255a4c545b2fc984bbc189f2610fd1",
+      "bytes": 531
+    },
+    "pair_head": {
+      "path": "disorderflow/modules/bfn/receiver.py",
+      "sha256": "9f13f6a772e529cdac715bb6116250f59a490413332a72a0cd7a8164ab19c2d9",
+      "bytes": 35432
+    },
+    "contact_loss": {
+      "path": "disorderflow/modules/bfn/core.py",
+      "sha256": "6b4c218f7d4f5bdb90940186800f9f80fb3007732c79a55d2c31d8d91fb7b62f",
+      "bytes": 53723
+    },
+    "hard_negative_model": {
+      "path": "disorderflow/models/bfn_model.py",
+      "sha256": "0fdbe6cbef39ba96046ca3ad3335c1a552630a755f6a30d0f605be987e0ab192",
+      "bytes": 7448
+    },
+    "dataset_builder": {
+      "path": "scripts/build/build_successor_v3_contact_dev_dataset.py",
+      "sha256": "7addbaa3a0f96bec5777fdd30e34f0ed8f6a288d4b6bcaba8c230cf00fc924ba",
+      "bytes": 8777
+    },
+    "baseline_runner": {
+      "path": "scripts/benchmark_successor_v3_contact_baselines.py",
+      "sha256": "7ad91fbb5401bb8ae1830ce8c22015c4b8b2fe8b00f1c927fe6de5cfdeb4dc60",
+      "bytes": 8081
+    },
+    "evaluation_runner": {
+      "path": "scripts/evaluate_successor_v3_contact_v2.py",
+      "sha256": "e52a794a53f3d0abcd13f9f483df366aca51ff891253a3b30e4ded358d96f41d",
+      "bytes": 8952
+    },
+    "experiment_runner": {
+      "path": "scripts/prepare_successor_v3_contact_v2_experiments.py",
+      "sha256": "d8d6f66da1ec782f40a713d9011271046dbfdf78ab8326d695f99635fecc1f8b",
+      "bytes": 8347
+    },
+    "confirmatory_evaluation_runner": {
+      "path": "scripts/evaluate_successor_v3_contact_v2_confirmatory.py",
+      "sha256": "70a3f0d69200cf4abd35e02c92e4da75263fa1b4b9ed324f5430da3b35f19929",
+      "bytes": 10094
+    },
+    "lineage_validator": {
+      "path": "scripts/validate_release_lineage.py",
+      "sha256": "af8439937c41431fafcc0b290c7319ae89cb498f060c0aafb376edd437dbd6bd",
+      "bytes": 7792
+    },
+    "ecls_scope_freeze": {
+      "path": "publication/ECLS_SCOPE_FREEZE.yml",
+      "sha256": "97b9a7a408da364c1740485051f9e9c565bf183114514b0082a104955b2807ca",
+      "bytes": 1755
+    },
+    "artifact_bundle_manifest": {
+      "path": "release/ecls_v1/artifact_bundle_manifest.json",
+      "sha256": "336f40b166d8cebfb84f2d73b9b83d2a8ba40d91053c7f19411448d33e61c8c3",
+      "bytes": 46931
+    },
+    "pipeline": {
+      "path": "scripts/pipelines/run_successor_v3_contact_v2_pipeline.py",
+      "sha256": "723081d4638e09112dc3cc264095f8dca4c8241c2b4e4b6833360dddc3138e96",
+      "bytes": 4549
+    }
+  },
+  "development_summary": {
+    "held_out_records": 46,
+    "residue_contact_auroc": 0.953150951943007,
+    "pair_contact_auroc": 0.9543090043555402,
+    "pair_contact_average_precision": 0.7061249080723322,
+    "residue_component_macro_auroc": 0.9601975522129507,
+    "residue_component_macro_auroc_ci95": [
+      0.9230976053560972,
+      0.986609168374567
+    ],
+    "eligible_for_future_confirmation": true
+  },
+  "wet_experiment_summary": {
+    "status": "planned_not_executed",
+    "targets": 16,
+    "constructs": 64,
+    "independent_targets": 16,
+    "planned_target_level_power": 0.9618851119323157,
+    "measurements_present": false
+  },
+  "future_readiness": {
+    "eligible_exact_new_structures": 0,
+    "independent_homology_components": 0,
+    "required_independent_homology_components": 12,
+    "ready": false
+  },
+  "claim_boundary": "The candidate passed exposed development gates only. No confirmatory or wet-experiment result exists."
+}

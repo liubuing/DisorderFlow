@@ -2,6 +2,11 @@
 
 ## Target
 
+Current manuscript: `publication/MANUSCRIPT_DRAFT.md`. Current release:
+`disorderflow-ecls-v1`. See `docs/PUBLICATION_MAP.md` and
+`release/ecls_v1/publication_line.json` for publication routing. The PAE surrogate
+is a separate manuscript revision and does not replace this ECLS scope.
+
 - Primary venue: Bioinformatics.
 - Secondary venue: PLOS Computational Biology, conditional on a stronger
   biological analysis of flexible-epitope recognition.

@@ -1,5 +1,12 @@
 # Candidate-Interface PAE Deployment — Reproducibility
 
+> Historical v1-v3 protocol. The GP2 final test was subsequently evaluated once;
+> statements below saying "never evaluated" refer only to the original freeze.
+> Revision v4 identified AF2-output coordinates in the historical model inputs
+> and a mismatched baseline target. For current claims and corrected pre-AF2
+> experiments, see [PAE_SURROGATE_REVISION_V4.md](PAE_SURROGATE_REVISION_V4.md).
+> Historical gates do not establish pre-AF2 deployment readiness.
+
 This document describes how to reproduce the **PAE single-axis candidate-interface
 confidence deployment**: six independent antibody-peptide scaffolds are discovered
 and isolated, candidate interfaces are generated and scored with AlphaFold2, and a

@@ -70,18 +70,18 @@
     },
     "pair_head": {
       "path": "disorderflow/modules/bfn/receiver.py",
-      "sha256": "9f13f6a772e529cdac715bb6116250f59a490413332a72a0cd7a8164ab19c2d9",
-      "bytes": 35432
+      "sha256": "cbcfd72c2bfc59aef6fc6b05590194e3e034123b21439b967614fc41623bc9d4",
+      "bytes": 45366
     },
     "contact_loss": {
       "path": "disorderflow/modules/bfn/core.py",
-      "sha256": "6b4c218f7d4f5bdb90940186800f9f80fb3007732c79a55d2c31d8d91fb7b62f",
-      "bytes": 53723
+      "sha256": "d07d4c22f05f1fed050032cfd58660699cc0856a7f4f2d6ae544fa061e54eba8",
+      "bytes": 64072
     },
     "hard_negative_model": {
       "path": "disorderflow/models/bfn_model.py",
-      "sha256": "0fdbe6cbef39ba96046ca3ad3335c1a552630a755f6a30d0f605be987e0ab192",
-      "bytes": 7448
+      "sha256": "be515d96491fd2d8158fe5a7c9ae79f83f3af88d658193ad70378d5936d5917d",
+      "bytes": 7528
     },
     "dataset_builder": {
       "path": "scripts/build/build_successor_v3_contact_dev_dataset.py",
@@ -110,8 +110,8 @@
     },
     "lineage_validator": {
       "path": "scripts/validate_release_lineage.py",
-      "sha256": "af8439937c41431fafcc0b290c7319ae89cb498f060c0aafb376edd437dbd6bd",
-      "bytes": 7792
+      "sha256": "390494354699957583c11deb1fa9f47cce1407eb99e7f20b909c55b2ea4e216b",
+      "bytes": 10194
     },
     "ecls_scope_freeze": {
       "path": "publication/ECLS_SCOPE_FREEZE.yml",

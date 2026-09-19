@@ -1,0 +1,1296 @@
+{
+  "schema_version": 1,
+  "release_id": "disorderflow-ecls-v1",
+  "status": "source_manifest_complete",
+  "classification": "source_and_lightweight_evidence",
+  "spec": {
+    "path": "release/ecls_v1/source_release_spec.yml",
+    "sha256": "adf2a10be670cd9ab879930e4f1aed2cb88f06f113700f1b286ee17356743805"
+  },
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 392,
+      "hash_mode": "raw",
+      "sha256": "5c927f8d185538555eaf02a7dacde2137bf0ddace574ff9a1c927149196a0ed7"
+    },
+    {
+      "path": "LICENSE.md",
+      "bytes": 1065,
+      "hash_mode": "canonical_lf",
+      "sha256": "2e4aff43bb31f4048f938624224cd64aba3c8c9ea2eadf7d7e53ecc8d6d34c31"
+    },
+    {
+      "path": "PUBLICATION_PROTOCOL.md",
+      "bytes": 19721,
+      "hash_mode": "canonical_lf",
+      "sha256": "e4f3ea0ea5b724e4584a733413cba17b783c7aec43f379bf94c6b677c3d7b3e0"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3644,
+      "hash_mode": "canonical_lf",
+      "sha256": "4515a2833f4ea01fc987b1977d8591b44dc0694bba499b2b472696949dfa979d"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_confirmatory.yml",
+      "bytes": 3037,
+      "hash_mode": "canonical_lf",
+      "sha256": "b5a95ad3523cce35fc533f80d3ac4fa00ded122a509221b2715630c33740b718"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_contact_v2_development.yml",
+      "bytes": 3971,
+      "hash_mode": "canonical_lf",
+      "sha256": "d714af0de52b0b839f0a49553d84ae46466187a88f90d35792c2bc4abef6a23a"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_contact_v2_future_confirmation.yml",
+      "bytes": 4477,
+      "hash_mode": "canonical_lf",
+      "sha256": "a67e20b7818d0cf9fa93975ae7962cb46d6c66ae92eb56e0d87f5c1b502a23c2"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_development.yml",
+      "bytes": 1365,
+      "hash_mode": "canonical_lf",
+      "sha256": "467b97f4ab10b2ce299294611febfb70977cd89128f9419f16b4fdeca5a53a3a"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_exploratory.yml",
+      "bytes": 4149,
+      "hash_mode": "canonical_lf",
+      "sha256": "1f4228c89586ef4016ef55973290436036fa60501285ffce9e201c1b9916a411"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_future_snapshot_policy.yml",
+      "bytes": 1414,
+      "hash_mode": "canonical_lf",
+      "sha256": "b6bbddae70ad6a8ccce5debcd3c8f8c85553a8948ea4314da12e7405963b965c"
+    },
+    {
+      "path": "configs/benchmarks/successor_v3_rcsb_acquisition_addendum.yml",
+      "bytes": 2820,
+      "hash_mode": "canonical_lf",
+      "sha256": "4bb493230289e26812253405b0ccc218c49751662864c4ef2dfd0221cbdb9330"
+    },
+    {
+      "path": "configs/train/bfn_successor_v3_contact_v2_exposed.yml",
+      "bytes": 1643,
+      "hash_mode": "canonical_lf",
+      "sha256": "1cea3ae907883cf857d178ffed23d92a3ff2d3de1b559574d06ee9807875a1ac"
+    },
+    {
+      "path": "configs/train/bfn_successor_v3_h3_specificity.yml",
+      "bytes": 2287,
+      "hash_mode": "canonical_lf",
+      "sha256": "31799a3a74370311207cd06621ee4c5ec21b1cdfde5e347869732ad0a1a29f17"
+    },
+    {
+      "path": "disorderflow/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/data_factory.py",
+      "bytes": 25173,
+      "hash_mode": "canonical_lf",
+      "sha256": "5a6dc355d30fc6818e1d245a027c690310e9cc981ea9ba24ab4646f107df9b8d"
+    },
+    {
+      "path": "disorderflow/datasets/__init__.py",
+      "bytes": 1189,
+      "hash_mode": "canonical_lf",
+      "sha256": "c4738eff89c99f4825e5758ea06c2d52ff3e4d04b39dfcd5af33c9ff775ebadf"
+    },
+    {
+      "path": "disorderflow/datasets/_base.py",
+      "bytes": 1139,
+      "hash_mode": "canonical_lf",
+      "sha256": "ae3963c4b8bde51669f2647f6a064117c6b827db44451713516c87cadebcde6d"
+    },
+    {
+      "path": "disorderflow/datasets/confidence_dataset.py",
+      "bytes": 14597,
+      "hash_mode": "canonical_lf",
+      "sha256": "2aecdedff032f0953e3084608d916cd5fab1f6f521c5b66cc0baaeaa77a1633d"
+    },
+    {
+      "path": "disorderflow/datasets/conformation_dataset.py",
+      "bytes": 3790,
+      "hash_mode": "canonical_lf",
+      "sha256": "6c88406d1be31ed135c460c13d90d44f95550ad6d485ba380486e7a49dc0ad7d"
+    },
+    {
+      "path": "disorderflow/datasets/custom.py",
+      "bytes": 6584,
+      "hash_mode": "canonical_lf",
+      "sha256": "396002a87d825cd6a07ae5067f6e67950d09287aa8e6d97d66739748114fa7ec"
+    },
+    {
+      "path": "disorderflow/datasets/custom_ppi.py",
+      "bytes": 5010,
+      "hash_mode": "canonical_lf",
+      "sha256": "db223add188c777f957b3b6e98e2eab3947b4b4e93974e905a5df6b520acefaf"
+    },
+    {
+      "path": "disorderflow/datasets/dips.py",
+      "bytes": 11761,
+      "hash_mode": "canonical_lf",
+      "sha256": "17cacc1ce3f8d77688b088bc24ce683fe63c8f92fea5e67335d6101d80624add"
+    },
+    {
+      "path": "disorderflow/datasets/disorder_augmented.py",
+      "bytes": 16114,
+      "hash_mode": "canonical_lf",
+      "sha256": "b5bb6789f5af3841d1453473a03e19107c71b2f6a80dc02a9beec0c3d0eb2198"
+    },
+    {
+      "path": "disorderflow/datasets/lmdb_dataset.py",
+      "bytes": 1493,
+      "hash_mode": "canonical_lf",
+      "sha256": "aca2d86430f773a427ff6c6758fc5657c18da018bac51fd4ccf53bb038fb9656"
+    },
+    {
+      "path": "disorderflow/datasets/phase3_dataset.py",
+      "bytes": 2893,
+      "hash_mode": "canonical_lf",
+      "sha256": "5115c9105852522cf84b57b25396731c5d6b713ff1e760b0380c3b27456509bd"
+    },
+    {
+      "path": "disorderflow/datasets/protein.py",
+      "bytes": 2309,
+      "hash_mode": "canonical_lf",
+      "sha256": "4303eba8043bd2b4ec8e86bb48ab5a520ce52be89253476b4f5a8869cde02db2"
+    },
+    {
+      "path": "disorderflow/datasets/sabdab.py",
+      "bytes": 15650,
+      "hash_mode": "canonical_lf",
+      "sha256": "9ae227402fbfd021f6f284716ecd23d00db06ab8aeeda1deb0e37b5f385363b1"
+    },
+    {
+      "path": "disorderflow/datasets/statecontrast_metadata.py",
+      "bytes": 1362,
+      "hash_mode": "canonical_lf",
+      "sha256": "a3abcde7130e45906358445600a98ea58993b92a87b9f38517858ae2218a2791"
+    },
+    {
+      "path": "disorderflow/datasets/statecontrast_structural.py",
+      "bytes": 9592,
+      "hash_mode": "canonical_lf",
+      "sha256": "c25bc8f47653655a924d72c8ca3a762f96e03f2c0193acb8dbe60c2a78d1c737"
+    },
+    {
+      "path": "disorderflow/datasets/statecontrast_v2_pose_manifest.py",
+      "bytes": 9576,
+      "hash_mode": "canonical_lf",
+      "sha256": "aedc813eba8fb6edf597b76c2c83850634a5ccc7dcd452beb4e1b63b932d99f9"
+    },
+    {
+      "path": "disorderflow/datasets/statecontrast_v2_structural.py",
+      "bytes": 2996,
+      "hash_mode": "canonical_lf",
+      "sha256": "c1760159fbb68f99c14e44e78556943b033419c6a85819ddb62b23ca451f9c56"
+    },
+    {
+      "path": "disorderflow/disorder_calibration.py",
+      "bytes": 5134,
+      "hash_mode": "canonical_lf",
+      "sha256": "59ef7447793663c628839a5e986e03cc0b0352f0230c44b249f42885ae0e949d"
+    },
+    {
+      "path": "disorderflow/disorder_metrics.py",
+      "bytes": 2666,
+      "hash_mode": "canonical_lf",
+      "sha256": "51cb2ca21af577afbdc5f0f08f82f417d866f2c81527b8e4957153c6f6782697"
+    },
+    {
+      "path": "disorderflow/disorder_supervision.py",
+      "bytes": 4579,
+      "hash_mode": "canonical_lf",
+      "sha256": "9b1fdcc49dc30b4c7c93e8bbf6799f4c5826e6b9e8687bd2e5f1368ad92fca81"
+    },
+    {
+      "path": "disorderflow/models/__init__.py",
+      "bytes": 118,
+      "hash_mode": "canonical_lf",
+      "sha256": "cb3a233e25620709be73bed5a77112b86ddd7836713f7b73a22d8ea965cbec34"
+    },
+    {
+      "path": "disorderflow/models/_base.py",
+      "bytes": 202,
+      "hash_mode": "canonical_lf",
+      "sha256": "bf65d7b5edf97d534bd51f8c4f204861a548146d6f815995628a36169bb66b59"
+    },
+    {
+      "path": "disorderflow/models/bfn_model.py",
+      "bytes": 7528,
+      "hash_mode": "canonical_lf",
+      "sha256": "be515d96491fd2d8158fe5a7c9ae79f83f3af88d658193ad70378d5936d5917d"
+    },
+    {
+      "path": "disorderflow/models/disorderflow.py",
+      "bytes": 4894,
+      "hash_mode": "canonical_lf",
+      "sha256": "81f28d136464ed836d0ea408f9f9cc5c99666f513a6fe1e2148c08d38511cbe9"
+    },
+    {
+      "path": "disorderflow/models/statecontrast_v2.py",
+      "bytes": 8194,
+      "hash_mode": "canonical_lf",
+      "sha256": "9d9915eb91c56f3447faf133d4df751f1ae549b82a3a3828b3fe9f1aa1a2ac7d"
+    },
+    {
+      "path": "disorderflow/modules/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/modules/bfn/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/modules/bfn/contrastive_losses.py",
+      "bytes": 2244,
+      "hash_mode": "canonical_lf",
+      "sha256": "1a71f15f4017d57588862ce0b01dcfb6eca489bf3a9f1a9c4516daad217947f7"
+    },
+    {
+      "path": "disorderflow/modules/bfn/core.py",
+      "bytes": 64072,
+      "hash_mode": "canonical_lf",
+      "sha256": "654addeb7cd2954cbac9c83c52359f15f44bc995d394fe51e7cb5f3e7c082386"
+    },
+    {
+      "path": "disorderflow/modules/bfn/core_losses.py",
+      "bytes": 7673,
+      "hash_mode": "canonical_lf",
+      "sha256": "1c0241fd5d577966bad5ec66ec24139f53d0d2ac7380d2d1ac5fb086cf85bff2"
+    },
+    {
+      "path": "disorderflow/modules/bfn/orientation.py",
+      "bytes": 2275,
+      "hash_mode": "canonical_lf",
+      "sha256": "b446cda9b359fb38923949657f2a252f993553ea59baeb737f277131ca3ef4d6"
+    },
+    {
+      "path": "disorderflow/modules/bfn/position.py",
+      "bytes": 1918,
+      "hash_mode": "canonical_lf",
+      "sha256": "155023fae82a0f18e982042aee034e83ec5d53129db255d19284dfa55db2d6ce"
+    },
+    {
+      "path": "disorderflow/modules/bfn/receiver.py",
+      "bytes": 45366,
+      "hash_mode": "canonical_lf",
+      "sha256": "1116d0dcffa9c8558b13a641e959a222efa1825b23b4e62419fa93119fdfebe6"
+    },
+    {
+      "path": "disorderflow/modules/bfn/receiver_heads.py",
+      "bytes": 2964,
+      "hash_mode": "canonical_lf",
+      "sha256": "33a98976c89565470c38fe9d02fe18eb9c4a40ba136b433cd22e4a529eeeb364"
+    },
+    {
+      "path": "disorderflow/modules/bfn/sequence.py",
+      "bytes": 2710,
+      "hash_mode": "canonical_lf",
+      "sha256": "de430ffdf12d884554edc609b36d7466e685f2c8595d8526da8b51d60c84c474"
+    },
+    {
+      "path": "disorderflow/modules/bfn/sidechain.py",
+      "bytes": 3563,
+      "hash_mode": "canonical_lf",
+      "sha256": "4eb40ad7b9696092fe3082ad4439023db5f1b41bc51563885f15c26d639dd879"
+    },
+    {
+      "path": "disorderflow/modules/common/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/modules/common/geometry.py",
+      "bytes": 16612,
+      "hash_mode": "canonical_lf",
+      "sha256": "ec66e79c012c68fd824b5caa28a70d069372f772c22c1c34c4d2256dfb0a0939"
+    },
+    {
+      "path": "disorderflow/modules/common/layers.py",
+      "bytes": 5364,
+      "hash_mode": "canonical_lf",
+      "sha256": "2c222fa6ea9b77ca302639097c21789bc2567d9ae726527ca971babb118fed16"
+    },
+    {
+      "path": "disorderflow/modules/common/ot_align.py",
+      "bytes": 4668,
+      "hash_mode": "canonical_lf",
+      "sha256": "aa08ae7dc0828bee5c491371d06347a84de29e4edadfa1f3f7c33adf7a40e1aa"
+    },
+    {
+      "path": "disorderflow/modules/common/so3.py",
+      "bytes": 4660,
+      "hash_mode": "canonical_lf",
+      "sha256": "78076d997d06dd0b9564c4e3a5771f4fd1d58f0ccb4dc448690f543a1a5733ea"
+    },
+    {
+      "path": "disorderflow/modules/common/structure.py",
+      "bytes": 2869,
+      "hash_mode": "canonical_lf",
+      "sha256": "fd153da354bbe83601809a21b305684ad7778768d7e551b83e52245e8e3cdeb5"
+    },
+    {
+      "path": "disorderflow/modules/common/topology.py",
+      "bytes": 834,
+      "hash_mode": "canonical_lf",
+      "sha256": "7d49bd64e09e0b3c744f1f9691f1009a1bf2c7fd2826e7d1d5db7881eb2372a3"
+    },
+    {
+      "path": "disorderflow/modules/diffusion/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/modules/diffusion/dpm_full.py",
+      "bytes": 12647,
+      "hash_mode": "canonical_lf",
+      "sha256": "8319eebefacd0af99dbd042a678ad58b60496a956ee85fdf4dc29a17e5fc60d1"
+    },
+    {
+      "path": "disorderflow/modules/diffusion/transition.py",
+      "bytes": 7992,
+      "hash_mode": "canonical_lf",
+      "sha256": "83c22aec83c26a9d676d7b29be925d478d94f1707074498956a132d412f4e636"
+    },
+    {
+      "path": "disorderflow/modules/encoders/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/modules/encoders/ga.py",
+      "bytes": 9519,
+      "hash_mode": "canonical_lf",
+      "sha256": "1ef27b5423042c6b3336d48c4a1f91d3033df22e51f52cb77d9031c355214d25"
+    },
+    {
+      "path": "disorderflow/modules/encoders/pair.py",
+      "bytes": 4827,
+      "hash_mode": "canonical_lf",
+      "sha256": "def1c02b907f6e4b50baed94e095becd8793d688974bfded8df70f3112fef6ac"
+    },
+    {
+      "path": "disorderflow/modules/encoders/residue.py",
+      "bytes": 4381,
+      "hash_mode": "canonical_lf",
+      "sha256": "a660bf91f9f0e2878ab57670597c8e6a60bbf7c30c565c9f00eb2a5ac56a44a7"
+    },
+    {
+      "path": "disorderflow/modules/statecontrast_v2.py",
+      "bytes": 8378,
+      "hash_mode": "canonical_lf",
+      "sha256": "520fd8b3b6baece5a66216ef0452c11a56a6afd4369901ad21c92b732c2006fa"
+    },
+    {
+      "path": "disorderflow/statecontrast_v2_contract.py",
+      "bytes": 2965,
+      "hash_mode": "canonical_lf",
+      "sha256": "02c2e7e519b5798bb29b176234a5a710916d6387b78c4838ea9688719e250034"
+    },
+    {
+      "path": "disorderflow/tools/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/tools/dock/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/tools/dock/base.py",
+      "bytes": 478,
+      "hash_mode": "canonical_lf",
+      "sha256": "93388f72cbe074561f15e30cf274bc4a427e76151fba5572ea34b7e35f32f774"
+    },
+    {
+      "path": "disorderflow/tools/dock/hdock.py",
+      "bytes": 5512,
+      "hash_mode": "canonical_lf",
+      "sha256": "e4b37d31c49757c9690fca79f1515dedf912c52e0b55371f7d77376e62d0c55a"
+    },
+    {
+      "path": "disorderflow/tools/eval/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/tools/eval/__main__.py",
+      "bytes": 61,
+      "hash_mode": "canonical_lf",
+      "sha256": "028d943159dde9fb398d8a31cc4f53cbb9a88fa16a1c867832ed129bfe70b707"
+    },
+    {
+      "path": "disorderflow/tools/eval/base.py",
+      "bytes": 4019,
+      "hash_mode": "canonical_lf",
+      "sha256": "75b047db40a326709d900e2cbc13f8a36c13346a63555854d2d9e0b6f1d070a1"
+    },
+    {
+      "path": "disorderflow/tools/eval/energy.py",
+      "bytes": 1286,
+      "hash_mode": "canonical_lf",
+      "sha256": "e16bcf811a193b1f8dfeb3c6879f406c71a2061f8db77fef7676daea7b918247"
+    },
+    {
+      "path": "disorderflow/tools/eval/run.py",
+      "bytes": 2100,
+      "hash_mode": "canonical_lf",
+      "sha256": "abd9160828b6ddedda42c63856dbaf9813a3ec30d8c121511194ad90a14d32f7"
+    },
+    {
+      "path": "disorderflow/tools/eval/similarity.py",
+      "bytes": 4048,
+      "hash_mode": "canonical_lf",
+      "sha256": "10c66b15a262ebf4415300b32b42a7df5bbbd8f2ee71275580ca267052a29fe9"
+    },
+    {
+      "path": "disorderflow/tools/relax/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/tools/relax/__main__.py",
+      "bytes": 61,
+      "hash_mode": "canonical_lf",
+      "sha256": "028d943159dde9fb398d8a31cc4f53cbb9a88fa16a1c867832ed129bfe70b707"
+    },
+    {
+      "path": "disorderflow/tools/relax/base.py",
+      "bytes": 3644,
+      "hash_mode": "canonical_lf",
+      "sha256": "96d47b643ade9be3629a4a27e51145236e76b1c686f9dc9d49b1627448dd01dc"
+    },
+    {
+      "path": "disorderflow/tools/relax/openmm_relaxer.py",
+      "bytes": 5517,
+      "hash_mode": "canonical_lf",
+      "sha256": "e13162b62a79deacdc0575bba2da874b1eeabd863e9444472a717cffccd9a61e"
+    },
+    {
+      "path": "disorderflow/tools/relax/pyrosetta_relaxer.py",
+      "bytes": 6446,
+      "hash_mode": "canonical_lf",
+      "sha256": "ecd7f2bc05fa7daba9b22566445847e4c5cd419fec091a5829514dfe0e962ade"
+    },
+    {
+      "path": "disorderflow/tools/relax/run.py",
+      "bytes": 2189,
+      "hash_mode": "canonical_lf",
+      "sha256": "510bb524e1644a913a4e3b36f935a59b6c08842b7e90c50e05e3a4305c4b63cd"
+    },
+    {
+      "path": "disorderflow/tools/renumber/__init__.py",
+      "bytes": 26,
+      "hash_mode": "canonical_lf",
+      "sha256": "e6e4b06b56fb04b744e71853198d36454baf5fe89fd58dd93d670095dbcb725e"
+    },
+    {
+      "path": "disorderflow/tools/renumber/__main__.py",
+      "bytes": 65,
+      "hash_mode": "canonical_lf",
+      "sha256": "e18ab485b469c4aea9b9a469bd35529439db5e74eb323952ad377fb3ce811afd"
+    },
+    {
+      "path": "disorderflow/tools/renumber/run.py",
+      "bytes": 2803,
+      "hash_mode": "canonical_lf",
+      "sha256": "515b82a7a6ffa5a28127ad15404b3cc4189427a3e4cb71888e13ab0f072db909"
+    },
+    {
+      "path": "disorderflow/tools/runner/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/tools/runner/design_for_pdb.py",
+      "bytes": 11894,
+      "hash_mode": "canonical_lf",
+      "sha256": "1beeb528944089174cfa8b282a658c74d1bdf42e9bc946fdf4e2a7bd31586fbf"
+    },
+    {
+      "path": "disorderflow/tools/runner/design_for_testset.py",
+      "bytes": 10120,
+      "hash_mode": "canonical_lf",
+      "sha256": "f8dc345874b27f69b68ba8c22ea80c94fdd25ef6f67e62f0bae675be50019423"
+    },
+    {
+      "path": "disorderflow/utils/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/utils/conformation_calibration.py",
+      "bytes": 7701,
+      "hash_mode": "canonical_lf",
+      "sha256": "12157fc4b5e7b53f2ee168ed0f36ccced74f6b456334292944fcb057c25c2600"
+    },
+    {
+      "path": "disorderflow/utils/data.py",
+      "bytes": 7120,
+      "hash_mode": "canonical_lf",
+      "sha256": "cb5dc20b49a33b4cd212f439deae5d8939a11752a105273445f1f8149541d135"
+    },
+    {
+      "path": "disorderflow/utils/homology_split.py",
+      "bytes": 4922,
+      "hash_mode": "canonical_lf",
+      "sha256": "c01c8ab41b75b71118c55942b9d24c4e71210abba6d28b2c23f0a40edb6be2a0"
+    },
+    {
+      "path": "disorderflow/utils/inference.py",
+      "bytes": 2026,
+      "hash_mode": "canonical_lf",
+      "sha256": "10ca661af7537365487580b05249ccb53f7799964dff0eed3b9f3f211e5f0ced"
+    },
+    {
+      "path": "disorderflow/utils/misc.py",
+      "bytes": 3546,
+      "hash_mode": "canonical_lf",
+      "sha256": "6782d738af409bea9f6a3116f9ebf597ac7db669c90e02321ff90ca7049aecbd"
+    },
+    {
+      "path": "disorderflow/utils/protein/__init__.py",
+      "bytes": 0,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disorderflow/utils/protein/constants.py",
+      "bytes": 13884,
+      "hash_mode": "canonical_lf",
+      "sha256": "18c654150ea7d86b1f9b50e1d178f4e68c9ffd5935ac6857b8bdbc280da96700"
+    },
+    {
+      "path": "disorderflow/utils/protein/parsers.py",
+      "bytes": 5154,
+      "hash_mode": "canonical_lf",
+      "sha256": "9f043766dd598486e636de527c7c3fe8e4e2577026269af09d9ff5c6f760a916"
+    },
+    {
+      "path": "disorderflow/utils/protein/writers.py",
+      "bytes": 3222,
+      "hash_mode": "canonical_lf",
+      "sha256": "b3a5e93c7064e7379afd13f867e32b5eef91fec8482d411403b7187605a61f69"
+    },
+    {
+      "path": "disorderflow/utils/runtime_checks.py",
+      "bytes": 7067,
+      "hash_mode": "canonical_lf",
+      "sha256": "d1ed3601c2dfd56c6732ce2e9385b164263627466aedfa11d018c51de533fadf"
+    },
+    {
+      "path": "disorderflow/utils/source_balanced_sampler.py",
+      "bytes": 2585,
+      "hash_mode": "canonical_lf",
+      "sha256": "809ba180357a3ff8a38ee8cfe3b54145b8815e2daadda5e35857ebdbb5d4fa0b"
+    },
+    {
+      "path": "disorderflow/utils/train.py",
+      "bytes": 6640,
+      "hash_mode": "canonical_lf",
+      "sha256": "4f49d9f5992dfe947babbf9a9eb174a0a7468491c6ee4b0f9186f66d63e22e46"
+    },
+    {
+      "path": "disorderflow/utils/transforms/__init__.py",
+      "bytes": 383,
+      "hash_mode": "canonical_lf",
+      "sha256": "02e738fb3986f5fe4128b377961011e20f3eec0b6a43e444d023036622d3c5b3"
+    },
+    {
+      "path": "disorderflow/utils/transforms/_base.py",
+      "bytes": 1872,
+      "hash_mode": "canonical_lf",
+      "sha256": "23bc98aa61f0b854ab57a810200207a11d677fe4bf4f3f19129b740988229e0d"
+    },
+    {
+      "path": "disorderflow/utils/transforms/align_utils.py",
+      "bytes": 2538,
+      "hash_mode": "canonical_lf",
+      "sha256": "d809f73a7fa50264ac749d6964059ffdfb067a786dc300af3b28fed468a9b1ef"
+    },
+    {
+      "path": "disorderflow/utils/transforms/mask.py",
+      "bytes": 8098,
+      "hash_mode": "canonical_lf",
+      "sha256": "05b6d81891e85be811195f5e10d0c993e4a43706cf06819ff4207b997671accb"
+    },
+    {
+      "path": "disorderflow/utils/transforms/mask_region.py",
+      "bytes": 2303,
+      "hash_mode": "canonical_lf",
+      "sha256": "4b5c1b646bf112ca1b9c75674e4029d0ae8ace4a9f67241de3ab34736b7b6b92"
+    },
+    {
+      "path": "disorderflow/utils/transforms/merge.py",
+      "bytes": 3663,
+      "hash_mode": "canonical_lf",
+      "sha256": "bebca8c60afb6e8ddbee0fb9dc605b0dac8999057824696961646646ad78b0a2"
+    },
+    {
+      "path": "disorderflow/utils/transforms/merge_protein.py",
+      "bytes": 2221,
+      "hash_mode": "canonical_lf",
+      "sha256": "102b278c462b822edd8a39ef40c790a5a6dccb67a80eb34f68aaf14d3a87f719"
+    },
+    {
+      "path": "disorderflow/utils/transforms/patch.py",
+      "bytes": 3577,
+      "hash_mode": "canonical_lf",
+      "sha256": "e13533c9dd6fe978e7421bd66a51a4084c033131ebb2f29a66b7077b0b4b43a0"
+    },
+    {
+      "path": "disorderflow/utils/transforms/patch_protein.py",
+      "bytes": 4794,
+      "hash_mode": "canonical_lf",
+      "sha256": "9f2e246d4f2e6d9a55c6fb3223076d981da50c51b7819ead0cffe955256d9014"
+    },
+    {
+      "path": "disorderflow/utils/transforms/ppi.py",
+      "bytes": 6963,
+      "hash_mode": "canonical_lf",
+      "sha256": "edd1400fb2f0a35321b27edad2ff31fec06441783974ffc9a67aad9113db11f0"
+    },
+    {
+      "path": "disorderflow/utils/transforms/select_atom.py",
+      "bytes": 632,
+      "hash_mode": "canonical_lf",
+      "sha256": "10952baf7c2c0fa11292b862e535727ca12fb6568996949635f0a7107b6f0d4f"
+    },
+    {
+      "path": "experiments/successor_v3_contact_v2/PROTOCOL.md",
+      "bytes": 4741,
+      "hash_mode": "canonical_lf",
+      "sha256": "74dbadeaced9bed59053b4abf0e02358ca1f2e9f932f94dbaeb03658f2136303"
+    },
+    {
+      "path": "experiments/successor_v3_contact_v2/constructs.csv",
+      "bytes": 7267,
+      "hash_mode": "canonical_lf",
+      "sha256": "1468d76bdd87a04b896f4ab305fd7c4b8ab372913ed002f422646106947ab850"
+    },
+    {
+      "path": "experiments/successor_v3_contact_v2/measurements_template.csv",
+      "bytes": 531,
+      "hash_mode": "canonical_lf",
+      "sha256": "dc4b9411e7e4a25637c94328e28b58af83255a4c545b2fc984bbc189f2610fd1"
+    },
+    {
+      "path": "experiments/successor_v3_contact_v2/panel.json",
+      "bytes": 7733,
+      "hash_mode": "canonical_lf",
+      "sha256": "5a34302969443568f69833e8aa5d36f34d111eb21ff34c8298dca14a17361ac7"
+    },
+    {
+      "path": "modules/bfn_loader.py",
+      "bytes": 16917,
+      "hash_mode": "canonical_lf",
+      "sha256": "b45341ba070399c0cba2e7f622c9bc713c6ccd4acbfb22fe7bde6c97e6778c19"
+    },
+    {
+      "path": "publication/ECLS_SCOPE_FREEZE.yml",
+      "bytes": 1755,
+      "hash_mode": "canonical_lf",
+      "sha256": "97b9a7a408da364c1740485051f9e9c565bf183114514b0082a104955b2807ca"
+    },
+    {
+      "path": "publication/successor_v3_checkpoint_lineage.json",
+      "bytes": 2153,
+      "hash_mode": "canonical_lf",
+      "sha256": "a33cf1aa91595535be9e3398dce563d42eeb04d3fa9fccc8974c7507143ed766"
+    },
+    {
+      "path": "publication/successor_v3_confirmatory_feasibility_decision.json",
+      "bytes": 2013,
+      "hash_mode": "canonical_lf",
+      "sha256": "20828d0e9a26e2c86af62a7c6e78aef873e1b318365ac8b317fdd55bb74ed474"
+    },
+    {
+      "path": "publication/successor_v3_confirmatory_preregistration.json",
+      "bytes": 3018,
+      "hash_mode": "canonical_lf",
+      "sha256": "33a14c3236a13eb04e98757e3ad1a7f09b145be34eae881d7b2258ea8f9f7866"
+    },
+    {
+      "path": "publication/successor_v3_contact_and_exposure_followup.json",
+      "bytes": 3795,
+      "hash_mode": "canonical_lf",
+      "sha256": "587798818f2fc7d868632a53f090a9ab2af84cb8d22c1dc8ee1a74d5ccf7b4e8"
+    },
+    {
+      "path": "publication/successor_v3_contact_v2_registry.json",
+      "bytes": 6520,
+      "hash_mode": "canonical_lf",
+      "sha256": "dc1f837d9345a2d9025fc70b51d216975e4f4f01eb1b0de160d5c560d46b7e55"
+    },
+    {
+      "path": "publication/successor_v3_exploratory_result_manifest.json",
+      "bytes": 3327,
+      "hash_mode": "canonical_lf",
+      "sha256": "59180f607dcba63fdf06e67fbc2330bbe91af203c53089048f6cdab03b1ffdbd"
+    },
+    {
+      "path": "publication/successor_v3_future_readiness_2026_08_07.json",
+      "bytes": 714,
+      "hash_mode": "canonical_lf",
+      "sha256": "eecbfa953f4aba90a4c066eeab26c9977a9d96d1a2381ad28014f6c57d06d559"
+    },
+    {
+      "path": "publication/successor_v3_future_readiness_after_exposure_2026_08_07.json",
+      "bytes": 732,
+      "hash_mode": "canonical_lf",
+      "sha256": "a46a93925f5ee7e23c926140d336d518e916ef7cf56f3ea7aa33124f77daadf1"
+    },
+    {
+      "path": "publication/successor_v3_future_readiness_after_exposure_2026_08_15.json",
+      "bytes": 760,
+      "hash_mode": "canonical_lf",
+      "sha256": "7bcda1027fefe809a378bff29d2953e1a27aad4424647742bd7b722421fdf7f7"
+    },
+    {
+      "path": "publication/successor_v3_rcsb_feasibility_decision.json",
+      "bytes": 2291,
+      "hash_mode": "canonical_lf",
+      "sha256": "1448fe45feba628175e0f310716393e25eb3334183cb8d34b4d9220335cd174c"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 2413,
+      "hash_mode": "canonical_lf",
+      "sha256": "e31ce8682f1d39768949cb3279c563fc41062121c407aedb6b943ea5f48738d6"
+    },
+    {
+      "path": "release/ecls_v1/REPRODUCIBILITY.md",
+      "bytes": 2446,
+      "hash_mode": "canonical_lf",
+      "sha256": "6ff71a9273aff5091084c407bf91744ef69adcc1e7a06e9b9d047060df4a2101"
+    },
+    {
+      "path": "release/ecls_v1/artifact_bundle_manifest.json",
+      "bytes": 46931,
+      "hash_mode": "canonical_lf",
+      "sha256": "fb0f26b71dcff4ee12b0ef273950474b340dc595505337a67469f05e3d952a4b"
+    },
+    {
+      "path": "release/ecls_v1/artifact_bundle_spec.yml",
+      "bytes": 1313,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3df28ac72211d4015c1ac1744c70d2a45a1925e9a91bc5cb114b053f018339d"
+    },
+    {
+      "path": "release/ecls_v1/software_environment.yml",
+      "bytes": 642,
+      "hash_mode": "canonical_lf",
+      "sha256": "32195d30b5d14b4300d4072dc4affaa9989d611bc2678c24c777dab01ae6c39a"
+    },
+    {
+      "path": "release/ecls_v1/source_release_spec.yml",
+      "bytes": 2423,
+      "hash_mode": "canonical_lf",
+      "sha256": "1a486811cfa4939d015ca84b7f5a4b4b3a35394dbaf14995e8dec14eba32065b"
+    },
+    {
+      "path": "results/publication/h3_candidate_reranking_dev_v1/results.json",
+      "bytes": 201497,
+      "hash_mode": "canonical_lf",
+      "sha256": "9032597b614f83f1217a06443aae6a6793b6b3a87f713794f9388f6998e7cab3"
+    },
+    {
+      "path": "results/publication/h3_ecls_adaptation_v1/results.json",
+      "bytes": 1775551,
+      "hash_mode": "canonical_lf",
+      "sha256": "d016fc5ade1ff4b9132bfb5e38508327eb118510664249dcb577574ba3c6c48b"
+    },
+    {
+      "path": "results/publication/h3_ecls_temporal_final_v1/final_decision.json",
+      "bytes": 1638,
+      "hash_mode": "canonical_lf",
+      "sha256": "0e32c22ceaddd829497011708445b136f4f0a1f13f061bcbfdd76d68bacd8cb0"
+    },
+    {
+      "path": "results/publication/h3_ecls_temporal_final_v1/results.json",
+      "bytes": 1224983,
+      "hash_mode": "canonical_lf",
+      "sha256": "d9f64d0a1ee432bcedd6e85f2f7acfee0b32a18c9121de1f6fb3d5782d0a2eed"
+    },
+    {
+      "path": "results/publication/h3_generator_calibration_v1/analysis.json",
+      "bytes": 11190,
+      "hash_mode": "canonical_lf",
+      "sha256": "5e5516fbde5e487506c3970c863a519730240995fff269db55ead4200fb1b02a"
+    },
+    {
+      "path": "results/publication/h3_generator_calibration_v1/milestone_decision.json",
+      "bytes": 750,
+      "hash_mode": "canonical_lf",
+      "sha256": "11559faf9aed3f5ca5b2fec81d39df6614f808a89f2e4eb30c8dbef0ff0619d6"
+    },
+    {
+      "path": "results/publication/h3_submission_package_v1/main_results.csv",
+      "bytes": 1109,
+      "hash_mode": "canonical_lf",
+      "sha256": "6b38016fdf81ec016c56cabfba4754187e4fb62e7c3b6d886df3aead42ec432f"
+    },
+    {
+      "path": "results/successor_v3_contact_v2/baselines.json",
+      "bytes": 3415,
+      "hash_mode": "canonical_lf",
+      "sha256": "44f169230797a0371b1c73d20c6019a5b560fb6f8d140d49197f8d705eb7aa62"
+    },
+    {
+      "path": "results/successor_v3_contact_v2/development_evaluation.json",
+      "bytes": 19958,
+      "hash_mode": "canonical_lf",
+      "sha256": "ee89038c4f9d2a7698c094d892cf248ec2794755f512cecceec5e2190f4c47de"
+    },
+    {
+      "path": "scripts/analyze_h3_ecls_statistics.py",
+      "bytes": 4807,
+      "hash_mode": "canonical_lf",
+      "sha256": "af3793cdf2583d3a87bf457d194278ded09a3d7d978e1994be73b196e61abf38"
+    },
+    {
+      "path": "scripts/analyze_h3_generator_calibration.py",
+      "bytes": 13228,
+      "hash_mode": "canonical_lf",
+      "sha256": "5015cbb4a1b895d2e0897a3c3ed69701ec2f8f5c695c8cdf6bc2fc8dda59ef5a"
+    },
+    {
+      "path": "scripts/analyze_h3_t1_ensemble.py",
+      "bytes": 7325,
+      "hash_mode": "canonical_lf",
+      "sha256": "ce2c9bd9e1bcf48a7d80bdcce9b71d1f6d0ca6b3fc189f1af717fd2c6edcb979"
+    },
+    {
+      "path": "scripts/analyze_h3_t2.1_recovery.py",
+      "bytes": 5674,
+      "hash_mode": "canonical_lf",
+      "sha256": "4a72a8f747c4f36ac81a7b21695d57b9f3d40a888aa18c761c92c98ba5293832"
+    },
+    {
+      "path": "scripts/analyze_h3_t2_recovery.py",
+      "bytes": 5802,
+      "hash_mode": "canonical_lf",
+      "sha256": "fc04833ed079194392a28f5dd2dedd38db398b0217a417f5f881ceaaf64267c3"
+    },
+    {
+      "path": "scripts/analyze_successor_v3_contact.py",
+      "bytes": 8518,
+      "hash_mode": "canonical_lf",
+      "sha256": "fcb0597464a6fb7319e606d61f5b5621500ee3c7220f22beb0bfb933eaa5785f"
+    },
+    {
+      "path": "scripts/audit_successor_v3_exploratory.py",
+      "bytes": 10189,
+      "hash_mode": "canonical_lf",
+      "sha256": "0a5f1544eebec80cc43e585cde919fa9a7382c853b73854e52d041fd30d20f83"
+    },
+    {
+      "path": "scripts/audit_successor_v3_isolation.py",
+      "bytes": 14837,
+      "hash_mode": "canonical_lf",
+      "sha256": "9be4204a1850dda9c35b8da0beb711cd2c87d5f01af440acf14b37fb72b69618"
+    },
+    {
+      "path": "scripts/benchmark_h3_candidate_reranking.py",
+      "bytes": 19456,
+      "hash_mode": "canonical_lf",
+      "sha256": "590662bf30b9bc832a7960b03272a73a8018b112cabe68ef81555f8f34c5b6ec"
+    },
+    {
+      "path": "scripts/benchmark_h3_epitope_delta.py",
+      "bytes": 15101,
+      "hash_mode": "canonical_lf",
+      "sha256": "fc21c3c8d4ce2366ff49c1f7a710c6387300aa910113bd6a400a63d28cb4033a"
+    },
+    {
+      "path": "scripts/benchmark_h3_mpnn_sanity.py",
+      "bytes": 8275,
+      "hash_mode": "canonical_lf",
+      "sha256": "4bc00ebd604c5b4a74df94aca4ffbcf0e74e744d999f612815cd19cb6c47de19"
+    },
+    {
+      "path": "scripts/benchmark_h3_scorer_sanity.py",
+      "bytes": 8524,
+      "hash_mode": "canonical_lf",
+      "sha256": "3c6b6d04d80367c04e42c31729fcf66b06296a80e1a2fd5ab6457aaa778ee52f"
+    },
+    {
+      "path": "scripts/benchmark_h3_t1_ensemble.py",
+      "bytes": 13732,
+      "hash_mode": "canonical_lf",
+      "sha256": "7238b949dc65aa8421ad2ec0e21f67dcd5933294cdce0a3aa130231ea9a6a022"
+    },
+    {
+      "path": "scripts/benchmark_h3_t2.1_recovery.py",
+      "bytes": 6390,
+      "hash_mode": "canonical_lf",
+      "sha256": "8f24cff239bda6aac33b0150c07c3b25fef9960167dba2103cf1b44df9d14cec"
+    },
+    {
+      "path": "scripts/benchmark_h3_t2_recovery.py",
+      "bytes": 9770,
+      "hash_mode": "canonical_lf",
+      "sha256": "e2907d53671a4e3f891a7441615ce047bf0f92cabaa85482c727c5976218a416"
+    },
+    {
+      "path": "scripts/benchmark_successor_v3_contact_baselines.py",
+      "bytes": 8081,
+      "hash_mode": "canonical_lf",
+      "sha256": "7ad91fbb5401bb8ae1830ce8c22015c4b8b2fe8b00f1c927fe6de5cfdeb4dc60"
+    },
+    {
+      "path": "scripts/build/acquire_rcsb_successor_v3_snapshot.py",
+      "bytes": 6323,
+      "hash_mode": "canonical_lf",
+      "sha256": "cd6350c484bb1fdf107b132b6fbfe16a1355bd077f53391b2ea90be0f76a1090"
+    },
+    {
+      "path": "scripts/build/acquire_sabdab_successor_v3_snapshot.py",
+      "bytes": 4233,
+      "hash_mode": "canonical_lf",
+      "sha256": "595e8bfb6e03bb87be6680e0effdfce27d78f22f3d8a79a379ee74bf52e7a9d6"
+    },
+    {
+      "path": "scripts/build/build_release_artifact_bundle.py",
+      "bytes": 3019,
+      "hash_mode": "canonical_lf",
+      "sha256": "7fb24159f274904b4c12711200fbc2dc06b22c23e09d3a25bca190f9b466cbc1"
+    },
+    {
+      "path": "scripts/build/build_release_source_manifest.py",
+      "bytes": 2887,
+      "hash_mode": "canonical_lf",
+      "sha256": "caa527c94072b6186075c444287f12e6957f6cc878f4892ab7e7d6619d2a2e25"
+    },
+    {
+      "path": "scripts/build/build_successor_v3_confirmatory_reference.py",
+      "bytes": 10852,
+      "hash_mode": "canonical_lf",
+      "sha256": "98ddbca80ef77e5994c2ffd1b1533e855eb6f5c4c7b12c5d37e79e9e3cf40b35"
+    },
+    {
+      "path": "scripts/build/build_successor_v3_contact_dev_dataset.py",
+      "bytes": 8777,
+      "hash_mode": "canonical_lf",
+      "sha256": "7addbaa3a0f96bec5777fdd30e34f0ed8f6a288d4b6bcaba8c230cf00fc924ba"
+    },
+    {
+      "path": "scripts/build/build_successor_v3_contact_v2_registry.py",
+      "bytes": 5277,
+      "hash_mode": "canonical_lf",
+      "sha256": "0c8ce714728bbe58fff7efe04a751bbce4646a5340102f63fd69663325d8fecc"
+    },
+    {
+      "path": "scripts/build/build_successor_v3_development_manifest.py",
+      "bytes": 5878,
+      "hash_mode": "canonical_lf",
+      "sha256": "d5325ab3716c6519fdbae328e89e2319ef76e026db03657012659bcfcde0c624"
+    },
+    {
+      "path": "scripts/build/discover_rcsb_successor_v3_snapshot.py",
+      "bytes": 4717,
+      "hash_mode": "canonical_lf",
+      "sha256": "be5ae3209798e17401430e567f1c5309a6754bd3a22724776b00a492e72b8baa"
+    },
+    {
+      "path": "scripts/build/discover_sabdab_successor_v3_snapshot.py",
+      "bytes": 14168,
+      "hash_mode": "canonical_lf",
+      "sha256": "449b1e9504a9a9eb0d1811411b5bd02cb35ba77a2316f4efaae6d960390ab5ef"
+    },
+    {
+      "path": "scripts/build/discover_successor_v3_exploratory.py",
+      "bytes": 5846,
+      "hash_mode": "canonical_lf",
+      "sha256": "4b1b5726d038744cc88029d43aaf06ad3c153584886a33859f39e0f4a10710f6"
+    },
+    {
+      "path": "scripts/build/extend_successor_v3_reference_union.py",
+      "bytes": 6365,
+      "hash_mode": "canonical_lf",
+      "sha256": "4d4821864477425cbca43da23468b81ff73130d7c4da30b0e698b34cdf0ede22"
+    },
+    {
+      "path": "scripts/build/materialize_successor_v3_confirmatory.py",
+      "bytes": 10230,
+      "hash_mode": "canonical_lf",
+      "sha256": "b6b5fe48167fc6bb567d80b5e0b7e8b7eebca80b78fca29fa58973f4c9a501f1"
+    },
+    {
+      "path": "scripts/build/resume_successor_v3_exploratory_materialization.py",
+      "bytes": 1289,
+      "hash_mode": "canonical_lf",
+      "sha256": "287a5a79a271319f8f12955e72f2e931392d1be874a45d262ab1c0c959ee930d"
+    },
+    {
+      "path": "scripts/build_h3_publication_package.py",
+      "bytes": 13125,
+      "hash_mode": "canonical_lf",
+      "sha256": "82b07fb5e0af3662206c19390669d38e9a235b33dd4e25215908c89174bd324d"
+    },
+    {
+      "path": "scripts/check_successor_v3_future_readiness.py",
+      "bytes": 2384,
+      "hash_mode": "canonical_lf",
+      "sha256": "1e77d508cb3bae2e3081ec41796c9f4ec11e59e890ee867bffb26471990cf6e4"
+    },
+    {
+      "path": "scripts/curate_successor_v3_components.py",
+      "bytes": 6021,
+      "hash_mode": "canonical_lf",
+      "sha256": "e24a8df40a44f1a85700936c322776aef089d17a639d4d08f1e61df2ede8d799"
+    },
+    {
+      "path": "scripts/enrich_rcsb_successor_v3_metadata.py",
+      "bytes": 3615,
+      "hash_mode": "canonical_lf",
+      "sha256": "9ee15359650c7cb0951303880b1538f4f40943243988656d6b8607fe5671028b"
+    },
+    {
+      "path": "scripts/evaluate_successor_v3_confirmatory.py",
+      "bytes": 11901,
+      "hash_mode": "canonical_lf",
+      "sha256": "5f8c43691057a8f99864d1183f064305bb5ba2bf2c5cfd2d97ada722845bc52c"
+    },
+    {
+      "path": "scripts/evaluate_successor_v3_contact_v2.py",
+      "bytes": 8952,
+      "hash_mode": "canonical_lf",
+      "sha256": "e52a794a53f3d0abcd13f9f483df366aca51ff891253a3b30e4ded358d96f41d"
+    },
+    {
+      "path": "scripts/evaluate_successor_v3_contact_v2_confirmatory.py",
+      "bytes": 10094,
+      "hash_mode": "canonical_lf",
+      "sha256": "70a3f0d69200cf4abd35e02c92e4da75263fa1b4b9ed324f5430da3b35f19929"
+    },
+    {
+      "path": "scripts/evaluate_successor_v3_development.py",
+      "bytes": 9329,
+      "hash_mode": "canonical_lf",
+      "sha256": "6f14e3dff27a6b77a5384b114fc6a52a6bece500a0f9f8522cfae48fe2fb3a82"
+    },
+    {
+      "path": "scripts/evaluate_successor_v3_exploratory.py",
+      "bytes": 6982,
+      "hash_mode": "canonical_lf",
+      "sha256": "e472b986cea7d99e83776de04380c25d6e728240a13c4d1698e24c014b2d19f6"
+    },
+    {
+      "path": "scripts/fetch_release_artifacts.py",
+      "bytes": 2644,
+      "hash_mode": "canonical_lf",
+      "sha256": "968625a28cf4baeb2071c8c104454e455b28e0ca0a9004ab60f4455c361e45c0"
+    },
+    {
+      "path": "scripts/generate_h3_peptide_ensemble.py",
+      "bytes": 13169,
+      "hash_mode": "canonical_lf",
+      "sha256": "f8593596ed7604d1bd258cd3762ddb2a4782da6d3da5d47b196052adcc188270"
+    },
+    {
+      "path": "scripts/generate_h3_peptide_t2.py",
+      "bytes": 14782,
+      "hash_mode": "canonical_lf",
+      "sha256": "b5baa0b016f41a6beff5fa0e402bc476bbe1650516d5cb2d41fe7e37462a3db9"
+    },
+    {
+      "path": "scripts/generate_h3_peptide_t21.py",
+      "bytes": 16962,
+      "hash_mode": "canonical_lf",
+      "sha256": "e699b78ebb7bd9e9c43477cee6296ccbdf6edd2d0c8c971446d456a5f4a92319"
+    },
+    {
+      "path": "scripts/materialize_successor_v3_coordinates.py",
+      "bytes": 3278,
+      "hash_mode": "canonical_lf",
+      "sha256": "ca2fda9dc7f86d8e658ea3321a4c081382890cfe69712ba7d623ebb8593ff329"
+    },
+    {
+      "path": "scripts/parse_h3_structure_panel.py",
+      "bytes": 3936,
+      "hash_mode": "canonical_lf",
+      "sha256": "4a86a19c681d9b1b0bb4eef756868cdcf569b01c07a741fdfe6e0531a353ed3d"
+    },
+    {
+      "path": "scripts/pipelines/run_successor_v3_contact_v2_pipeline.py",
+      "bytes": 4549,
+      "hash_mode": "canonical_lf",
+      "sha256": "723081d4638e09112dc3cc264095f8dca4c8241c2b4e4b6833360dddc3138e96"
+    },
+    {
+      "path": "scripts/prepare_successor_v3_contact_v2_experiments.py",
+      "bytes": 8347,
+      "hash_mode": "canonical_lf",
+      "sha256": "d8d6f66da1ec782f40a713d9011271046dbfdf78ab8326d695f99635fecc1f8b"
+    },
+    {
+      "path": "scripts/run_successor_v3_future_snapshot.py",
+      "bytes": 6056,
+      "hash_mode": "canonical_lf",
+      "sha256": "0f910ea4f68a8b0b42dfd57e51e14a1ad1fdad89bb5ea934a0951a9001c40190"
+    },
+    {
+      "path": "scripts/smoke_h3_t2.1.py",
+      "bytes": 2701,
+      "hash_mode": "canonical_lf",
+      "sha256": "1b16dc9a36b1ed0c060f14371c6460f9f45f5d8c180926c73ccbb5b689042f2f"
+    },
+    {
+      "path": "scripts/validate_release_lineage.py",
+      "bytes": 10194,
+      "hash_mode": "canonical_lf",
+      "sha256": "ac8536fd846375016e25879559ebed5ab4ec952d148597caa3bd2d32c700ccfa"
+    },
+    {
+      "path": "tests/test_bfn_fixed_scoring.py",
+      "bytes": 5556,
+      "hash_mode": "canonical_lf",
+      "sha256": "0f8f5fa807ce3a2a00527e23c2fd6c74b342c13c5c1b451428625e1f945ee330"
+    },
+    {
+      "path": "tests/test_contact_v2_confirmatory_contract.py",
+      "bytes": 1576,
+      "hash_mode": "canonical_lf",
+      "sha256": "62583feda318b98e4cb92fe10f2c0f131a2dd05f6475c2254513d903fac2f231"
+    },
+    {
+      "path": "tests/test_h3_candidate_reranking.py",
+      "bytes": 1105,
+      "hash_mode": "canonical_lf",
+      "sha256": "3e065cfa5fb909666c33c3ce7bf84be93177858193657abe9a9f88f31c06c618"
+    },
+    {
+      "path": "tests/test_h3_ecls_statistics.py",
+      "bytes": 559,
+      "hash_mode": "canonical_lf",
+      "sha256": "27de27c77f3a957106125867f54e752d0afc4634543909eb93ebd903c3cd1cd8"
+    },
+    {
+      "path": "tests/test_h3_epitope_delta.py",
+      "bytes": 2093,
+      "hash_mode": "canonical_lf",
+      "sha256": "38d24100698ef5b5bd8a70642aeee245c6aeb33e878688ad1358e16fb874f141"
+    },
+    {
+      "path": "tests/test_h3_generator_calibration.py",
+      "bytes": 1341,
+      "hash_mode": "canonical_lf",
+      "sha256": "ac6a45e37813427384ba100580283f14aaff38beb1e13e71a0b334f0ca700083"
+    },
+    {
+      "path": "tests/test_h3_interface_contacts.py",
+      "bytes": 4213,
+      "hash_mode": "canonical_lf",
+      "sha256": "7323c74f1aa572a51c0eba54b391e6a3823c0a85c1ae2b17ebf2210943f615ea"
+    },
+    {
+      "path": "tests/test_h3_publication_package.py",
+      "bytes": 737,
+      "hash_mode": "canonical_lf",
+      "sha256": "309dc589f8de83a16cae003b6b01c01b10305eb902ffdcd377623c50e95e75e5"
+    },
+    {
+      "path": "tests/test_h3_seqres_constructs.py",
+      "bytes": 238,
+      "hash_mode": "canonical_lf",
+      "sha256": "88d0eeb5a1a99091a8fef285f2f4b35401925e6e4d54cfd9fc4b4725cddfbc3e"
+    },
+    {
+      "path": "tests/test_h3_t1_ensemble.py",
+      "bytes": 619,
+      "hash_mode": "canonical_lf",
+      "sha256": "4e02865b63d4c9a62edf1fc5a93b35109b7d0718f2b51620e4044902b1df6061"
+    },
+    {
+      "path": "tests/test_h3_t1_ensemble_analysis.py",
+      "bytes": 174,
+      "hash_mode": "canonical_lf",
+      "sha256": "789b6190387dac6f42103abaaeb3940795060e99640958a6bd8ff8949b9fce03"
+    },
+    {
+      "path": "tests/test_h3_t2_recovery.py",
+      "bytes": 571,
+      "hash_mode": "canonical_lf",
+      "sha256": "8b6a6655d7e3aa5faf9d005e01cc9a1a990855de77c5c1bb7cd0d7d98df1d845"
+    },
+    {
+      "path": "tests/test_h3_t2_recovery_analysis.py",
+      "bytes": 174,
+      "hash_mode": "canonical_lf",
+      "sha256": "83961c123e1abe5e31ee4b83fc82ae3397ea4250786c95d8cc189155619cf8a4"
+    },
+    {
+      "path": "tests/test_release_lineage.py",
+      "bytes": 1738,
+      "hash_mode": "canonical_lf",
+      "sha256": "e3420cf27a868965f8a92438aa1b27bd3189052b0c9be89e894da6dfd4a9a16e"
+    },
+    {
+      "path": "tests/test_sabdab_successor_v3_snapshot.py",
+      "bytes": 5848,
+      "hash_mode": "canonical_lf",
+      "sha256": "01d839999b64be7abdf09f254804e01e0b49b24a1c25495ae741748f88dd4e4b"
+    },
+    {
+      "path": "tests/test_successor_v3.py",
+      "bytes": 3369,
+      "hash_mode": "canonical_lf",
+      "sha256": "b7b1420b6552ef3447b4ec932ae01cee224f6c9ea5393abb8dfaa47ff2968487"
+    },
+    {
+      "path": "tests/test_successor_v3_confirmatory_contract.py",
+      "bytes": 3669,
+      "hash_mode": "canonical_lf",
+      "sha256": "e8604ec71e0c17606eac10ec211d04bd42d0c6b5f2c4f139f7229475061718aa"
+    },
+    {
+      "path": "tests/test_successor_v3_exploratory.py",
+      "bytes": 10174,
+      "hash_mode": "canonical_lf",
+      "sha256": "10e95426eadae0cf0e0563ae75397bcd7d0933e88f02f094ad6f4d9a4fe74db4"
+    },
+    {
+      "path": "tests/test_successor_v3_future_snapshot_runner.py",
+      "bytes": 1310,
+      "hash_mode": "canonical_lf",
+      "sha256": "f889ce52ed819a9da39b439312b7399f467e05041557bcd3b621454748b60a8c"
+    },
+    {
+      "path": "tests/test_successor_v3_isolation.py",
+      "bytes": 3090,
+      "hash_mode": "canonical_lf",
+      "sha256": "d3a5151ce05f86d5296e2aa46f41963c77cb898028789f0c689ff6f4f929bfc8"
+    },
+    {
+      "path": "tests/test_successor_v3_rcsb_acquisition.py",
+      "bytes": 2392,
+      "hash_mode": "canonical_lf",
+      "sha256": "ee4afa35a8022455509dac4f602c13461f31496630c2c7c799d9c01667caa2c3"
+    }
+  ]
+}

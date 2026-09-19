@@ -1,0 +1,29 @@
+{
+  "schema_version": "ecls_hard_controls_dev_v1",
+  "status": "prospective_controls_on_previously_inspected_development_components",
+  "component_source": "data/candidate_interface_external_calibration_v1/extension_manifest_v1.json",
+  "candidate_source": "results/ecls_pae_joint_dev_v1/scores.json",
+  "independent_confirmation": false,
+  "seed": 20260916,
+  "controls_per_component": 20,
+  "sequence_control": "unique_two_position_swaps_of_native_H3_preserve_length_and_composition",
+  "sequence_selection": "seeded_sampling_without_any_model_score_or_AF2_label",
+  "sequence_endpoint": "native_ECLS_minus_mean_near_native_control_ECLS",
+  "inference_unit": "component_not_sequence",
+  "sequence_controls_are_known_nonbinders": false,
+  "implementation_controls": [
+    "antigen_sequence_shuffle_fixed_backbone_expected_invariance",
+    "global_rigid_transform_complex_and_apo_expected_invariance"
+  ],
+  "scoring_seeds": [0, 2281, 20260916],
+  "structural_sensitivity": {
+    "contact_definition": "antigen_CA_to_H3_CA_min_distance_lt_8_angstrom",
+    "remote_definition": "antigen_CA_to_H3_CA_min_distance_gt_16_angstrom",
+    "contact_vs_remote_comparison": "matched_residue_count_and_backbone_RMSD_after_constrained_geometry_validated_perturbation",
+    "missing_remote_control": "mark_ineligible_do_not_relax_distance_cutoff",
+    "endpoint": "paired_change_of_native_vs_control_ECLS_contrast",
+    "interpretation": "model_sensitivity_not_binding_or_hotspot_causality"
+  },
+  "promotion_rule": "report_all_components_and_negative_results; independent_confirmation_required_for_generalization",
+  "forbidden": ["frozen_temporal_final_rerun", "GP2_holdout_access", "score_based_control_selection", "posthoc_ECLS_sign_flip"]
+}

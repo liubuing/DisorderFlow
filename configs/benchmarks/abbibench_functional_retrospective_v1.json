@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "classification": "prespecified_retrospective_analysis_rules_pending_data_mapping",
+  "date": "2026-09-16",
+  "dataset_revision": "556fd6913aa231c0d342a8658818be8f963fd582",
+  "structural_manifest": "data/abbibench_structural_audit_v1/structural_manifest.json",
+  "publication_role": "separate_functional_scope_extension_not_frozen_ECLS_confirmation",
+  "individual_measurement_values_read_at_freeze": false,
+  "public_aggregate_model_results_seen": true,
+  "ready_for_scoring": false,
+  "required_before_scoring": [
+    "Verify per-table endpoint column, direction, units, normalization and censoring from original sources; save a versioned endpoint dictionary before parsing values",
+    "Map experimental parent H/L sequences to observed coordinates and Chothia positions using sequences only; report gaps and ambiguity",
+    "Resolve AAYL structure provenance and shared-parent assignment; never label unverified coordinates as experimental structures",
+    "Document 5a12_vegf chain metadata conflict and inspect interface without a result-dependent chain change",
+    "Count all eligible H3-only variants and assay/lineage/antigen components before scores; report feasibility without a confirmatory power claim"
+  ],
+  "inclusion": {
+    "source_set": "all listed and metadata-mapped tables in fixed revision; report missing files explicitly",
+    "primary_mutations": "one or more substitutions confined to Chothia H3 positions 93-102; no other H/L changes relative to the experimental parent",
+    "fixed_backbone": "same parent backbone for all variants of an assay; no indels, unmapped substitutions or noncanonical residues",
+    "antigen": "experimental target must map to structure; strain mismatches are flagged, not silently treated as matched",
+    "minimum_unique_variants_for_rank_summary": 20,
+    "non_H3_or_LC_only": "report counts and exclusion reasons; do not change the H3-only method to fit these variants",
+    "unresolved_structure_or_endpoint": "exclude from scored subset with explicit reason, retain in accounting"
+  },
+  "endpoints": {
+    "direct_Kd": "rank by -log10(Kd in molar) only when raw positive physical Kd and units are verified",
+    "AlphaSeq": "separate assay-derived affinity-estimate stratum, not a direct biophysical Kd measurement",
+    "enrichment": "separate enrichment stratum, higher verified enrichment is better",
+    "already_transformed_score": "use verified direction without applying log twice",
+    "unknown": "do not score",
+    "censored": "retain flags; exclude censored numerical pseudo-values from primary continuous correlation, report excluded fraction and label restriction; no substitution by detection limit",
+    "duplicates": "same H/L, antigen and experimental condition is one entity; aggregate genuine technical replicates with median on verified transformed scale; retain between-study values separately"
+  },
+  "scores": {
+    "primary": "unchanged H3 ECLS = apo H3 NLL minus complex H3 NLL; larger is better",
+    "primary_comparator": "negative complex H3 NLL",
+    "secondary_comparator": "negative apo H3 NLL",
+    "model": "existing ProteinMPNN v48_020 backbone-only conditional probabilities",
+    "seeds": [0, 2281, 20260916],
+    "seed_behavior": "direct API explicit seeds; upstream CLI seed=0 random fallback forbidden",
+    "no_training_or_fusion_tuning": true,
+    "no_PAE_or_AF2_surrogate_as_experimental_ground_truth": true
+  },
+  "analysis": {
+    "within_assay": "Spearman correlation with average ranks for ties; ECLS minus negative-complex-NLL correlation is primary paired contrast",
+    "constant_score_or_endpoint": "undefined correlation reported as NA with tie and variance diagnostics; never silently remove from accounting or treat as successful",
+    "aggregation": "within assay, then lineage/antigen components; equal component weights and separate endpoint strata, never pool all mutant rows as independent",
+    "small_component_count": "descriptive results only; no confirmatory superiority or cross-antigen significance claim",
+    "uncertainty": "do not use a mutant-row bootstrap to claim independent antigen generalization",
+    "independence": "report original MMseqs screen and additional short-sequence sensitivity separately; no post-result threshold changes",
+    "frozen_final_rerun": false
+  }
+}

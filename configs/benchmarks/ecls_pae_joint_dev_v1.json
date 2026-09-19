@@ -1,0 +1,18 @@
+{
+  "schema_version": "ecls_pae_joint_dev_v1",
+  "status": "development_only_previously_inspected_transfer_data",
+  "primary_pool": "candidate",
+  "secondary_pool": "all_with_controls",
+  "pae_model": "mean_of_full_s2041_full_s2053_full_s2069",
+  "ecls_definition": "mean_H3_NLL_apo_minus_mean_H3_NLL_complex",
+  "joint_rule": "equal_weight_within_scaffold_midranks_of_negative_ecls_and_pae",
+  "budgets": [0.1, 0.2, 0.5],
+  "primary_budget": 0.2,
+  "target_top_fraction": 0.2,
+  "mpnn_seed": 0,
+  "bootstrap_seed": 20260916,
+  "bootstrap_replicates": 2000,
+  "independent_confirmation_required": true,
+  "frozen_ecls_temporal_final_rerun": false,
+  "gp2_holdout_access": false
+}

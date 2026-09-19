@@ -1,0 +1,44 @@
+{
+  "title": "Backbone-conditioned likelihood contrasts for computational scoring of antibody CDR-H3 sequences in antibody-peptide complex structures (ECLS v1 reproducibility package)",
+  "upload_type": "publication",
+  "publication_type": "article",
+  "creators": [
+    {
+      "name": "Chen, Haoyang",
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
+    },
+    {
+      "name": "Dai, Tan",
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
+    },
+    {
+      "name": "Sun, Yuchao",
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
+    },
+    {
+      "name": "Hu, Jing",
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
+    }
+  ],
+  "description": "Local reproducibility package accompanying the ECLS structural sequence-scoring manuscript. The frozen primary result compares deposited native CDR-H3 sequences with composition-matched shuffles on a one-time temporal panel of 31 structures and 15 antigen clusters (mean ECLS advantage 0.172281; cluster-bootstrap 95% CI 0.059156 to 0.291920). Includes the ECLS manuscript source, protocol, frozen final result, reviewer archive, source manifest, and legacy supporting research artifacts. Contact-v2 material is development provenance only. The PAE surrogate is a separate manuscript revision and is excluded from this deposit. No general candidate-reranking, successful antibody design, binding, affinity or efficacy claim is made. Package preparation does not establish journal submission, acceptance, or remote publication.",
+  "keywords": [
+    "ECLS",
+    "epitope-conditioned likelihood shift",
+    "CDR-H3",
+    "structural sequence scoring",
+    "antibody-peptide complexes",
+    "ProteinMPNN",
+    "reproducibility"
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/liubuing/DisorderFlow",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ],
+  "communities": [],
+  "prereserve_doi": true
+}

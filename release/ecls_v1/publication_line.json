@@ -1,0 +1,27 @@
+{
+  "schema_version": "publication_line_v1",
+  "updated_date": "2026-09-16",
+  "primary_line": "ecls",
+  "release_id": "disorderflow-ecls-v1",
+  "manuscript_title": "Backbone-conditioned likelihood contrasts for computational scoring of antibody CDR-H3 sequences in antibody-peptide complex structures",
+  "manuscript": "publication/MANUSCRIPT_DRAFT.md",
+  "protocol": "PUBLICATION_PROTOCOL.md",
+  "frozen_scope": "publication/ECLS_SCOPE_FREEZE.yml",
+  "primary_decision": "results/publication/h3_ecls_temporal_final_v1/final_decision.json",
+  "primary_results": "results/publication/h3_ecls_temporal_final_v1/results.json",
+  "reviewer_package": "results/publication/h3_submission_package_v1/ECLS_GCLC_reviewer_package_v1.zip",
+  "target_venue": "Bioinformatics",
+  "stage": "frozen_computational_evidence_and_local_submission_preparation",
+  "journal_submission_confirmed": false,
+  "remote_publication_confirmed": false,
+  "separate_research_lines": {
+    "pae_surrogate": {
+      "manuscript": "publication/af2_interface_pae_surrogate_manuscript_v4.md",
+      "status": "separate_revision_not_primary_ecls_evidence"
+    },
+    "contact_v2": {
+      "registry": "publication/successor_v3_contact_v2_registry.json",
+      "status": "development_only_supporting_provenance"
+    }
+  }
+}

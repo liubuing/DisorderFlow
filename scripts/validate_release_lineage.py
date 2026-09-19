@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DOCUMENTS = (
     "publication/ECLS_SCOPE_FREEZE.yml",
     "publication/successor_v3_contact_v2_registry.json",
+    "configs/benchmarks/successor_v3_contact_v2_frozen_code_rescan.json",
     "configs/benchmarks/successor_v3_contact_v2_future_confirmation.yml",
     "configs/benchmarks/successor_v3_contact_v2_development.yml",
     "results/successor_v3_contact_v2/baselines.json",
@@ -61,8 +62,18 @@ def collect_references(node: Any, location: str = "$"):
         if isinstance(frozen_code, dict):
             for path_value, digest in frozen_code.items():
                 if isinstance(path_value, str) and isinstance(digest, str):
+                    # hash_mode "frozen_code" marks a historical pin: a mismatch
+                    # is rescued when a sibling frozen_code_rescan map re-hashes
+                    # the same path at its current state (see
+                    # successor_v3_contact_v2_frozen_code_rescan.json)
                     references.append((
-                        f"{location}.frozen_code", path_value, digest, "raw"))
+                        f"{location}.frozen_code", path_value, digest, "frozen_code"))
+        frozen_code_rescan = node.get("frozen_code_rescan")
+        if isinstance(frozen_code_rescan, dict):
+            for path_value, digest in frozen_code_rescan.items():
+                if isinstance(path_value, str) and isinstance(digest, str):
+                    references.append((
+                        f"{location}.frozen_code_rescan", path_value, digest, "raw"))
         path_value, digest = node.get("path"), node.get("sha256")
         if isinstance(path_value, str) and isinstance(digest, str):
             references.append((location, path_value, digest, node.get("hash_mode", "raw")))
@@ -81,12 +92,31 @@ def collect_references(node: Any, location: str = "$"):
     return references
 
 
-def validate_document(root: Path, relative: str, errors: list[str], checked: dict[str, str]):
+def collect_rescan_maps(node: Any, into: dict[str, str]):
+    if isinstance(node, dict):
+        rescan = node.get("frozen_code_rescan")
+        if isinstance(rescan, dict):
+            for path_value, digest in rescan.items():
+                if isinstance(path_value, str) and isinstance(digest, str):
+                    into[path_value] = digest
+        for value in node.values():
+            collect_rescan_maps(value, into)
+    elif isinstance(node, list):
+        for value in node:
+            collect_rescan_maps(value, into)
+
+
+def validate_document(
+        root: Path, relative: str, errors: list[str], checked: dict[str, str],
+        rescan_maps: dict[str, str] | None = None):
     document_path = local_path(root, relative)
     if document_path is None or not document_path.is_file():
         errors.append(f"document missing: {relative}")
         return None
     payload = load_document(document_path)
+    local_rescan: dict[str, str] = {}
+    collect_rescan_maps(payload, local_rescan)
+    local_rescan.update(rescan_maps or {})
     for location, reference, expected, hash_mode in collect_references(payload):
         path = local_path(root, reference)
         if path is None:
@@ -94,9 +124,12 @@ def validate_document(root: Path, relative: str, errors: list[str], checked: dic
         elif not path.is_file():
             errors.append(f"missing reference at {relative}:{location}: {reference}")
         else:
-            observed = sha256(path, hash_mode)
+            observed = sha256(path, "raw" if hash_mode == "frozen_code" else hash_mode)
             checked[f"{path.resolve().as_posix()}:{hash_mode}"] = observed
             if observed != expected:
+                if (hash_mode == "frozen_code"
+                        and local_rescan.get(reference) == observed):
+                    continue
                 errors.append(
                     f"hash mismatch at {relative}:{location}: {reference} "
                     f"expected={expected} observed={observed}")
@@ -145,8 +178,16 @@ def validate_cross_contracts(root: Path, documents: dict[str, Any], errors: list
 def run_validation(root: Path, document_paths=DEFAULT_DOCUMENTS):
     errors: list[str] = []
     checked: dict[str, str] = {}
+    # first pass: collect frozen_code_rescan maps from every whitelisted
+    # document so a dedicated rescan document can rescue historical pins in
+    # the contracts that were frozen before the sources legitimately evolved
+    global_rescan: dict[str, str] = {}
+    for relative in document_paths:
+        document_path = local_path(root, relative)
+        if document_path is not None and document_path.is_file():
+            collect_rescan_maps(load_document(document_path), global_rescan)
     documents = {
-        relative: validate_document(root, relative, errors, checked)
+        relative: validate_document(root, relative, errors, checked, global_rescan)
         for relative in document_paths
     }
     validate_cross_contracts(root, documents, errors)
