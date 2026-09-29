@@ -3,23 +3,8 @@
   "upload_type": "dataset",
   "creators": [
     {
-      "name": "Chen, Haoyang",
-      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
-    },
-    {
-      "name": "Hu, Jing",
-      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
-    },
-    {
-      "name": "Dai, Tanyu",
-      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
-    },
-    {
-      "name": "Sun, Yuchao",
-      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)"
-    },
-    {
-      "name": "Su, Jing"
+      "name": "[Authors to be added before publish]",
+      "affiliation": "TBD"
     }
   ],
   "description": "ECLS v1 saved-score evidence and numerical reanalysis package accompanying the antibody-peptide structural sequence-scoring manuscript. Primary frozen endpoint: 31 structures in 15 antigen clusters; mean native-versus-composition-shuffle ECLS advantage 0.172281, cluster-bootstrap 95% CI [0.059156, 0.291920], 12/15 positive clusters. Includes current manuscript, supplementary boundaries, portable saved results, provenance digests and numerical verification code. Machine-specific paths are normalized in derived copies; original frozen results are unchanged. Excludes historical contact-v2 model bundles, third-party weights, raw structural databases and the separate PAE manuscript. Reproduces saved-score statistics, not end-to-end inference or experimentally validated binding. Reserved DOI: 10.5281/zenodo.23037055 (record published at submission). Author declarations and license confirmation remain pending.",
@@ -42,5 +27,6 @@
     }
   ],
   "communities": [],
-  "reserved_doi": "10.5281/zenodo.23037055"
+  "reserved_doi": "10.5281/zenodo.23037055",
+  "creators_status": "withheld_pending_confirmation; real creators must be re-added before Zenodo publish"
 }

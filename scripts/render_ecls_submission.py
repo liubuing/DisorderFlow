@@ -115,7 +115,7 @@ def render(source, output, label, stamp=True):
             canvas.drawString(67,A4[1]-34,label+' | Author-review draft | 29 September 2026')
         canvas.drawRightString(A4[0]-62,30,str(doc.page));canvas.restoreState()
     doc=SimpleDocTemplate(str(output),pagesize=A4,rightMargin=62,leftMargin=67,topMargin=57,bottomMargin=52,
-                          title=lines[0].lstrip('# '),author='Haoyang Chen; Jing Hu; Tanyu Dai; Yuchao Sun; Jing Su',
+                          title=lines[0].lstrip('# '),author='',
                           pageCompression=1)
     doc.build(story,onFirstPage=page,onLaterPages=page)
     return len(re.findall(r'\b\S+\b',source.read_text(encoding='utf-8')))
