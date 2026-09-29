@@ -1,67 +1,19 @@
-# ECLS v1 Reproducibility Release
+# ECLS v1 current reproducibility boundary
 
-## Scope
-
-Primary manuscript: `publication/MANUSCRIPT_DRAFT.md`.
-Publication identity: `release/ecls_v1/publication_line.json`.
-The title and deposit entry points are listed in `docs/PUBLICATION_MAP.md`.
-The PAE surrogate remains a separate revision and is not the ECLS manuscript.
-
-This release supports the bounded ECLS native-versus-composition-shuffle
-structural sequence-scoring paper. It does not release a validated antibody
-design, binding, affinity, contact-hotspot, or therapeutic model.
-
-## Source Layer
-
-Git contains source code, frozen protocols, tests, lightweight result summaries,
-and SHA-256 registries. Run:
+The active manuscript is publication/MANUSCRIPT_DRAFT.md and the active reviewer archive is dist/disorderflow-ecls-v1-reviewer-20260928.zip. This is a numerical reanalysis package built from saved evidence; it does not claim end-to-end model inference reproducibility. The old contact-v2 artifact bundle remains historical and is excluded from active staging.
 
 ```bash
-pip install -e ".[publication,dev]"
-python scripts/validate_release_lineage.py --source-only
-pytest -q tests/test_release_lineage.py tests/test_h3_ecls_statistics.py
-```
-
-## Large Artifact Layer
-
-`artifact_bundle_manifest.json` lists every checkpoint, LMDB, structure, and
-reviewer archive required by the bundled contact-v2 supporting analysis. Each
-file and the deterministic ZIP have independent SHA-256 digests.
-
-The active ECLS upload also contains the primary temporal-final result and
-reviewer archive directly, so the primary evidence is distinct from the legacy
-contact-v2 supporting bundle. See `release/zenodo_v1/UPLOAD_MANIFEST.json`.
-The manuscript is an unpublished Markdown source draft, not a final typeset
-journal article.
-
-Remote publication is a release blocker until the manifest status is
-`published` and contains an immutable repository revision and URL. While the
-network blocker remains, the local bundle can be restored with:
-
-```bash
-python scripts/fetch_release_artifacts.py \
-  --bundle dist/disorderflow-ecls-v1-artifacts.zip
-```
-
-Verify an existing installation without extracting:
-
-```bash
-python scripts/fetch_release_artifacts.py --verify-only
-python scripts/validate_release_lineage.py
-```
-
-No manuscript or software release should claim remote reproducibility while the
-bundle manifest remains `blocked_pending_remote_upload`.
-
-## Local deposit preparation
-
-After refreshing any changed source manifest, run:
-
-```bash
+python scripts/render_ecls_submission.py
+python scripts/prepare_ecls_submission.py
 python scripts/build_zenodo_upload.py
 python scripts/validate_publication_alignment.py
+python scripts/validate_release_lineage.py --source-only
 ```
 
-This assembles and verifies local files only. It neither submits the manuscript
-nor publishes a remote deposit. Historical mixed PAE/ECLS upload files remain
-under `release/zenodo_v1/archive/` and are excluded from active staging.
+Extract the current archive into a new directory and run python -B verify_ecls_saved_results.py there. Python 3.10+ and NumPy are required. The verifier checks file digests, composition controls, record arithmetic, cluster assignments and the original fixed bootstrap calculations, with no model forward pass.
+
+The same verifier reconstructs the 63 development-pool native ranks and all three ranking intervals in the main figures, and compares figure values and the endpoint table with saved evidence. To redraw figures, install Matplotlib and run python -B plot_ecls_narrative.py --archive-root . in a separate extracted working copy after digest verification. Editable SVG, vector PDF and high-resolution PNG outputs are included. Regenerated files may have different hashes across library versions.
+
+Original frozen source files retain their hashes. Portable JSON copies normalize machine-specific execution paths; the separate original and public digests and transformation locations are recorded. Frozen final decision and scope are kept unchanged, including historical title and result references.
+
+The active upload manifest enumerates only the current ECLS package and readable manuscript/provenance assets. The old artifact_bundle_manifest.json describes a separate historical bundle and its unresolved remote upload; it is not evidence that the new archive has been published. Current author declarations and publication state are in submission_metadata.json. Only a verified remote record and downloaded checksums can establish remote publication.

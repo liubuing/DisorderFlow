@@ -22,15 +22,15 @@
     },
     {
       "path": "PUBLICATION_PROTOCOL.md",
-      "bytes": 19721,
+      "bytes": 3947,
       "hash_mode": "canonical_lf",
-      "sha256": "e4f3ea0ea5b724e4584a733413cba17b783c7aec43f379bf94c6b677c3d7b3e0"
+      "sha256": "0ef3e61c719ecf7bebcd905a0e859112dd1043bd8d9cf5100de3fab8c9e6638d"
     },
     {
       "path": "README.md",
-      "bytes": 3644,
+      "bytes": 6361,
       "hash_mode": "canonical_lf",
-      "sha256": "4515a2833f4ea01fc987b1977d8591b44dc0694bba499b2b472696949dfa979d"
+      "sha256": "37810a104b364782b613964574601288dcc8b35925b02f0086803bf0082cc0c2"
     },
     {
       "path": "configs/benchmarks/successor_v3_confirmatory.yml",
@@ -784,9 +784,9 @@
     },
     {
       "path": "release/ecls_v1/REPRODUCIBILITY.md",
-      "bytes": 2446,
+      "bytes": 2205,
       "hash_mode": "canonical_lf",
-      "sha256": "6ff71a9273aff5091084c407bf91744ef69adcc1e7a06e9b9d047060df4a2101"
+      "sha256": "8073feddd20edaaa8631a329fc3d403e98c62fd721babff0df9a1993fbeaa7eb"
     },
     {
       "path": "release/ecls_v1/artifact_bundle_manifest.json",

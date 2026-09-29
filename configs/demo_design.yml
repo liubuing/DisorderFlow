@@ -1,5 +1,7 @@
 model:
-  checkpoint: ./logs/bfn_confidence_combined_v6_phase2_2026_05_18__14_05_03/checkpoints/best.pt
+  # 2026-09-27 纠偏：原指向 2026-05-18 的 v6_phase2（旧），与 app_config.yaml 的当前主力对齐
+  # 原值: ./logs/bfn_confidence_combined_v6_phase2_2026_05_18__14_05_03/checkpoints/best.pt
+  checkpoint: ./logs/bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032/checkpoints/best.pt
 
 sampling:
   seed: 2026

@@ -1,50 +1,35 @@
 # Current publication map
 
-Updated 2026-09-16. This is the current routing document; it does not rewrite
-frozen scientific decisions. `release/ecls_v1/publication_line.json` is its
-machine-readable counterpart.
+Updated 2026-09-28. Authoritative current routing: release/ecls_v1/publication_line.json. The frozen ECLS scientific scope remains unchanged; current editorial title and routing supersede older draft instructions.
 
-## Primary manuscript and release
+## Primary manuscript and archive
 
-- Line: **ECLS structural sequence scoring**.
-- Manuscript title: **Backbone-conditioned likelihood contrasts for computational scoring of antibody CDR-H3 sequences in antibody-peptide complex structures**.
-- Manuscript: `publication/MANUSCRIPT_DRAFT.md` (local unpublished draft).
-- Protocol: `PUBLICATION_PROTOCOL.md`.
-- Frozen scope: `publication/ECLS_SCOPE_FREEZE.yml`.
-- Primary result: `results/publication/h3_ecls_temporal_final_v1/final_decision.json`.
-- Reviewer package: `results/publication/h3_submission_package_v1/ECLS_GCLC_reviewer_package_v1.zip`.
-- Release ID: `disorderflow-ecls-v1`; release directory: `release/ecls_v1/`.
-- Deposit staging: `release/zenodo_v1/upload/`, enumerated by `UPLOAD_MANIFEST.json`.
-- Stage: final computational evidence frozen; manuscript and local deposit
-  preparation. Journal submission, acceptance and remote DOI are unconfirmed.
+- Title: **Peptide-context scoring of antibody loops: native recognition and the limits of candidate ranking**.
+- Source: publication/MANUSCRIPT_DRAFT.md.
+- Review PDF: publication/ECLS_MANUSCRIPT.pdf.
+- Supplement: publication/ECLS_SUPPLEMENT.md and .pdf.
+- Cover letter: publication/Cover_Letter_Bioinformatics.md.
+- Target: Bioinformatics, Original Paper.
+- Authors and pending declarations: release/ecls_v1/submission_metadata.json.
+- Current archive: dist/disorderflow-ecls-v1-reviewer-20260928.zip.
+- Active staging: release/zenodo_v1/upload/, enumerated by UPLOAD_MANIFEST.json.
+- Stage: scientific manuscript rewritten for author review; author declarations and verified remote publication pending. No journal submission or DOI is asserted.
 
-The primary result is native-versus-composition-matched-shuffle ECLS contrast
-on 31 structures / 15 antigen clusters (mean 0.172281; bootstrap 95% CI
-[0.059156, 0.291920]). Internal gate acceptance is not journal acceptance.
-No universal reranking, successful antibody design, binding or affinity claim
-is included. The temporal final must not be rerun.
+The narrative asks whether native-sequence recognition extends to candidate ranking. The primary temporal result remains mean advantage 0.172281, 95% CI [0.059156, 0.291920], on 31 structures in 15 antigen clusters. Universal candidate-ranking superiority was not established. Calibration is exploratory. There is no experimental binding claim.
 
-## Separate manuscripts and supporting work
+## Separate and historical materials
 
-| Research line | Current entry point | Status / allowed use |
-|---|---|---|
-| PAE surrogate | `publication/af2_interface_pae_surrogate_manuscript_v4.md`, `docs/PAE_SURROGATE_REVISION_V4.md` | Independent revision; excluded from the ECLS deposit's manuscript and primary evidence |
-| AF2 scoring-boundary analysis | `publication/af2_scoring_boundary_manuscript.md` | Historical PAE-related analysis; not an alternative ECLS title |
-| Contact-v2 | `publication/successor_v3_contact_v2_registry.json` | Development candidate, no independent confirmation or wet-lab result; legacy ECLS artifact ZIP contains supporting provenance |
-| BFN/IDP platform | `publication/idp_platform_capability_v1.json` | Historical capability inventory; PAE-specific claims must be read alongside its v4 corrections |
+| Material | Role |
+|---|---|
+| publication/pae_screening_evidence_v20_draft.md | Current PAE results/methods draft; retrospective composition-driven screening |
+| docs/PAE_EVIDENCE_AUDIT_V20.md and docs/PAE_NEW_FAMILY_FEASIBILITY_V21.md | Current PAE claim limits and lack of newly eligible candidates within the searched scope |
+| publication/af2_interface_pae_surrogate_manuscript_v4.md | Corrected historical PAE revision; v4 corrections remain binding context |
+| PAE v3 Markdown, TeX and PDF | Superseded submission versions; not current submission artifacts |
+| ECLS_GCLC_reviewer_package_v1.zip | Historical archive with older embedded manuscript; excluded from current upload |
+| disorderflow-ecls-v1-artifacts.zip and contact-v2 | Historical supporting development bundle; excluded from current upload |
 
-The legacy large artifact ZIP includes contact-v2 supporting material and the
-ECLS reviewer package. Its presence does not promote contact-v2 into the primary
-paper claim. PAE revisions neither replace nor retune ECLS evidence.
+Previous editorial files are preserved under release/zenodo_v1/archive/pre-consolidation-20260928T153543/. They are not included in the current public candidate. Related-manuscript overlap must be disclosed; different internal identifiers do not prove independence. No mandatory three-month separation rule is asserted.
 
-## Deposit status and consistency
+## Rebuild
 
-The active metadata, title, manuscript, reviewer package and upload manifest all
-refer to ECLS. Old mixed PAE/ECLS staging files are retained under
-`release/zenodo_v1/archive/`, outside the active upload directory. Preparation
-does not imply deposit publication or journal submission.
-
-Run `python scripts/build_zenodo_upload.py` to rebuild local staging, then
-`python scripts/validate_publication_alignment.py` to verify identity and hashes.
-Source manifests are refreshed separately; frozen scientific results and
-historical artifact ZIPs are preserved.
+Run scripts/render_ecls_submission.py, scripts/prepare_ecls_submission.py, scripts/build_zenodo_upload.py and scripts/validate_publication_alignment.py in that order. Numerical verification is available in the current archive as verify_ecls_saved_results.py. The build does not perform model inference or publish a record.

@@ -1,0 +1,6 @@
+analysis,clusters,mean,ci95_low,ci95_high,evidence_class
+Exposed adaptation,46,0.217481,0.14605,0.289555,exposed_adaptation
+Temporal final,15,0.172281,0.059156,0.29192,primary_final
+Universal ECLS vs complex NLL,7,0.055952380952380934,-0.19166666666666665,0.2718253968253968,development_gate_failed
+Calibrated vs random,7,0.35317460317460314,0.1666666666666667,0.49603174603174605,exploratory
+Calibrated vs complex NLL,7,0.18650793650793657,-0.0019841269841269138,0.32936507936507947,superiority_unestablished
