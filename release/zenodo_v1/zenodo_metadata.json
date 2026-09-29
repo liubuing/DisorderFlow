@@ -22,7 +22,7 @@
       "name": "Su, Jing"
     }
   ],
-  "description": "ECLS v1 saved-score evidence and numerical reanalysis package accompanying the antibody-peptide structural sequence-scoring manuscript. Primary frozen endpoint: 31 structures in 15 antigen clusters; mean native-versus-composition-shuffle ECLS advantage 0.172281, cluster-bootstrap 95% CI [0.059156, 0.291920], 12/15 positive clusters. Includes current manuscript, supplementary boundaries, portable saved results, provenance digests and numerical verification code. Machine-specific paths are normalized in derived copies; original frozen results are unchanged. Excludes historical contact-v2 model bundles, third-party weights, raw structural databases and the separate PAE manuscript. Reproduces saved-score statistics, not end-to-end inference or experimentally validated binding. Local preparation only: author declarations, license confirmation and remote DOI remain pending.",
+  "description": "ECLS v1 saved-score evidence and numerical reanalysis package accompanying the antibody-peptide structural sequence-scoring manuscript. Primary frozen endpoint: 31 structures in 15 antigen clusters; mean native-versus-composition-shuffle ECLS advantage 0.172281, cluster-bootstrap 95% CI [0.059156, 0.291920], 12/15 positive clusters. Includes current manuscript, supplementary boundaries, portable saved results, provenance digests and numerical verification code. Machine-specific paths are normalized in derived copies; original frozen results are unchanged. Excludes historical contact-v2 model bundles, third-party weights, raw structural databases and the separate PAE manuscript. Reproduces saved-score statistics, not end-to-end inference or experimentally validated binding. Reserved DOI: 10.5281/zenodo.23037055 (record published at submission). Author declarations and license confirmation remain pending.",
   "keywords": [
     "ECLS",
     "epitope-conditioned likelihood shift",
@@ -42,5 +42,5 @@
     }
   ],
   "communities": [],
-  "prereserve_doi": true
+  "reserved_doi": "10.5281/zenodo.23037055"
 }

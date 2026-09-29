@@ -60,7 +60,7 @@ def inline(text):
     return text
 
 
-def render(source, output, label):
+def render(source, output, label, stamp=True):
     if 'CJK' not in pdfmetrics.getRegisteredFontNames():
         pdfmetrics.registerFont(TTFont('CJK',r'C:\Windows\Fonts\simsun.ttc',subfontIndex=0))
     styles={
@@ -111,7 +111,8 @@ def render(source, output, label):
         story.append((Paragraph if front else NumberedParagraph)(inline(' '.join(para)),styles['front' if front else 'body']))
     def page(canvas,doc):
         canvas.saveState();canvas.setFont('Times-Roman',9);canvas.setFillColor(colors.HexColor('#58636a'))
-        canvas.drawString(67,A4[1]-34,label+' | Author-review draft | 29 September 2026')
+        if stamp:
+            canvas.drawString(67,A4[1]-34,label+' | Author-review draft | 29 September 2026')
         canvas.drawRightString(A4[0]-62,30,str(doc.page));canvas.restoreState()
     doc=SimpleDocTemplate(str(output),pagesize=A4,rightMargin=62,leftMargin=67,topMargin=57,bottomMargin=52,
                           title=lines[0].lstrip('# '),author='Haoyang Chen; Jing Hu; Tanyu Dai; Yuchao Sun; Jing Su',
@@ -121,10 +122,21 @@ def render(source, output, label):
 
 
 if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--clean',action='store_true',
+                        help='render without the Author-review-draft page header, '
+                             'to *clean-named* outputs; the stamped review PDFs are kept')
+    args=parser.parse_args()
     figures_and_table()
     outputs=[]
-    for md,pdf,label in [('MANUSCRIPT_DRAFT.md','ECLS_MANUSCRIPT.pdf','ECLS main manuscript'),
-                         ('ECLS_SUPPLEMENT.md','ECLS_SUPPLEMENT.pdf','ECLS supplementary methods')]:
-        words=render(ROOT/'publication'/md,ROOT/'publication'/pdf,label)
+    pairs=[('MANUSCRIPT_DRAFT.md','ECLS_MANUSCRIPT.pdf','ECLS main manuscript'),
+           ('ECLS_SUPPLEMENT.md','ECLS_SUPPLEMENT.pdf','ECLS supplementary methods')]
+    for md,pdf,label in pairs:
+        if args.clean:
+            pdf=pdf.replace('.pdf','_clean.pdf')
+            words=render(ROOT/'publication'/md,ROOT/'publication'/pdf,label,stamp=False)
+        else:
+            words=render(ROOT/'publication'/md,ROOT/'publication'/pdf,label)
         outputs.append({'file':'publication/'+pdf,'source_word_count_including_references':words})
     print(json.dumps(outputs,indent=2))
