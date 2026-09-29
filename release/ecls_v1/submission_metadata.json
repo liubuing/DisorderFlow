@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "updated_date": "2026-09-28",
+  "primary_line": "ecls",
+  "target_venue": "Bioinformatics",
+  "article_type": "Original Paper",
+  "authors": [
+    {
+      "name_zh": "陈昊阳",
+      "name_en": "Haoyang Chen",
+      "deposit_name": "Chen, Haoyang",
+      "order": 1,
+      "corresponding": false,
+      "email": null,
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)",
+      "affiliation_confirmed": false,
+      "english_spelling_confirmed": false
+    },
+    {
+      "name_zh": "胡静",
+      "name_en": "Jing Hu",
+      "deposit_name": "Hu, Jing",
+      "order": 2,
+      "corresponding": false,
+      "email": null,
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)",
+      "affiliation_confirmed": false,
+      "english_spelling_confirmed": false
+    },
+    {
+      "name_zh": "戴谭宇",
+      "name_en": "Tanyu Dai",
+      "deposit_name": "Dai, Tanyu",
+      "order": 3,
+      "corresponding": false,
+      "email": null,
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)",
+      "affiliation_confirmed": false,
+      "english_spelling_confirmed": false
+    },
+    {
+      "name_zh": "孙宇超",
+      "name_en": "Yuchao Sun",
+      "deposit_name": "Sun, Yuchao",
+      "order": 4,
+      "corresponding": false,
+      "email": null,
+      "affiliation": "Qilu University of Technology (Shandong Academy of Sciences)",
+      "affiliation_confirmed": false,
+      "english_spelling_confirmed": false
+    },
+    {
+      "name_zh": "苏静",
+      "name_en": "Jing Su",
+      "deposit_name": "Su, Jing",
+      "order": 5,
+      "corresponding": true,
+      "email": "sj_12346@163.com",
+      "affiliation": null,
+      "affiliation_confirmed": false,
+      "english_spelling_confirmed": false
+    }
+  ],
+  "author_order_source": "explicit user confirmation in this chat, 2026-09-28",
+  "author_contributions": null,
+  "funding": null,
+  "conflicts_of_interest": null,
+  "all_authors_approve_submission": null,
+  "all_authors_approve_public_archive": null,
+  "related_manuscripts_status_confirmed": false,
+  "manuscript_data_license_confirmed": false,
+  "journal_submission_confirmed": false,
+  "remote_publication_confirmed": false,
+  "remote_doi": null,
+  "remote_record_url": null,
+  "pending": [
+    "English spellings and author-affiliation mapping",
+    "CRediT contributions",
+    "Funding and conflict-of-interest declarations",
+    "All-author approval",
+    "Related manuscript status",
+    "Manuscript/data license confirmation",
+    "Authenticated Zenodo publication and remote checksum verification"
+  ]
+}

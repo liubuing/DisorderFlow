@@ -22,21 +22,26 @@ OUT = ROOT / "release" / "zenodo_v1" / "upload"
 LINE = "release/ecls_v1/publication_line.json"
 
 INCLUDE = [
-    "dist/disorderflow-ecls-v1-artifacts.zip",
+    "dist/disorderflow-ecls-v1-reviewer-20260928.zip",
     "release/ecls_v1/source_manifest.json",
-    "release/ecls_v1/artifact_bundle_manifest.json",
     "release/ecls_v1/REPRODUCIBILITY.md",
-    "release/ecls_v1/software_environment.yml",
+    "release/ecls_v1/LICENSE_SCOPE.md",
+    "release/ecls_v1/REFERENCE_AUDIT.md",
+    "release/ecls_v1/CLAIM_EVIDENCE_MAP.md",
+    "release/ecls_v1/submission_package_manifest.json",
+    "release/ecls_v1/primary_results.csv",
+    "release/ecls_v1/prepared/SOURCE_PROVENANCE.json",
     LINE,
     "README.md",
     "PUBLICATION_PROTOCOL.md",
     "docs/PUBLICATION_MAP.md",
     "publication/ECLS_SCOPE_FREEZE.yml",
     "publication/MANUSCRIPT_DRAFT.md",
+    "publication/ECLS_MANUSCRIPT.pdf",
+    "publication/ECLS_SUPPLEMENT.md",
+    "publication/ECLS_SUPPLEMENT.pdf",
     "results/publication/h3_ecls_temporal_final_v1/final_decision.json",
-    "results/publication/h3_ecls_temporal_final_v1/results.json",
-    "results/publication/h3_submission_package_v1/ECLS_GCLC_reviewer_package_v1.zip",
-    "results/publication/h3_submission_package_v1/main_results.csv",
+    "release/ecls_v1/prepared/temporal_results_portable.json",
 ]
 
 
@@ -97,7 +102,7 @@ def build(root=ROOT):
             "sha256": digest(target),
         })
     manifest = {
-        "schema_version": "zenodo_upload_v2",
+        "schema_version": "zenodo_upload_v3",
         "primary_line": line["primary_line"],
         "release_id": line["release_id"],
         "stage": "local_preparation_not_published",
@@ -106,7 +111,9 @@ def build(root=ROOT):
         "metadata": "release/zenodo_v1/zenodo_metadata.json",
         "metadata_sha256": digest(base / "zenodo_metadata.json"),
         "upload_directory": "release/zenodo_v1/upload",
-        "legacy_bundle_scope": "contact-v2 supporting provenance plus ECLS reviewer archive; not primary contact/binding evidence",
+        "archive_scope": "current ECLS manuscript and saved-score numerical reanalysis; historical archives excluded",
+        "public_results_are_derivatives": True,
+        "publication_ready": False,
         "files": entries,
     }
     (base / "UPLOAD_MANIFEST.json").write_text(

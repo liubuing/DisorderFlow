@@ -229,6 +229,7 @@ publication/*.blg
 # Local DOI deposit staging (unpublished manuscript, >100MB bundles)
 /release/zenodo_v1/upload/
 /release/zenodo_v1/archive/
+/release/ecls_v1/prepared/
 
 # Internal journal-submission strategy (keep local only)
 /docs/SUBMISSION_STRATEGY.md
