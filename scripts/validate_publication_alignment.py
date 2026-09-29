@@ -106,13 +106,20 @@ def validate(root=ROOT):
     if manifest.get('metadata_sha256')!=sha256(base/'zenodo_metadata.json'):
         errors.append('Deposit metadata hash mismatch')
     authors = sorted(submission['authors'],key=lambda a:a['order'])
-    if [a['name'] for a in metadata['creators']] != [a['deposit_name'] for a in authors]:
-        errors.append('Deposit author order differs from author metadata')
-    author_line = ', '.join(a['name_en'] + (' (corresponding author)' if a['corresponding'] else '') for a in authors)
-    if author_line not in manuscript:
-        errors.append('Manuscript author order differs from author metadata')
-    if any(a['email'] not in manuscript for a in authors if a['corresponding']):
-        errors.append('Corresponding email differs from author metadata')
+    if submission.get('authors_withheld_from_rendered_artifacts'):
+        # author names are deliberately absent from rendered artifacts while
+        # spellings/affiliations are unconfirmed; the ledger keeps the
+        # order-of-record, and re-adding authors remains a publication blocker
+        withheld = True
+    else:
+        withheld = False
+        if [a['name'] for a in metadata['creators']] != [a['deposit_name'] for a in authors]:
+            errors.append('Deposit author order differs from author metadata')
+        author_line = ', '.join(a['name_en'] + (' (corresponding author)' if a['corresponding'] else '') for a in authors)
+        if author_line not in manuscript:
+            errors.append('Manuscript author order differs from author metadata')
+        if any(a['email'] not in manuscript for a in authors if a['corresponding']):
+            errors.append('Corresponding email differs from author metadata')
     out = root/manifest['upload_directory']
     expected = {e['path'] for e in manifest['files']}
     actual = {p.name for p in out.iterdir()}
@@ -139,6 +146,8 @@ def validate(root=ROOT):
         errors.append('Frozen final rerun policy changed')
     errors.extend(archive_errors(root,line))
     blockers = publication_blockers(submission)
+    if submission.get('authors_withheld_from_rendered_artifacts'):
+        blockers.append('Author information withheld from rendered artifacts (re-add before publication)')
     if blockers and manifest.get('publication_ready'):
         errors.append('Publication marked ready while author declarations or remote verification are missing')
     return {'status':'valid' if not errors else 'invalid','primary_line':line['primary_line'],

@@ -81,5 +81,7 @@
     "Related manuscript status",
     "Manuscript/data license confirmation",
     "Authenticated Zenodo publication and remote checksum verification"
-  ]
+  ],
+  "authors_withheld_from_rendered_artifacts": true,
+  "authors_withheld_note": "Author names/email removed from manuscript, cover letter, PDF metadata and Zenodo creators on 2026-09-29 pending spelling/affiliation confirmation; the authors array below remains the internal order-of-record."
 }
