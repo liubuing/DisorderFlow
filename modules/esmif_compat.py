@@ -9,6 +9,14 @@ import types
 import torch
 
 
+def install_biotite_compat():
+    """Alias the renamed backbone filter that fair-esm imports at load time."""
+    import biotite.structure
+
+    if not hasattr(biotite.structure, "filter_backbone"):
+        biotite.structure.filter_backbone = biotite.structure.filter_peptide_backbone
+
+
 def install_torch_scatter_fallback():
     """Install the two scatter operations used by fair-esm via native PyTorch."""
     if importlib.util.find_spec("torch_scatter") is not None:
@@ -17,10 +25,8 @@ def install_torch_scatter_fallback():
     # Import first so torch-geometric records torch-scatter as unavailable and
     # continues to use its own native-PyTorch fallback paths.
     import torch_geometric  # noqa: F401
-    import biotite.structure
 
-    if not hasattr(biotite.structure, "filter_backbone"):
-        biotite.structure.filter_backbone = biotite.structure.filter_peptide_backbone
+    install_biotite_compat()
 
     module = types.ModuleType("torch_scatter")
     module.scatter_add = scatter_add

@@ -1114,7 +1114,15 @@ def create_ui():
                 """)
 
                 # ── State variables ──
-                _mf_disease_key = gr.State("")
+                # 预填首个疾病的隐藏状态：Gradio 仅在用户交互时触发 .change，
+                # 否则下拉框视觉上已选中首项而状态仍为空，点击"加载靶点"会静默返回空值。
+                _mf_disease_options = [(f'{cn} ({en})', key) for key, cn, en in mkb.list_diseases()]
+                _mf_default_disease_key = _mf_disease_options[0][1] if _mf_disease_options else ""
+                _mf_default_confs = (mkb.get_conformations(_mf_default_disease_key)
+                                     if _mf_default_disease_key else {})
+                _mf_default_conf_options = [
+                    (f'{cd["type"]} ({cd["pdb_id"]})', ck) for ck, cd in _mf_default_confs.items()]
+                _mf_disease_key = gr.State(_mf_default_disease_key)
                 _mf_conf_key = gr.State("")
                 _mf_target_pdb = gr.State("")
                 _mf_target_chain = gr.State("")
@@ -1134,12 +1142,16 @@ def create_ui():
                     gr.Markdown("#### Step 1: 选择靶点疾病")
                     with gr.Row():
                         with gr.Column(scale=1):
-                            disease_choices = [(f'{cn} ({en})', key) for key, cn, en in mkb.list_diseases()]
+                            disease_choices = _mf_disease_options
                             mf_disease = gr.Dropdown(
-                                choices=disease_choices, label="选择疾病靶点",
+                                choices=disease_choices, value=_mf_default_disease_key,
+                                label="选择疾病靶点",
                                 info="从知识库中选择已整理的错误折叠疾病靶点")
                             conf_choices = gr.Dropdown(
-                                choices=[], label="靶点构象", interactive=True,
+                                choices=_mf_default_conf_options,
+                                value=(_mf_default_conf_options[0][1]
+                                       if _mf_default_conf_options else None),
+                                label="靶点构象", interactive=True,
                                 info="选择致病的结构构象（纤维/寡聚体等）")
                             mf_load_btn = gr.Button("📥 加载靶点", variant="primary")
                         with gr.Column(scale=2):
@@ -1172,7 +1184,7 @@ def create_ui():
                     pipeline = mfp.MisfoldingDesignPipeline()
                     result = pipeline.prepare_target(disease_key, conf_key)
                     if not result['success']:
-                        return ('', '', '', '', f'**Error**: {result.get("error")}',
+                        return ('', '', '', f"❌ 加载失败: {result.get('error')}", '',
                                 gr.Markdown(visible=False))
                     is_idp = result.get('is_idp', False)
                     idp_warn = result.get('idp_warning')
