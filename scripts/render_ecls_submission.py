@@ -121,12 +121,22 @@ def render(source, output, label, stamp=True):
     return len(re.findall(r'\b\S+\b',source.read_text(encoding='utf-8')))
 
 
+STANDALONE_NAMES={'ECLS_MANUSCRIPT_clean.pdf':'Peptide-context_scoring_of_antibody_loops_manuscript',
+                  'ECLS_SUPPLEMENT_clean.pdf':'Peptide-context_scoring_of_antibody_loops_supplement'}
+
 if __name__=='__main__':
-    import argparse
+    import argparse,shutil
+    from datetime import date
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--clean',action='store_true',
                         help='render without the Author-review-draft page header, '
                              'to *clean-named* outputs; the stamped review PDFs are kept')
+    parser.add_argument('--standalone-dir',type=Path,
+                        help='copy the clean PDFs into this directory under '
+                             '<title-slug>_<manuscript|supplement>_<YYYY-MM-DD>.pdf')
+    parser.add_argument('--standalone-date',default=date.today().isoformat(),
+                        help='date stamp for standalone filenames; pass the manuscript '
+                             'version date (YYYY-MM-DD) to match the PDF front matter')
     args=parser.parse_args()
     figures_and_table()
     outputs=[]
@@ -139,4 +149,10 @@ if __name__=='__main__':
         else:
             words=render(ROOT/'publication'/md,ROOT/'publication'/pdf,label)
         outputs.append({'file':'publication/'+pdf,'source_word_count_including_references':words})
+        if args.standalone_dir and pdf in STANDALONE_NAMES:
+            args.standalone_dir.mkdir(parents=True,exist_ok=True)
+            standalone_dir=(ROOT/args.standalone_dir).resolve()
+            target=standalone_dir/f'{STANDALONE_NAMES[pdf]}_{args.standalone_date}.pdf'
+            shutil.copy2(ROOT/'publication'/pdf,target)
+            outputs.append({'standalone':str(target.relative_to(ROOT))})
     print(json.dumps(outputs,indent=2))
