@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "local_author_review_candidate",
-  "archive": "dist/disorderflow-ecls-v1-reviewer-20260928.zip",
+  "archive": "dist/disorderflow-ecls-v1-reviewer-package.zip",
   "sha256": "e90ebe2ceea32ba198cdab33e623d2234629f2d2291c8005ab180ecb12fd5ee3",
   "bytes": 2501907,
   "files": 32,
