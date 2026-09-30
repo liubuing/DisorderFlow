@@ -19,7 +19,9 @@ import misfolding_knowledge_base as mkb
 import misfolding_pipeline as mfp
 import closed_loop_scorer as cls
 import closed_loop_orchestrator as clo
-from runtime_environment import build_colabfold_command, colabfold_environment
+from runtime_environment import (
+    build_colabfold_command, colabfold_environment, resolve_colabfold_executable,
+)
 
 
 
@@ -87,6 +89,9 @@ def load_esmif():
     global _esmif_model
     if _esmif_model is not None:
         return _esmif_model
+    from esmif_compat import install_biotite_compat, install_torch_scatter_fallback
+    install_torch_scatter_fallback()
+    install_biotite_compat()
     from esm.pretrained import esm_if1_gvp4_t16_142M_UR50
     model, _ = esm_if1_gvp4_t16_142M_UR50()
     model = model.to(DEVICE).eval()
@@ -130,14 +135,18 @@ def get_system_status():
     except:
         pass
 
-    bfn_ok = os.path.exists(cfg['models']['bfn']['checkpoint'])
-    mpnn_ok = Path(cfg['models']['proteinmpnn']['weights_dir']).exists()
+    bfn_ok = Path(get_bfn_ckpt()).exists()
+    mpnn_dir = Path(cfg['models']['proteinmpnn']['weights_dir'])
+    mpnn_ok = (mpnn_dir if mpnn_dir.is_absolute() else PROJECT_DIR / mpnn_dir).exists()
     esmif_loaded = _esmif_model is not None
     bfn_loaded = _bfn_model is not None
     af_cfg = cfg.get('alphafold', {})
-    af2_venv = af_cfg.get('af2', {}).get('venv', '')
-    af2_exe = str(Path(af2_venv) / 'Scripts' / 'colabfold_batch.exe') if af2_venv else ''
-    af2_ok = af2_exe and os.path.exists(af2_exe)
+    af2_cfg = af_cfg.get('af2', {}) if isinstance(af_cfg, dict) else {}
+    af2_backend = str(af2_cfg.get('backend', 'native'))
+    try:
+        af2_ok = resolve_colabfold_executable(af2_cfg, PROJECT_DIR) is not None
+    except Exception:
+        af2_ok = False
 
     status = f"""服务状态面板
 {'='*50}
@@ -148,7 +157,7 @@ def get_system_status():
 BFN 模型:      {'✓ 加载就绪' if bfn_loaded else ('✓ 文件存在' if bfn_ok else '✗ 未找到')}
 ProteinMPNN:   {'✓ 就绪' if mpnn_ok else '✗ 未找到'}
 ESM-IF:        {'✓ 已加载' if esmif_loaded else '○ 按需加载'}
-AlphaFold2:    {'✓ 就绪' if af2_ok else '✗ 未找到'}
+AlphaFold2:    {'✓ 就绪 (' + af2_backend + ')' if af2_ok else '✗ 未找到'}
 {'='*50}
 配置文件:      {CONFIG_FILE}
 Python:        {sys.version.split()[0]}
