@@ -4,7 +4,7 @@
   "release_id": "disorderflow-ecls-v1",
   "stage": "local_preparation_not_published",
   "manuscript": "publication/MANUSCRIPT_DRAFT.md",
-  "publication_line_sha256": "c807325036901ac15c9af91da9d23ee118c4e8362462fb23798849c0c891e215",
+  "publication_line_sha256": "64b31fe71cf487d2d30b8c0e5ed23ff09523d1e9331b48fdeff6ee4a0e2a1bf5",
   "metadata": "release/zenodo_v1/zenodo_metadata.json",
   "metadata_sha256": "887c0352d259499afb93f5060e8cf30fbdf35cb3b3d86d49af44a811d8a1766b",
   "upload_directory": "release/zenodo_v1/upload",
@@ -13,8 +13,8 @@
   "publication_ready": false,
   "files": [
     {
-      "path": "disorderflow-ecls-v1-reviewer-20260928.zip",
-      "source": "dist/disorderflow-ecls-v1-reviewer-20260928.zip",
+      "path": "disorderflow-ecls-v1-reviewer-package.zip",
+      "source": "dist/disorderflow-ecls-v1-reviewer-package.zip",
       "bytes": 2501907,
       "sha256": "e90ebe2ceea32ba198cdab33e623d2234629f2d2291c8005ab180ecb12fd5ee3"
     },
@@ -22,13 +22,13 @@
       "path": "source_manifest.json",
       "source": "release/ecls_v1/source_manifest.json",
       "bytes": 45456,
-      "sha256": "0c397d98b78d2a298115bfd150244a072a50749587675c19a0590d59d7471f65"
+      "sha256": "1fa12b9de42e491eb8a69ec239f7e422c8cd091b9497ab8053ca3f679a4ee6e6"
     },
     {
       "path": "REPRODUCIBILITY.md",
       "source": "release/ecls_v1/REPRODUCIBILITY.md",
-      "bytes": 2205,
-      "sha256": "8073feddd20edaaa8631a329fc3d403e98c62fd721babff0df9a1993fbeaa7eb"
+      "bytes": 2223,
+      "sha256": "5ecfe8a03b1aa65cea2af6a3a79ba6563bbb1399211a2e275653f70699584845"
     },
     {
       "path": "LICENSE_SCOPE.md",
@@ -51,8 +51,8 @@
     {
       "path": "submission_package_manifest.json",
       "source": "release/ecls_v1/submission_package_manifest.json",
-      "bytes": 468,
-      "sha256": "1035f552e9d4215e64b338ca0cdde3c898fee6e79bd654bbeb3e2872dbe8fead"
+      "bytes": 467,
+      "sha256": "9f1a5c658e744da1bfff81750733fed8e2eea0250572c2fbe1768c218fc82638"
     },
     {
       "path": "primary_results.csv",
@@ -69,8 +69,8 @@
     {
       "path": "publication_line.json",
       "source": "release/ecls_v1/publication_line.json",
-      "bytes": 1841,
-      "sha256": "c807325036901ac15c9af91da9d23ee118c4e8362462fb23798849c0c891e215"
+      "bytes": 1840,
+      "sha256": "64b31fe71cf487d2d30b8c0e5ed23ff09523d1e9331b48fdeff6ee4a0e2a1bf5"
     },
     {
       "path": "README.md",
@@ -87,8 +87,8 @@
     {
       "path": "PUBLICATION_MAP.md",
       "source": "docs/PUBLICATION_MAP.md",
-      "bytes": 2882,
-      "sha256": "9f22ffe466afbc675ddd1e451b493837cea6c19ce6ebcbbdc7c1f90eb53ac01e"
+      "bytes": 2916,
+      "sha256": "868ba730b74e1d7958b7b77ff41be58b42aaf3b0cc414a80941c21405de2d655"
     },
     {
       "path": "ECLS_SCOPE_FREEZE.yml",

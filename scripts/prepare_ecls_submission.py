@@ -11,7 +11,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PREPARED = "release/ecls_v1/prepared"
-ARCHIVE = "dist/disorderflow-ecls-v1-reviewer-20260928.zip"
+ARCHIVE = "dist/disorderflow-ecls-v1-reviewer-package.zip"
 
 
 def digest(path):

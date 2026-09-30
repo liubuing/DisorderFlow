@@ -1,6 +1,6 @@
 # ECLS v1 current reproducibility boundary
 
-The active manuscript is publication/MANUSCRIPT_DRAFT.md and the active reviewer archive is dist/disorderflow-ecls-v1-reviewer-20260928.zip. This is a numerical reanalysis package built from saved evidence; it does not claim end-to-end model inference reproducibility. The old contact-v2 artifact bundle remains historical and is excluded from active staging.
+The active manuscript is publication/MANUSCRIPT_DRAFT.md and the active reviewer archive is dist/disorderflow-ecls-v1-reviewer-package.zip. This is a numerical reanalysis package built from saved evidence; it does not claim end-to-end model inference reproducibility. The old contact-v2 artifact bundle remains historical and is excluded from active staging.
 
 ```bash
 python scripts/render_ecls_submission.py

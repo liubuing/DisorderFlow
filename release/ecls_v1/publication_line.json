@@ -9,7 +9,7 @@
   "frozen_scope": "publication/ECLS_SCOPE_FREEZE.yml",
   "primary_decision": "results/publication/h3_ecls_temporal_final_v1/final_decision.json",
   "primary_results": "results/publication/h3_ecls_temporal_final_v1/results.json",
-  "reviewer_package": "dist/disorderflow-ecls-v1-reviewer-20260928.zip",
+  "reviewer_package": "dist/disorderflow-ecls-v1-reviewer-package.zip",
   "target_venue": "Bioinformatics",
   "stage": "editorially_consolidated_pending_author_declarations_and_remote_publication",
   "journal_submission_confirmed": false,

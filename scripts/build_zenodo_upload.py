@@ -22,7 +22,7 @@ OUT = ROOT / "release" / "zenodo_v1" / "upload"
 LINE = "release/ecls_v1/publication_line.json"
 
 INCLUDE = [
-    "dist/disorderflow-ecls-v1-reviewer-20260928.zip",
+    "dist/disorderflow-ecls-v1-reviewer-package.zip",
     "release/ecls_v1/source_manifest.json",
     "release/ecls_v1/REPRODUCIBILITY.md",
     "release/ecls_v1/LICENSE_SCOPE.md",

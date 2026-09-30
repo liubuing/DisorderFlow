@@ -11,7 +11,7 @@ Updated 2026-09-28. Authoritative current routing: release/ecls_v1/publication_l
 - Cover letter: publication/Cover_Letter_Bioinformatics.md.
 - Target: Bioinformatics, Original Paper.
 - Authors and pending declarations: release/ecls_v1/submission_metadata.json.
-- Current archive: dist/disorderflow-ecls-v1-reviewer-20260928.zip.
+- Current archive: dist/disorderflow-ecls-v1-reviewer-package.zip.
 - Active staging: release/zenodo_v1/upload/, enumerated by UPLOAD_MANIFEST.json.
 - Stage: scientific manuscript rewritten for author review; author declarations and verified remote publication pending. No journal submission or DOI is asserted.
 
