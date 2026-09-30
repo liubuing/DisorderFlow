@@ -27,9 +27,12 @@ from webapp.state import PROJECT_DIR, load_esmif
 
 def run_mpnn(pdb_path, chains, num_samples, temperature, seed, omit_aas):
     out_dir = tempfile.mkdtemp(prefix='mpnn_')
+    # protein_mpnn_run.py derives its output file names with rfind("/"); a
+    # Windows backslash path defeats that and the name becomes the whole path.
+    # Hand the script the POSIX form of the same absolute path.
     cmd = [
         sys.executable, 'ProteinMPNN/protein_mpnn_run.py',
-        '--pdb_path', pdb_path, '--pdb_path_chains', chains,
+        '--pdb_path', str(pdb_path).replace('\\', '/'), '--pdb_path_chains', chains,
         '--num_seq_per_target', str(num_samples),
         '--sampling_temp', str(temperature),
         '--seed', str(seed),
