@@ -77,6 +77,11 @@ def run_mpnn(pdb_path, chains, num_samples, temperature, seed, omit_aas):
         lines.append(diag)
     return '\n'.join(lines), fasta_str, results_list
 def run_esmif(pdb_path, chain, temperature, num_samples):
+    # The compat shim must land before fair-esm's import-time biotite lookup;
+    # load_esmif() also patches, but it is called after this import.
+    from esmif_compat import install_biotite_compat, install_torch_scatter_fallback
+    install_torch_scatter_fallback()
+    install_biotite_compat()
     from esm.inverse_folding import util as if_util
     model = load_esmif()
     try:
