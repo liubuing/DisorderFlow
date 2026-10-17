@@ -15,7 +15,7 @@
 
 | 资产 | 路径 | 说明 |
 |---|---|---|
-| PAE 代理三种子部署 | `logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__*/checkpoints/{1000,800,800}.pt` | 冻结校准映射在 `publication/candidate_interface_pae_deployment_v1.json`；对应 Bioinformatics 投稿稿 |
+| PAE 代理三种子部署 | `logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__*/checkpoints/{1000,800,800}.pt` | 冻结校准映射在 `publication/candidate_interface_pae_deployment_v1.json`；PAE 当前目标为 PLOS Computational Biology，见 2026-09-30 期刊路由记录；ECLS 保留 Bioinformatics |
 | ECLS 冻结结果 | `publication/ECLS_SCOPE_FREEZE.yml` + 结果文件 sha256 | 禁止 temporal-final 重跑 |
 
 ## 历史版本（不删，但不是"当前"）

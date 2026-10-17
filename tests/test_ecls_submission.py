@@ -8,7 +8,7 @@ import pytest
 
 from scripts.prepare_ecls_submission import portable_copy
 from scripts.verify_ecls_saved_results import read, verify_scores, verify_ranking, verify_manifest
-from scripts.validate_publication_alignment import publication_blockers
+from scripts.validate_publication_alignment import publication_blockers, publication_state_errors
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -78,3 +78,15 @@ def test_declarations_are_not_inferred_from_valid_content():
     assert 'funding' in blockers
     assert 'conflicts_of_interest' in blockers
     assert 'all_authors_approve_public_archive' in blockers
+
+
+def test_reserved_doi_cannot_be_promoted_to_publication_by_prose():
+    submission = {'remote_publication_confirmed':False, 'reserved_doi':'10.5281/zenodo.23037055'}
+    documents = {'manuscript':'The public archive is deposited on Zenodo (DOI: 10.5281/zenodo.23037055).',
+                 'cover':'The corresponding immutable code revision is tagged in the source repository at publication.'}
+    assert len(publication_state_errors(submission,documents)) == 2
+
+
+def test_planned_doi_and_pending_release_are_consistent():
+    text = 'Planned Zenodo DOI: 10.5281/zenodo.23037055; public release and remote file verification remain pending.'
+    assert publication_state_errors({'remote_publication_confirmed':False},{'manuscript':text}) == []

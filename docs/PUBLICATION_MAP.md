@@ -1,6 +1,6 @@
 # Current publication map
 
-Updated 2026-09-28. Authoritative current routing: release/ecls_v1/publication_line.json. The frozen ECLS scientific scope remains unchanged; current editorial title and routing supersede older draft instructions.
+Updated 2026-10-03. Authoritative current routing: release/ecls_v1/publication_line.json. The frozen ECLS scientific scope remains unchanged; current editorial title and routing supersede older draft instructions.
 
 ## Primary manuscript and archive
 
@@ -13,7 +13,7 @@ Updated 2026-09-28. Authoritative current routing: release/ecls_v1/publication_l
 - Authors and pending declarations: release/ecls_v1/submission_metadata.json.
 - Current archive: dist/disorderflow-ecls-v1-reviewer-package.zip.
 - Active staging: release/zenodo_v1/upload/, enumerated by UPLOAD_MANIFEST.json.
-- Stage: scientific manuscript rewritten for author review; author declarations and verified remote publication pending. No journal submission or DOI is asserted.
+- Stage: scientific manuscript rewritten for author review; author declarations and verified remote publication pending. Planned DOI 10.5281/zenodo.23037055 is recorded but is not evidence of a published archive. No journal submission is asserted. Author information remains withheld from rendered artifacts.
 
 The narrative asks whether native-sequence recognition extends to candidate ranking. The primary temporal result remains mean advantage 0.172281, 95% CI [0.059156, 0.291920], on 31 structures in 15 antigen clusters. Universal candidate-ranking superiority was not established. Calibration is exploratory. There is no experimental binding claim.
 
@@ -22,6 +22,8 @@ The narrative asks whether native-sequence recognition extends to candidate rank
 | Material | Role |
 |---|---|
 | publication/pae_screening_evidence_v20_draft.md | Current PAE results/methods draft; retrospective composition-driven screening |
+| docs/PAE_ANALOG_TRANSFER_V30.md | Frozen analogue-transfer results (TCR-pMHC): preregistered recall 50.0% vs 21.4% random, CI [17.5, 39.7] pp, 6/6 families positive; composition-only ties; native vs shuffle indistinguishable |
+| PAE journal routing | Target changed to PLOS Computational Biology 2026-09-30 (publication/pae_journal_routing_decision_v1.json); manuscript draft publication/pae_analog_manuscript_draft_v1.md; ECLS keeps Bioinformatics |
 | docs/PAE_EVIDENCE_AUDIT_V20.md and docs/PAE_NEW_FAMILY_FEASIBILITY_V21.md | Current PAE claim limits and lack of newly eligible candidates within the searched scope |
 | publication/af2_interface_pae_surrogate_manuscript_v4.md | Corrected historical PAE revision; v4 corrections remain binding context |
 | PAE v3 Markdown, TeX and PDF | Superseded submission versions; not current submission artifacts |

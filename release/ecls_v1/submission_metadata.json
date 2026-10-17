@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_date": "2026-09-28",
+  "updated_date": "2026-10-18",
   "primary_line": "ecls",
   "target_venue": "Bioinformatics",
   "article_type": "Original Paper",
@@ -50,18 +50,18 @@
       "english_spelling_confirmed": false
     },
     {
-      "name_zh": "（已移除的作者）",
-      "name_en": "Removed Author",
-      "deposit_name": "Removed Author",
+      "name_zh": "胡岳",
+      "name_en": "Yue Hu",
+      "deposit_name": "Hu, Yue",
       "order": 5,
       "corresponding": true,
-      "email": "removed-contact@invalid",
+      "email": null,
       "affiliation": null,
       "affiliation_confirmed": false,
       "english_spelling_confirmed": false
     }
   ],
-  "author_order_source": "explicit user confirmation in this chat, 2026-09-28",
+  "author_order_source": "explicit user confirmation in this chat, 2026-09-28 (five-author order of record), revised by explicit user confirmations, 2026-10-18: one previously listed author removed entirely at user instruction and corresponding author assigned to Hu Yue in last position; the 2026-10-18 removal supersedes the 2026-09-28 order",
   "author_contributions": null,
   "funding": null,
   "conflicts_of_interest": null,
@@ -75,6 +75,7 @@
   "remote_record_url": null,
   "pending": [
     "English spellings and author-affiliation mapping",
+    "Corresponding author (Hu Yue) email and affiliation",
     "CRediT contributions",
     "Funding and conflict-of-interest declarations",
     "All-author approval",
@@ -83,5 +84,9 @@
     "Authenticated Zenodo publication and remote checksum verification"
   ],
   "authors_withheld_from_rendered_artifacts": true,
-  "authors_withheld_note": "Author names/email removed from manuscript, cover letter, PDF metadata and Zenodo creators on 2026-09-29 pending spelling/affiliation confirmation; the authors array below remains the internal order-of-record."
+  "authors_withheld_note": "Author names/email removed from manuscript, cover letter, PDF metadata and Zenodo creators on 2026-09-29 pending spelling/affiliation confirmation; the authors array below remains the internal order-of-record.",
+  "reserved_doi": "10.5281/zenodo.23037055",
+  "reserved_record_url": "https://zenodo.org/records/23037055",
+  "doi_status": "recorded_as_reserved; public_release_unverified",
+  "publication_status_check": "release/ecls_v1/PUBLICATION_STATUS_CHECK_20261003.json"
 }

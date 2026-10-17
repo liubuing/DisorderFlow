@@ -113,6 +113,7 @@ def build(root=ROOT):
         "release/ecls_v1/REFERENCE_AUDIT.md": "REFERENCE_AUDIT.md",
         "release/ecls_v1/CLAIM_EVIDENCE_MAP.md": "CLAIM_EVIDENCE_MAP.md",
         "release/ecls_v1/primary_results.csv": "primary_results.csv",
+        "release/ecls_v1/PUBLICATION_STATUS_CHECK_20261003.json": "PUBLICATION_STATUS.json",
         PREPARED + "/SOURCE_PROVENANCE.json": "SOURCE_PROVENANCE.json",
     }
     for name in [*data_sources.values(), "adaptation_cluster_assignments.json"]:

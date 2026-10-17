@@ -72,7 +72,9 @@ def render(source, output, label, stamp=True):
         'caption':ParagraphStyle('caption',fontName='Times-Roman',fontSize=11,leading=15,spaceAfter=10),
         'table':ParagraphStyle('table',fontName='Times-Roman',fontSize=10,leading=13),
     }
-    source=Path(source);lines=source.read_text(encoding='utf-8').splitlines();story=[];i=0
+    source=Path(source);source_text=source.read_text(encoding='utf-8');lines=source_text.splitlines();story=[];i=0
+    revision=re.search(r'(?:Author-review version, |Revision: )([^\.]+)\.',source_text)
+    review_date=revision.group(1) if revision else 'Undated'
     front = source.name == 'MANUSCRIPT_DRAFT.md'
     while i<len(lines):
         line=lines[i].strip()
@@ -112,7 +114,7 @@ def render(source, output, label, stamp=True):
     def page(canvas,doc):
         canvas.saveState();canvas.setFont('Times-Roman',9);canvas.setFillColor(colors.HexColor('#58636a'))
         if stamp:
-            canvas.drawString(67,A4[1]-34,label+' | Author-review draft | 29 September 2026')
+            canvas.drawString(67,A4[1]-34,label+' | Author-review draft | '+review_date)
         canvas.drawRightString(A4[0]-62,30,str(doc.page));canvas.restoreState()
     doc=SimpleDocTemplate(str(output),pagesize=A4,rightMargin=62,leftMargin=67,topMargin=57,bottomMargin=52,
                           title=lines[0].lstrip('# '),author='',

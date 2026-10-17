@@ -1,6 +1,6 @@
 {
   "schema_version": "publication_line_v1",
-  "updated_date": "2026-09-29",
+  "updated_date": "2026-10-03",
   "primary_line": "ecls",
   "release_id": "disorderflow-ecls-v1",
   "manuscript_title": "Peptide-context scoring of antibody loops: native recognition and the limits of candidate ranking",
@@ -30,5 +30,5 @@
   "supplement": "publication/ECLS_SUPPLEMENT.md",
   "public_primary_results": "release/ecls_v1/prepared/temporal_results_portable.json",
   "submission_metadata": "release/ecls_v1/submission_metadata.json",
-  "editorial_revision": "2026-09-29 narrative figures and saved-score package verification; frozen scientific endpoint unchanged"
+  "editorial_revision": "2026-10-03 publication-state correction and current package alignment; frozen scientific endpoint unchanged"
 }

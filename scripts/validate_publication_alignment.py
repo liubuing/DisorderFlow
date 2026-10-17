@@ -84,6 +84,18 @@ def publication_blockers(submission):
     return blockers
 
 
+def publication_state_errors(submission, documents):
+    """A planned DOI must not silently become a claim of verified publication."""
+    if submission.get('remote_publication_confirmed'):
+        return []
+    premature_claims = ('public archive is deposited on zenodo',
+                        'record is published together with the submission',
+                        'immutable code revision is tagged in the source repository')
+    return [f'Unverified publication claim in {name}: {claim}'
+            for name, content in documents.items()
+            for claim in premature_claims if claim in content.lower()]
+
+
 def validate(root=ROOT):
     root = Path(root)
     errors = []
@@ -95,6 +107,11 @@ def validate(root=ROOT):
     manifest = read(base/'UPLOAD_MANIFEST.json')
     manuscript = (root/line['manuscript']).read_text(encoding='utf-8-sig')
     title = manuscript.splitlines()[0].removeprefix('# ')
+    errors.extend(publication_state_errors(submission, {
+        line['manuscript']:manuscript,
+        'publication/Cover_Letter_Bioinformatics.md':
+            (root/'publication/Cover_Letter_Bioinformatics.md').read_text(encoding='utf-8'),
+    }))
     if line['primary_line']!='ecls' or manifest.get('primary_line')!='ecls':
         errors.append('Primary line must be ECLS')
     if title!=line['manuscript_title'] or metadata['title']!=title+' (ECLS v1 reproducibility package)':

@@ -2,6 +2,8 @@
 
 This is a local author-review candidate, not a published record. The manuscript title is Peptide-context scoring of antibody loops: native recognition and the limits of candidate ranking. Scientific content has been rewritten around one question and two separate tests. Author declarations, manuscript/data license, immutable public code revision and remote DOI remain pending.
 
+Planned DOI 10.5281/zenodo.23037055 is recorded in project history. The public checks in PUBLICATION_STATUS.json did not verify a published record on 3 October 2026. Publication and remote file checksums remain unconfirmed; a reserved identifier must not be cited as completed publication. Author details are currently withheld from rendered artifacts while their internal order is retained.
+
 ## Run numerical verification
 
 Use Python 3.10 or later with NumPy installed. Extract this archive into a new directory and run:
