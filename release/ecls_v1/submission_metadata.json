@@ -88,5 +88,6 @@
   "reserved_doi": "10.5281/zenodo.23037055",
   "reserved_record_url": "https://zenodo.org/records/23037055",
   "doi_status": "recorded_as_reserved; public_release_unverified",
+  "reserved_doi_source_commit": "278ff97c (recorded as 04581bb0 on 2026-09-29, prior to the 2026-10-18 history scrub of the release line)",
   "publication_status_check": "release/ecls_v1/PUBLICATION_STATUS_CHECK_20261003.json"
 }
