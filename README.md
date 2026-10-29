@@ -1,5 +1,7 @@
 # DisorderFlow — ECLS Structural Sequence Scoring
 
+[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/liubuing/badge.svg)](https://hub.xerj.org/contributors/liubuing)
+
 DisorderFlow is a research repository for antibody–peptide sequence scoring
 and related BFN design experiments. **The current primary manuscript and
 release are ECLS v1**, targeting a computational structural sequence-scoring
