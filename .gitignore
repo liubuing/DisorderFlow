@@ -236,3 +236,17 @@ publication/*.blg
 
 # Local agent tooling state
 /.zcode/
+
+# Publication/editorial materials and manuscript markup (unpublished, keep local)
+/publication/AI_FLAVOR_MARKUP_20261014.docx
+/publication/AI_FLAVOR_MARKUP_20261018.docx
+/publication/PAE_PLOS_SUBMISSION_MARKUP.docx
+/publication/pae_journal_routing_decision_v1.json
+/release/ecls_v1/EDITORIAL_HANDOFF_20261003.md
+/release/ecls_v1/PUBLICATION_STATUS_CHECK_20261003.json
+/scripts/render_ai_flavor_markup.py
+
+# Local editor state and stray artifacts
+/.vscode/
+/Untitled-1.cpp
+/C/
