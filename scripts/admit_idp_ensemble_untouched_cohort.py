@@ -12,10 +12,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件的 SHA-256 摘要，用于把输入工件固化进审计记录，保证可溯源、防篡改。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def admit(discovery_path, registry_path, output, curation_path=None):
+    # 裁决"未接触队列"是否准入。
+    # 参数:
+    #   discovery_path: 发现阶段产物（含 candidate_entry_ids）。
+    #   registry_path: 历史注册表，仅作对照，其中的结构一律视为不合格。
+    #   output: 输出 JSON 路径；已存在则拒绝写入（fail-closed，防止覆盖既有审计工件）。
+    #   curation_path: 可选的人工整理结果，提供 component/target 计数等准入证据。
+    # 返回: 描述准入决策的 payload 字典；准许与拒绝两种结果都会落盘留痕。
+    # 准入阈值（>=12 个新结构、>=12 条独立 lineage、>=3 个靶点、单簇 <=2）为
+    # 冻结协议约定，用于保证新队列的规模与多样性，避免被单一家族主导。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite cohort admission: {output}")
     discovery = json.loads(discovery_path.read_text(encoding="ascii"))
@@ -67,6 +77,7 @@ def admit(discovery_path, registry_path, output, curation_path=None):
 
 
 def main():
+    # 命令行入口：解析参数后执行准入裁决，并把完整决策 JSON 打印到 stdout。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--discovery", type=Path, required=True)
     parser.add_argument(

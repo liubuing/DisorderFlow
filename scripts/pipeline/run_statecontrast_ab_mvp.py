@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Run StateContrast-Ab MVP on A-beta reference contact maps."""
+# 目的：StateContrast-Ab 最小可行产品（MVP）运行器——对白名单内的 Aβ 参考结构
+# 逐一提取接触图，构造"抗体结合态"正状态与若干负状态，生成接触导向变体
+# （每参考 500 条、最多 4 突变、逐参考递增种子），按状态对比分排序，
+# 并做高低分位（top 20%）特征归因与富集分析，输出评分/归因/富集 CSV。
 from __future__ import annotations
 
 import argparse

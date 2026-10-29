@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 """Validate blinded v3 binding, specificity, expression, and QC measurements."""
 
+# 目的：检查盲法实验测量（结合 Kd、表达量、特异性、QC）是否对 v3 面板全部
+# 组分齐备且列结构完整。仅做"测量完备性"判定（measurements_complete/blocked），
+# 决定是否允许进入冻结分析；不表达任何疗效或效力结论。
+
 from __future__ import annotations
 
 import argparse
@@ -19,6 +23,8 @@ REQUIRED_COLUMNS = {
 
 
 def check(measurements, panel_path, output):
+    # 主检查：拒绝覆盖已有输出→读取面板组分与测量 CSV→过滤有效行
+    #（组分在面板内且各字段非空/取值合法）→比较测量组分集合与面板全集。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite measurement status: {output}")
     panel = json.loads(panel_path.read_text(encoding="ascii"))

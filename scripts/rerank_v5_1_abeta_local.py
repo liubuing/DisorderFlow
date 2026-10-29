@@ -30,6 +30,7 @@ from state_contact_scorer import extract_contact_map  # noqa: E402
 from disorderflow.utils.protein.constants import ChothiaCDRRange  # noqa: E402
 
 AA = "ACDEFGHIKLMNPQRSTVWY"
+# 参考复合物: PDB 路径与肽段(抗原)链 ID, 用于接触图与突变定位
 REFERENCES = {
     "4HIX": {"path": "data/anti_abeta_refs/4HIX.pdb", "peptide_chain": "A"},
     "5CSZ": {"path": "data/anti_abeta_refs/5CSZ.pdb", "peptide_chain": "E"},
@@ -66,6 +67,8 @@ def construct_chains(records, construct_id):
 
 
 def mutation_map(row, contact_map):
+    # 解析 "A12V;T30S" 形式的突变串(1-based 指标 -> paratope_residues 下标),
+    # 校验原生残基一致后输出 {(链, 残基号): 替换单字母}
     mutations = {}
     for token in row["mutations"].split(";"):
         match = re.fullmatch(r"([A-Z])(\d+)([A-Z])", token.strip())
@@ -80,6 +83,9 @@ def mutation_map(row, contact_map):
 
 
 def build_batch(reference, mutations, profile, device):
+    # 构建单条候选的推理 batch: 以参考复合物为骨架, 对突变位点做 mask_region,
+    # 再把突变后的氨基酸写入被生成区域; 肽段链按"残基数等于 profile 长度"唯一识别,
+    # 并在其上挂校正后的表位无序 profile; fixed_t 取 0.5 的中间噪声水平
     design_chains = sorted({chain for chain, _ in mutations})
     peptide_chain = reference["peptide_chain"]
     structure = preprocess_protein_structure(
@@ -124,6 +130,8 @@ def build_batch(reference, mutations, profile, device):
 
 
 def evaluate(model, source_batch, device, factual, seed):
+    # 单次前向评估: factual=True 使用真实无序 profile, False 则清零(反事实对照);
+    # 用 forward hook 抓取 receiver 输出, 统计生成区域的 NLL/恢复率/接触头均值
     batch = recursive_to(copy.deepcopy(source_batch), device)
     if not factual:
         batch["epitope_disorder_profile"].zero_()
@@ -141,6 +149,7 @@ def evaluate(model, source_batch, device, factual, seed):
         handle.remove()
     output = captured["output"]
     generated = batch["generate_flag"].bool() & batch["mask"].bool()
+    # output[0] 为氨基酸 logits(取前 20 个标准氨基酸通道); output[8] 为接触头 logits
     logits = output[0][..., :20][generated].float()
     targets = batch["aa"][generated].long()
     return {
@@ -209,6 +218,8 @@ def main():
             failures.append({"candidate_id": row["candidate_id"], "error": "construct_sequence_missing"})
             continue
         condition_advantage = zero["nll"] - factual["nll"]
+        # 综合重排名分数: 0.40 候选分 + 0.25 接触保持(上限 1.2 截断归一) +
+        # 0.20 条件优势(sigmoid(-5x), 无序条件带来的 NLL 改善) + 0.15 事实接触头均值
         combined = (
             0.40 * float(row["candidate_score"])
             + 0.25 * min(float(row["contact_retention"]), 1.2) / 1.2

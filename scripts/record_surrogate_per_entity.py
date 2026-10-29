@@ -6,6 +6,11 @@ script only materializes per-entity predictions for the generator-baseline
 comparison and measures per-record wall time for the cost table.
 """
 
+# 目的：按实体记录 PAE 代理（surrogate）预测与推理耗时——纯评估脚本：
+# 复用冻结部署合同的三个种子检查点（2041/2053/2069）在 transfer/holdout
+# 两个已冻结 LMDB 上推理，落盘逐实体预测记录与每实体秒数（成本表用）。
+# 门控判定不在本脚本内进行。
+
 from __future__ import annotations
 
 import json

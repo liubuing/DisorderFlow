@@ -5,6 +5,10 @@ Fixes the V8 "红斑": AUC=1.0 from single Aβ42 (42 residues) vs 15327 folded.
 Uses balanced set of IDPs from SAbDab disorder lookup + folded SAbDab complexes.
 Reports AUC-ROC/PR with proper class balance.
 """
+# 角色：V12 CAID 标准基准——修复 V8 的"红斑"（单条 42 残基 Aβ42 vs 15327 条折叠
+# 导致 AUC=1.0 的类失衡假象）：改用 SAbDab 无序查表提供的多条 IDP（目标约
+# 5000 个无序残基）对 80 条折叠 SAbDab 复合物的均衡评测，报告 AUC-ROC/AUC-PR。
+# 使用 V20 检查点（V15 作对照），预测后立即还原 app_config.yaml。
 import sys, os, pickle, time, json, random
 sys.path.insert(0, '.'); sys.path.insert(0, 'modules')
 import numpy as np
@@ -14,8 +18,8 @@ from collections import defaultdict
 
 V20_CKPT = 'logs/bfn_v20_amplify_xpu_2026_07_02__21_32_16_v20_win/checkpoints/best.pt'
 V15_CKPT = 'logs/bfn_v15_binding_xpu_2026_06_26__15_52_10/checkpoints/best.pt'
-N_SABDAB = 80  # folded complexes
-N_IDP_RESIDUES_TARGET = 5000  # target disordered residues for balance
+N_SABDAB = 80  # folded complexes（折叠类样本量）
+N_IDP_RESIDUES_TARGET = 5000  # target disordered residues for balance（无序类目标残基数，控制类平衡）
 
 print("=" * 60)
 print("V12 CAID Standard Benchmark — Multi-IDP Balanced")

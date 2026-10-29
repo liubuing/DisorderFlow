@@ -1,4 +1,8 @@
 """Sequence-only coordinate compatibility and H3-only feasibility; no label access."""
+# 用途：仅基于序列做坐标兼容性与"仅 H3 突变"可行性审计（不接触任何数值标签）。
+# 流程：读取结构审计清单与序列投影（校验 sha256 防篡改），用滑窗把表序列
+# 唯一映射到观测坐标序列，再逐行分类；输出 sequence_audit.json 与
+# 暂定的 H3 坐标兼容行 JSONL。共识序列仅作诊断，不代表实验亲本序列。
 import hashlib
 import json
 from collections import Counter, defaultdict
@@ -11,6 +15,7 @@ AA = set("ACDEFGHIKLMNPQRSTVWY")
 
 
 def consensus(sequences):
+    """对多条序列取逐位众数共识；先按最常见长度过滤，保证对齐。"""
     lengths = Counter(map(len, sequences))
     n = lengths.most_common(1)[0][0]
     selected = [s for s in sequences if len(s) == n]
@@ -37,7 +42,9 @@ def window_mapping(reference, query):
 
 
 def classify(h, l, h_ref, l_ref, h3):
+    """按严格程度递进的分类规则判定一条 (重链, 轻链) 记录的坐标兼容性。"""
     if set(h + l) - AA:
+        # 含非标准氨基酸则直接排除
         return "noncanonical"
     if len(h) != len(h_ref) or len(l) != len(l_ref):
         return "length_mismatch"
@@ -63,6 +70,7 @@ def main():
     acquisition = json.loads((OUT / "acquisition.json").read_text())
     results, eligible = [], []
     for receipt in acquisition["receipts"]:
+        # 校验序列投影文件未被改动（冻结哈希一致性检查）
         path = OUT / "sequences" / (Path(receipt["file"]).stem + ".jsonl")
         if hashlib.sha256(path.read_bytes()).hexdigest() != receipt["projection_sha256"]:
             raise ValueError("Sequence projection changed")
@@ -94,6 +102,7 @@ def main():
                   "heavy_mapping": hm, "light_mapping": lm, "diagnostic_heavy_consensus_not_parent": hc,
                   "diagnostic_light_consensus_not_parent": lc, "classification_counts": dict(counts),
                   "coordinate_compatible_unique_pairs": len(unique),
+                  # 审计边界：仅序列层面的坐标可行性，不验证实验亲本，也不可直接用于打分
                   "experimental_parent_verified": False, "ready_for_scoring": False}
         results.append(result)
         eligible.extend({"table": receipt["file"], "structure": r["instance"], **x} for x in accepted)

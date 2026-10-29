@@ -16,6 +16,11 @@ Categories (aligned with scripts/render_ai_flavor_markup.py):
 The script self-verifies highlight counts and source coverage before exiting.
 """
 
+# 目的：把 PLOS 投稿格式的 PAE 手稿渲染为带五类 AI 痕迹高亮的 DOCX 审阅副本：
+# 按句子级正则规则分类（A 边界否定句/黄、D 限定公式/亮绿、B 路标元话语/青、
+# C 警句/粉），逐 run 应用 Word 高亮并附图例；退出前自检高亮计数与源覆盖。
+# 仅用于稿件语言审阅，不改动科学内容。
+
 from __future__ import annotations
 
 import re

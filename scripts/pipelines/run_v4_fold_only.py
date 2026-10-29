@@ -1,4 +1,8 @@
 """V4 Step 1: AF2-fold 10 designs + 4 native/scram controls, save CDR coords."""
+# V4 步骤 1：用 AF2 单链折叠 5 个生成设计 + 4 个天然/打乱对照（各天然 CDR
+# 附一条打乱版），并把每个设计的 CDR 区 N/CA/C 原子坐标与 pLDDT 保存下来，
+# 供后续步骤在真实折叠构象上做对接/接触分析（AF2 折叠较慢，故只取 top-5 设计）。
+# 需在 WSL 中运行（依赖 af2_jax_runner）。
 import sys,os,json,time,numpy as np,random
 os.chdir("/mnt/d/biological/DisorderFlow")
 sys.path.insert(0,"/mnt/d/biological/DisorderFlow")
@@ -8,6 +12,7 @@ from Bio.PDB import PDBParser
 AA3={"ALA":"A","ARG":"R","ASN":"N","ASP":"D","CYS":"C","GLU":"E","GLN":"Q","GLY":"G","HIS":"H","ILE":"I","LEU":"L","LYS":"K","MET":"M","PHE":"F","PRO":"P","SER":"S","THR":"T","TRP":"W","TYR":"Y","VAL":"V"}
 
 # Load top-5 designs only (AF2 folding is slow)
+# 只取 top-5 设计（AF2 折叠耗时，控制运行时长）
 with open("idp_design_results/p3_scale_top100_20260629_030111.json") as f:
     designs=json.load(f)[:5]
 

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Verify donor heavy/H3 sequences and freeze independent-scorer inputs."""
 
+# 目的：为 IDP 集成扩展开发 v2 冻结独立打分器（independent scorer）的输入：
+# 校验同谱系供体抗体的重链/H3 序列是否与参考组分一致，挑选每对 (component, pdb)
+# 的最佳供体链，按 Kabat H3 区（残基 93-102）编号比对 H3，并逐供体给出接受/拒绝理由。
+# 输出两个 JSON：donor_audit（供体审计）与 scorer_inputs（冻结的打分器参考输入）。
+
 from __future__ import annotations
 
 import argparse
@@ -34,10 +39,15 @@ def sha256(path):
 
 
 def sequence_identity(left, right):
+    # 用 difflib 的最长匹配块比率近似序列恒等度；此处仅用于供体排序/阈值筛选，
+    # 非严格的 Smith-Waterman 比对。
     return difflib.SequenceMatcher(None, left, right).ratio()
 
 
 def audit(config_path, donor_output, scorer_output):
+    # 主审计：先拒绝覆盖已存在的输出（保证冻结产物不被意外重写），校验三个冻结输入
+    # 哈希，然后为每个组分挑选同谱系最佳供体链并按配置阈值（最小重链恒等度、
+    # 最小实验姿态数）判定接受与否，最后落盘 donor_audit 与 scorer_inputs 两个 JSON。
     for path in (donor_output, scorer_output):
         if path.exists():
             raise FileExistsError(f"Refusing to overwrite scorer input artifact: {path}")
@@ -104,6 +114,7 @@ def audit(config_path, donor_output, scorer_output):
             best = max(candidates, key=lambda row: (row[0], row[1]))
             best_records[(component["component_id"], pdb_id)] = best
             donor_sequences[f"{component['component_id']}::{pdb_id}"] = best[3]
+    # [93, 102]：Kabat 编号下 CDR-H3 的残基区间，用于从完整重链中切出 H3 序列做比对。
     numbered = number_h3(donor_sequences, [93, 102]) if donor_sequences else {}
     components = []
     scorer_components = []

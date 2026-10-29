@@ -22,10 +22,12 @@ from docx.oxml import OxmlElement
 
 # ── Configuration ──────────────────────────────────────────────────────────
 
+# 输入/输出路径（相对仓库根目录运行）。
 MARKDOWN_PATH = 'DISORDERFLOW_COMPLETE_GUIDE.md'
 OUTPUT_PATH = 'DisOrderFlow_完整说明书.docx'
 
 # Font settings for Chinese readability
+# 字体配置：正文/标题用中文字体，代码块用等宽字体；各级标题字号与颜色递减。
 BODY_FONT = '微软雅黑'
 BODY_SIZE = Pt(10.5)
 CODE_FONT = 'Consolas'
@@ -40,6 +42,7 @@ H3_SIZE = Pt(11.5)
 
 def setup_styles(doc):
     """Configure document styles for Chinese readability."""
+    # Normal 样式：中文字体需同时设置 w:eastAsia，否则 Word 里中文回退默认字体。
     style = doc.styles['Normal']
     font = style.font
     font.name = BODY_FONT
@@ -260,6 +263,8 @@ def add_image_placeholder(doc, caption):
 def parse_and_render(doc, md_text):
     """Parse markdown text and render into the Word document, section by section."""
 
+    # 单遍扫描 markdown 行流，用三个缓冲区分别积累表格/代码块/ASCII 图示，
+    # 在块结束时一次性 flush 成对应的 Word 元素，保证排版完整。
     lines = md_text.split('\n')
     i = 0
     table_buffer = []
@@ -322,6 +327,7 @@ def parse_and_render(doc, md_text):
             flush_table()
 
         # ASCII art detection (lines starting with spaces/special chars for diagrams)
+        # 缩进行视为 ASCII 图示；排除以 * 或 - 开头的列表项与字母开头的代码行。
         if (line.startswith('    ') or line.startswith('   ')) and not line.strip().startswith('*') and not line.strip().startswith('-') and not line.strip()[0].isalpha() if line.strip() else False:
             if not in_ascii_art:
                 flush_code()
@@ -395,6 +401,7 @@ def parse_and_render(doc, md_text):
                     break
             bq_text = ' '.join(bq_lines)
             # Determine box type
+            # 根据引用文本中的关键词选择提示框类型（警告/危险/普通信息）。
             if any(w in bq_text for w in ['重要', '关键', '铁律', '必须', 'NOTE']):
                 box_type = 'warning'
             elif any(w in bq_text for w in ['风险', '不能', '禁止', '失败']):
@@ -474,6 +481,7 @@ def add_header_footer(doc):
         run.element.rPr.rFonts.set(qn('w:eastAsia'), BODY_FONT)
 
         # Footer with page number
+        # 页脚插入 Word 域字段(fldChar begin -> PAGE -> end)实现自动页码。
         footer = section.footer
         fp = footer.paragraphs[0] if footer.paragraphs else footer.add_paragraph()
         fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -505,6 +513,8 @@ def add_toc_page(doc):
     # We'll add the TOC as a structured list of the main sections
     # The actual Word TOC field is unreliable across Word versions,
     # so we use a manual TOC for reliability
+    # 目录为手工硬编码条目（而非 Word TOC 域），跨版本更可靠，但
+    # markdown 章节变化时需要同步维护此处列表。
 
     p = doc.add_paragraph()
     p.paragraph_format.space_before = Pt(24)
@@ -621,6 +631,7 @@ def main():
 
     # ── Main Content ──
     # Find where the actual content starts (after frontmatter divider)
+    # 跳过 markdown 头部的 frontmatter（第二条 --- 分隔线之后才是正文）。
     content_start = 0
     content_lines = md_text.split('\n')
     for i, line in enumerate(content_lines):

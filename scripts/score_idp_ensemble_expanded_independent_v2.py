@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Score fixed expanded-IDP candidates with an orthogonal contact scorer."""
 
+# 目的：用正交（与生成器无关）的接触打分器给固定扩展 IDP 候选打分：
+# 在参考姿态上定位 native CDR-H3（精确子串匹配），按重原子最小距离统计
+# H3-表位界面接触（contact_cutoff 为接触判定距离，sidechain_cutoff 用于
+# 侧链级细分），调用 modules.h3_interface_contacts.score_h3_sequence 评分。
+# 输入哈希全部冻结校验，属独立评估通道，不依赖训练/生成器的内部表示。
+
 from __future__ import annotations
 
 import argparse
@@ -49,6 +55,7 @@ def residue_rows(chain):
 
 
 def minimum_distance(left, right):
+    # 两组重原子间的最小欧氏距离（含原子对名称），用于接触判定。
     values = [
         (float(np.linalg.norm(left_coordinate - right_coordinate)),
          (left_name, right_name))

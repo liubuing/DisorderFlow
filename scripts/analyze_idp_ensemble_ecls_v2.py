@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Evaluate a jackknife lower-envelope ECLS selector on exposed components."""
 
+# 本脚本是 DisorderFlow 科研管线中 IDP ensemble 的 ECLS v2 开发评估工具：
+# 读取冻结的成分级得分输入（逐文件做 SHA-256 校验），对每个暴露面板成分执行
+# "留一折叠 + jackknife 下包络"选择器，比较 ensemble 选择与单态选择的
+# ensemble-minus-single 效应量，并按配置门槛判定是否可进入未来冻结流程。
+# 输入：YAML 配置 + 冻结 JSON 分析文件；输出：JSON 汇总与 Markdown 报告。
+
 from __future__ import annotations
 
 import argparse
@@ -16,9 +22,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256 摘要，用于冻结输入与配置的来源校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 稳健聚合得分：p25 分位数、最小值、均值按权重组合，再减去标准差惩罚，
+# 在多个训练构象上给出保守（偏悲观）的候选评分。
 def robust_value(values, aggregation):
     values = np.asarray(values, dtype=np.float64)
     return float(
@@ -29,6 +38,9 @@ def robust_value(values, aggregation):
     )
 
 
+# Jackknife 下包络选择器：对每个候选逐一删除一个训练构象后计算稳健得分，
+# 取最小值作为下包络得分；在全部候选中选最高者（并列时按序列名打破平局）。
+# 要求至少两个训练构象，否则 jackknife 无意义。
 def jackknife_lower_envelope(matrix, training, sequences, aggregation):
     if len(training) < 2:
         raise ValueError("Jackknife lower envelope requires at least two training conformers")
@@ -48,6 +60,7 @@ def jackknife_lower_envelope(matrix, training, sequences, aggregation):
     return winner, scores, inner_scores
 
 
+# Bootstrap 均值置信区间：有放回重采样 trials 次，返回 2.5%/97.5% 分位数（95% CI）。
 def bootstrap_mean(values, trials, seed):
     array = np.asarray(values, dtype=np.float64)
     generator = np.random.default_rng(seed)
@@ -55,6 +68,8 @@ def bootstrap_mean(values, trials, seed):
     return [float(np.quantile(estimates, 0.025)), float(np.quantile(estimates, 0.975))]
 
 
+# 精确符号翻转检验：枚举全部 ±1 符号组合，计算 |均值| 不小于观测值的比例作 p 值；
+# 1e-12 容差用于抵消浮点比较误差；组合数随样本量呈 2^n 增长，仅适用于小样本。
 def exact_sign_flip_p(values):
     array = np.asarray(values, dtype=np.float64)
     observed = abs(float(array.mean()))
@@ -65,6 +80,10 @@ def exact_sign_flip_p(values):
     return float(np.mean(np.asarray(estimates) >= observed - 1e-12))
 
 
+# 对单个暴露成分做留一（leave-one-fold-out）分析：每次留出一个构象作验证，
+# 其余作训练集；比较 ensemble 选择的得分与逐训练集单态最优得分的中位数，
+# 并记录两类"仅报告型"弃权条件（各训练集单态最优与 ensemble 选择完全一致 /
+# 训练集候选得分极差中位数低于阈值即训练信号过低），二者命中任一即不符合报告条件。
 def analyze_component(component, method_row, config):
     sequences = method_row["sequences"]
     matrix = np.asarray(method_row["epitope_conditioning_gain"], dtype=np.float64)
@@ -125,6 +144,9 @@ def analyze_component(component, method_row, config):
     }
 
 
+# 跨成分汇总：统计效应量方向与幅度、bootstrap 置信区间、精确符号翻转 p 值，
+# 并按配置中的 development gates 逐项判定是否"通过、可进入未来冻结"。
+# seed_offset 使不同方法在 bootstrap_seed 基础上使用互不相同的随机流。
 def summarize(rows, config, seed_offset):
     values = [row["mean_ensemble_minus_single_state"] for row in rows]
     epsilon = float(config["statistics"]["mathematical_effect_epsilon"])
@@ -171,6 +193,8 @@ def summarize(rows, config, seed_offset):
     }
 
 
+# 生成 Markdown 开发报告；以 ASCII 编码写入，保证产物跨平台可复现。
+# 报告明确声明这是开发机制评估，不构成确认性结论（见 claim_boundary）。
 def write_report(path, output):
     primary = output["method_summary"][output["primary_method"]]
     lines = [
@@ -197,6 +221,8 @@ def write_report(path, output):
     path.write_text("\n".join(lines), encoding="ascii")
 
 
+# 主入口：加载配置 → 校验并读取全部冻结输入（哈希不匹配即抛错终止）→
+# 按方法分组逐成分分析 → 汇总门槛判定 → 写出 JSON 结果与 Markdown 报告。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

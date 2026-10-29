@@ -23,6 +23,10 @@ def load_csv(path):
 
 
 def main():
+    # 汇总非 A-beta IDP 证据链的最终审计: 读取系综准备、姿态面板、
+    # 设计摘要、候选审计、Fv 折叠侧检、Fv repack、off-state 对比、
+    # 复合物折叠证据等全部中间审计工件，按靶点/抗体家族聚合
+    # （requested/passed 计数），产出家族隔离的最终证据审计 JSON。
     manifest = load_json("outputs/non_abeta_idp_ensemble_prep_v1/ensemble_manifest.json")
     poses = load_json("outputs/non_abeta_idp_pose_panels_v1/pose_panel_audit.json")
     design = load_json("outputs/non_abeta_idp_ensemble_design_v1/ensemble_design_summary.json")

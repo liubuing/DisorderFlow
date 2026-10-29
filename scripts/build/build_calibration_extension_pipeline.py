@@ -30,14 +30,16 @@ RAW_GEN = ROOT / RES / "raw_generation.json"
 RAW_AUDIT = ROOT / RES / "raw_generation_audit.json"
 SELECTION = ROOT / RES / "pre_af2_selection.json"
 
+# 四条生成臂：当前 BFN（disorder 开/关）、stage-A BFN 与 ProteinMPNN 基线
 ARMS = ["current_bfn_disorder_on", "current_bfn_disorder_off",
         "stage_a_antibody_bfn", "proteinmpnn"]
-SEEDS = [2609, 2617, 2621]
-CANDIDATES_PER_SEED = 8
-SLOTS_PER_ARM_COMPONENT = 3
+SEEDS = [2609, 2617, 2621]  # 固定生成种子，保证可复现
+CANDIDATES_PER_SEED = 8  # 每种子候选数
+SLOTS_PER_ARM_COMPONENT = 3  # 每臂每组件入选的候选槽数
 
 
 def sha256(path: Path) -> str:
+    # 流式计算文件 SHA256（1 MiB 分块，适配大文件）
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -46,6 +48,7 @@ def sha256(path: Path) -> str:
 
 
 def write_json_once(path: Path, payload: dict) -> None:
+    # 一次性写出 JSON：已存在则拒绝覆盖，保证冻结产物不被篡改
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite {path}")
@@ -53,6 +56,7 @@ def write_json_once(path: Path, payload: dict) -> None:
 
 
 def write_yaml_once(path: Path, payload: dict) -> None:
+    # 一次性写出 YAML：已存在则拒绝覆盖
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite {path}")
@@ -60,6 +64,7 @@ def write_yaml_once(path: Path, payload: dict) -> None:
 
 
 def component_specs() -> list[dict]:
+    # 从合并结构清单与隔离审计中提取每个独立组件及其代表记录
     merged = json.loads(MERGED.read_text(encoding="utf-8"))
     audit = json.loads(AUDIT.read_text(encoding="utf-8"))
     by_instance = {str(r["instance"]): r for r in merged["records"]}
@@ -96,6 +101,7 @@ def component_specs() -> list[dict]:
 
 
 def build_holdout() -> dict:
+    # 阶段1：冻结校准扩展的 holdout manifest（隔离阈值方案 vhvl_90_pairedcdr_70）
     specs = component_specs()
     manifest = {
         "schema_version": 1,
@@ -123,6 +129,7 @@ def build_holdout() -> dict:
 
 
 def build_lineage() -> dict:
+    # 阶段2：冻结 checkpoint 血缘（stage-A 随机初始化 -> stage-B disorder 监督）
     lineage = {
         "schema_version": 1,
         "status": "frozen_before_calibration_extension_generation",
@@ -154,6 +161,7 @@ def build_lineage() -> dict:
 
 
 def build_protocol() -> dict:
+    # 阶段3：冻结隔离协议（阈值/CDR 定义/生成与选择约束）
     protocol = {
         "schema_version": 2,
         "status": "frozen_before_calibration_extension_generation",
@@ -206,6 +214,7 @@ def build_protocol() -> dict:
 
 
 def build_genconfig() -> dict:
+    # 阶段4：冻结原始生成配置（四臂 x 三种子 x 每种子 8 条，保留失败与重复）
     config = {
         "schema_version": 1,
         "status": "frozen_before_calibration_extension_candidate_generation",
@@ -268,6 +277,7 @@ def build_genconfig() -> dict:
 
 
 def build_selconfig() -> dict:
+    # 阶段5：冻结 AF2 前的候选选择配置（仅基于序列多样性，禁用生成器/置信度等输入）
     config = {
         "schema_version": 1,
         "status": "frozen_before_calibration_extension_selection",
@@ -302,6 +312,7 @@ def build_selconfig() -> dict:
 
 
 def build_split() -> dict:
+    # 阶段6：冻结划分 manifest（train/test 为空，全部组件归入 calibration）
     manifest = {
         "schema_version": "candidate_interface_multiscaffold_split_v1",
         "status": "frozen_before_calibration_extension_af2",
@@ -322,6 +333,7 @@ def build_split() -> dict:
 
 
 def build_af2_configs() -> None:
+    # 阶段7：生成两个 AF2 multimer 模型的配置（含 native/组合打乱对照与实体数量预期）
     selection_sha = sha256(SELECTION)
     holdout_sha = sha256(HOLDOUT)
     split_sha = sha256(SPLIT)
@@ -383,6 +395,7 @@ def build_af2_configs() -> None:
 
 
 def main():
+    # 分阶段构建冻结产物；每阶段写出前打印路径与哈希，哈希链贯穿各阶段
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", required=True,
                         choices=["holdout", "lineage", "protocol", "genconfig",

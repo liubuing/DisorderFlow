@@ -1,4 +1,12 @@
-﻿import os
+﻿"""DisorderFlow / BFN 模型训练入口脚本。
+
+用法: python train.py <config.yml> [--resume ckpt] [--finetune ckpt] [--init ckpt] ...
+
+职责：解析配置与命令行 -> 校验数据/初始化器血统（lineage SHA-256 契约）-> 构建数据集
+与 DataLoader（支持多种按组分批的 sampler）-> 构建/加载模型 -> 训练循环（AMP 混合精度、
+梯度累积、EMA、负样本增强、IDP 加权损失）-> 验证与 checkpoint 保存/早停。
+"""
+import os
 import shutil
 import argparse
 import hashlib
@@ -10,6 +18,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from tqdm.auto import tqdm
 if torch.cuda.is_available():
+    # 允许 TF32：在 Ampere+ GPU 上以少量精度换取 matmul/cudnn 明显加速，训练场景可接受
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
 
@@ -30,6 +39,7 @@ class ScaffoldGroupedBatchSampler(torch.utils.data.Sampler):
     Each batch draws `batch_size` entries that share the same scaffold_id.
     """
     def __init__(self, dataset, batch_size, shuffle=True):
+        # dataset 需暴露 _scaffold_ids（每条样本所属骨架 ID）；缺失时每条样本自成一组
         scaffold_ids = getattr(dataset, '_scaffold_ids', None)
         groups = {}  # scaffold_id -> list of indices
         for idx in range(len(dataset)):
@@ -61,6 +71,7 @@ class ScaffoldGroupedBatchSampler(torch.utils.data.Sampler):
                     self.batches.append([i])
 
     def __iter__(self):
+        # shuffle 打乱的是"批的顺序"而非批内元素，保证批内始终同骨架
         if self.shuffle:
             import random
             random.shuffle(self.batches)
@@ -72,6 +83,8 @@ class ScaffoldGroupedBatchSampler(torch.utils.data.Sampler):
 
 
 def configure_trainable_parameters(model, config, logger):
+    # 冻结主干微调（confidence head fine-tuning）：默认只训练置信度头相关模块，
+    # trainable_modules 列出按子串匹配的可训练参数名后缀
     if not config.train.get('freeze_backbone', False):
         return
     logger.info('Freezing backbone for confidence head fine-tuning...')
@@ -89,6 +102,7 @@ def configure_trainable_parameters(model, config, logger):
         if any(suffix in name for suffix in trainable_suffixes):
             parameter.requires_grad = True
             continue
+        # 编码器按需解冻最后 N 层；encoder.blocks 总层数此处假定为 6
         parameter.requires_grad = any(
             f'encoder.blocks.{layer_idx}' in name
             for layer_idx in range(6 - unfreeze_encoder_layers, 6)
@@ -129,6 +143,8 @@ if __name__ == '__main__':
 
     # Load configs
     config, config_name = load_config(args.config)
+    # 血统（lineage）契约校验：配置可声明允许的初始化器 SHA-256 与数据集清单 SHA-256，
+    # 用于保证正式发布训练只能在冻结的数据与初始权重上进行
     allowed_initializer_sha256 = config.get('lineage', {}).get(
         'allowed_initializer_sha256')
     dataset_manifest_sha256 = config.get('lineage', {}).get(
@@ -204,6 +220,7 @@ if __name__ == '__main__':
         config.train.val_freq = args.val_freq
     if args.seed is not None:
         config.train.seed = args.seed
+    # 命令行参数优先级高于配置文件，统一在此应用后设置全局种子
     seed_all(config.train.seed)
 
     # Logging
@@ -299,6 +316,7 @@ if __name__ == '__main__':
                 split_name, len(disorder_lookup), len(ids))
 
     if config.dataset.get('contrastive_cross_sample_negatives', False):
+        # 跨样本对比负例：包装数据集使其能取到其它样本的 CDR 作为负例
         from disorderflow.datasets.disorder_augmented import ContrastiveNegativeDataset
         train_dataset = ContrastiveNegativeDataset(train_dataset)
         val_dataset = ContrastiveNegativeDataset(val_dataset)
@@ -402,6 +420,7 @@ if __name__ == '__main__':
     if amp_dtype_name not in amp_dtypes:
         raise ValueError(f'Unsupported AMP dtype: {amp_dtype_name}')
     amp_dtype = amp_dtypes[amp_dtype_name]
+    # CPU/MPS 不支持（或不适合）AMP；float16 需要 GradScaler 防止下溢，bfloat16 不需要
     amp_enabled = args.device not in ('cpu', 'mps') and not args.no_amp
     scaler_enabled = amp_enabled and amp_dtype == torch.float16
     logger.info('AMP enabled=%s dtype=%s grad_scaler=%s',
@@ -409,14 +428,17 @@ if __name__ == '__main__':
     scaler = torch.amp.GradScaler(
         'xpu' if args.device == 'xpu' else 'cuda',
         enabled=scaler_enabled,
+        # 初始 scale 取 128：比默认 65536 温和，减少早期频繁的 inf 梯度回退
         init_scale=128.0)
     optimizer.zero_grad()
     it_first = 1
     min_val_loss = float('inf')
 
     # Resume or Finetune
+    # 另支持 --init：形状兼容初始化，用于课程学习阶段衔接
     if args.resume is not None:
         # Resume: restore everything (model, optimizer, scheduler, iteration)
+        # 恢复完整训练状态（模型/优化器/调度器/迭代数），用于断点续训
         logger.info('Resuming from checkpoint: %s' % args.resume)
         ckpt = torch.load(args.resume, map_location=args.device, weights_only=False)
         it_first = ckpt['iteration'] + 1
@@ -440,6 +462,7 @@ if __name__ == '__main__':
         scaler.load_state_dict(ckpt['scaler'])
     elif args.finetune is not None:
         # Finetune: only load model weights, start fresh (new optimizer, scheduler, warmup)
+        # 只加载主干权重、丢弃旧任务头，优化器/调度器从头开始（新任务微调）
         logger.info('Finetuning from checkpoint: %s' % args.finetune)
         ckpt = torch.load(args.finetune, map_location=args.device, weights_only=False)
         # Strip old confidence head weights only if architecture differs from checkpoint.
@@ -471,6 +494,7 @@ if __name__ == '__main__':
         # it_first and min_val_loss stay at default (1 and inf)
     elif args.init is not None:
         # Retain compatible heads learned by the previous curriculum stage.
+        # 形状兼容的全部张量都加载（含任务头），不兼容的跳过——用于课程学习阶段衔接
         logger.info('Initializing compatible weights from checkpoint: %s' % args.init)
         ckpt = torch.load(args.init, map_location=args.device, weights_only=False)
         source_state = ckpt['model']
@@ -499,6 +523,7 @@ if __name__ == '__main__':
             logger.info('Deprecated parameters (skipped): %d', len(unexpected_keys))
 
     # EMA
+    # 指数滑动平均：decay>0 时启用，验证/保存 best 时使用 EMA 权重
     ema_decay = config.train.get('ema_decay', 0.0)
     ema = EMAModel(model, decay=ema_decay) if ema_decay > 0 else None
     if ema is not None:
@@ -559,9 +584,11 @@ if __name__ == '__main__':
     neg_scramble_ratio = config.train.get('neg_scramble_ratio', [0.2, 0.5])
 
     # Train
+    # 记录连续失败步数（用 list 以便闭包内修改）；连续全 NaN 时终止训练防止静默空转
     consecutive_failed_steps = [0]
 
     def train(it):
+        # 单个训练迭代：梯度累积 accum_steps 个 micro-batch 后统一更新一次参数
         time_start = current_milli_time()
         model.train()
 
@@ -584,6 +611,7 @@ if __name__ == '__main__':
 
             # Forward
             # if args.debug: torch.set_anomaly_enabled(True)
+            # autocast 仅在 CUDA/XPU/MPS 上启用；CPU 路径强制回落到 fp32 语义
             device_type = args.device if args.device in ('cuda', 'xpu') else ('mps' if args.device == 'mps' else 'cpu')
             with torch.autocast(device_type=device_type, dtype=amp_dtype, enabled=amp_enabled):
                 loss_dict = model(batch)
@@ -644,6 +672,7 @@ if __name__ == '__main__':
             accum_loss_dict[k] = torch.tensor(accum_loss_dict[k])
 
         # Optimizer Step
+        # 先 unscale 再裁剪梯度，这样记录的 grad_norm 是真实（未缩放）范数
         scaler.unscale_(optimizer)
         orig_grad_norm = clip_grad_norm_(model.parameters(), config.train.max_grad_norm)
 
@@ -656,6 +685,8 @@ if __name__ == '__main__':
             return
 
         # Linear Warmup
+        # 线性预热：前 warmup_steps 步学习率从 0 线性升至配置目标值；
+        # 期间不依赖 scheduler，调度器在 validate 中延迟到预热结束后才 step
         warmup_steps = config.train.get('warmup_steps', 1000)
         if it <= warmup_steps:
             warmup_factor = float(it) / float(warmup_steps)
@@ -686,6 +717,8 @@ if __name__ == '__main__':
 
     # Validate
     def validate(it):
+        # 验证：可选地用 EMA 权重评估；按 IDP/折叠蛋白分桶统计损失，
+        # 并在有 disorder 标签时计算 ROC-AUC/PR-AUC/MCC 等池化指标
         if ema is not None:
             ema.apply(model)
 
@@ -701,6 +734,7 @@ if __name__ == '__main__':
             for i, batch in enumerate(tqdm(val_loader, desc='Validate', dynamic_ncols=True)):
                 # Prepare data
                 batch = recursive_to(batch, args.device)
+                # 验证统一使用固定 t（默认 0.5）并按样本编号派生确定性种子，保证可复现
                 batch['fixed_t'] = config.train.get('val_fixed_t', 0.5)
                 if config.model.loss_weight.get('contrastive', 0) > 0:
                     batch['contrastive_corrupt'] = torch.tensor(
@@ -779,6 +813,8 @@ if __name__ == '__main__':
                 scheduler.step()
 
         selection_key = config.train.get('checkpoint_selection_metric')
+        # checkpoint 选择指标：可配置为某个 disorder 指标或验证损失分量；
+        # mode=max 时取负值，统一按"越小越好"与 min_val_loss 比较
         if selection_key:
             if selection_key in disorder_metrics:
                 metric_value = disorder_metrics[selection_key]
@@ -811,6 +847,7 @@ if __name__ == '__main__':
         return selection_value
 
     # Early stopping
+    # 连续 patience 次验证无改善则提前停止
     early_stop_patience = config.train.get('early_stopping_patience', 0)
     early_stop_counter = 0
 
@@ -851,6 +888,7 @@ if __name__ == '__main__':
                     ckpt_path = os.path.join(ckpt_dir, '%d.pt' % it)
                     torch.save(ckpt_state, ckpt_path)
                     if is_best:
+                        # best.pt 在 EMA 启用时保存 EMA 权重（weights_kind=ema），否则为原始权重
                         best_path = os.path.join(ckpt_dir, 'best.pt')
                         best_state = dict(ckpt_state)
                         if ema is not None:

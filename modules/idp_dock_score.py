@@ -110,6 +110,7 @@ def compute_bsa(pdb_path, chain1, chain2):
     sasa_c2 = sum(a.sasa for a in s2.get_atoms())
 
     bsa = (sasa_c1 + sasa_c2 - sasa_complex) / 2.0
+    # 数值误差可能给出微小的负值，截断到 0
     return max(0.0, bsa)
 
 
@@ -150,6 +151,8 @@ def score_complex(pdb_path, cdr_chain='H', epitope_chain='P',
 
     # ── 2. Electrostatic complementarity (ALL pairs, distance-weighted) ──
     # Compute full distance matrix for AB × EPI, weight by 1/distance
+    # 静电项：异号电荷对（-q1*q2 > 0）按线性距离权重累加，超出 12Å 权重归零；
+    # 最后按参与配对数归一化，避免链越长分越虚高
     all_dists = np.linalg.norm(
         ab_coords[:, None, :] - epi_coords[None, :, :], axis=-1)  # (n_ab, n_epi)
     # Inverse distance weight, clamp at ELEC_CUTOFF
@@ -167,6 +170,8 @@ def score_complex(pdb_path, cdr_chain='H', epitope_chain='P',
     elec_norm = elec_score / max(n_elec, 1)
 
     # ── 3. Hydrophobic matching (ALL pairs, distance-weighted) ──
+    # 疏水项：双疏水残基对按较弱的疏水值（除以最大值 4.5 归一）计分，
+    # 双亲水邻近对给小奖励（界面水合层匹配）
     hydro_weights = np.maximum(0, 1.0 - all_dists / HYDRO_CUTOFF)
     hydro_score = 0.0; n_hydro = 0
     for i in range(len(ab_coords)):
@@ -185,6 +190,7 @@ def score_complex(pdb_path, cdr_chain='H', epitope_chain='P',
 
     # ── 4. Shape complementarity (local curvature) ──
     # Approximate by checking if contact distances are tightly clustered
+    # 形状互补的粗略代理：接触距离越集中（std 小）说明表面贴合越均匀
     contact_dists = dists[contact_mask]
     if len(contact_dists) > 1:
         shape_score = 1.0 - contact_dists.std() / CONTACT_CUTOFF
@@ -192,6 +198,7 @@ def score_complex(pdb_path, cdr_chain='H', epitope_chain='P',
         shape_score = 0.0
 
     # ── Composite ──
+    # 加权合成：接触密度权重最高（与乱序对照的分离度最大），负分项一律截为 0
     composite = round(
         0.35 * contact_density +
         0.25 * max(0, elec_norm) +

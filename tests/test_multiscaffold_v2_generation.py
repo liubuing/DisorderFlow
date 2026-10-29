@@ -1,3 +1,5 @@
+"""多支架确认集 v2 生成的契约测试：守护规范化结构的三链连续编号（H/L/P 从 1 起）、
+失败槽位也必须完整保留（8 个 attempt 逐一记录），以及重设计只改冻结的 H3 索引位置。"""
 import json
 from pathlib import Path
 
@@ -12,6 +14,7 @@ from scripts.generate_multiscaffold_confirmatory_v2 import (
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# 辅助函数：读取留出清单中的第一个组件作为代表性测试样本。
 def first_component():
     holdout = json.loads((
         ROOT / "data/multiscaffold_confirmatory_v2/holdout_manifest.json"
@@ -19,6 +22,8 @@ def first_component():
     return holdout["components"][0]
 
 
+# 规范化结构：三链重命名为 H/L/P，残基数与序列长度一致且编号从 1 连续——
+# 防止链名或编号错位破坏下游打分输入。
 def test_canonical_structure_has_contiguous_role_chains(tmp_path):
     component = first_component()
     representative = component["representative"]
@@ -38,6 +43,8 @@ def test_canonical_structure_has_contiguous_role_chains(tmp_path):
             range(1, expected_length + 1))
 
 
+# 失败留痕：生成失败时 8 个槽位必须全部以独立 attempt_id 记录 status=failed 与错误信息——
+# 防止失败槽位被静默吞掉导致有效样本数虚增。
 def test_attempt_rows_preserve_every_failed_slot():
     component = first_component()
     rows = attempt_rows(
@@ -50,6 +57,7 @@ def test_attempt_rows_preserve_every_failed_slot():
     assert all(row["error"] == "generation failed" for row in rows)
 
 
+# H3 限定：full_heavy 在 H3 索引处写入替换序列，其余位置逐残基不变——防止重设计越出冻结区间。
 def test_full_heavy_changes_only_frozen_h3_positions():
     representative = first_component()["representative"]
     indices = representative["h3_heavy_indices_zero_based"]

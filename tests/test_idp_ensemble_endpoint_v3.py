@@ -1,3 +1,5 @@
+"""IdP 系综终点 v3 的契约测试：守护 complex 稳健代价的鲁棒口径、native 约束排除高增益但
+complex 劣化的候选、top-fraction 约束只保留最优 complex 子集，以及中位数溯源对两条单态观测的支持。"""
 import numpy as np
 
 from scripts.analyze_idp_ensemble_endpoint_v3 import (
@@ -6,6 +8,7 @@ from scripts.analyze_idp_ensemble_endpoint_v3 import (
     select_ensemble,
 )
 
+# 选择配置：native 约束（候选稳健 complex NLL 不得超过 native）与 p75 为主的代价聚合权重。
 CONFIG = {
     "selection": {
         "complex_constraint": "candidate_robust_complex_nll_not_above_native_robust_complex_nll",
@@ -26,12 +29,15 @@ CONFIG = {
 }
 
 
+# 代价口径：p75 主导的聚合必须显著高于均值（尾敏感），防止乐观口径低估 complex 代价。
 def test_complex_cost_is_negative_gain_robust_of_negative_nll():
     values = np.asarray([1.0, 2.0, 3.0, 4.0])
     cost = complex_robust_cost(values, CONFIG["selection"]["complex_cost_aggregation"])
     assert cost > np.mean(values) * 0.8
 
 
+# 约束优先：增益 10 但 complex NLL 高达 5 的候选必须被判不可行，唯一可行且胜出的是 SAFE——
+# 防止"高增益"绕过不变差的硬约束。
 def test_native_constraint_excludes_high_gain_poor_complex_candidate():
     matrices = {
         "sequences": ["POOR", "SAFE"],
@@ -44,6 +50,8 @@ def test_native_constraint_excludes_high_gain_poor_complex_candidate():
     assert winner == 1
 
 
+# top-fraction 约束：仅 complex 代价最低的 25% 候选可行，阈值必须等于第 2 名的稳健代价——
+# 防止可行集放宽到劣质候选并保证阈值溯源精确。
 def test_top_fraction_constraint_keeps_only_best_complex_subset():
     config = {
         "selection": {
@@ -69,6 +77,8 @@ def test_top_fraction_constraint_keeps_only_best_complex_subset():
     assert winner == 1
 
 
+# 中位数溯源：两条不同训练态的观测取中位数 2.0，贡献者按分数升序列出——
+# 保证"中位数来自哪些观测"可审计，防止摘要统计丢失证据链。
 def test_median_provenance_supports_two_single_state_observations():
     records = [
         {"gain": 3.0, "training_conformer": 1, "candidate": "B"},

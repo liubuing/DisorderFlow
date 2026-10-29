@@ -25,6 +25,9 @@ sys.path.insert(0, str(PROJECT_ROOT / "modules"))
 from state_contact_scorer import extract_contact_map, score_contact_guided_variants  # noqa: E402
 
 
+# N-糖基化补救选项: NAS 基序位于 5CSZ 重链可变区 A:52-A:54。
+# A:52 的 N 突变为 H/Q/D、A:54 的 S 突变为 A/F/Y——均可破坏
+# N-X-S/T 序列子（X 非 Pro）而不激进改变体积/电荷。
 RESCUE_OPTIONS = [
     ("A", 52, "N52H", "H"),
     ("A", 52, "N52Q", "Q"),
@@ -63,6 +66,9 @@ def paratope_index_by_residue(contact_map):
 
 
 def has_nglyco_motif(seq, idx_by_residue=None):
+    # 检查 N-糖基化序列子 N-X-S/T（X 非 P）。除对 paratope 串做正则外，
+    # 还需特判 A:54: 它在完整 VH 中后接 G/T，但 paratope 串只含 A:54
+    # 本身，正则看不到后续残基，必须按索引单独判断。
     import re
     if re.search(r"N[^P][ST]", seq):
         return True
@@ -80,6 +86,10 @@ def mutate(seq, idx, aa):
 
 
 def main():
+    # 主流程: 取短名单 v2 中 5CSZ 的发展性审查项 → 逐个生成补救变体
+    # （跳过与基序无关或未消除基序的选项）→ 用同一接触感知打分器重打分
+    # → 过滤: 接触保留率 >= min-retention（默认 0.98，要求补救几乎不
+    # 损失原接触）且通过全部既有过滤器 → 按通过/分数/保留率排序输出。
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

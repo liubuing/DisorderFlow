@@ -40,6 +40,8 @@ from iterative_refiner import IterativeRefiner, format_refinement_report
 from cascade_filter import apply_cascade_af2
 
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
+# 默认 CDR 区间（Chothia H1/H2/H3: 26-33, 51-58, 97-113），仅当
+# --cdr 未指定时用于给定支架链。
 DEFAULT_CDR = '26-33,51-58,97-113'
 
 
@@ -108,6 +110,11 @@ def run_single_design(scaffold_pdb, cdr_spec, num_samples, stochastic,
 
 def compute_stats(results):
     """Compute aggregate stats from design results."""
+    # 复合分数 = 0.35*ipTM + 0.25*pLDDT + 0.15*(1 - min(PPL,200)/200)
+    #          + 0.10*(1 - min(entropy,3)/3) + 0.10*(1 - min(PAE,15)/15)。
+    # 各项均归一到 0-1；方向约定: ipTM/pLDDT 越高越好，PPL/熵/PAE
+    # 越低越好。PPL 上限 200、熵上限 3 (nat)、PAE 上限 15 埃为经验
+    # 截断（超过即不追加奖励）。权重为该 CLI 的启发式默认，不是冻结协议。
     if not results:
         return {}
     keys = ['plddt', 'iptm', 'pae', 'ppl', 'entropy']
@@ -158,6 +165,8 @@ def _iter_progress(round_idx, max_rounds, status):
 
 def run_iterative_refinement(args, disorder, segments, epi_seq):
     """Iterative refinement: design -> AF2 -> cascade filter -> top-K -> redesign."""
+    # 迭代精修闭环: 每轮 BFN 设计 N 个 → AF2 验证 → 级联过滤 → 取 top-K
+    # 进入下一轮；收敛由 convergence_delta 控制。逐轮结果与总摘要落盘。
     import closed_loop_orchestrator as clo
 
     cdr_spec_str = parse_cdr_spec(args.cdr, args.scaffold_chain)
@@ -253,6 +262,9 @@ def run_iterative_refinement(args, disorder, segments, epi_seq):
 
 def run_closed_loop(args, disorder, segments, epi_seq):
     """Closed-loop multi-objective optimization with optional physics scoring."""
+    # 多目标闭环: 与迭代精修类似，但用 Pareto 首选策略（pareto_first）
+    # 在 ipTM/pLDDT/物理分数等多目标间取舍；PyRosetta 可用时启用物理
+    # 打分（不可用时安全降级为纯 AF2 指标）。
     import closed_loop_orchestrator as clo
 
     cdr_spec_str = parse_cdr_spec(args.cdr, args.scaffold_chain)

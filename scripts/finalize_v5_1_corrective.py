@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Accept the corrected v5.1 checkpoint only on supported scientific gates."""
 
+# 目的：v5.1 纠偏收尾——只有在全部"有科学依据的门控"通过时才接受纠偏检查点：
+# EMA 权重且张量有限；contact AUROC>=0.60；条件输入确实改变 logits（>1e-4）；
+# factual 条件改善 native NLL（CI95 上界 <0）；条件跟踪无序熵（Spearman>0.30）；
+# NMR 排名保持。对比式兼容目标因单正例数据不支持而明确列为"未支持目标"。
+# 通过后写出验收报告并登记检查点路径（state 文件）。
+
 import argparse
 import json
 from pathlib import Path
@@ -28,6 +34,8 @@ def main():
     nmr = json.loads(Path(args.nmr_report).read_text(encoding='utf-8'))
     nll_effect = phase3['paired_effects']['factual_minus_zero_native_nll']
     supported_gates = {
+        # 各门控阈值（0.60 / 1e-4 / 0.0 / 0.30）为预注册的最小科学判据：
+        # 分别对应接触判别力、条件通路生效、因果改善与无序一致性。
         'contact_auroc_at_least_0_60': phase3['contact']['auroc'] >= 0.60,
         'condition_changes_logits': (
             phase3['paired_effects']['factual_vs_zero_mean_abs_logit_change']['mean'] > 1e-4),

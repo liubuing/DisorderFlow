@@ -10,6 +10,12 @@ Usage:
 After training V14 with bfn_v14_grouped_conf_xpu.yml, set V14_CKPT below to the
 new best.pt, then run this, then run_oc_v14_p2.py.
 """
+# OC（over-confidence，过度自信）验证第一阶段：用 V14 检查点（分组真实 AF2
+# 设计变体置信度训练）在 5IMK/Abeta42 上生成 BFN 设计并保存，供第二阶段
+# AF2 实测对比。支持两种模式：fixbb（抗原对 BFN 不可见，旧式）与 complex
+# （构建抗体+表位复合物并把抗原链作为上下文，更符合结合设计；V14 仅用
+# 抗体单独训练，故 complex 模式属于 OOD 基线）。脚本会临时改写
+# app_config.yaml 的检查点路径并在 finally 中恢复。
 import sys
 import os
 if sys.platform == 'win32':
@@ -139,9 +145,9 @@ try:
         design_pdb, DESIGN_CONFIG['cdr_spec'],
         num_samples=DESIGN_CONFIG['n_samples'], stochastic=True,
         context_chains=DESIGN_CONFIG['context_chains'], device=device,
-        # V14-unfreeze: rank by self-predicted ipTM so design_top_n picks the
-        # highest-confidence designs to send to AF2 (was designs[:n] = blind
-        # random sampling → all AF2 ipTM ~0.05). Requires an un-collapsed head.
+        # V14 修订：按模型自预测 ipTM 降序排列，让 design_top_n 挑出
+        # 置信最高的设计送 AF2（此前盲取前 N 导致 AF2 ipTM 全约 0.05）；
+        # 依赖未坍缩的置信头才有效
         sort_by='iptm', descending=True,
         disorder_guided=args.disorder_guided,
         disorder_guided_strength=args.dg_strength)
@@ -159,6 +165,7 @@ try:
     print(f'  Entropy: mean={np.mean(entropies):.4f} std={np.std(entropies):.4f}')
 
     af2_input = []
+    # 对前 design_top_n 条设计做 CDR 嫁接，记录 BFN 各项置信指标与突变数
     for i, d in enumerate(designs[:DESIGN_CONFIG['design_top_n']]):
         full_ab, mutations = graft_cdrs(scaffold_seq, d['sequence'], cdr_ranges)
         af2_input.append({

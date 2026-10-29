@@ -22,8 +22,11 @@ os.chdir(_project_root)
 
 SRC_LMDB = "data/confidence_unified_v2"
 DST_DIR = "data/confidence_conformation_v5"
+# 序列长度上限：超过 500 残基的 IDP 直接跳过（AF2 CPU/GPU 内存与运行时间的实际约束）。
 MAX_SEQ_LEN = 500
+# 重原子张量第 2 维中 CA 原子的索引（af2 37 原子布局: N=0, CA=1, C=2, O=3...）。
 CA_IDX = 1
+# 单个 IDP 条目（所有 seed 合计）的子进程超时：90 分钟，按最长序列 + 全部 seed 估算。
 DEFAULT_TIMEOUT = 5400  # 90 min per IDP entry (all seeds combined)
 
 
@@ -42,6 +45,10 @@ def _get_rss_mb():
 
 
 def kabsch_align(P, Q):
+    # Kabsch 算法：求把点集 P 最优叠合到 Q 的旋转 R 与平移 t。
+    # 通过对协方差矩阵 H = Pc^T @ Qc 做 SVD 得到旋转；当行列式为负时翻转
+    # 最后一个奇异向量以排除反射（保证是纯旋转）。返回 (R, t)，
+    # 满足 Q ≈ P @ R.T + t（RMSF 计算中 P/Q 为不同构象的 CA 坐标，单位: 埃）。
     p_mean = P.mean(axis=0); q_mean = Q.mean(axis=0)
     Pc = P - p_mean; Qc = Q - q_mean
     H = Pc.T @ Qc
@@ -67,6 +74,9 @@ def compute_rmsf(pos_list):
 
 
 def rmsf_to_disorder(rmsf, scale=2.0):
+    # 把逐残基 CA RMSF（埃）映射到 0-1 的无序标签：tanh(rmsf/scale)。
+    # scale=2.0 埃为柔性尺度参考：RMSF 远小于 2 Å 的残基标签趋于 0（有序），
+    # 达到或超过 2 Å 的趋于 1（无序）。tanh 保证有界且单调。
     return np.tanh(rmsf / scale)
 
 
@@ -119,6 +129,7 @@ def run_af2_seeds_inprocess(sequence, n_seeds=5, num_recycle=1):
     if len(seq_clean) > MAX_SEQ_LEN:
         return None, "skipped"
 
+    # 固定奇数种子 1/3/5/7/9：与种子清单协议一致，保证跨批次可复现、可续跑。
     seeds = [1, 3, 5, 7, 9][:n_seeds]
     positions = []
     crashes = 0
@@ -181,6 +192,7 @@ def run_af2_seeds(sequence, n_seeds=5, num_recycle=1, timeout=DEFAULT_TIMEOUT):
     if len(seq_clean) > MAX_SEQ_LEN:
         return None, "skipped"
 
+    # 固定奇数种子 1/3/5/7/9（与 in-process 版本一致），保证两种执行路径产出可对齐。
     seeds = [1, 3, 5, 7, 9][:n_seeds]
     positions = []
     crashes = 0
@@ -188,6 +200,7 @@ def run_af2_seeds(sequence, n_seeds=5, num_recycle=1, timeout=DEFAULT_TIMEOUT):
     failures = 0
 
     # Per-seed timeout: fraction of total, min 5 minutes
+    # 每个 seed 的超时 = 总超时均摊，下限 5 分钟（过短会把长序列全部误判为超时）。
     seed_timeout = max(300, timeout // n_seeds)
 
     for seed in seeds:
@@ -241,6 +254,17 @@ def run_af2_seeds(sequence, n_seeds=5, num_recycle=1, timeout=DEFAULT_TIMEOUT):
 
 
 def main():
+    # 主循环：逐 IDP 跑 AF2 多 seed、算 RMSF 无序标签并写入目标 LMDB。
+    # 管线角色: 教师标签生成——以 AF2 构象集合的 CA RMSF 经 tanh 压缩作为
+    # 无序监督信号，落盘到 confidence_conformation_v5 供置信度头训练。
+    # 关键机制:
+    #   - 按长度升序处理（短序列先跑，快且成功率高，尽早暴露问题）;
+    #   - 断点续跑: 目标 LMDB 已有条目时自动推进 resume_from，键从计数写入;
+    #   - 稳健性: 连续失败达到 max_consecutive_failures（默认 5，视为系统性
+    #     故障）时暂停等待人工确认; crash 后额外冷却 crash_cooldown_sec
+    #     （默认 120s）让 OS 回收资源;
+    #   - 内存卫生: 每条 IDP 处理后强制 gc + 停顿，RSS 超 12 GB 才清 JAX
+    #     缓存（8 GB 显卡留 2 GB 余量; 每条都清会毁掉 XLA 编译缓存，慢约 5 倍）。
     parser = argparse.ArgumentParser()
     parser.add_argument("--n_seeds", type=int, default=5)
     parser.add_argument("--num_recycle", type=int, default=0,

@@ -7,6 +7,12 @@ Pose sources follow the frozen protocol priority:
 Synthetic sampling is NOT performed here.
 """
 
+# 角色：为已准入的 v3 队列提取"一次写入"的实验姿态面板。来源严格遵循冻结协议
+# 优先级：同谱系同靶标的独立实验结构 > 同一生物组装内的独立复合物拷贝；
+# 此处不做任何合成采样。MIN_HEAVY_OVERLAP=100 / MIN_SEQUENCE_RATIO=0.98
+# 用于同谱系链的序列资格判定；OWN_OVERRIDE/EXTRA_PLAN 记录个别条目的
+# 手工链选择与补充姿态计划（含来源声明）。
+
 from __future__ import annotations
 
 import argparse
@@ -21,8 +27,8 @@ from Bio.SeqUtils import seq1
 
 ROOT = Path(__file__).resolve().parents[1]
 
-MIN_HEAVY_OVERLAP = 100
-MIN_SEQUENCE_RATIO = 0.98
+MIN_HEAVY_OVERLAP = 100        # 重链最小重叠残基数，保证序列比对有意义
+MIN_SEQUENCE_RATIO = 0.98      # 候选链与参考链的最小相似比，近似要求完全一致的构建体
 
 OWN_OVERRIDE = {
     # VHH entries with two assembly copies: one pose = one antibody copy +

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Build an audited CAID target-to-UniRef50 cluster manifest."""
 
+# 目的：为 CAID2 无序区评测集构建"靶标 → UniRef50 聚类"映射清单，用于按序列
+# 聚类划分训练/测试，避免同源泄漏。优先取 DisProt 快照中已存的 uniref50 字段，
+# 缺失时经 UniProt REST 检索补齐；仍失败的记为 unresolved:{id} 并计入审计。
+# 输出：cluster manifest JSON + 审计 JSON（来源计数与未解析 ID 列表）。
+
 from __future__ import annotations
 
 import argparse
@@ -19,6 +24,8 @@ def fasta_ids(path):
 
 
 def fetch_uniref50(accession, retries=3):
+    # identity:0.5 即 UniRef50 聚类标准（50% 序列恒等）；最多重试 3 次，
+    # 退避等待 2**attempt 秒（1s、2s），全部失败返回 None 由调用方标记 unresolved。
     query = urllib.parse.urlencode({
         "query": f"identity:0.5 AND uniprot_id:{accession}",
         "format": "json",
@@ -57,6 +64,7 @@ def build(entries_path, sequences_path, output, audit_path, threads=8):
             pending[target_id] = str(entry["acc"])
 
     with ThreadPoolExecutor(max_workers=max(1, min(threads, 8))) as executor:
+        # 并发上限钳制在 8 以内，避免触发 UniProt REST 速率限制。
         jobs = {
             executor.submit(fetch_uniref50, accession): target_id
             for target_id, accession in pending.items()

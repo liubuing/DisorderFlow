@@ -53,6 +53,7 @@ BLOSUM62_MATRIX = {
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 
 def get_blosum62_score(aa1, aa2):
+    # BLOSUM62 取分；未知字符（X 等）按 -4 处理（经验最保守罚分）
     if aa1 in BLOSUM62_MATRIX and aa2 in BLOSUM62_MATRIX[aa1]:
         return BLOSUM62_MATRIX[aa1][aa2]
     return -4
@@ -74,6 +75,8 @@ def calculate_sequence_metrics(pred_seq, true_seq):
 
 
 def design_seq(args):
+    # 抗体 CDR 设计主流程：Chothia 重编号 -> 逐个 CDR 遮蔽生成 ->
+    # 计算 PPL/pLDDT/ipTM/PAE（eval 模式另算 recovery 与 BLOSUM 分）-> 汇总输出
     # Load config
     config, _ = load_config(args.config)
     seed_all(config.sampling.seed if hasattr(config.sampling, 'seed') else 42)
@@ -93,6 +96,7 @@ def design_seq(args):
         heavy_chains, light_chains = renumber_antibody(in_pdb_path, out_pdb_path)
 
     # Determine chain IDs
+    # 重编号器能自动识别重/轻链；失败或跳过时退回命令行指定的链 ID
     heavy_id = heavy_chains[0] if heavy_chains else args.heavy
     light_id = light_chains[0] if light_chains else args.light
     
@@ -116,6 +120,7 @@ def design_seq(args):
         print("[INFO] No antigen found or loaded.")
     
     # Determine CDRs to design
+    # 默认只设计 H_CDR3（抗体识别的关键环），可用配置扩展到全部 6 个 CDR
     cdrs_to_design = ['H_CDR3']  # Default
     if hasattr(config, 'sampling') and hasattr(config.sampling, 'cdrs'):
         cdrs_to_design = config.sampling.cdrs
@@ -151,6 +156,7 @@ def design_seq(args):
         print(f"{'='*60}")
         
         # Deep copy structure to avoid side effects
+        # 每个 CDR 独立深拷贝结构：mask 变换会就地改写数据，避免互相污染
         import copy
         structure_copy = copy.deepcopy(structure)
         
@@ -200,6 +206,7 @@ def design_seq(args):
             pred_seq = ''.join([AA_LETTERS[aa] if aa < 20 else 'X' for aa in pred_aa.cpu().tolist()])
             
             # Calculate perplexity from model's direct prediction
+            # PPL 只统计 20 类标准氨基酸（第 21 类为掩码/未知，不参与）
             pred_logits = traj['pred_logits'][0][gen_mask]
             log_probs = torch.log_softmax(pred_logits[..., :20], dim=-1)
             nll = -log_probs[range(len(pred_aa)), pred_aa].mean()

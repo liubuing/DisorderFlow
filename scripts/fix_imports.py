@@ -15,7 +15,11 @@ SCRIPTS_DIR = os.path.join(ROOT, 'scripts')
 SUBDIRS = ['probes', 'pipelines', 'validation', 'build', 'utils']
 
 def fix_file(filepath):
-    """Add or fix sys.path.insert to include project root."""
+    """Add or fix sys.path.insert to include project root.
+
+    一次性维护工具：把子目录脚本里过时的 sys.path.insert('.', ...)
+    替换为基于 __file__ 的项目根相对路径，并把 modules/ 一并加入搜索路径。
+    """
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
@@ -88,6 +92,7 @@ def fix_file(filepath):
 
 
 def main():
+    """遍历 scripts/ 各子目录的 .py（跳过 __ 开头），就地修复导入路径。"""
     fixed = 0
     for subdir in SUBDIRS:
         dirpath = os.path.join(SCRIPTS_DIR, subdir)

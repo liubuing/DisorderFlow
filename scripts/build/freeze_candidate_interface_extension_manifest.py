@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Freeze the calibration-extension membership manifest from the consolidated audit."""
 
+# 目的：把通过合并审计（frozen_model_free_successor_v3_isolation_audit）的独立组分
+# 冻结为"校准扩展成员清单"（write-once）：成员仅进入 calibration 划分，绝不进入
+# 训练/检查点选择/密封测试（见 claim_boundary）。冻结前置条件：审计门通过、
+# 独立组分 >=5；同时记录上游审计/清单/合同三者的 SHA-256 溯源。
+
 from __future__ import annotations
 
 import argparse
@@ -14,6 +19,8 @@ def sha256_file(path: Path) -> str:
 
 
 def freeze(audit_path: Path, merged_path: Path, contract_path: Path, output: Path) -> dict:
+    # 冻结流程：拒绝覆盖已存在输出→校验审计门/状态/组分下限→以代表实例为键
+    # 汇出成员条目（含序列、分辨率、坐标哈希）→写清单（open("x") 保证一次写入）。
     audit_path = Path(audit_path)
     merged_path = Path(merged_path)
     contract_path = Path(contract_path)

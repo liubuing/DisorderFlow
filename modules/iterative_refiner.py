@@ -109,6 +109,7 @@ class IterativeRefiner:
         """
         result = RefinementResult()
         current_pdbs = [initial_pdb]  # Template PDBs for next round
+        # prev_best_iptm 初始 -1 表示"尚无可比较的上一轮"
         prev_best_iptm = -1.0
         t_start = time.time()
 
@@ -123,6 +124,7 @@ class IterativeRefiner:
 
             # Step 1: Design sequences on each template PDB
             all_designs = []
+            # 总样本数均分到各模板（至少 1 条）
             samples_per_template = max(1, self.n_samples // len(current_pdbs))
 
             for pdb_path in current_pdbs:
@@ -203,6 +205,8 @@ class IterativeRefiner:
                     result.best_overall_pdb = best_pdb
 
                 # Prepare templates for next round: use AF2-predicted structures from top_k
+                # 下一轮模板优先用 AF2 预测结构；PDB 缺失时回退到本轮模板；
+                # 全缺则回退初始模板，保证循环可持续
                 current_pdbs = []
                 for r in filtered[:self.top_k]:
                     pdb = r.get('pdb_path')
@@ -244,6 +248,7 @@ class IterativeRefiner:
                 self._log(f"    最优 ipTM: {best_iptm:.3f}  pTM: {best_ptm:.3f}")
 
             # Convergence check
+            # ipTM 相对上一轮提升不足 convergence_delta 且至少跑满 2 轮才判收敛
             if best_iptm is not None and prev_best_iptm >= 0:
                 delta = best_iptm - prev_best_iptm
                 if delta < self.convergence_delta and round_idx >= 2:

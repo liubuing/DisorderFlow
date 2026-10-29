@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Run ProteinMPNN on the frozen 12-residue 4HIX H3 mask."""
 
+# 本脚本在冻结的 4HIX（抗 Aβ 抗体）结构上运行 ProteinMPNN 作为匹配基线：
+# 固定 A（抗原）链与 L（轻链）及重链非 H3 区，仅重设计 H 链 96-107 的
+# 12 个 H3 残基；按多个种子采样并解析输出 FASTA，统计序列唯一数与
+# 相对天然 H3 的恢复率。定位为"匹配生成诊断"，不是设计验证。
+
 from __future__ import annotations
 
 import argparse
@@ -17,8 +22,11 @@ ROOT = Path(__file__).resolve().parents[1]
 PDB_PATH = ROOT / "data/anti_abeta_refs/4HIX.pdb"
 MPNN_SCRIPT = ROOT / "ProteinMPNN/protein_mpnn_run.py"
 WEIGHTS = ROOT / "ProteinMPNN/vanilla_model_weights"
+# 4HIX 天然 H3 序列（对应 H 链 96-107，共 12 个残基）
 NATIVE_H3 = "VRYDHYSGSSDY"
+# 允许重设计的 H 链位置（Chothia H3 区段，其余位置全部固定）
 DESIGN_POSITIONS = list(range(96, 108))
+# 默认三个采样种子（间隔 10 便于追溯，无特殊统计含义）
 DEFAULT_SEEDS = [4101, 4111, 4121]
 AA3_TO_1 = {
     "ALA": "A",
@@ -45,9 +53,11 @@ AA3_TO_1 = {
 
 
 def sha256(path):
+    # 计算文件 SHA-256 摘要，记录 PDB 输入的来源指纹
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 从冻结 PDB 提取 A/H/L 三条链的一字母序列（跳过水与非标准残基）
 def chain_sequences():
     model = PDBParser(QUIET=True).get_structure("4hix", str(PDB_PATH))[0]
     return {
@@ -59,6 +69,7 @@ def chain_sequences():
     }
 
 
+# 生成 ProteinMPNN 的固定位置清单：除 H 链 96-107 设计区外全部固定
 def fixed_positions(sequences):
     return {
         "4HIX": {
@@ -72,6 +83,9 @@ def fixed_positions(sequences):
     }
 
 
+# 解析 ProteinMPNN 输出 FASTA：第 1 条为天然序列（校验链序为 A/H/L 且
+# H3 段与冻结序列一致），其后每两行为一条采样序列（header + 序列）；
+# 从重链段按设计位置切出 H3，计算相对天然 H3 的逐位恢复率。
 def parse_fasta(path, seed, expected_lengths):
     lines = [line.strip() for line in path.read_text().splitlines() if line.strip()]
     native_segments = lines[1].split("/")
@@ -109,6 +123,9 @@ def parse_fasta(path, seed, expected_lengths):
     return rows
 
 
+# 主入口：校验冻结 H3 掩码与天然序列一致 → 写 fixed_positions →
+# 逐种子调用 ProteinMPNN 子进程（单种子超时 900 秒）→ 解析并汇总 → 写 JSON。
+# v_48_020 为 ProteinMPNN 的 vanilla 预训练权重之一；温度 0.5 为常规采样强度。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--samples", type=int, default=8)

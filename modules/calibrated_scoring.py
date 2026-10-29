@@ -47,6 +47,7 @@ class CalibratedScorer:
         self._load_artifacts()
 
     def _load_artifacts(self):
+        # 各校准器全部可选：缺哪个就自动降级，实例化永不失败
         # Isotonic + Ridge
         pkl_path = self.artifacts_dir / "calibration_functions.pkl"
         if pkl_path.exists():
@@ -62,6 +63,7 @@ class CalibratedScorer:
             }
 
         # Sequence calibrator
+        # 先后尝试 best/final 两个检查点名；加载失败静默跳过（该模型可选）
         for name in ["sequence_calibrator_best.pt", "sequence_calibrator_final.pt"]:
             pt_path = self.artifacts_dir / name
             if pt_path.exists():
@@ -144,12 +146,14 @@ class CalibratedScorer:
         L = len(seq)
 
         # One-hot encode
+        # 非标准字符统一映射到索引 0（A）；序列右侧补零至 max_len
         aa_idx = torch.tensor([[aa_letters.index(c) if c in aa_letters else 0
                                 for c in seq] + [0] * (max_len - L)],
                               dtype=torch.long, device=self.device)
         aa_onehot = F.one_hot(aa_idx.clamp(0, 19), num_classes=20).float()
 
         # CDR type assignment (canonical VHH positions)
+        # 按典型 VHH（纳米抗体）编号标注 CDR1/2/3 区段（1/2/3），框架区为 0
         cdr_types = torch.zeros(1, max_len, dtype=torch.long, device=self.device)
         for start, end, cdr_id in [(25, 33, 1), (50, 58, 2), (96, 113, 3)]:
             if start < L:
@@ -186,6 +190,8 @@ class CalibratedScorer:
         # Composite: weighted combination favoring PPL (most discriminative)
         # PPL is inverted (lower = better), normalize to [0,1] range
         # Typical PPL range: 20-150 for BFN designs
+        # PPL 经 log1p 压缩后线性映射到 [0,1]（越低分越高）；
+        # ppl 为空时取 50 作为经验中性值
         ppl = ppl if ppl is not None else 50.0
         ppl_score = 1.0 - np.clip((np.log1p(ppl) - np.log1p(20)) /
                                    (np.log1p(150) - np.log1p(20)), 0, 1)
@@ -193,6 +199,7 @@ class CalibratedScorer:
         composite = (0.35 * ppl_score
                      + 0.35 * cal_iptm
                      + 0.30 * cal_plddt)
+        # 三路加权和：PPL 与 ipTM 权重最高（判别力强），pLDDT 略低
 
         return cal_plddt, cal_iptm, float(composite)
 

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Apply audited local mutations to native PDB chains and reuse parent MSAs."""
 
+# 目的：v5.1 候选 A3M 准备——把审计过的局部点突变（A123B 格式）施加到
+# 4HIX/5CSZ native 链序列上（残基类型与 native 不符即报错），并复用亲本的
+# ColabFold MSA（替换查询行为突变后 VH+VL+表位序列），保证候选与亲本在
+# 相同 MSA 上下文下进行 AF2-Multimer 可比预测。
+
 import json
 import re
 import sys

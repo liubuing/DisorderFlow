@@ -11,6 +11,7 @@ from tfr_design_pipeline import (
 
 
 def _mk(seq, composite, full_ab=None):
+    # 辅助函数：构造带复合分与全长抗体序列的 mock 设计字典。
     return {
         "sequence": seq,
         "composite_score": composite,
@@ -18,6 +19,8 @@ def _mk(seq, composite, full_ab=None):
     }
 
 
+# 负设计剔除：脱靶 ipTM 超限的设计必须被标记 rejected 并沉底，
+# 未被剔除的设计保持原有特异性顺序——防止脱靶结合物混入 TfR 短名单。
 def test_negative_design_rejects_off_target_binders():
     """Designs above off_target_iptm_max are flagged and demoted to the bottom."""
     designs = [
@@ -38,6 +41,8 @@ def test_negative_design_rejects_off_target_binders():
     assert non_rej[0]["full_ab_seq"] == "AB1"  # highest specificity_score
 
 
+# 特异性分数方向：在靶复合分相同时，脱靶 ipTM 更高的设计 specificity_score 必须更低——
+# 防止特异性惩罚项失效（脱靶分不参与排序）。
 def test_specificity_score_penalises_off_target():
     """A design with higher off-target ipTM gets a lower specificity_score,
     even when on-target composite is equal."""
@@ -51,6 +56,8 @@ def test_specificity_score_penalises_off_target():
     assert out[0]["full_ab_seq"] == "AB1"
 
 
+# 缺分降级：无脱靶分数的设计默认 0.0（视为不结合）且不被拒——
+# 防止缺数据时误杀候选或抛异常。
 def test_missing_off_target_score_defaults_zero():
     """Designs without an off-target score get 0.0 (treated as non-binding)."""
     designs = [_mk("AAAA", 0.7, full_ab="AB1")]
@@ -59,6 +66,8 @@ def test_missing_off_target_score_defaults_zero():
     assert out[0]["off_target_rejected"] is False
 
 
+# 重排后名次：调用方按新顺序重排名次（1..N 连续），被拒者垫底——
+# 防止重排后名次与顺序脱节。
 def test_re_ranked_list_gets_consecutive_positions():
     """After re-ranking, callers re-assign ranks 1..N (pipeline does this)."""
     designs = [_mk("A", 0.8, "AB1"), _mk("B", 0.6, "AB2"), _mk("C", 0.7, "AB3")]
@@ -71,10 +80,12 @@ def test_re_ranked_list_gets_consecutive_positions():
     assert out[-1]["full_ab_seq"] == "AB2"  # rejected → last
 
 
+# 空报告边界：空设计列表必须给出明确提示而非异常。
 def test_format_tfr_report_handles_empty():
     assert "No TfR designs" in format_tfr_report([])
 
 
+# 报告可读性：被拒设计必须带 REJECT 标记且标题保留——防止报告隐藏淘汰原因。
 def test_format_tfr_report_includes_rejected_flag():
     designs = [
         {"rank": 1, "sequence": "ACDEFGHIKABCDEFGHIJKLMNOPQRSTUVWX",

@@ -24,18 +24,21 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.i
 
 import yaml, numpy as np
 
-CKPT = os.environ.get('V14_CKPT', 'logs/disorder_head_retrain.pt')
+CKPT = os.environ.get('V14_CKPT', 'logs/disorder_head_retrain.pt')  # 重训练的 disorder 条件头
 OUTPUT = os.environ.get('OUTPUT', 'oc_validation_results/oc_v15C_phase1.json')
-DG_STRENGTH = float(os.environ.get('DG_STRENGTH', '0.3'))
-N_SAMPLES = int(os.environ.get('N_SAMPLES', '6'))
-TOP_N = int(os.environ.get('TOP_N', '5'))
+DG_STRENGTH = float(os.environ.get('DG_STRENGTH', '0.3'))  # disorder 引导强度（柔度图缩放噪声）
+N_SAMPLES = int(os.environ.get('N_SAMPLES', '6'))  # 每骨架×构象组合的采样数
+TOP_N = int(os.environ.get('TOP_N', '5'))  # 进入 phase2 的保留数
 
 # (scaffold_pdb, scaffold_chain, region_spec_for_that_chain)
+# 两个干净 VHH 骨架（全骨架主链），CDR 区间按 Chothia 常规三段给出
 SCAFFOLDS = [
     ('data/misfolding_targets/3STB.pdb', 'A', 'A:26-33,51-58,97-113'),
     ('data/misfolding_targets/5IMK.pdb', 'B', 'B:26-33,51-58,97-113'),
 ]
 # Aβ42 conformations to try (chain 'P' in each)
+# 多构象种子打破"固定 5IMK + 19/42 残基截断"的旧天花板——每个种子都解析
+# 出完整 42 残基
 ABETA_SEEDS = [
     'data/abeta_conformations/pdbs/abeta42_seed0_42.pdb',
     'data/abeta_conformations/pdbs/abeta42_seed2_42.pdb',
@@ -46,6 +49,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 def main():
+    # 临时把重训练检查点写入 app_config.yaml（BFN 加载从该配置读模型路径），
+    # 结束后务必恢复原值——配置文件是全局共享状态
     APP = os.path.join(PROJECT_ROOT, 'app_config.yaml')
     app = yaml.safe_load(open(APP, encoding='utf-8'))
     orig = app['models']['bfn']['checkpoint']

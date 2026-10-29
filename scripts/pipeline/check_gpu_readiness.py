@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Check GPU/runtime readiness for StateContrast-Ab continuation."""
+"""Check GPU/runtime readiness for StateContrast-Ab continuation.
+
+StateContrast-Ab 续跑前的环境就绪检查：探测 NVIDIA 驱动、torch CUDA /
+JAX GPU 运行时、ColabFold 可执行文件与必需项目文件（白名单、参考 PDB、
+报告脚本）。必需项缺失记为 blocked；GPU/运行时缺失按层级降级为
+cpu_only / driver_only / runtime_incomplete 等状态。输出 JSON 与 MD 报告。
+"""
 from __future__ import annotations
 
 import argparse
@@ -35,6 +41,7 @@ def main():
 
 
 def build_checks(colabfold_path, python_executable=sys.executable):
+    """构造检查清单：驱动/torch/jax/ColabFold 为可选，项目文件为必需。"""
     checks = []
     checks.append(command_check("nvidia_smi", ["nvidia-smi"], required=False))
     checks.append(python_check("torch_cuda", "import torch; print(torch.__version__); print(torch.version.cuda); print(torch.cuda.is_available()); print(torch.cuda.device_count())", python_executable, required=False))
@@ -71,6 +78,7 @@ def path_check(name, path, required=True):
 
 
 def command_check(name, cmd, required=True, timeout=15):
+    """运行子命令并记录退出码与输出尾部（stdout/stderr 截 1200 字符）。"""
     executable = shutil.which(cmd[0]) if not Path(cmd[0]).exists() else cmd[0]
     if not executable:
         return {"name": name, "kind": "command", "required": required, "status": "fail", "command": cmd, "detail": "executable_not_found"}
@@ -100,6 +108,7 @@ def tail(text, max_chars=1200):
 
 
 def summarize_checks(checks):
+    """按必需失败与 GPU/运行时检测结果归纳总体状态（fail-closed 优先）。"""
     required_failures = [c for c in checks if c.get("required") and c.get("status") != "pass"]
     optional_failures = [c for c in checks if not c.get("required") and c.get("status") != "pass"]
     driver_pass = any(c["name"] == "nvidia_smi" and c["status"] == "pass" for c in checks)

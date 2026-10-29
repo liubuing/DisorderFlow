@@ -16,6 +16,11 @@ from disorderflow.utils.misc import load_config, seed_all  # noqa: E402
 
 
 def main():
+    # 物化"第 0 次迭代"基线 checkpoint: 用配置中的训练种子重建模型，
+    # 仅从源 checkpoint 迁移键名与形状都兼容的张量（strict=False），
+    # 其余保持随机初始化。这样基线评估与正式训练起点严格可比，
+    # 又不假装源权重完全适配当前结构。输出拒绝覆盖（fail-closed），
+    # 落盘记录兼容张量数/总张量数与初始化种子，保证可审计。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--config', required=True, type=Path)

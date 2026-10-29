@@ -37,12 +37,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(me
 
 # Standard germline FR/CDR boundaries (IMGT, approximate residue indices in
 # sequential numbering from the start of the variable domain)
+# CDR 近似区间（IMGT 量级），用于无 Chothia 编号时的几何式标注
 CDR_APPROX_RANGES = {
     'H': {'H1': (25, 35), 'H2': (50, 60), 'H3': (95, 110)},
     'L': {'L1': (23, 37), 'L2': (50, 58), 'L3': (88, 100)},
 }
 
 # Distance threshold for interface residue identification
+# 界面残基判定的 CA 距离阈值（埃）
 INTERFACE_CUTOFF = 8.0  # Angstrom
 
 
@@ -56,6 +58,7 @@ def identify_antibody_chains(structure, chain_map):
     Returns:
         (heavy_chains, light_chains, antigen_chains, all_chain_ids)
     """
+    # 按链映射表把结构中的链分为重链/轻链/抗原链三组
     all_chains = list(structure.get_chains())
     all_ids = [c.id for c in all_chains]
 
@@ -80,6 +83,7 @@ def guess_fv_boundary(positions_ca):
         return len(positions_ca)
 
     # Compute CA-CA distances along the chain
+    # 以相邻 CA 距离 >10A 的结构性断裂点作为可变域边界（在残基 90 之后的首个断裂）
     dists = np.linalg.norm(positions_ca[1:] - positions_ca[:-1], axis=-1)
     # Find first gap > 10A after position 100 (domain boundary)
     gaps = np.where(dists > 10.0)[0]
@@ -105,10 +109,11 @@ def label_cdr_by_geometry(positions_ca, residue_indices, chain_type='H'):
     cdr_flag = np.zeros(n, dtype=np.int32)
 
     if n < 80:
-        return cdr_flag  # Too short to be a proper Fv
+        return cdr_flag  # Too short to be a proper Fv  # 链过短，不标注 CDR
 
     # Normalize the length to ~120 residues (standard Fv length)
     # Map approximate CDR positions to the actual sequence
+    # 以典型 Fv 长度约 120 残基为基准做线性缩放，映射 CDR 近似位置
     scale = n / 120.0
 
     ranges = CDR_APPROX_RANGES.get(chain_type, CDR_APPROX_RANGES['H'])
@@ -157,6 +162,7 @@ def preprocess_single_complex(pdb_path, pdbcode, chain_map_entry, output_dir):
     Returns:
         dict mimicking SAbDab preprocessed format, or None on failure
     """
+    # 单个复合物预处理：解析三组链 -> CDR 标注 -> 界面标注 -> 写调试 JSON
     parser = PDB.PDBParser(QUIET=True)
 
     try:
@@ -265,6 +271,7 @@ def preprocess_single_complex(pdb_path, pdbcode, chain_map_entry, output_dir):
 
 def build_lmdb(data_list, lmdb_path, map_size=4 * 1024 * 1024 * 1024):
     """Build LMDB database from list of processed complex dicts."""
+    # map_size 预留 4 GiB 地址空间；同时导出 ID 列表文件
     db_conn = lmdb.open(
         lmdb_path,
         map_size=map_size,
@@ -289,6 +296,7 @@ def build_lmdb(data_list, lmdb_path, map_size=4 * 1024 * 1024 * 1024):
 
 
 def main():
+    # 主流程：读链映射 -> 逐复合物预处理 -> 固定验证 PDB 划分 -> 写 LMDB 与划分信息
     parser = argparse.ArgumentParser(
         description='Preprocess antibody-antigen complexes for Phase 3 fine-tuning'
     )
@@ -313,7 +321,7 @@ def main():
         help='PDB codes to use for validation (default: 5 complexes)'
     )
     parser.add_argument(
-        '--seed', type=int, default=2022,
+        '--seed', type=int, default=2022,  # 划分随机种子（当前为固定验证集，仅备用）
     )
     args = parser.parse_args()
 

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Inventory repository zones and report architecture debt without moving history."""
 
+# 目的：仓库边界审计——盘点 git 跟踪文件所属分区（zones），报告架构债：
+# 根目录遗留脚本、硬编码绝对路径（Windows 盘符或 /mnt/c/）、core 包引用生成
+# 输出目录、缺失的稳定入口。决策是"保留历史不动，新工作走 scripts/core 包"。
+# 输入：configs/repository_layout.yml；输出：JSON 审计报告。
+
 from __future__ import annotations
 
 import argparse
@@ -12,6 +17,7 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+# Windows 绝对路径（如 D:\ 或 C:/）的宽松正则，用于扫描硬编码路径。
 WINDOWS_ABSOLUTE = re.compile(r"[A-Za-z]:[/\\]")
 
 
@@ -33,6 +39,8 @@ def classify(path, zones):
 
 
 def audit(config_path, output_path):
+    # 主审计：分类每个文件→收集根目录脚本/绝对路径/核心包违规引用/缺失入口，
+    # 其中缺失入口与 core 引用输出视为 hard_failures。
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     files = tracked_files()
     counts = {}

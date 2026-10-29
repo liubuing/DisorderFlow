@@ -23,6 +23,8 @@ def smooth_torsion_direction(sequence, seed):
     raw_phi = np.asarray([rng.gauss(0, 1) for _ in sequence], dtype=float)
     raw_psi = np.asarray([rng.gauss(0, 1) for _ in sequence], dtype=float)
     kernel = np.asarray([0.25, 0.5, 0.25])
+    # [0.25,0.5,0.25] 卷积平滑随机方向，得到空间上连贯（低频）的扭转扰动模式；
+    # phi[0] 置零（首残基无 phi），proline 的 phi 压缩到 20%（五元环刚性约束）
     phi = np.convolve(np.pad(raw_phi, 1, mode="edge"), kernel, mode="valid")
     psi = np.convolve(np.pad(raw_psi, 1, mode="edge"), kernel, mode="valid")
     phi[0] = 0.0
@@ -33,6 +35,7 @@ def smooth_torsion_direction(sequence, seed):
     magnitude = math.sqrt(float(np.mean(np.concatenate([phi, psi]) ** 2)))
     if magnitude < 1e-8:
         raise ValueError("Degenerate torsion perturbation direction")
+    # 按 RMS 归一化为单位方向，扰动幅度完全由 scale_degrees 控制
     return phi / magnitude, psi / magnitude
 
 
@@ -62,6 +65,8 @@ def standard_residues(chain):
 
 def perturb_model(model, peptide_chain, phi_direction, psi_direction, scale_degrees):
     """Return a copied model with peptide phi/psi values rotated by a fixed scale."""
+    # 深拷贝后经 Biopython 内坐标表示旋转 phi/psi，再写回原子坐标；
+    # 只动肽链，抗体链保持不变
     perturbed = copy.deepcopy(model)
     chain = perturbed[peptide_chain]
     chain.atom_to_internal_coordinates()
@@ -113,6 +118,7 @@ def search_target_rmsd(model, antibody_chains, peptide_chain, sequence, seed,
     if not in_tier:
         return None, [{key: value for key, value in candidate.items() if key != "model"}
                       for candidate in candidates]
+    # 选落在 RMSD 档内、且最接近目标中心的最小尺度候选（同距时取更小 scale）
     selected = min(
         in_tier,
         key=lambda candidate: (

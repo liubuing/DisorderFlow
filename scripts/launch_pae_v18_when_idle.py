@@ -8,6 +8,11 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'results/pae_screen_batches_v18'
 
 def main():
+    # 一次性预检启动器：最多等 30 分钟，GPU 连续 3 个 10 秒采样满足
+    # "利用率<20% 且显存<3000MiB" 才拉起 v18 批处理——避免把批处理
+    # 拍在他人作业上。等待与启动状态全部落盘可审计（preflight.jsonl 追加、
+    # launch_status.json 覆写）。超时未等到空闲则记录 not_started_gpu_busy，
+    # 不启动、不重试（本脚本只为这一次实验服务，不是常驻调度器）。
     start=time.monotonic(); idle=0
     with (OUT/'preflight.jsonl').open('a') as log:
         while time.monotonic()-start<1800:

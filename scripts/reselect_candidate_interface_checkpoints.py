@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Re-select v2 raw checkpoints by lowest validation loss (train-only criterion)."""
 
+# 目的：重选候选界面 v2 的 raw 检查点——原标准（校准 Spearman 最大）因校准
+# 方差塌缩（Spearman~0）而退化，选出了欠训练检查点（iter 100/300/400）。
+# 改用"raw 检查点最低验证损失"这一仅依赖训练侧信号的标准，独立于校准/测试/
+# 扩展骨架，避免任何测试信息泄漏；输出选择报告并记录检查点哈希。
+
 from __future__ import annotations
 
 import argparse

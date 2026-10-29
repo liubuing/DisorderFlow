@@ -9,6 +9,8 @@ These run on CPU with tiny tensors; no model/checkpoint required.
 """
 import pytest
 
+# torch 可能未安装在精简环境中：importorskip 让整组测试在缺 torch 时静默跳过
+# 而非报错，保证 CI 在无 GPU/torch 的机器上仍能跑其余测试。
 torch = pytest.importorskip("torch")
 
 from disorderflow.modules.bfn.core import (

@@ -5,6 +5,11 @@ Usage:
   conda activate bfn-msa
   python test_overconfidence_phase2.py
 """
+# 角色：过度自信验证第二阶段（AF2 教师验证，需在 bfn-msa conda 环境运行）——
+# 读取第一阶段（/tmp/overconfidence_phase1.json）的设计，对 phase3/phase4 两个
+# 训练阶段的设计分别跑 AF2-Multimer（1 次 recycle），计算 BFN 预测相对 AF2
+# 的过度自信比（OC ratio = BFN/AF2，分母截断 0.001 防除零），比较 phase4 的
+# 负样本训练是否降低了过度自信。结果写 /tmp/overconfidence_phase2.json。
 import os, sys, json, time
 os.chdir('/home/liubuzi/disorderflow-main/disorderflow-main')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))

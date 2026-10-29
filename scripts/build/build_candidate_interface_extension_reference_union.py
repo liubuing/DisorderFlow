@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Build the calibration-extension reference union from the frozen successor-v3 union plus round-1 exposures."""
 
+# 本脚本构建"校准扩展"参考并集：在冻结的 successor-v3 确认性参考并集之上，
+# 并入第一轮（round-1）暴露条目，形成更大的排除参考库。
+# 五轴序列字段（VH/VL/成对 CDR/CDR-H3/抗原）必须全部非空；round-1 快照的
+# 全部 PDB 条目进入 exact 排除集，结构合格序列进入五轴排除集。
+# 输出拒绝覆盖已有文件，全部输入记录 SHA-256 溯源。
+
 from __future__ import annotations
 
 import argparse
@@ -17,9 +23,12 @@ AXES_FIELDS = ("vh_sequence", "vl_sequence", "paired_cdr_sequence",
 
 
 def sha256_file(path: Path) -> str:
+    # 计算文件 SHA-256，用于参考并集的输入溯源
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# PDB ID 归一化：小写、去 pdb_ 前缀、去除多余前导零（保留 4 位）、
+# 截掉 "_" 或 "-" 之后的后缀，保证不同来源的同一 entry 可以对齐
 def normalize_pdb(value) -> str:
     text = str(value or "").casefold().strip()
     if text.startswith("pdb_"):
@@ -31,10 +40,13 @@ def normalize_pdb(value) -> str:
     return text
 
 
+# 序列清洗：转大写并仅保留 20 种标准氨基酸字符
 def clean_sequence(value) -> str:
     return "".join(char for char in str(value).upper() if char in AA)
 
 
+# 读取 round-1 RCSB 搜索快照的 entry ID 列表；缺失 result_set 或
+# 出现重复 ID 均视为快照不合规
 def snapshot_entry_ids(snapshot_dir: Path) -> list[str]:
     response = json.loads((snapshot_dir / "search_response.json").read_text(encoding="ascii"))
     result_set = response.get("result_set")
@@ -49,6 +61,8 @@ def snapshot_entry_ids(snapshot_dir: Path) -> list[str]:
     return sorted(ids)
 
 
+# 从结构清单生成扩展参考记录：按顺序分配 EXTR##### 编号，
+# 五轴序列字段任一清洗后为空即报错，PDB ID 统一归一化
 def reference_records(structural_manifest: Path) -> list[dict[str, str]]:
     manifest = json.loads(structural_manifest.read_text(encoding="utf-8"))
     records = []
@@ -71,6 +85,8 @@ def reference_records(structural_manifest: Path) -> list[dict[str, str]]:
     return records
 
 
+# 并集构建主流程：校验基础并集状态 → 合并参考记录（ID 冲突即报错）→
+# 合并 exact 暴露 PDB 集 → 写出带完整溯源的新冻结并集（独占创建，不覆盖）
 def build(base_manifest: Path, round1_snapshot: Path, round1_structural: Path,
           output: Path) -> dict:
     if output.exists():
@@ -132,6 +148,7 @@ def build(base_manifest: Path, round1_snapshot: Path, round1_structural: Path,
     return union
 
 
+# 主入口：四个路径均为必填参数，完成后打印并集计数摘要
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-manifest", type=Path, required=True)

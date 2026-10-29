@@ -58,6 +58,8 @@ print(f"Native CDR atoms: H={len(h_atoms)}, L={len(l_atoms)}")
 # Generate perturbed receptors
 def perturb_and_save(scaffold_pdb, out_path, h_atoms, l_atoms, sigma):
     """Apply Gaussian noise to CDR backbone atoms and save."""
+    # 对 CDR 主链 N/CA/C/O 原子加各向同性高斯噪声（标准差 sigma 埃），
+    # 只扰动 CDR 残基，框架与抗原不动。
     ps = PDBParser(QUIET=True)
     st = ps.get_structure('ref', scaffold_pdb)[0]
 
@@ -77,6 +79,8 @@ def perturb_and_save(scaffold_pdb, out_path, h_atoms, l_atoms, sigma):
     io.set_structure(st)
     io.save(out_path)
 
+# 扰动幅度梯度（单位: 埃）: 0 为原生对照，到 3 Å 覆盖"轻度柔性"到
+# "明显重构"的 CDR 骨架变化范围；全局种子 42 保证扰动可复现。
 sigmas = [0.0, 0.1, 0.3, 0.5, 1.0, 2.0, 3.0]  # Angstroms
 random.seed(42)
 np.random.seed(42)
@@ -160,6 +164,9 @@ for sigma in sigmas:
         print(f"{sigma:>8.1f} {'?':>10} {s:>12.1f} {delta:>+10.1f}")
 
 # Gate verdict
+# 门判定（HDOCK 分数越负越好，top1 取最小值）: 各扰动水平 top1 分数
+# 极差 > 5 判 PASS（HDOCK 对 CDR 骨架变化敏感，fold-then-dock 路线可行）；
+# 1-5 之间为 MARGINAL；<= 1 判 FAIL（基本不敏感）。
 if len(results) >= 3:
     scores = [results[k]['top1'] for k in sorted(results.keys())]
     score_range = max(scores) - min(scores)

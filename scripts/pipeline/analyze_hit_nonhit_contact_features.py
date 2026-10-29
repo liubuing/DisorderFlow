@@ -14,6 +14,8 @@ from collections import defaultdict
 from pathlib import Path
 
 
+# 氨基酸按侧链体积粗分三类（small/medium/large），按化学性质分类；
+# 分类是描述性的分组口径，不是量化标度。
 VOLUME_CLASS = {
     **{aa: "small" for aa in "GAS"},
     **{aa: "medium" for aa in "CTDNVP"},
@@ -45,6 +47,7 @@ def load_csv(path):
 
 
 def parse_mutations(mutation_text):
+    # 解析 "chain:resid:W>T;..." 形式的突变串；格式不符的 token 静默跳过。
     out = []
     for token in str(mutation_text or "").split(";"):
         if not token:
@@ -58,6 +61,10 @@ def parse_mutations(mutation_text):
 
 
 def main():
+    # 把实验结果 CSV 的 hit 判定（hit/binder/oligomer_specific 等枚举）
+    # 与库中应用的突变做连接，逐突变记录化学/体积特征，按
+    # (hit 组, 链, 位点, 化学, 体积) 计数汇总。目的: 回答"命中与非命中
+    # 在未预先硬编码的接触位置特征上是否有可辨差异"。
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

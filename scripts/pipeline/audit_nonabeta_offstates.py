@@ -19,6 +19,10 @@ from ensemble_pose_transfer import ca_coordinates, fixed_paratope_contact_map, k
 from state_contact_scorer import AA3_TO_1, extract_contact_map, score_sequence_on_contact_map  # noqa: E402
 
 
+# 每个 IDP 靶点的实验"off-state"（非设计构象态）清单: tau 取两条不同
+# 制备方式的 PHF/丝状filament，alpha_synuclein 取胶束/纤维态。
+# 8B9V 因与设计管线共用同一阳性参考复合物而被显式排除并记录原因——
+# 排除必须留痕，不允许静默丢弃。
 OFF_STATES = {
     "tau": [
         {
@@ -49,10 +53,13 @@ OFF_STATES = {
 
 
 def sha256(path):
+    # 文件哈希（大写十六进制），登记进审计行以便复现核查。
     return hashlib.sha256(path.read_bytes()).hexdigest().upper()
 
 
 def chain_sequence(path, chain_id):
+    # 直接从 PDB ATOM 行按链提取单字母序列（按 (resSeq, insertion, resname)
+    # 去重），不依赖外部解析器，保证与文件中实际观测残基一致。
     residues = []
     seen = set()
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -67,6 +74,13 @@ def chain_sequence(path, chain_id):
 
 
 def project_assembly(template, off_path, output, target):
+    # 把参考复合物的抗体"搬"到 off-state 聚集体上（几何投影控制，不是
+    # 实验阴性复合物）:
+    #   1. 在 off 链序列中精确查找设计表位（找不到即失败，绝不模糊对齐）;
+    #   2. Kabsch 叠合表位 CA 得到旋转/平移与拟合 RMSD;
+    #   3. 重写 PDB: 抗体链保持原坐标，off 聚集体全部链经变换后按固定
+    #      链字母表重新编号，避免链名冲突。
+    # 返回拟合 RMSD、表位起点与链映射等溯源信息。
     template_sequence, template_ca = ca_coordinates(template, target["reference_peptide_chain"])
     off_sequence, off_ca = ca_coordinates(off_path, target["off_chain"])
     start = off_sequence.find(template_sequence)
@@ -116,6 +130,7 @@ def project_assembly(template, off_path, output, target):
 
 
 def atom_records(path, chains):
+    # 提取指定链的重原子记录（氢原子剔除——几何距离统计只看重原子）。
     rows = []
     for line in path.read_text(encoding="ascii").splitlines():
         if not line.startswith("ATOM  ") or line[21:22].strip() not in chains:
@@ -132,6 +147,9 @@ def atom_records(path, chains):
 
 
 def projection_geometry(path, antibody_chains, antigen_chains, primary_chain, epitope_resids):
+    # 投影姿态的几何体检: 抗体-抗原最小重原子距离、<1.5 Å 严重碰撞对数
+    # （>0 即判定 sterically_blocked，其接触分数不可比）、<5 Å 近距对数、
+    # 表位-邻位 <5 Å 对数（衡量表位微环境是否被保留）。
     antibody = atom_records(path, set(antibody_chains))
     antigen = atom_records(path, set(antigen_chains))
     distances = np.linalg.norm(
@@ -170,6 +188,13 @@ def write_csv(path, rows):
 
 
 def main():
+    # 主流程: 审计各靶点的实验 off-states（表位精确匹配 + 几何投影 +
+    # 接触图打分），再对每个候选序列在可比 off-state 接触图上打分，
+    # 门规则: 相对原生投影分数的最大 delta <= 0 才算 pass（即候选在
+    # 任何 off-state 上都不优于原生——降低脱离设计构象结合的风险）。
+    # 全部几何阻塞的候选记为 not_applicable 而非 fail。汇总要求每靶点
+    # 至少 1 个可打分状态、至少 2 个候选 pass 才给整体 pass 状态。
+    # claim_boundary: 投影姿态只是几何/相对分数控制，不是实验不结合标签。
     manifest_path = PROJECT_ROOT / "outputs/non_abeta_idp_ensemble_prep_v1/ensemble_manifest.json"
     candidate_path = PROJECT_ROOT / "outputs/non_abeta_idp_ensemble_design_v1/ensemble_designed_candidates.csv"
     with open(manifest_path, encoding="utf-8") as handle:

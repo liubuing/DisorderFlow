@@ -5,6 +5,10 @@ This package deliberately avoids calling candidates synthesis-ready. The goal is
 to send a small experimental draft set, measure binding/state specificity, and
 then mine hit/non-hit differences for emergent design variables.
 """
+# 目的：为"设计变量发现"故事构建实验打包件：从 v2 短名单取前 top（默认 10）条
+# 候选，附 Chothia 编号摘要与（可选）Fv ColabFold 折叠证据。该包明确不声称
+# "可直接合成"，而是小型实验草案集——测结合/状态特异性后回挖 hit 与 non-hit
+# 的差异以发现涌现设计变量。
 from __future__ import annotations
 
 import argparse

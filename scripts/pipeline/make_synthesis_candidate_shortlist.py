@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Create a clean full-chain candidate shortlist from construct drafts."""
+"""Create a clean full-chain candidate shortlist from construct drafts.
+
+从全长构建草稿中筛除带风险标记/警告的候选，按 (selection_rank,
+-candidate_score) 排序取 top（默认 20），生成合成候选短清单 CSV、
+对应 FASTA、逐突变明细 CSV、汇总 JSON 与 MD 报告。
+状态固定为 draft_not_synthesis_ready（需补五类侧证据）。
+"""
 from __future__ import annotations
 
 import argparse
@@ -18,6 +24,7 @@ def parse_args():
 
 
 def load_constructs(path):
+    """读取构建 CSV 并把数值字段转回类型。"""
     with open(path, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     for r in rows:
@@ -29,6 +36,7 @@ def load_constructs(path):
 
 
 def load_fasta(path):
+    """读取 FASTA 为 {header: sequence} 字典。"""
     records = {}
     header = None
     seq = []
@@ -60,6 +68,7 @@ def fasta_records_for_construct(records, construct_id):
 
 
 def main():
+    """主流程：清洗 -> 排序选 top -> 写短清单/FASTA/突变明细/汇总/报告。"""
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

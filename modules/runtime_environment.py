@@ -14,6 +14,7 @@ from pathlib import Path
 
 def windows_to_wsl_path(path):
     """Map an absolute Windows path to its WSL /mnt/<drive> equivalent."""
+    # D:\foo\bar -> /mnt/d/foo/bar；非盘符路径原样返回
     resolved = Path(path).resolve().as_posix()
     if len(resolved) >= 3 and resolved[1:3] == ":/":
         return f"/mnt/{resolved[0].lower()}{resolved[2:]}"
@@ -33,6 +34,8 @@ def resolve_colabfold_executable(af2_config, project_dir):
     executable = af2_config.get("executable", "colabfold_batch")
     if backend == "wsl":
         # The venv itself lives on D:, so both Windows and WSL see the same files.
+        # 项目内 venv 同时被 Windows 与 WSL 视图看到：存在性用 Windows 视图检查，
+        # 返回值换成 WSL 的 /mnt/... 路径；环境缺失返回 None 而不是回退到全局安装
         environment = af2_config.get("environment", "venv_wsl")
         environment = Path(environment)
         if not environment.is_absolute():
@@ -41,6 +44,7 @@ def resolve_colabfold_executable(af2_config, project_dir):
         return windows_to_wsl_path(candidate) if candidate.exists() else None
 
     configured = Path(str(executable)).expanduser()
+    # native 后端解析顺序：绝对路径 -> 项目内 venv（Windows 用 Scripts\）-> PATH
     if configured.is_absolute() and configured.exists():
         return str(configured)
 
@@ -93,6 +97,8 @@ def colabfold_environment(af2_config, project_dir):
         existing = [value for value in env.get("WSLENV", "").split(":") if value]
         env["WSLENV"] = ":".join(existing + [name for name in forwarded if name not in existing])
     if str((af2_config or {}).get("backend", "native")).lower() != "wsl":
+        # native 模式下把可执行文件所在目录前置到 PATH，
+        # 使其能找到同目录的运行时依赖（JAX 包等）
         executable = resolve_colabfold_executable(af2_config, project_dir)
         if executable:
             env["PATH"] = str(Path(executable).parent) + os.pathsep + env.get("PATH", "")

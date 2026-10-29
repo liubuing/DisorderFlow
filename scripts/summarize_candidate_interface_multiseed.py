@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Select balanced development checkpoints and evaluate precommitted gates."""
 
+# 多 seed 候选界面置信度模型的检查点汇总脚本：
+# 对每个 seed 的评估文件按预设规则挑选均衡的 raw 检查点，
+# 并对照预先承诺(precommitted)的部署门槛逐项判定（MAE、配对准确率、
+# bootstrap 下界、脚手架内 Spearman、方差比等），产出可审计的选择摘要。
+# 分类固定为 development_only，且明确 final_test_evaluated=False。
 from __future__ import annotations
 
 import argparse
@@ -12,18 +17,25 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+# 参与选择与门槛判定的三个输出量。
 OUTPUTS = ("plddt", "iptm", "pae")
+# 预先承诺的 MAE 门槛（单位与各指标一致，均为相对量）。
 MAE_GATES = {"plddt": 0.05, "iptm": 0.05, "pae": 0.10}
+# 配对证据门槛：有效配对数下限、贡献脚手架族数下限，
+# 以及单一脚手架族配对占比上限（防止结论被某一族主导）。
 MIN_RELIABLE_PAIRS = 30
 MIN_PAIR_SCAFFOLDS = 3
 MAX_SCAFFOLD_PAIR_FRACTION = 0.50
 
 
 def sha256(path):
+    # 文件 sha256：评估文件溯源。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def rankdata(values):
+    # 平均秩(rank)：并列值取其覆盖区间的平均秩。
+    # 使用 mergesort 保证排序稳定、结果确定。
     values = np.asarray(values, dtype=float)
     order = np.argsort(values, kind="mergesort")
     ranks = np.empty(len(values), dtype=float)
@@ -38,6 +50,7 @@ def rankdata(values):
 
 
 def spearman(left, right):
+    # Spearman 秩相关；任一侧秩为常数（零方差）时返回 None。
     left, right = rankdata(left), rankdata(right)
     if np.std(left) == 0 or np.std(right) == 0:
         return None
@@ -45,10 +58,17 @@ def spearman(left, right):
 
 
 def metric_view(evaluation, name):
+    # 统一取实体级聚合(entity_aggregated)指标视图。
     return evaluation["metrics"][name]["entity_aggregated"]
 
 
 def selection_key(evaluation):
+    # 检查点选择规则（词典序最大化）：
+    # 1) 三个输出脚手架内 Spearman 的最小值；
+    # 2) 三者均值；
+    # 3) 通过的 MAE 门槛数；
+    # 4) 归一化 MAE 之和取负（越小越好）。
+    # 缺失的相关系数按负无穷处理，避免选中。
     metrics = [metric_view(evaluation, name) for name in OUTPUTS]
     correlations = [
         metric["within_scaffold"]["mean_group_spearman"] for metric in metrics]
@@ -63,6 +83,9 @@ def selection_key(evaluation):
 
 
 def pair_outcomes(rows, name):
+    # 构造可靠配对结果：仅保留目标值差异超过两倍噪声合成幅度
+    # (np.hypot 即正交合成 sqrt(a^2+b^2)) 的实体对；
+    # 结果为预测方向是否与目标方向一致（1/0 布尔值）。
     outcomes = []
     for left in range(len(rows)):
         for right in range(left + 1, len(rows)):
@@ -78,6 +101,8 @@ def pair_outcomes(rows, name):
 
 
 def pair_statistics(records, name, bootstrap_seed):
+    # 配对级统计：按脚手架族分组后计算方向一致率，并以
+    # "脚手架族->实体"两阶段分层 bootstrap 估计 95% 置信下界。
     groups = defaultdict(list)
     for row in records:
         groups[row["scaffold_family"]].append(row)
@@ -107,6 +132,8 @@ def pair_statistics(records, name, bootstrap_seed):
     outcomes = np.asarray(outcomes)
     generator = np.random.default_rng(bootstrap_seed)
     scaffolds = list(groups)
+    # 两阶段 bootstrap：先有放回抽脚手架族，再在每族内有放回抽实体，
+    # 保持层次结构与原始数据一致；重复次数固定 10000 以稳定分位数估计。
     bootstrap = []
     for _ in range(10000):
         sampled_scaffolds = generator.choice(
@@ -132,6 +159,7 @@ def pair_statistics(records, name, bootstrap_seed):
 
 
 def scaffold_correlations(records, name):
+    # 各脚手架族内"预测 vs 目标"的 Spearman 相关；可能为 None。
     groups = defaultdict(list)
     for row in records:
         groups[row["scaffold_family"]].append(row)
@@ -144,6 +172,8 @@ def scaffold_correlations(records, name):
 
 
 def dispersion_ratios(prediction_std, target_std):
+    # 离散度比：预测标准差与参照标准差之比及其平方（方差比）。
+    # 参照标准差非正时无法定义，返回 (None, None)。
     if target_std <= 0:
         return None, None
     std_ratio = prediction_std / target_std
@@ -151,6 +181,8 @@ def dispersion_ratios(prediction_std, target_std):
 
 
 def summarize_selection(evaluation, bootstrap_seed):
+    # 汇总单个选中检查点：三个输出量各自计算配对统计、脚手架相关、
+    # 离散度比，并对照预承诺门槛逐项判定；全部通过才计入部署通过。
     records = evaluation["entity_aggregated_records"]
     summary = {
         "checkpoint": evaluation["checkpoint"],
@@ -169,10 +201,14 @@ def summarize_selection(evaluation, bootstrap_seed):
             float(np.median(defined_correlations)) if defined_correlations else None)
         stability = evaluation["metrics"][name]["condition_stability"]
         replicate_std = stability["mean_target_std_across_conditions"]
+        # 两类离散度比较：
+        # - 实体间：预测 std 相对目标 std（应为同一量级，方差比落在 [0.5, 2.0]）；
+        # - 跨条件：预测 std 相对重复间目标 std（不应放大噪声，方差比 <= 2.0）。
         condition_std_ratio, condition_variance_ratio = dispersion_ratios(
             stability["mean_prediction_std_across_conditions"], replicate_std)
         entity_std_ratio, entity_variance_ratio = dispersion_ratios(
             metric["prediction_std"], metric["target_std"])
+        # 预承诺门槛集合（数值与配对证据阈值见模块顶部常量）。
         gates = {
             "mae": metric["mae"] <= MAE_GATES[name],
             "pair_evidence": (
@@ -230,6 +266,8 @@ def main():
             "selection_summary_semantics_v2.json"))
     args = parser.parse_args()
 
+    # 逐 seed 处理：只考虑 raw 权重的周期性检查点，按 selection_key 选最优；
+    # bootstrap_seed=2041+index 与 seed 编号保持对应，结果可复现。
     selections = []
     sources = []
     dataset_hashes = set()
@@ -243,6 +281,7 @@ def main():
         selections.append(summarize_selection(selected, bootstrap_seed=2041 + index))
         sources.append({"path": relative_path, "sha256": sha256(path)})
 
+    # 所有 seed 必须基于同一数据清单，否则选择不可比。
     if len(dataset_hashes) != 1:
         raise ValueError("Evaluation files do not share one dataset manifest")
     output = {

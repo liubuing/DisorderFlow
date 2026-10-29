@@ -1,15 +1,23 @@
+"""候选界面扩展冻结清单测试：验证成员归属生成、门槛校验与不可覆盖。
+
+守护 freeze_candidate_interface_extension_manifest 的冻结溯源语义：
+按连通分量审计生成 train/calibration/test 成员归属（全部组件按隔离门槛进 calibration）、
+隔离审计门槛未通过（gate_passed=False）必须拒绝冻结、输出已存在拒绝覆盖。
+"""
 import importlib.util
 import json
 from pathlib import Path
 
 import pytest
 
+# 模块级加载被测脚本（scripts/build/freeze_candidate_interface_extension_manifest.py）。
 SCRIPT = Path(__file__).parents[1] / "scripts" / "build" / "freeze_candidate_interface_extension_manifest.py"
 SPEC = importlib.util.spec_from_file_location("freeze_ext", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 
+# 辅助函数：构造一条合并后的候选记录（含序列、分辨率与接触统计）。
 def make_record(instance):
     return {
         "instance": instance,
@@ -28,6 +36,7 @@ def make_record(instance):
     }
 
 
+# 辅助函数：写入隔离审计文件（通过门槛 + 连通分量成员列表）。
 def make_audit(tmp_path, components):
     return (tmp_path / "audit.json").write_text(json.dumps({
         "status": "frozen_model_free_successor_v3_isolation_audit",
@@ -36,12 +45,15 @@ def make_audit(tmp_path, components):
     }), encoding="utf-8")
 
 
+# 辅助函数：写入合并记录文件（instances → records）。
 def make_merged(tmp_path, instances):
     (tmp_path / "merged.json").write_text(json.dumps({
         "records": [make_record(i) for i in instances],
     }), encoding="utf-8")
 
 
+# 冻结清单的成员归属必须由审计的连通分量逐组件生成（此处全部归 calibration）——
+# 防止组件成员丢失或被重新划分导致拆分溯源断裂。
 def test_freeze_builds_membership(tmp_path):
     instances = ["1ABC_H_L_P", "2DEF_H_L_P", "3GHI_H_L_P", "4JKL_H_L_P", "5MNO_H_L_P"]
     make_merged(tmp_path, instances)
@@ -61,6 +73,7 @@ def test_freeze_builds_membership(tmp_path):
     assert manifest["membership"]["test"] == []
 
 
+# fail-closed：隔离审计门槛未通过时冻结必须被拒绝——防止未隔离的数据进入冻结产物。
 def test_freeze_rejects_failed_gate(tmp_path):
     make_merged(tmp_path, ["1ABC_H_L_P"])
     (tmp_path / "audit.json").write_text(json.dumps({
@@ -73,6 +86,7 @@ def test_freeze_rejects_failed_gate(tmp_path):
                       tmp_path / "c.json", tmp_path / "out.json")
 
 
+# 冻结不可重写：输出已存在必须拒绝——防止冻结清单被静默改写破坏发布一致性。
 def test_freeze_refuses_overwrite(tmp_path):
     out = tmp_path / "out.json"
     out.write_text("sentinel")

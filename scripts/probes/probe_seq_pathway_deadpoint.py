@@ -23,6 +23,7 @@ CKPT = os.environ.get('V14_CKPT',
     'logs/bfn_v14_grouped_conf_xpu_2026_06_26__02_53_57/checkpoints/best.pt')
 
 cfg_path = 'app_config.yaml'
+# 临时改写 app_config.yaml 指向目标 checkpoint, finally 块中还原原始配置
 app = yaml.safe_load(open(cfg_path, encoding='utf-8'))
 orig = app['models']['bfn']['checkpoint']
 app['models']['bfn']['checkpoint'] = CKPT
@@ -45,6 +46,8 @@ try:
             backbone_pos=None, prev_conf=None, prev_iptm=None, prev_pae=None,
             prev_seq_emb=None, mask_gen=None):
         # Capture pre-head stages for this forward.
+        # 在调用原 forward 前逐级取值: softmax 概率 -> v12_seq_emb 嵌入 ->
+        # 按生成掩码池化 -> v12_iptm 标量, 逐设计记录以定位通路死点
         probs_seq = torch.softmax(theta_seq, dim=-1)  # (N,L,20)
         seq_emb = recv.v12_seq_emb(probs_seq)          # (N,L,64)
         # CDR region
@@ -84,6 +87,7 @@ try:
         print(f'  {k:>20}: std={std(k):.6f}  range={max(s[k] for s in stages)-min(s[k] for s in stages):.6f}')
 
     print('\n=== dead-point verdict ===')
+    # 判定阈值: 各级 std 低于 1e-5/1e-4 量级视为"该级恒定", 据此定位需重建的组件
     if std('probs_cdr_mean_var') < 1e-5:
         print('  >> probs_seq identical across designs (upstream: sampling not varying CDR?)')
     elif std('seqemb_cdr_std') < 1e-5 and std('pooled_norm') < 1e-3:

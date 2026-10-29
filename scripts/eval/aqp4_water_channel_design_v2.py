@@ -45,6 +45,7 @@ AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 DEFAULT_CDR = 'B:26-33,51-58,97-113'
 
 # AQP4 extracellular loops (1RC2 numbering, corresponds to full AQP4 32-254)
+# 三个胞外环：Loop A 为主要胞外环，Loop C 含芳族/精氨酸选择性过滤器
 AQP4_EXTRACELLULAR_LOOPS = {
     'Loop_A': (55, 68),   # ~14 aa, major extracellular loop
     'Loop_C': (134, 141), # ~8 aa, contains ar/R selectivity filter
@@ -52,6 +53,7 @@ AQP4_EXTRACELLULAR_LOOPS = {
 }
 
 AQP4_EXTRACELLULAR_BROAD = [
+    # 各胞外环的"宽松"边界（含侧翼），用于先筛胞外残基再归入具体环
     (53, 72),    # Loop A + flanks
     (131, 145),  # Loop C + flanks
     (189, 198),  # Loop E + flanks
@@ -85,6 +87,7 @@ def analyze_epitopes(aqp4_pdb, chain):
     print(f"\n[2/6] Epitope Analysis (SASA + hydropathy + protrusion)")
 
     weights = {'sasa': 0.40, 'hydrophilicity': 0.35, 'protrusion': 0.25}
+    # 表位加权评分：溶剂可及面积 0.40 / 亲水性 0.35 / 突出度 0.25
     epitope_data = score_epitope_residues(aqp4_pdb, chain, weights=weights)
 
     # Build extracellular set
@@ -147,6 +150,7 @@ def build_epitopes(aqp4_pdb, chain, epitope_info, output_dir, max_segments=3):
             print(f"  {name}: FAILED — {e}")
 
     segments.sort(key=lambda x: x['mean_score'], reverse=True)
+    # 只保留表位评分最高的 max_segments 个片段，控制后续 BFN 设计成本
     return segments[:max_segments]
 
 
@@ -287,8 +291,10 @@ def filter_and_rank(all_design_results):
 
     ranked, report = apply_cascade(
         all_designs,
+        # 级联硬阈值：pLDDT>=0.50、ipTM>=0.30、PPL<=150、熵<=2.8
         thresholds={'plddt_min': 0.50, 'iptm_min': 0.30,
                     'ppl_max': 150.0, 'entropy_max': 2.8},
+        # 综合分权重：ipTM 为主信号（0.35），其余为置信/多样性辅助项
         weights={'iptm': 0.35, 'plddt': 0.25, 'ppl_inv': 0.15,
                 'entropy_inv': 0.10, 'recovery': 0.15},
     )
@@ -298,6 +304,7 @@ def filter_and_rank(all_design_results):
 
     for r in ranked:
         cs = r.get('composite_score', 0)
+        # 质量分档：综合分 >=0.65 HIGH，>=0.45 MEDIUM，其余 LOW
         r['quality'] = 'HIGH' if cs >= 0.65 else ('MEDIUM' if cs >= 0.45 else 'LOW')
 
     print(report)
@@ -378,6 +385,7 @@ def save_results(ranked, output_dir, config):
 
 
 def main():
+    """六步主流程：加载 AQP4 -> 表位分析 -> 构建表位 -> BFN 设计 -> 级联筛选 -> 保存。"""
     parser = argparse.ArgumentParser(
         description='AQP4 Water Channel Design — V2 Optimized')
     parser.add_argument('--aqp4-pdb', default='data/aqp4/1RC2.pdb')

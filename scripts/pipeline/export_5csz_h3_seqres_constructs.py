@@ -20,6 +20,8 @@ ABETA42 = "DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA"
 
 
 def sequence_sha256(sequence):
+    # 对 "heavy:light" 拼接序列取 SHA-256（大写十六进制），
+    # 作为构造体序列的唯一指纹写入清单。
     return hashlib.sha256(sequence.encode("ascii")).hexdigest().upper()
 
 
@@ -29,6 +31,15 @@ def load_rows(path):
 
 
 def main():
+    # 导出运行级完整 SEQRES 构造体（合成用短名单）:
+    #   - 先核对 5CSZ SEQRES 契约（重链 228 / 轻链 215 / E 链 Aβ1-11 肽
+    #     DAEFRHDSGYE），不符即失败，防止在错误骨架上叠突变;
+    #   - 每个候选按 H3 突变 + 背景突变（默认 N52H 补救 NAS N-糖基化基序;
+    #     前 paired-nas-controls 个候选额外保留 N52 作为风险对照）应用突变;
+    #   - 校验全部突变都被实际应用、H3 区（残基 95-102，Kabat 粗窗口）
+    #     突变数与选择记录一致，否则失败;
+    #   - 输出 CSV/Fab FASTA/Fab+Aβ11/Fab+Aβ42 多种形式与 manifest。
+    # 排序契约: 以发展性/接触多样性优先，ipTM 只作绝对拒绝门不作排序。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--selected", required=True, type=Path)
     parser.add_argument("--mutation-plan", required=True, type=Path)

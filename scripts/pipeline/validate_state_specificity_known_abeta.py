@@ -6,6 +6,9 @@ residues that contact the peptide chain in a reference antibody-peptide PDB,
 then compares their state-specific score against scrambled composition-matched
 controls.
 """
+# 角色：状态特异性打分器的健全性检查（非结合证明）——在已知抗 Aβ 抗体-肽复合物
+# 中提取与肽链接触（重原子距离 <=8Å）的 native paratope 残基，比较其状态
+# 特异性得分与 50 条组成匹配的打乱对照（seed 42），native 应显著更优。
 from __future__ import annotations
 
 import argparse

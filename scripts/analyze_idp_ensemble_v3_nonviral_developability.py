@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-"""Attach explicitly heuristic developability proxies to nonviral candidates."""
+"""Attach explicitly heuristic developability proxies to nonviral candidates.
+
+为非病毒（nonviral）候选序列附加显式启发式可开发性（developability）代理指标：
+序列复杂度、免疫原性代理、是否引入半胱氨酸，并按 YAML 配置的阈值打标记。
+输出仅供风险提示（risk flags），不用于对 ensemble/single_state 分支排序。
+"""
 
 from __future__ import annotations
 
@@ -22,7 +27,9 @@ from modules.state_specificity_scorer import (
 
 
 def analyze(config_path, output):
+    """读取 YAML 配置与 QC 记录，逐候选计算代理指标并在分 arm 汇总。"""
     if output.exists():
+        # 审计产物不可覆盖，防止重复运行污染结果
         raise FileExistsError(f"Refusing to overwrite developability proxy: {output}")
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
     subset = json.loads(
@@ -41,6 +48,7 @@ def analyze(config_path, output):
         sequence = row["sequence"]
         complexity = sequence_complexity(sequence)
         immunogenicity = immunogenicity_proxy(sequence)
+        # 与 native_h3 对比检测是否新引入了半胱氨酸（潜在二硫键/聚集风险）
         introduced_cysteine = "C" in sequence and "C" not in native[row["component_id"]]
         flags = []
         if complexity < thresholds["minimum_sequence_complexity"]:
@@ -102,6 +110,7 @@ def analyze(config_path, output):
 
 
 def main():
+    """命令行入口：读取 YAML 配置，运行代理分析并打印摘要。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

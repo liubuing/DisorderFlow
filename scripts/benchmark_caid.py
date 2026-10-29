@@ -120,9 +120,11 @@ def assert_scored_clusters_resolved(targets, work_dir, structure_backend):
 
 
 # ── AUC (self-contained, no sklearn dependency) ──
+# 以下指标实现不依赖 sklearn，便于在冻结环境中复现 CAID 基准结果
 
 
 def _binary_labels(labels, threshold=0.5):
+    """把连续标签按 0.5 阈值二值化（>=0.5 记为无序/正类）。"""
     return [1 if float(l) >= threshold else 0 for l in labels]
 
 
@@ -169,7 +171,11 @@ def auc_pr(scores, labels):
 
 
 def binary_classification_metrics(scores, labels, threshold=0.5, calibration_bins=10):
-    """Threshold and calibration metrics for finite probabilities."""
+    """阈值指标（F1/MCC/混淆矩阵）与校准指标（Brier/ECE）。
+
+    ECE 把 [0,1] 分成 calibration_bins=10 个等宽桶，
+    以 |桶内平均置信度 - 实际正类频率| 的加权平均衡量过自信程度。
+    """
     predictions = [1 if float(score) >= threshold else 0 for score in scores]
     tp = sum(p == 1 and y == 1 for p, y in zip(predictions, labels, strict=True))
     tn = sum(p == 0 and y == 0 for p, y in zip(predictions, labels, strict=True))
@@ -326,6 +332,7 @@ def run_benchmark(
     aucs_roc, aucs_pr, f1s, mccs, briers, eces = [], [], [], [], [], []
     pooled_scores, pooled_labels = [], []
     loaded = None
+    # 默认判别阈值 0.5；若提供冻结校准产物则改用其记录的最优阈值
     prediction_threshold = 0.5
     calibration_metadata = None
     if calibration is not None:
@@ -436,6 +443,7 @@ def self_test():
 
 
 def main():
+    """命令行入口：--self-test 可无 GPU 验证指标正确性；正式评测需 EMA checkpoint + 校准产物。"""
     parser = argparse.ArgumentParser(description="CAID disorder-prediction benchmark")
     parser.add_argument(
         "--caid-dir",

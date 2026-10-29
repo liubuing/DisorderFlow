@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Apply top 5CSZ N-glyco rescue variants to the selected library."""
+# 目的：把通过 N-糖基化拯救（rescue）过滤的 5CSZ 最优变体回填到已选接触导向
+# 文库：按 (reference_pdb, candidate_id) 匹配源候选，替换序列/突变/得分字段，
+# 重置状态接触分并强制 strict_pass=True（因为替换序列已通过拯救过滤）。
+# 输出：回填后的 CSV/FASTA 文库与救援应用清单 CSV。
 from __future__ import annotations
 
 import argparse

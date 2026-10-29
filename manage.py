@@ -21,6 +21,8 @@ from pathlib import Path
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
+# 运行期状态文件的固定位置：PID/日志用于后台模式的服务管理，
+# CONFIG_FILE 是 Web 平台的主配置，DEFAULT_CONFIG 是批量设计时使用的 BFN 模型配置
 PROJECT_DIR = Path(__file__).parent
 PID_FILE = PROJECT_DIR / '.server.pid'
 LOG_FILE = PROJECT_DIR / 'server.log'
@@ -29,6 +31,8 @@ DEFAULT_CONFIG = PROJECT_DIR / 'configs' / 'demo_design.yml'
 
 
 def load_app_config():
+    # 读取平台主配置 app_config.yaml（服务器地址、模型检查点、批量输出等）；
+    # 返回值：yaml 解析后的嵌套 dict
     with open(CONFIG_FILE, encoding='utf-8') as f:
         return yaml.safe_load(f)
 
@@ -39,6 +43,7 @@ def load_app_config():
 
 def cmd_start(args):
     """启动 Web 服务器"""
+    # PID 文件存在且进程存活 => 已有实例在跑，避免重复启动
     if PID_FILE.exists():
         pid = int(PID_FILE.read_text().strip())
         if _is_running(pid):
@@ -53,8 +58,12 @@ def cmd_start(args):
 
     if args.bg:
         # 后台启动
+        # 以分离进程运行 app.py，stdout/stderr 重定向到 server.log，
+        # 轮询端口（最长 90 秒）确认服务真正可用后才算启动成功
         print(f"[*] 后台启动服务器...")
         log_f = open(LOG_FILE, 'w')
+        # Windows 需要显式创建新进程组并分离控制台，否则子进程随父进程一起退出；
+        # 非 Windows 平台 creationflags 保持 0（该参数仅 Windows 有效）
         creationflags = 0
         if sys.platform == 'win32':
             creationflags = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
@@ -86,11 +95,13 @@ def cmd_start(args):
         print(f"[*] 启动服务器: http://{host}:{port}")
         print(f"    按 Ctrl+C 停止")
         os.chdir(str(PROJECT_DIR))
+        # 前台模式用 os.execv 原地替换为 app.py 进程（不产生额外父进程）
         os.execv(sys.executable, [sys.executable, 'app.py'])
 
 
 def cmd_stop(args):
     """停止 Web 服务器"""
+    # PID 文件缺失时退化为按端口扫描（netstat），尽力找到残留进程
     if not PID_FILE.exists():
         print("[!] 未找到运行中的服务器 (PID 文件不存在)")
         # 尝试通过端口查找
@@ -175,6 +186,8 @@ def cmd_status(args):
 
 def _is_running(pid):
     """检查进程是否运行"""
+    # os.kill(pid, 0) 不发送任何信号，仅探测进程是否存在（POSIX 语义；
+    # Windows 上 CPython 也按存在性处理），抛异常即视为进程不在
     try:
         os.kill(pid, 0)
         return True
@@ -184,6 +197,8 @@ def _is_running(pid):
 
 def _kill_process(pid, force=False):
     """终止进程"""
+    # 常规停止用 SIGTERM（允许清理），强制停止用 SIGKILL；
+    # 失败（如进程恰好退出）静默吞掉，由调用方在后续检查中处理
     sig = signal.SIGKILL if force else signal.SIGTERM
     try:
         os.kill(pid, sig)
@@ -193,6 +208,7 @@ def _kill_process(pid, force=False):
 
 def _find_by_port(port=7860):
     """通过端口查找进程 (Windows)"""
+    # 依赖 Windows 的 netstat -ano 输出：找到 LISTENING 行后取最后一列（PID）
     try:
         result = subprocess.run(
             ['netstat', '-ano'], capture_output=True, text=True
@@ -207,6 +223,7 @@ def _find_by_port(port=7860):
 
 
 def _port_is_open(host, port):
+    # 用一次短超时 TCP 连接探测服务是否就绪；任何 OSError（拒绝/超时）都视为未就绪
     import socket
 
     try:
@@ -279,6 +296,7 @@ def cmd_batch(args):
 
 def _run_single_job(pdb_path, tool, args):
     """执行单个设计任务"""
+    # 按 --tool 选择分发；各实现函数返回可 JSON 序列化的结果 dict
     if tool == 'bfn_protein':
         return _batch_bfn_protein(pdb_path, args)
     elif tool == 'bfn_antibody':
@@ -294,6 +312,8 @@ def _run_single_job(pdb_path, tool, args):
 
 
 def _batch_bfn_protein(pdb_path, args):
+    # 离线批量执行 BFN 区域重设计：加载冻结检查点 -> 遮蔽指定区域 -> 采样多条序列，
+    # 返回包含困惑度（ppl）与序列恢复率（recovery）的统计结果
     from disorderflow.datasets.protein import preprocess_protein_structure
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.misc import load_config as _lc, seed_all
@@ -303,6 +323,7 @@ def _batch_bfn_protein(pdb_path, args):
     import torch, re
 
     # Parse region
+    # 解析 "A:10-25,30 B:1-5" 形式的区域描述 -> {链 ID: 残基编号（去重升序）}
     region_spec = args.region or 'A:10-25'
     regions = {}
     for cid, spec in re.findall(r'([A-Za-z0-9]+):([0-9,\-\s]+)', region_spec):
@@ -318,16 +339,20 @@ def _batch_bfn_protein(pdb_path, args):
         regions[cid] = sorted(set(indices))
 
     gconfig, _ = _lc(DEFAULT_CONFIG)
+    # weights_only=False 是必须的：检查点内保存了 OmegaConf 配置对象而非纯张量
     ckpt = torch.load(gconfig.model.checkpoint, map_location='cpu', weights_only=False)
+    # 模型超参与损失权重以训练时保存的配置为准，避免与当前代码默认值不一致
     mc = ckpt['config'].model
     if hasattr(ckpt['config'], 'train') and hasattr(ckpt['config'].train, 'loss_weights'):
         mc['loss_weight'] = dict(ckpt['config'].train.loss_weights)
     model = get_model(mc).to('cpu')
     model.load_state_dict(ckpt['model'])
     model.eval()
+    # 固定随机种子保证批量结果可复现
     seed_all(42)
 
     structure = preprocess_protein_structure(pdb_path, chain_ids=list(regions.keys()))
+    # 预处理流水线：遮蔽设计区域 -> 合并链 -> 裁剪 patch，再 padding 成批
     transform = get_transform([
         {'type': 'mask_region', 'regions': regions},
         {'type': 'merge_protein'},
@@ -337,10 +362,13 @@ def _batch_bfn_protein(pdb_path, args):
     gen_mask = batch['generate_flag'][0].bool()
 
     native_aa = batch['aa'][0][gen_mask]
+    # 20 标准氨基酸字母表；索引 >= 20（未知/掩码残基）统一显示为 X
     AA = 'ACDEFGHIKLMNPQRSTVWY'
     native_seq = ''.join(AA[a] if a < 20 else 'X' for a in native_aa.cpu())
 
     seqs = []
+    # 每条采样序列计算：ppl = exp(被生成残基的平均负对数似然)（越低越好），
+    # recovery = 与天然序列的逐位一致比例
     for i in range(args.samples or 3):
         with torch.no_grad():
             traj = model.sample(batch, sample_opt={'deterministic': not args.stochastic})
@@ -362,6 +390,8 @@ def _batch_bfn_protein(pdb_path, args):
 
 
 def _batch_bfn_antibody(pdb_path, args):
+    # 抗体 CDR 重设计版本：与 _batch_bfn_protein 流程一致，
+    # 区别在于用抗体专用预处理（H/L 链）并遮蔽 6 个 CDR 区域
     from disorderflow.datasets.custom import preprocess_antibody_structure
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.misc import load_config as _lc, seed_all
@@ -371,6 +401,7 @@ def _batch_bfn_antibody(pdb_path, args):
     import torch
 
     gconfig, _ = _lc(DEFAULT_CONFIG)
+    # weights_only=False：检查点包含配置对象；其余逻辑与蛋白版完全相同
     ckpt = torch.load(gconfig.model.checkpoint, map_location='cpu', weights_only=False)
     mc = ckpt['config'].model
     if hasattr(ckpt['config'], 'train') and hasattr(ckpt['config'].train, 'loss_weights'):
@@ -380,10 +411,12 @@ def _batch_bfn_antibody(pdb_path, args):
     model.eval()
     seed_all(42)
 
+    # 重/轻链 ID 可通过命令行覆盖，默认按常见命名取 H 与 L
     heavy = args.heavy or 'H'
     light = args.light or 'L'
     structure = preprocess_antibody_structure(pdb_path, heavy_chain=heavy, light_chain=light)
 
+    # 同时遮蔽重链与轻链的 6 个 CDR 区域进行联合生成
     cdrs = ['H_CDR1','H_CDR2','H_CDR3','L_CDR1','L_CDR2','L_CDR3']
     transform = get_transform([
         {'type': 'mask_cdr', 'sample_cdr': cdrs, 'mode': 'all'},
@@ -394,10 +427,13 @@ def _batch_bfn_antibody(pdb_path, args):
     gen_mask = batch['generate_flag'][0].bool()
 
     native_aa = batch['aa'][0][gen_mask]
+    # 20 标准氨基酸字母表；索引 >= 20（未知/掩码残基）统一显示为 X
     AA = 'ACDEFGHIKLMNPQRSTVWY'
     native_seq = ''.join(AA[a] if a < 20 else 'X' for a in native_aa.cpu())
 
     seqs = []
+    # 每条采样序列计算：ppl = exp(被生成残基的平均负对数似然)（越低越好），
+    # recovery = 与天然序列的逐位一致比例
     for i in range(args.samples or 3):
         with torch.no_grad():
             traj = model.sample(batch, sample_opt={'deterministic': not args.stochastic})
@@ -419,6 +455,8 @@ def _batch_bfn_antibody(pdb_path, args):
 
 
 def _batch_mpnn(pdb_path, args):
+    # 调用仓库内 ProteinMPNN 官方脚本作为对比基线；解析其 FASTA 输出
+    # （每个 ">T=" 头部记录 score/seq_recovery 等指标，序列在下一行）
     out_dir = Path('batch_mpnn_temp')
     out_dir.mkdir(exist_ok=True)
     cmd = [
@@ -453,6 +491,7 @@ def _batch_mpnn(pdb_path, args):
 
 
 def _batch_esmif(pdb_path, args):
+    # ESM-IF1 逆折叠基线：按单链坐标采样序列，统计与天然序列的恢复率
     from esm.pretrained import esm_if1_gvp4_t16_142M_UR50
     from esm.inverse_folding import util as if_util
     import torch
@@ -542,6 +581,7 @@ def cmd_config(args):
 
 
 def _print_config(d, indent=0):
+    # 递归打印嵌套 dict 配置；list 压成一行，便于在终端快速查看
     for k, v in d.items():
         if isinstance(v, dict):
             print(f"{' ' * indent}{k}:")
@@ -695,6 +735,8 @@ def cmd_test(args):
 # ═══════════════════════════════════════════
 
 def main():
+    # CLI 入口：start/stop/restart/status/batch/config/test 七个子命令；
+    # 无参数时默认执行 start（保持旧行为兼容）
     parser = argparse.ArgumentParser(
         description='蛋白质序列设计平台 — 管理工具',
         formatter_class=argparse.RawDescriptionHelpFormatter,

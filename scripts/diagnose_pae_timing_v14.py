@@ -13,6 +13,8 @@ SOURCE=ROOT/'results/pae_timing_v13'
 
 
 def main():
+    # 解析 v13 筛选轮的 GPU 遥测 JSONL（nvidia-smi 式 CSV 字段：时间戳/利用率/显存MiB/温度/功耗）。
+    # 只保留 returncode==0 的采样行，防止失败的探针读数污染统计。
     telemetry=[]
     for line in (SOURCE/'gpu_telemetry.jsonl').read_text().splitlines():
         r=json.loads(line)
@@ -20,7 +22,10 @@ def main():
         fields=[s.strip() for s in r['data'].split(',')]
         telemetry.append(dict(t=datetime.strptime(fields[0],'%Y/%m/%d %H:%M:%S.%f').timestamp(),util=float(fields[2].split()[0]),
             memory_mib=float(fields[3].split()[0]),temperature=float(fields[4]),power=float(fields[5].split()[0])))
+    # v12 全量运行的逐任务耗时作为"同任务参考基线"，用于量化 v13 筛选轮的失速幅度。
     full={r['id']:r for r in map(json.loads,(ROOT/'results/pae_timing_v12/full/results.jsonl').read_text().splitlines()) if r.get('id')}
+    # 时间对齐是回顾性近似：用 PAE 文件 mtime 减去记录的 elapsed 反推任务起止窗口，
+    # 再取窗口内遥测的中位数；assert digest(...) 先校验 PAE 文件未被事后改动。
     rows=[]; groups=defaultdict(list)
     for r in map(json.loads,(SOURCE/'screened/results.jsonl').read_text().splitlines()):
         if not r.get('id'): continue
@@ -32,9 +37,11 @@ def main():
             approximate_end=datetime.fromtimestamp(end).isoformat(),telemetry_samples=len(near),
             telemetry={k:statistics.median(t[k] for t in near) for k in ['memory_mib','util','temperature','power']} if near else None)
         rows.append(item); groups[r['id'].split('|')[0]+'|'+r['id'].split('|')[-2]].append(item)
+    # 按"组件|模型"分组汇总（分组键取任务 id 的首段与倒数第二段），定位失速集中在哪个模型/组件。
     summary={k:dict(n=len(v),seconds=sum(r['elapsed'] for r in v),reference_seconds=sum(r['reference_elapsed'] for r in v),
         median_seconds=statistics.median(r['elapsed'] for r in v),
         median_memory_mib=statistics.median(r['telemetry']['memory_mib'] for r in v if r['telemetry']) if any(r['telemetry'] for r in v) else None) for k,v in groups.items()}
+    # 冻结诊断结论：附带输入 SHA-256 溯源与"近似对齐、非因果证明"的边界声明，防止被后续当作因果证据引用。
     freeze(OUT/'audit.json',{'classification':'post_hoc_execution_diagnosis','source_sha256':digest(SOURCE/'screened/results.jsonl'),
         'telemetry_sha256':digest(SOURCE/'gpu_telemetry.jsonl'),'alignment':'PAE file modification timestamp minus worker elapsed; approximate; not event timestamp instrumentation',
         'groups':summary,'rows':rows,'boundary':'GPU process ownership, shared memory paging and OS load not recorded; memory pressure is a hypothesis, not established cause'})

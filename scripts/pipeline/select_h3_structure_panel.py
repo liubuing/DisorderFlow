@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """Select a mutation-pattern-diverse N52H H3 panel for absolute structure gates."""
+# 本脚本为绝对结构门槛挑选"突变模式多样"的 N52H H3 面板：
+# 只取可开发性通过且处于 N52H 挽救背景的候选，按 H3 突变位置模式去重
+# （默认最多 6 个），不足时允许重复模式补齐；输出 Fab 与 Fab+Aβ11/Aβ42
+# 两版复合物的折叠队列 FASTA。排名契约：多聚体 ipTM 只作绝对拒绝门槛，
+# 绝不重排已通过候选（避免用置信度做相对排序）。
 
 import argparse
 import csv
@@ -8,10 +13,13 @@ from pathlib import Path
 
 
 def mutation_positions(text):
+    # 从 "chain:pos;chain:pos" 形式的突变串中提取排序后的位置元组（模式键）
     return tuple(sorted(int(token.split(':')[1]) for token in text.split(';') if token))
 
 
 def main():
+    # 主流程：过滤可开发性+N52H 候选 → 按突变模式去重选前 N（不足则补齐）
+    # → 写面板 CSV、三类 FASTA（Fab / +Aβ11 / +Aβ42）与选择契约 JSON
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--developability', required=True, type=Path)
     parser.add_argument('--manifest', required=True, type=Path)

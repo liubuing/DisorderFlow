@@ -24,25 +24,29 @@ from pdbfixer import PDBFixer as Fixer
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# 采样协议常量：两个种子；300 K Langevin 动力学；骨架/抗原约束刚度；
+# 及审计阈值（重原子冲突 <1.8A、框架 CA RMSD <=1A、界面 CA RMSD <=3A）
 SEEDS = [13501, 13511]
-DYNAMICS_PS = 2.5
-TIMESTEP_FS = 2.0
-FRICTION_PER_PS = 1.0
-TEMPERATURE_K = 300.0
-MINIMIZATION_STEPS = 400
-FRAMEWORK_K = 1000.0
-ANTIGEN_K = 100.0
-CLASH_ANGSTROM = 1.8
-FRAMEWORK_RMSD_MAX = 1.0
-INTERFACE_RMSD_MAX = 3.0
+DYNAMICS_PS = 2.5  # 每个种子的动力学时长（皮秒）
+TIMESTEP_FS = 2.0  # 积分步长（飞秒）
+FRICTION_PER_PS = 1.0  # 摩擦系数（1/ps）
+TEMPERATURE_K = 300.0  # 体系温度（K）
+MINIMIZATION_STEPS = 400  # 动力学前的能量最小化步数
+FRAMEWORK_K = 1000.0  # 抗体骨架 CA 约束刚度（kJ/mol/nm^2）
+ANTIGEN_K = 100.0  # 抗原 CA 约束刚度（kJ/mol/nm^2）
+CLASH_ANGSTROM = 1.8  # 重原子冲突判定距离（埃）
+FRAMEWORK_RMSD_MAX = 1.0  # 框架 CA RMSD 上限（埃）
+INTERFACE_RMSD_MAX = 3.0  # 界面 CA RMSD 上限（埃）
 
 
 def sha256(path):
+    # 文件 SHA256，用作 pose 坐标指纹
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def load_pose_atoms(pdb_path):
     """Return ordered residues per chain with heavy atoms for audit math."""
+    # 解析 pose PDB：按链返回有序残基及其重原子坐标（MSE 视为 MET）
     structure = PDBParser(QUIET=True).get_structure(Path(pdb_path).stem, str(pdb_path))
     model = next(iter(structure))
     chains = {}
@@ -68,10 +72,12 @@ def load_pose_atoms(pdb_path):
 
 
 STANDARD_RESIDUES = {
+    # 允许保留的标准残基（含 MSE），其余（溶剂/配体）一律丢弃
     "ALA", "ARG", "ASN", "ASP", "CYS", "GLN", "GLU", "GLY", "HIS", "ILE",
     "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL",
     "MSE",
 }
+# 链重编号可用字母表（覆盖 62 个可能的片段链）
 SEGMENT_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 

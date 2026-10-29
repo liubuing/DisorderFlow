@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Parse complete-SEQRES parent and candidate ColabFold screens."""
 
+# 目的：解析 v5.1 生物构建体（5CSZ 亲本 + 候选）的 ColabFold/AF2-Multimer 筛选结果，
+# 提取 pLDDT/ptm/ipTM/界面 PAE 等指标并与亲本做差值比较。门控阈值：
+# 抗体 pLDDT>=80、ipTM>=0.7、界面 PAE<=20（亲本需先达标作为校准前提）。
+# 输出 biological_screen.json，作为表达包构建的结构质检输入。
+
 import json
 from pathlib import Path
 
@@ -8,7 +13,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = ROOT / "results/v5_1_candidates/abeta42_biological_constructs"
-LENGTHS = [228, 215, 11]
+LENGTHS = [228, 215, 11]  # SEQRES 链长：重链 228 / 轻链 215 / Aβ1-11 表位 11
 
 
 def score_file(directory, name):

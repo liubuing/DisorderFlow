@@ -5,6 +5,11 @@ This uses PDB residue order and residue numbers. It does not perform ANARCI or
 Chothia renumbering; the output is a construct-level sequence draft for further
 numbering, side-chain rebuilding, and fold/stability side checks.
 """
+# 本脚本从突变计划导出全长（重链+轻链）突变构造序列草稿：
+# 依 PDB 残基序与残基号将计划突变应用到参考链序列（原生残基不匹配、
+# 链/残基缺失等都会记入警告与风险标记），重/轻链角色优先取自接触图中
+# 实际参与 paratope 的链（避免含重复抗体拷贝的 PDB 选错副本）。
+# 输出仅为构造级序列草稿，不做 ANARCI/Chothia 重编号，合成前需另行确认编号。
 from __future__ import annotations
 
 import argparse
@@ -45,6 +50,7 @@ def load_refs(path):
 
 
 def pdb_chain_sequences(pdb_path):
+    # 提取第一个模型各链的残基列表（仅标准氨基酸，按 (残基号, 插入码) 去重）
     from Bio.PDB import PDBParser
     parser = PDBParser(QUIET=True)
     structure = parser.get_structure("s", str(pdb_path))
@@ -71,6 +77,8 @@ def pdb_chain_sequences(pdb_path):
 
 
 def apply_candidate_mutations(chain_res, mutations):
+    # 按突变计划逐条应用替换：以 (残基号, 插入码) 定位，
+    # 原生残基与计划不符仍应用但记录 native_mismatch 警告
     seq_by_chain = {cid: [r["aa"] for r in residues] for cid, residues in chain_res.items()}
     resid_to_idx = {
         cid: {(r["resid"], r["icode"]): i for i, r in enumerate(residues)}
@@ -104,6 +112,8 @@ def apply_candidate_mutations(chain_res, mutations):
 
 
 def main():
+    # 主流程：读选中候选与突变计划 → 预解析参考链序列与链角色 →
+    # 逐候选应用突变并导出重/轻链序列 → 写 CSV/FASTA/明细 JSON/报告
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

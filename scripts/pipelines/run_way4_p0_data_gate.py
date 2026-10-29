@@ -5,6 +5,12 @@ distribution. Must show non-degenerate distribution before P1 training.
 
 Iron rule: P0 fails → stop, do not proceed to P1.
 """
+# WAY4 V6 的 P0 数据门：扫描 SAbDab phase3 训练集的抗原链，用带无序头的
+# V15 模型（t=0.5 固定）预测每个复合物表位的逐残基无序分布，
+# 按 disorder_mean 分桶（≤0.1 有序 / 0.1-0.3 中间 / >0.3 柔性）。
+# 门控铁律：柔性（>0.3）复合物 ≥5 判 PASS 可进入 P1 训练，2-4 判 MARGINAL
+# 需 IDP 数据增广，<2 判 FAIL 必须停止。运行前临时改写 app_config.yaml
+# 的检查点并在加载后立即恢复。
 import sys,os,json,time,pickle,random
 from collections import defaultdict
 sys.path.insert(0,'.');sys.path.insert(0,'modules')
@@ -73,7 +79,7 @@ n_with_antigen=0;n_scanned=0
 print(f"Scanning {len(ids)} SAbDab complexes...")
 t0=time.time()
 for i,sid in enumerate(ids):
-    if n_scanned>=500:break  # sample 500 for speed
+    if n_scanned>=500:break  # 速度考虑：最多扫描 500 个复合物
     with env.begin() as txn:e=pickle.loads(txn.get(sid.encode()))
     if e.get('antigen') is None or e.get('heavy') is None:continue
     n_with_antigen+=1
@@ -116,6 +122,7 @@ print(f"  Mean disorder: {np.mean(means):.4f} ± {np.std(means):.4f}")
 print(f"  Range: {np.min(means):.4f} - {np.max(means):.4f}")
 
 # Gate decision
+# 门控判定：柔性复合物（disorder_mean>0.3）数量决定 PASS/MARGINAL/FAIL
 if n_flex>=5:
     print(f"\nP0 GATE: PASS — {n_flex} flexible complexes (>{5})")
     print("Non-degenerate disorder distribution confirmed.")

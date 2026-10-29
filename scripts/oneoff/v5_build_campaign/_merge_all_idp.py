@@ -2,9 +2,14 @@
 import lmdb, pickle, json
 
 MAX_LEN = 500
+# 与 AF2 构象生成管线的序列长度上限保持一致（见 build_conformation_cf.py）。
 seen = set()
 all_entries = []
 
+# 一次性脚本: 把 v8/v9/v10 统一库与 idp_v3 中的 IDP 条目合并为单一构建队列。
+# IDP 判定: idp_v3 全量为 IDP；其余来源按 disorder_fraction>0、
+# disorder_source=='idp' 或 disorder_mask 有正元素兜底判定。
+# pdb_id 全局去重（先到先得），按长度升序输出，便于后续先跑短序列。
 sources = [
     ('D:/biological/DisorderFlow/data/confidence_merged_v8/confidence_train.lmdb', 'v8'),
     ('D:/biological/DisorderFlow/data/confidence_merged_v9/confidence_train.lmdb', 'v9'),

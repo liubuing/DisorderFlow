@@ -12,7 +12,7 @@ os.chdir(_here)
 
 V5 = "data/confidence_conformation_v5/confidence_train.lmdb"
 LOG = "_build_v5.log"
-TOTAL_TARGET = 1301  # 统一源 v2 总条目
+TOTAL_TARGET = 1301  # 统一源 v2 总条目（进度分母，与队列 JSON 一致）
 WSL_DISTRO = os.environ.get("DISORDERFLOW_WSL_DISTRO", "Ubuntu-24.04-D")
 
 def get_progress():
@@ -58,6 +58,7 @@ def get_log_stats():
             "n_launches": len(launches), "n_crashes": len(crashes),
             "last_crash": crashes[-1].strip() if crashes else None}
 
+# 进程检查：在 WSL（或经 wsl.exe 调用）里用 pgrep 查找构建进程是否存活
 def get_proc_status():
     in_wsl = "microsoft" in os.uname().release.lower() if hasattr(os, "uname") else False
     try:

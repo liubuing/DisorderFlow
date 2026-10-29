@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Fail-closed readiness check for the four ensemble-pilot corrections."""
 
+# 本脚本对 IDP ensemble 试点（pilot）的四项修正做"失败即关闭"的就绪检查：
+# 逐一盘点模型适配器审计、未触碰队列准入、面板计划、生成/pose/候选与
+# 测量状态等冻结产物（存在性 + SHA-256），并按配置中的突变空间与
+# 最小成分数门槛（≥12 个独立成分、≥3 个靶标、≥12 条新曝光条目）判定
+# 全部门槛通过才允许执行修正，否则状态为 blocked 并禁止评分/声明。
+
 from __future__ import annotations
 
 import argparse
@@ -14,9 +20,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256，用于冻结产物完整性校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 产物存在性/哈希检查：文件不存在或哈希不匹配都如实报告，不做推断
 def artifact_status(path, expected_hash=None):
     path = Path(path)
     if not path.is_file():
@@ -30,6 +38,7 @@ def artifact_status(path, expected_hash=None):
     }
 
 
+# 取指定前缀下版本号最大的 JSON（按文件名排序）；无版本文件时退回 v1 路径
 def latest_versioned(prefix):
     directory = ROOT / "reviewer_outputs/idp_ensemble_correction_v3"
     versions = sorted(directory.glob(f"{prefix}_v*.json"))
@@ -38,6 +47,9 @@ def latest_versioned(prefix):
     )
 
 
+# 就绪检查主流程：收集各冻结产物状态与负载 → 组合判定五项门槛
+# （自回归生成器、未触碰队列、最小独立成分数、更广突变空间、实验测量）
+# → 全部通过才写"可执行修正"状态；输出同时保留每项产物的审计明细。
 def check(config_path, output_path):
     config_path = Path(config_path)
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
@@ -170,6 +182,7 @@ def check(config_path, output_path):
 
 
 def main():
+    # 主入口：配置与输出路径均有默认值，结果以 JSON 打印并落盘
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_correction_v3.yml"

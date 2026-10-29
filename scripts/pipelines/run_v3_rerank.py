@@ -1,4 +1,11 @@
 """L3 re-rank: score P3 designs with interface_scorer, compare vs old composite."""
+# 脚本级流程（无函数封装）: 取最多 100 个 P3 设计 → 把设计 CDR 序列逐位
+# 写回支架 PDB（Chothia 位点区间由 cdr_spec 解析）→ 在 CDR 中心 +x 方向
+# 以 3.8 Å 间距摆放 8 肽 Aβ16-23 核心片段 KLVFFAED（理想键长 N-CA 1.46/
+# CA-C 1.52 Å）作为肽抗原 → interface_scorer.score_pose 重新打分 →
+# 与旧 composite 分数做 Kendall tau 一致性检验。
+# 阈值口径: |tau|<0.2 视为排序显著不同（V3 引入了新信号），
+# tau>0.3 视为与旧排序强一致（V3 确认旧信号），其余为弱相关。
 import sys,os,json,time,tempfile; sys.path.insert(0,'.'); sys.path.insert(0,'modules')
 import numpy as np
 from Bio.PDB import PDBParser,PDBIO,Model,Chain,Residue,Atom

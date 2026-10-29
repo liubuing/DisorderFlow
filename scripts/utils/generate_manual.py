@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Generate Word user manual for the Protein Sequence Design Platform."""
+# 本脚本为"蛋白质序列设计平台"生成中文 Word 用户手册（python-docx）。
+# 脚本按线性流程搭建文档：样式 -> 封面 -> 目录 -> 14 个章节 -> 页脚，
+# 最终保存到当前用户桌面。属于文档工具，不参与科研计算管线。
 import os, sys
 from docx import Document
 from docx.shared import Inches, Pt, Cm, RGBColor
@@ -8,16 +11,21 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
+# Windows 控制台默认非 UTF-8，这里强制把 stdout 包成 UTF-8，
+# 避免打印中文/emoji 时抛 UnicodeEncodeError。
 if sys.platform == 'win32':
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
+# 输出位置固定为当前用户桌面，便于非开发者直接打开查看。
 DESKTOP = os.path.join(os.environ['USERPROFILE'], 'Desktop')
 OUT_PATH = os.path.join(DESKTOP, '蛋白质序列设计平台_使用说明.docx')
 
 doc = Document()
 
 # ── Styles ──
+# 全局正文样式：中文字体（含 eastAsia 属性，否则中文回退默认字体）、
+# 10.5pt 字号、1.25 倍行距；标题 1-3 统一字体与品牌蓝色。
 style = doc.styles['Normal']
 style.font.name = '微软雅黑'
 style.font.size = Pt(10.5)
@@ -32,6 +40,7 @@ for level in range(1, 4):
     heading_style.font.color.rgb = RGBColor(0x1a, 0x56, 0xdb)
 
 # ═══════════════ Helper functions ═══════════════
+# 三个排版助手：代码块（等宽字体）、带样式表格、高亮提示条。
 def add_code_block(doc, text):
     """Add a code-formatted paragraph."""
     p = doc.add_paragraph()
@@ -80,6 +89,7 @@ def add_note(doc, text, note_type="info"):
     return p
 
 # ═══════════════ Title Page ═══════════════
+# 封面：标题 + 副标题 + 版本信息，随后分页。
 doc.add_paragraph()
 title = doc.add_paragraph()
 title.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -634,6 +644,7 @@ add_code_block(doc, 'result = refiner.run("input.pdb", "A:10-30")')
 doc.add_page_break()
 
 # ═══════════════ 14. Reference Results ═══════════════
+# 参考结果章节：8 种测试蛋白的序列、BFN 设计指标摘要与最优序列。
 doc.add_heading('14. 8种测试蛋白质设计结果', level=1)
 
 doc.add_paragraph(
@@ -642,6 +653,7 @@ doc.add_paragraph(
 )
 
 doc.add_heading('14.1 蛋白质序列', level=2)
+# 8 种测试蛋白的原始序列（内置数据，便于读者核对输入）。
 proteins = {
     'FABP3': 'MVDAFLGTWKLVDSKNFDDYMKSLGVGFATRQVASMTKPTTIIEKNGDILTLKTHSTFKNTEISFKLGVEFDETTADDRKVKSIVTLDGGKLVHLQKWDGQET',
     'ENO2': 'MSIEKIWAREILDSRGNPTVEVDLYTAKGLFRAAVPSGASTGIYEALELRDGDKGRYLGKGVLKAVENINNTLGPALLQKKLSVVDQEKVDKFMIELDG',
@@ -687,6 +699,7 @@ doc.add_paragraph(
 )
 
 doc.add_heading('14.4 各蛋白质最优设计序列', level=2)
+# 各蛋白质 PPL 最优的设计序列（设计区域片段）。
 best_seqs = {
     'FABP3': 'WIAATKAYRIWKIPLFVVGENFKTNGVVFSAPQSRCQPSAVQFAKRNHDR',
     'ENO2': 'TDYRTTMRQWGSAPVNALGRDYNNVAVHDEGHPKLLHSGMHHSSYFSLAF',
@@ -730,5 +743,6 @@ run.font.size = Pt(8)
 run.font.color.rgb = RGBColor(0xAA, 0xAA, 0xAA)
 
 # ── Save ──
+# 保存到桌面并回显路径。
 doc.save(OUT_PATH)
 print(f'Word 文档已保存至: {OUT_PATH}')

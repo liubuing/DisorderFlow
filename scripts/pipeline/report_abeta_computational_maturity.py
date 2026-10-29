@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Aggregate A-beta multi-conformation evidence into conservative maturity gates."""
+# 目的：把 Aβ 多构象管线的各环节证据（姿态面板审计、稳健排名、留出构象选择、
+# 全链映射、Fv repack）聚合为保守的"计算成熟度"门控报告，逐项给出 pass/fail/
+# blocked 状态与证据文本，用于对外声明计算阶段的完备程度（不涉及实验结论）。
 from __future__ import annotations
 
 import argparse

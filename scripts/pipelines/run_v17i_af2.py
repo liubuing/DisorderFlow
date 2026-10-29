@@ -4,6 +4,10 @@
 Reads oc_v17i_phase1_complex.json, extracts grafted sequences,
 runs AF2 via WSL, computes OC + Spearman ρ.
 """
+# 角色：V17i 第二阶段（phase2）——AF2 教师验证：从 phase1 的复合设计 JSON 读取
+# 移植后的完整序列，经 WSL GPU 批量运行 AF2-Multimer（1 次 recycle，首个序列作
+# 预热），合并 AF2 与 BFN 的 ipTM/pLDDT/PAE，计算排序一致性（OC 与 Spearman ρ）
+# 作为 BFN 置信头与 AF2 真值的一致性检查。
 import os, sys, json, time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import numpy as np
@@ -17,7 +21,7 @@ with open(INPUT, encoding='utf-8') as f:
 print(f'Loaded {len(designs)} designs')
 
 # Get epitope sequence (Aβ42)
-EPITOPE_SEQ = 'DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA'
+EPITOPE_SEQ = 'DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA'  # Aβ42 全长 43 残基（DAEFR...VIA，1-42/43 编号依 PDB）
 
 # Get full grafted sequences from PDBs
 def get_pdb_sequence(pdb_path):

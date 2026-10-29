@@ -28,6 +28,8 @@ from webapp.state import CONFIDENCE_DEFAULTS, DEVICE, load_app_config
 
 
 def run_batch(pdb_files, tool, region_spec, chains_spec, temperature, num_samples, progress=gr.Progress()):
+    # 批量模式：对目录中的每个 PDB 依次跑所选设计工具，
+    # 汇总为文本报告 + JSON 摘要 + DataFrame；单文件失败不中断整批
     if not pdb_files:
         return "请上传 PDB 文件", None, None
 
@@ -111,6 +113,7 @@ def run_target_design(target_pdb, target_chain, epitope_region,
         return "请先完成步骤3：提供抗体结构", "", "", None
 
     # Parse epitope region
+    # 表位残基跨链展平为集合，供"面向表位残基"搜索使用
     epitope_residues = tdh.parse_region_spec(epitope_region)
     if not epitope_residues:
         return f"表位区域格式错误: {epitope_region}", "", "", None
@@ -127,6 +130,8 @@ def run_target_design(target_pdb, target_chain, epitope_region,
     try:
         complex_chains = None
         if design_tool == "BFN (抗体CDR设计)":
+            # BFN 固定骨架设计不能拼接两个独立坐标系的 PDB：
+            # 抗体 PDB 必须本身包含配准好的抗原链
             complex_chains = detect_chains(antibody_pdb)
             if target_chain not in complex_chains:
                 return (
@@ -217,6 +222,7 @@ def run_target_design(target_pdb, target_chain, epitope_region,
         design_lines.append(text)
 
         # Validation: contact analysis between designed antibody and target
+        # 验证步骤基于"设计前"的复合物坐标：给出现有界面的接触/化学报告（非新序列的）
         try:
             contacts, ia, ib, summary = tdh.analyze_contacts(
                 antibody_pdb, ab_heavy, target_chain, distance_cutoff=8.0
@@ -277,6 +283,8 @@ def run_design(pdb_path, tool,
     df = build_results_dataframe(results_list)
     return text, fasta_file, df, gr.update(visible=bool(fasta_str))
 def run_unified_pipeline(pdb_path, region_spec, num_samples, stochastic, enable_af2, af2_num_recycle, progress=gr.Progress()):
+    # 四阶段统一管线：0 置信度预评估 -> 1 BFN 设计 -> 2 级联过滤 -> 3 (可选)AF2 验证重排；
+    # 任何一阶段无幸存者都提前返回并附带已完成阶段的报告
     if not pdb_path or not os.path.exists(str(pdb_path)):
         return "Please upload a PDB file first", pd.DataFrame(), "Pipeline aborted"
 
@@ -284,6 +292,7 @@ def run_unified_pipeline(pdb_path, region_spec, num_samples, stochastic, enable_
     progress(0.0, desc="Stage 0/4: BFN Pre-Design Confidence...")
     conf_text, conf_df = run_bfn_confidence_evaluation(pdb_path, region_spec)
     # Parse mean pLDDT from the report text
+    # 从报告文本正则抽回均值：评估函数返回的是格式化文本而非结构化数值
     import re as _re
     pre_plddt_match = _re.search(r'pLDDT \(region mean\):\s+([\d.]+)', conf_text)
     pre_iptm_match = _re.search(r'ipTM \(global\):\s+([\d.]+)', conf_text)
@@ -299,6 +308,7 @@ def run_unified_pipeline(pdb_path, region_spec, num_samples, stochastic, enable_
 
     progress(0.5, desc="Stage 2/4: Cascade Filter...")
     # Pass confidence thresholds from config
+    # 级联阈值取自用户配置的分档中值（plddt_medium/iptm_medium），未配置时用默认
     cfg = load_app_config()
     thresholds = cfg.get('confidence', CONFIDENCE_DEFAULTS)
     filter_thresholds = {

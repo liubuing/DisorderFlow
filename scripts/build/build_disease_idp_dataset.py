@@ -17,6 +17,11 @@ Usage:
   python scripts/build/build_disease_idp_dataset.py --max_proteins 500
   python scripts/build/build_disease_idp_dataset.py --skip_disprot  # use only manual lists
 """
+# 本脚本构建疾病相关 IDP（内在无序蛋白）置信度训练数据集（策略二）：
+# 拉取全部 DisProt 条目 + 手工整理的疾病 IDP 清单，用 UniProt 疾病关键词
+# 查询标注疾病关联，逐蛋白下载 AF2 结构并经 BFN 预处理管线转批次，
+# 无序标签优先取 EBI Proteins API（替代失效的 mobidb.org API），
+# 缺失时回退为"AF2 pLDDT < 50 视为无序"的启发式。输出 LMDB + 构建摘要。
 
 import sys, os, json, pickle, time, argparse, io
 from pathlib import Path
@@ -292,6 +297,8 @@ def fetch_disorder_regions(uniprot_id, seq_len):
     Returns (mask, source) where mask is (seq_len,) float32 array.
     source: 'ebi_mobidb_lite' or 'failed'.
     """
+    # EBI Proteins API 的 REGION 特征中描述含 "disorder" 的区段视为无序；
+    # 位置为 1-based 闭区间，转换为 0-based 掩码；失败时重试一次（间隔 1 秒）
     import urllib.request as ur
     for attempt in range(2):
         try:
@@ -320,6 +327,7 @@ def fetch_disorder_regions(uniprot_id, seq_len):
 
 def af2_plddt_fallback(af2_plddt, threshold=50.0):
     """Use AF2 pLDDT < threshold as disorder indicator."""
+    # 回退启发式：pLDDT < 50 通常表示 AF2 认为该区域低置信度/可能无序
     plddt = np.array(af2_plddt, dtype=np.float32)
     mask = (plddt < threshold).astype(np.float32)
     return mask, 'af2_plddt_fallback'
@@ -533,6 +541,7 @@ def process_one_protein(acc, pdb_cache, is_disease=False):
         return None
 
     # 2. Preprocess through BFN (v3-style: single-chain aware)
+    # 长度约束：小于 20 或大于 2000 个残基的单链直接丢弃，避免极端样本
     try:
         batch, seq_str, n_res = preprocess_af2_pdb(str(pdb_path))
     except Exception:
@@ -592,6 +601,10 @@ def process_one_protein(acc, pdb_cache, is_disease=False):
 # 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?# Main
 # 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
 def main():
+    # 主流程三阶段：
+    # Phase 1 收集候选 ID（手工清单 ∪ 全部 DisProt），与 v10 合并数据集去重；
+    # Phase 2 多线程（默认 4 workers）逐蛋白下载并处理，统计 EBI 标签与回退比例；
+    # Phase 3 按 build_utils 的统一逻辑划分并写出 LMDB 与构建摘要。
     parser = argparse.ArgumentParser(description='Build disease-associated IDP dataset')
     parser.add_argument('--output', default=str(DEFAULT_OUTPUT), help='Output directory')
     parser.add_argument('--max_proteins', type=int, default=None, help='Max proteins to process')

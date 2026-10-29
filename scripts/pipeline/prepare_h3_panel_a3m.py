@@ -7,6 +7,11 @@ from pathlib import Path
 
 
 def write_replaced(template, output, header, query):
+    """把 A3M 模板的第 2/3 行替换为查询表头与查询序列（单序列 MSA）。
+
+    A3M 格式首行是注释头，第 2 行表头，第 3 行查询序列——保留模板其余行
+    作为背景比对，让打分器看到固定的检索上下文。
+    """
     lines = template.read_text(encoding="utf-8").splitlines()
     lines[1] = header
     lines[2] = query

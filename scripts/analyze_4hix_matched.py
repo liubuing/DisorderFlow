@@ -14,6 +14,7 @@ from Bio.PDB import PDBParser
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+# 4HIX 抗体的天然 H3 环序列（12 aa），作为 native recovery / Hamming 比较的基准。
 NATIVE_H3 = "VRYDHYSGSSDY"
 AA3_TO_1 = {
     "ALA": "A",
@@ -40,6 +41,8 @@ AA3_TO_1 = {
 
 
 def chain_sequences():
+    # 从 data/anti_abeta_refs/4HIX.pdb 提取三条链的一级序列：
+    # A = 抗原（Aβ），H = 抗体重链，L = 抗体轻链；非标准残基直接跳过。
     path = ROOT / "data/anti_abeta_refs/4HIX.pdb"
     model = PDBParser(QUIET=True).get_structure("4hix", str(path))[0]
     return {
@@ -52,12 +55,17 @@ def chain_sequences():
 
 
 def hamming(left, right):
+    # 两条 H3 序列必须等长（固定 scaffold 上逐位替换），否则直接报错而非截断，
+    # 以保证配对比较的严谨性；返回差异位置比例（0~1）。
     if len(left) != len(right):
         raise ValueError("Cannot compare unequal H3 sequences")
     return sum(a != b for a, b in zip(left, right, strict=True)) / len(left)
 
 
 def generation_summary(bfn, mpnn):
+    # 汇总各生成臂（BFN 消融各臂 + ProteinMPNN 基线）的样本数、去重后序列数、
+    # native recovery 均值与耗时；并按 (seed, sample_index) 配对
+    # current_disorder_on / off 两臂，计算 Hamming 差异以衡量条件化的响应度。
     arms = {arm["name"]: arm["results"] for arm in bfn["arms"]}
     arms["proteinmpnn"] = mpnn["results"]
     output = {}
@@ -87,6 +95,8 @@ def generation_summary(bfn, mpnn):
 
 
 def af2_summary(data):
+    # 汇总 AF2 预测结果：按候选 id 分组（同一候选多次预测），统计 ipTM
+    # （越高越好）/ 界面 PAE（越低越好）/ pLDDT 的中位数与极值，再按臂聚合。
     grouped = defaultdict(list)
     metadata = {}
     for row in data["results"]:
@@ -121,6 +131,9 @@ def af2_summary(data):
 
 
 def developability_summary(arms):
+    # 可开发性评估：把每条生成的 H3 拼回重链骨架（H 链前 95 位 + H3 + 第 107 位起，
+    # 对应 H3 区域的编号边界），与轻链风险分取最大值；
+    # risk <= 0.55 视为可开发性通过的经验阈值。
     from scripts.pipeline.score_shortlist_developability import score_sequence
 
     sequences = chain_sequences()
@@ -149,6 +162,9 @@ def developability_summary(arms):
 
 
 def main():
+    # 汇总入口：读入 BFN 消融、ProteinMPNN 基线、AF2 评估三份 JSON，
+    # 输出统一摘要；status 字段明确声明这是"单 scaffold 诊断"而非设计验证，
+    # claim_boundary 界定了不可过度外推的结论范围。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bfn", default=str(ROOT / "results/ablation/4hix_bfn_matched_v1.json"))
     parser.add_argument("--mpnn", default=str(ROOT / "results/ablation/4hix_mpnn_matched_v1.json"))

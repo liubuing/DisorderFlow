@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Audit whether an adapter provides true prefix-conditioned pose logits."""
+"""Audit whether an adapter provides true prefix-conditioned pose logits.
+
+审计模型适配器是否提供真正"前缀条件化"的逐残基构象 logits：
+- 校验运行时轨迹（runtime trace）：至少 2 个构象、每事件 log_probs 长度 21 且有限；
+- 校验 checkpoint 存在性并记录 sha256；
+- 禁止用固定 npz 捷径绕过逐步重算 logits。
+输出适配器就绪审计 JSON；结论仅代表接口就绪，不涉及候选或结合结果。
+"""
 
 from __future__ import annotations
 
@@ -12,10 +19,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    """计算文件 sha256，用于 checkpoint/产物血缘校验。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def validate_runtime_trace(trace_path):
+    """校验运行时轨迹是否满足前缀条件化 logits 的证据要求。
+
+    合格标准：事件非空、覆盖 >=2 个构象、每事件 log_probs 有限且长度 21
+    （20 种标准氨基酸 + 1 个掩码/结束位），并带有 int 位置与 str 前缀。
+    """
     if trace_path is None or not Path(trace_path).is_file():
         return {"present": False, "valid": False, "reason": "runtime_trace_missing"}
     trace = json.loads(Path(trace_path).read_text(encoding="ascii"))
@@ -39,7 +52,9 @@ def validate_runtime_trace(trace_path):
 
 
 def audit(output, checkpoint_paths=(), runtime_trace=None):
+    """汇总 checkpoint 与运行时轨迹检查，写适配器就绪审计 JSON。"""
     if output.exists():
+        # 审计产物不可覆盖
         raise FileExistsError(f"Refusing to overwrite adapter audit: {output}")
     checkpoints = []
     for checkpoint in checkpoint_paths:
@@ -84,6 +99,7 @@ def audit(output, checkpoint_paths=(), runtime_trace=None):
 
 
 def main():
+    """命令行入口：--checkpoint 可重复传入，--runtime-trace 指向轨迹 JSON。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--output",

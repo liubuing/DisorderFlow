@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def download_file(url: str, dest: Path, desc: str = ""):
-    """Download a file with progress indication."""
+    """Download a file with progress indication. 已存在则跳过（幂等）。"""
     dest.parent.mkdir(parents=True, exist_ok=True)
     if dest.exists():
         print(f"  [skip] {desc or dest.name} already exists")
@@ -36,6 +36,7 @@ def download_file(url: str, dest: Path, desc: str = ""):
 
 def setup_proteinmpnn():
     """Clone ProteinMPNN repo and keep only inference code (no weights in git)."""
+    # ProteinMPNN 用于抗体序列设计（生成模块），权重单独下载不入库
     mpnn_dir = ROOT / "ProteinMPNN"
     print("\n=== ProteinMPNN ===")
 
@@ -146,6 +147,7 @@ def setup_data():
 
 
 def main():
+    """命令行入口：--all 默认下载全部外部资产；各开关可单独选择组件。"""
     parser = argparse.ArgumentParser(description="Download DisorderFlow external assets")
     parser.add_argument("--all", action="store_true", help="Download everything")
     parser.add_argument("--mpnn", action="store_true", help="Download ProteinMPNN")

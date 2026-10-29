@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Audit whether expanded IDP artifacts can support StateContrast-v2 training."""
+"""Audit whether expanded IDP artifacts can support StateContrast-v2 training.
+
+就绪性审计：判断扩展 IDP 构件能否支撑 StateContrast-v2 训练。
+把现有构象清单逐条映射为 target 状态记录，经官方契约校验器
+（独立教师覆盖率 >= 0.80）验证；若提供显式状态清单则改用后者。
+训练放行需同时满足：契约校验通过、含 off_target 状态、训练清单就绪。
+输出 readiness status JSON；仅为就绪审计，不含任何训练或性能声明。
+"""
 
 from __future__ import annotations
 
@@ -18,6 +25,7 @@ from disorderflow.statecontrast_v2_contract import validate_statecontrast_v2_rec
 
 def audit(candidate_path, pose_path, output_path, explicit_states_path=None,
           training_manifest_path=None):
+    """执行就绪性审计：构造状态记录 -> 契约校验 -> 汇总三道检查并写出 status。"""
     candidates = json.loads(candidate_path.read_text(encoding="ascii"))
     poses = json.loads(pose_path.read_text(encoding="ascii"))
     pose_by_component = {
@@ -123,6 +131,7 @@ def audit(candidate_path, pose_path, output_path, explicit_states_path=None,
 
 
 def main():
+    """命令行入口：默认指向 expanded_development_v2 候选/构象与显式状态清单。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--candidates", type=Path,

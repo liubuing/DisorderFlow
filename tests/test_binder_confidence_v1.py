@@ -1,9 +1,12 @@
+"""结合置信度 v1 测量分析的契约测试：守护无实验标签时的弃权行为、表达标签的双批次门槛、
+训练就绪闸门（多支架/多靶点），以及"标签完整也不得解锁训练"的保守原则。"""
 import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# 辅助函数：按路径动态加载 scripts/binder_confidence_v1.py（脚本不在包内）。
 def load_script():
     path = ROOT / "scripts" / "binder_confidence_v1.py"
     spec = importlib.util.spec_from_file_location("binder_confidence_v1", path)
@@ -12,6 +15,8 @@ def load_script():
     return module
 
 
+# 弃权契约：测量文件缺失/为空时必须返回 abstain 状态且不给任何候选打概率标签，
+# 防止在无实验证据时静默产出"训练就绪"的假象。
 def test_empty_measurements_abstain_without_probabilities():
     mod = load_script()
     config = {
@@ -37,6 +42,8 @@ def test_empty_measurements_abstain_without_probabilities():
     assert result["training_readiness"]["eligible"] is False
 
 
+# 表达标签门槛：必须有两个独立批次同时满足产量/SEC 单体比例/QC 才判 expression_pass，
+# 防止单批次的批次效应被当成可复现的表达成功。
 def test_expression_requires_two_complete_passing_batches():
     mod = load_script()
     config = {"labels": {"expression_pass": {"required_batches": 2,
@@ -52,6 +59,8 @@ def test_expression_requires_two_complete_passing_batches():
     assert audit["x"]["complete"] is True
 
 
+# 训练闸门：单一支架/单一靶点的 panel 数据不得用于训练置信度模型，
+# 防止模型只学到 panel 特异性而非可泛化的结合规律。
 def test_training_gate_rejects_single_scaffold_panel():
     mod = load_script()
     config = {"training_gates": {"minimum_qc_candidates": 1,
@@ -65,6 +74,8 @@ def test_training_gate_rejects_single_scaffold_panel():
     assert result["checks"]["minimum_targets"] is False
 
 
+# 端到端契约：实验有效（native 对照信号通过）、标签全部完整时，可以出 panel 标签，
+# 但训练仍然被闸门拒绝（支架/靶点数不足）——"可标注"与"可训练"必须严格分层。
 def test_complete_valid_assay_labels_panel_but_still_rejects_training(tmp_path):
     mod = load_script()
     config = {

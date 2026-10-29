@@ -17,6 +17,9 @@ Usage:
   # Disorder-only analysis of the TfR target
   python run_tfr_design.py --analyze-only
 """
+# 角色：TfR（转铁蛋白受体）纳米抗体设计的 CLI 入口，是对
+# modules/tfr_design_pipeline.py 的薄封装：BFN 设计 + 对 Transferrin 的
+# 负设计（off-target ipTM>0.3 硬拒绝），可选 AF2-Multimer 验证（默认 3 次 recycle）。
 from __future__ import annotations
 
 import argparse

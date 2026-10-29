@@ -5,6 +5,10 @@ The design positions (from BFN design report) are scattered surface residues on 
 3GD8 scaffold (an AQP4-derived binder). This script grafts each 28aa designed CDR
 sequence into those positions, creating a full nanobody for AF2 validation.
 """
+
+# 角色：BFN 设计→AF2 教师验证的桥接——把 BFN 生成的 28aa CDR 序列按 PDB 残基号
+# 移植（graft）回 3GD8 骨架，与 AQP4 表位（230 位起）拼成复合物后交给
+# ColabFold alphafold2_multimer_v3 预测，解析 pLDDT/ipTM/PAE 完成闭环验证。
 import os, sys, json, subprocess, time
 from pathlib import Path
 
@@ -22,6 +26,8 @@ SCAFFOLD_SEQ = (
 
 # All interface-facing positions (41 total, from BFN design report)
 # First 28 = BFN design region; last 13 = additional interface contacts (not designed)
+# 41 个界面朝向残基（PDB 编号）：前 28 个为 BFN 设计区，其余 13 个为未设计的
+# 附加界面接触点，移植时保持骨架原序列不变。
 ALL_INTERFACE_POSITIONS = [
     32,33,34,35, 37,38,39,40, 60,61,62, 64,65, 91,92, 149,
     157,158,159,160, 162,163,164,165, 185,186, 188,189,

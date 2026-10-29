@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Audit non-A-beta IDP candidates and prepare a family-isolated Fv fold panel."""
+# 目的：审计非 Aβ 靶标的 IDP 集成设计候选：逐条检查可变区/CDR、可开发性风险
+# （max-risk=0.55 为风险上限），再按序列恒等度 0.90 划分"家族"实现家族隔离，
+# 每个家族最多保留 per-family=2 条进入 Fv 折叠面板（供 AF2 教师验证）。
 from __future__ import annotations
 
 import argparse
@@ -41,6 +44,8 @@ def mutation_distance(left, right):
 
 
 def sequence_identity(left, right):
+    # 全局比对（错配 0 分、opening gap -1、延伸 gap -0.1）后的匹配比例，
+    # 用于候选间家族聚类（>=0.90 视为同家族）。
     if not left or not right:
         return 0.0
     aligner = PairwiseAligner(mode="global", match_score=1.0, mismatch_score=0.0)

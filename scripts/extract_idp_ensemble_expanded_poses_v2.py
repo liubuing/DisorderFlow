@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Extract reference/donor PDB poses and sampling-compatible contact manifests."""
+"""Extract reference/donor PDB poses and sampling-compatible contact manifests.
+
+扩展 IDP ensemble 开发的构象物化：从冻结配置引用的结构面板/打分输入/
+捐赠审计三份 JSON（逐一校验 sha256）出发，把参考与同谱系捐赠结构裁剪为
+规范链命名的 PDB 构象（去重按内容哈希），并用 H3 重链原子与抗原的最小
+重原子距离提取接触残基清单。产出构象清单、采样准入与生成就绪三份 JSON；
+任一异常时回滚删除已写文件（原子性）。
+"""
 
 from __future__ import annotations
 
@@ -20,10 +27,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    """文件 sha256，用于输入/产物冻结哈希校验与构象去重。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 class ChainSelect(Select):
+    """Bio.PDB 输出选择器：只保留指定链与标准氨基酸残基。"""
     def __init__(self, chains):
         self.chains = set(chains)
 
@@ -35,6 +44,7 @@ class ChainSelect(Select):
 
 
 def extract_pose(parser, coordinate_path, chains, output_path):
+    """把指定链裁剪重命名为规范大写链名（A,B,C...）并写出 PDB，返回链映射。"""
     structure = parser.get_structure(output_path.stem, str(coordinate_path))
     model = next(iter(structure))
     missing = [chain for chain in chains if chain not in {row.id for row in model}]
@@ -57,6 +67,7 @@ def extract_pose(parser, coordinate_path, chains, output_path):
 
 
 def reference_contact_residues(parser, reference, h3_indices, cutoff):
+    """以 H3 重链非氢原子到抗原残基非氢原子的最小距离 <= cutoff（Å）定义接触残基。"""
     model = next(iter(parser.get_structure(
         reference["coordinate_sha256"], reference["coordinate_path"]
     )))
@@ -88,7 +99,9 @@ def reference_contact_residues(parser, reference, h3_indices, cutoff):
 
 
 def extract(config_path, pose_dir, manifest_path, admission_path, readiness_path):
+    """主物化流程：三输入哈希校验 -> 逐组件提取构象与接触 -> 写三份产物。"""
     for path in (manifest_path, admission_path, readiness_path):
+        # 冻结产物不可覆盖
         if path.exists():
             raise FileExistsError(f"Refusing to overwrite pose extraction artifact: {path}")
     if pose_dir.exists():
@@ -133,6 +146,7 @@ def extract(config_path, pose_dir, manifest_path, admission_path, readiness_path
             if donor["pdb_id"] != reference_pdb_id)
             poses, seen_hashes = [], set()
             for index, source in enumerate(sources):
+                # 内容哈希去重：相同坐标的捐赠结构只保留一份
                 chains = [source["heavy_chain"]]
                 if source.get("light_chain"):
                     chains.append(source["light_chain"])
@@ -232,6 +246,7 @@ def extract(config_path, pose_dir, manifest_path, admission_path, readiness_path
         readiness_path.write_text(json.dumps(readiness, indent=2) + "\n", encoding="ascii")
         return manifest, admission, readiness
     except Exception:
+        # 失败回滚：删除本次生成的构象目录，保证不留下半成品
         for path in sorted(pose_dir.rglob("*"), reverse=True):
             if path.is_file():
                 path.unlink()
@@ -242,6 +257,7 @@ def extract(config_path, pose_dir, manifest_path, admission_path, readiness_path
 
 
 def main():
+    """命令行入口：读取 pose_extraction 冻结配置并运行物化流程。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

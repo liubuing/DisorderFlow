@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Export antigen FASTA and build a split-scoped external disorder lookup."""
+"""Export antigen FASTA and build a split-scoped external disorder lookup.
+
+导出指定划分（split）的抗原 FASTA，并（可选）把外部预测器输出
+（如 metapredict CSV）打包成分划分作用域的外部无序度查找表：
+- 严格校验 ID 集合、序列一致性、逐残基值域 [0,1]；
+- 产物含完整来源契约（预测器/版本/设备）与输入输出 sha256 血缘；
+- 同时写 .audit.json 摘要（不含 profiles 本体）。
+"""
 
 from __future__ import annotations
 
@@ -18,6 +25,7 @@ AA = 'ACDEFGHIKLMNPQRSTVWY'
 
 
 def sha256(path: Path):
+    """分块计算文件 sha256（1MB 块），供产物血缘记录。"""
     hasher = hashlib.sha256()
     with path.open('rb') as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b''):
@@ -26,10 +34,12 @@ def sha256(path: Path):
 
 
 def ids_digest(ids):
+    """对 ID 列表按序拼接后取 sha256，作为划分内容指纹。"""
     return hashlib.sha256('\n'.join(map(str, ids)).encode('utf-8')).hexdigest()
 
 
 def load_sequences(lmdb_path: Path):
+    """从 LMDB 读取全部样本的抗原序列；缺键/缺序列/非标准残基一律抛错。"""
     ids_path = Path(f"{lmdb_path}-ids")
     ids = pickle.loads(ids_path.read_bytes())
     env = lmdb.open(str(lmdb_path), subdir=False, readonly=True, lock=False, readahead=False)
@@ -62,6 +72,7 @@ def write_fasta(path: Path, ids, sequences):
 
 
 def parse_scores(path: Path, expected_sequences=None):
+    """解析预测器 CSV：每行 [id, (可选序列), 逐残基分数...]，重复 ID 报错。"""
     profiles = {}
     with path.open(newline='', encoding='utf-8') as handle:
         for row in csv.reader(handle, skipinitialspace=True):
@@ -82,6 +93,7 @@ def parse_scores(path: Path, expected_sequences=None):
 
 
 def main():
+    """主流程：导出 FASTA ->（可选）解析并校验预测分数 -> 打包 pickle 产物与审计 JSON。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--lmdb', required=True, type=Path)
     parser.add_argument('--split', required=True,

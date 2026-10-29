@@ -25,6 +25,8 @@ from webapp.state import AA_LETTERS, CONFIDENCE_DEFAULTS, DEVICE, load_app_confi
 
 
 def confidence_quality_label(value, thresholds, metric='plddt'):
+    # 按配置阈值把置信度数值翻译成 HIGH/MEDIUM/LOW 标签；
+    # pae 方向相反（越低越好）
     if metric in ('plddt', 'iptm'):
         if value >= thresholds[f'{metric}_high']: return 'HIGH'
         if value >= thresholds[f'{metric}_medium']: return 'MEDIUM'
@@ -90,6 +92,7 @@ def build_results_dataframe(results_list):
         entropy = r.get('entropy')
         composite = r.get('composite_score')
         quality = 'N/A'
+        # 兼容两种 pLDDT 标度：AF2 原生 0-100 与 BFN 0-1
         plddt_normalized = plddt / 100.0 if plddt is not None and plddt > 1 else plddt
         if plddt_normalized is not None and iptm is not None:
             if plddt_normalized >= 0.80 and iptm >= 0.70:
@@ -113,6 +116,8 @@ def build_results_dataframe(results_list):
         })
     return pd.DataFrame(rows)
 def run_bfn_confidence_evaluation(pdb_path, region_spec):
+    # 对已有结构上的指定区域做 BFN 置信度"自评估"：不做生成，
+    # 只输出该区域的 pLDDT/ipTM/PAE 及逐残基分档表
     from disorderflow.datasets.protein import preprocess_protein_structure
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.misc import seed_all
@@ -155,6 +160,7 @@ def run_bfn_confidence_evaluation(pdb_path, region_spec):
     with torch.no_grad():
         traj = model.sample(batch, sample_opt=sample_opt)
 
+    # 区域 pLDDT 取生成掩码内均值；PAE 只看区域内部子矩阵（自洽性）
     plddt_full = traj['plddt'][0]
     plddt_region = plddt_full[gen_mask]
     iptm_val = traj['iptm'][0].item()
@@ -195,6 +201,7 @@ def run_bfn_confidence_evaluation(pdb_path, region_spec):
 
     return '\n'.join(lines), pd.DataFrame(per_residue)
 def run_bfn_antibody(pdb_path, heavy, light, num_samples, stochastic, eval_mode):
+    # 抗体 CDR 设计 Web 入口：6 个 CDR 联合遮蔽 -> 采样 -> 级联过滤 -> FASTA/表格输出
     from disorderflow.datasets.custom import preprocess_antibody_structure
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.misc import seed_all
@@ -265,6 +272,7 @@ def run_bfn_antibody(pdb_path, heavy, light, num_samples, stochastic, eval_mode)
             best_ppl, best_seq = ppl, seq
 
     # Cascade filter
+    # 先级联过滤再取综合最优；全军覆没时回退到旧的"PPL 最小者"FASTA 格式
     pdb_name = os.path.basename(pdb_path).replace('.pdb', '')
     filtered, filter_report = cf.apply_cascade(results_list)
     if filtered:
@@ -291,6 +299,7 @@ def run_bfn_antibody(pdb_path, heavy, light, num_samples, stochastic, eval_mode)
         lines.append(diag)
     return '\n'.join(lines), fasta_str, results_list
 def run_bfn_protein(pdb_path, region_spec, num_samples, stochastic, eval_mode):
+    # 通用蛋白区域设计 Web 入口：与抗体版同构，只是用 mask_region 按区域遮蔽
     from disorderflow.datasets.protein import preprocess_protein_structure
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.misc import seed_all

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Audit H3 localization and pose availability for the admitted v3 cohort."""
 
+# 目的：对已准入（admitted）的 v3 候选队列做生成前就绪审计：用 Anarcii 抗体编号
+# （转 Chothia 方案）定位每条重链的 CDR-H3 区间与序列，并统计每个组分可用的
+# 已接受姿态数。仅当全部组分 H3 定位成功且姿态数 >=2 时判定 generation_ready。
+# 输出仅表达"生成就绪性"，不包含任何候选或性能结论（见 claim_boundary）。
+
 from __future__ import annotations
 
 import argparse
@@ -13,6 +18,7 @@ from Bio.PDB import MMCIFParser
 from Bio.PDB.Polypeptide import is_aa
 from Bio.SeqUtils import seq1
 
+# (93, 102)：Chothia 编号方案中 CDR-H3 的起止残基号，用于从编号结果切出 H3。
 CHOTHIA_H3 = (93, 102)
 
 
@@ -29,6 +35,8 @@ def chain_sequence(chain):
 
 
 def h3_records(sequences):
+    # 抗体编号：Anarcii 以 accuracy 模式编号后统一转到 Chothia 方案，
+    # 输出每条链的 H3 零基索引与序列；编号失败或无 H3 残基则 ready=False。
     model = Anarcii(
         seq_type="antibody", mode="accuracy", batch_size=16,
         cpu=True, ncpu=1, verbose=False,
@@ -59,6 +67,8 @@ def h3_records(sequences):
 
 
 def audit(admission_path, coordinate_dir, output, pose_manifest=None):
+    # 主审计：拒绝覆盖已有输出；准入状态必须是 untouched_cohort_admitted；
+    # 提取抗体链序列做 H3 编号，结合（可选的）姿态清单统计每组分姿态可用性。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite generation audit: {output}")
     admission = json.loads(admission_path.read_text(encoding="ascii"))

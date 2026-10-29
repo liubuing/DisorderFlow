@@ -38,6 +38,8 @@ AA3 = {'A':'ALA','R':'ARG','N':'ASN','D':'ASP','C':'CYS','E':'GLU','Q':'GLN',
        'P':'PRO','S':'SER','T':'THR','W':'TRP','Y':'TYR','V':'VAL'}
 
 # ── Config ──
+# Aβ42 的六个表位区段（N 端/核心疏水簇/中部/转弯/C 端），
+# residues 为 Aβ42 编号区间——多表位覆盖防止单表位过拟合
 EPITOPES = {
     'mid_16_24':   {'seq':'KLVFFAED',  'residues':(16,24)},
     'core_16_21':  {'seq':'KLVFFA',    'residues':(16,21)},
@@ -47,6 +49,7 @@ EPITOPES = {
     'n_mid_10_20': {'seq':'YEVHHQKLVFF','residues':(10,20)},
 }
 
+# 与 run_design_multiscaffold 相同的两个干净 VHH 骨架（CDR 区间 Chothia）
 SCAFFOLDS = [
     ('data/misfolding_targets/3STB.pdb', 'A', 'A:26-33,A:51-58,A:97-113'),
     ('data/misfolding_targets/5IMK.pdb', 'B', 'B:26-33,B:51-58,B:97-113'),

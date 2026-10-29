@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Leave-one-epitope-region-out transfer of mutation rules across antibody families."""
+# 目的：跨家族的"留一表位区域外推"基准——在接触图上穷举 paratope 单点突变并
+# 记录状态接触分效应；训练时排除 held-out 家族（同靶标其它家族仍可用），
+# 用"突变规则均值"预测 held-out 家族的突变效应，以 Spearman 相关评估迁移性。
 from __future__ import annotations
 
 import csv

@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Run a StateContrast-Ab domain workflow from a generic YAML config."""
+# 目的：从通用 YAML 驱动一次完整的 StateContrast-Ab 域工作流：归一化配置→
+# 校验参考结构数量门（不过即拒绝执行）→写出派生白名单→调用 v4 效应引导
+# 运行器（可 --dry-run 跳过）→生成元数据、域报告与声明级别
+# （claim_level，来自 statecontrast_workflow 合同）。
 from __future__ import annotations
 
 import argparse

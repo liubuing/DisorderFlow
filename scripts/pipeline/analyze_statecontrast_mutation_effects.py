@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Estimate mutation/position effect sizes for StateContrast-Ab candidates."""
+"""Estimate mutation/position effect sizes for StateContrast-Ab candidates.
+
+对 StateContrast-Ab 候选做突变/位点效应量归因：把候选按 reference_pdb
+分组，对每个突变（如 A12V）与每个位点比较"携带 vs 不携带"两组的指标
+（默认 specificity_gap_delta）均值/中位数差；双侧样本数均需 >= min_support=5。
+输出突变/位点效应 CSV、汇总 JSON 与 Markdown 报告（关联性而非因果）。
+"""
 from __future__ import annotations
 
 import argparse
@@ -52,6 +58,7 @@ def main():
 
 
 def mutation_effects(rows, metric="specificity_gap_delta", min_support=5):
+    """按参考结构分组，逐突变与逐位点计算携带/不携带两组的效应量。"""
     parsed = []
     for row in rows:
         if row.get("candidate_id") == "native":
@@ -91,6 +98,7 @@ def mutation_effects(rows, metric="specificity_gap_delta", min_support=5):
 
 
 def parse_mutations(text):
+    """解析分号分隔的突变串（A12V 格式），非法 token 忽略。"""
     out = []
     for token in str(text or "").split(";"):
         token = token.strip()
@@ -109,6 +117,7 @@ def mutation_key(mutation):
 
 
 def effect_row(reference_pdb, key, present, absent, min_support, kind):
+    """构造单条效应记录；任一侧样本 < min_support 则返回 None（不报告弱证据）。"""
     if len(present) < min_support or len(absent) < min_support:
         return None
     present_mean = sum(present) / len(present)

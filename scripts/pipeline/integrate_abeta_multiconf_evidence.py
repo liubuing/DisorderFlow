@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Join ensemble scores to exact full-chain, developability, and fold evidence."""
+# 本脚本把多构象集合打分结果与精确匹配的全长构造、可开发性、折叠旁证
+# 及 repack 审计逐构造连接：候选身份以 (参考 PDB, 完整 paratope 序列) 为键
+# （生成器 ID 重复不可信），三项旁证全部通过才标记
+# "computational_side_evidence_complete_wetlab_pending"。
+# 折叠冒烟输出不作为 fold-pass 证据（见 claim_boundary）。
+
 from __future__ import annotations
 
 import argparse
@@ -32,6 +38,7 @@ def read_csv(path):
 
 
 def read_fasta(path):
+    # 读取 FASTA 为 {header: sequence}（header 保留完整以携带链信息）
     records = {}
     header = None
     sequence = []
@@ -51,6 +58,9 @@ def read_fasta(path):
 
 
 def main():
+    # 主流程：读入排名/源候选/构造/可开发性/折叠/repack 六路证据 →
+    # 以参考+paratope 序列精确匹配并拼接 → 排序（可开发性通过优先、
+    # 稳健分降序）→ 写集成 CSV、摘要、Markdown 与 Fv 折叠队列 FASTA
     args = parse_args()
     ranking = read_csv(args.ranking)
     sources = read_csv(args.source_candidates)

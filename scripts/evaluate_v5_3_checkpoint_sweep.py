@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Select a flexibility checkpoint on the independent NMR ranking holdout."""
 
+# 本脚本在独立的 NMR 排名校准 holdout 上扫描并选择柔性（RMSF）检查点：
+# 对目录下按迭代号命名的所有 *.pt 检查点，逐一在 holdout 上预测并打分
+# （整体与标注 IDP 子集的 median Spearman），与基线检查点比较并过双门槛
+# （passes_gate）；在通过门槛的检查点中按"总体 median Spearman 最高"选择。
+# 无一通过则报告 fail 并以非零码退出，防止弱模型流入下游。
+
 import argparse
 import copy
 import json
@@ -16,6 +22,9 @@ from disorderflow.utils.misc import load_config, seed_all
 
 
 def main():
+    # 主流程：构建 holdout DataLoader（最长 500 残基、固定骨架）→
+    # 先评基线 → 逐检查点评估并判门槛（每次评估前重置种子保证可比）→
+    # 选择通过门槛且排名最优者 → 写报告；无合格检查点即退出失败
     parser = argparse.ArgumentParser()
     parser.add_argument('--checkpoint-dir', required=True)
     parser.add_argument('--baseline-checkpoint', required=True)

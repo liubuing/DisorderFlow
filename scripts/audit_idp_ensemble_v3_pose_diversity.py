@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Audit pairwise H3 geometry after heavy-framework alignment."""
 
+# 本脚本审计 IDP ensemble v3 各成分构象（pose）之间的多样性：
+# 将每对已接受 pose 在"重链框架残基"上做 Kabsch 叠合，分别度量
+# 框架 CA-RMSD 与 H3 环 CA-RMSD；H3 RMSD 低于配置阈值视为近似重复对。
+# 用于回答"候选多样性是否来自真实构象差异而非噪声"，且只做敏感性报告，
+# 不做事后删除 pose（见 decision 字段）。输出多样性审计 JSON。
+
 from __future__ import annotations
 
 import argparse
@@ -21,6 +27,9 @@ if str(ROOT) not in sys.path:
 from scripts.generate_idp_ensemble_v3_candidates import featurize_arm  # noqa: E402
 
 
+# Kabsch 叠合度量：将 moving 点集按质心对齐后用 SVD 求最优旋转
+# （行列式为负时翻转最后一列以避免反射），分别返回
+# 框架残基与 H3 残基对齐后的 CA-RMSD（单位埃）。
 def kabsch_metrics(reference, moving, reference_h3, moving_h3):
     reference_center = reference.mean(axis=0)
     moving_center = moving.mean(axis=0)
@@ -41,6 +50,10 @@ def kabsch_metrics(reference, moving, reference_h3, moving_h3):
     return framework_rmsd, h3_rmsd
 
 
+# 审计主流程：输出已存在则拒绝覆盖；读取冻结 pose 与就绪清单，
+# 复用候选生成侧的 featurize_arm 获得统一特征（CA 坐标、mask、design 区、
+# H3 位置），框架残基定义为"非 H3 且所有 pose 均有效且均属设计区"的位点，
+# 对全部 pose 两两做 Kabsch 叠合并统计近重复对，写审计 JSON。
 def audit(config_path, output):
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite pose diversity: {output}")
@@ -124,6 +137,7 @@ def audit(config_path, output):
     return payload
 
 
+# 主入口：读取配置并驱动 audit()，打印近重复成分与全局中位 H3 RMSD。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

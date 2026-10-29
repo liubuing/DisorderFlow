@@ -23,6 +23,8 @@ if os.path.isdir(MODULES) and MODULES not in sys.path:
 
 def pytest_collection_modifyitems(config, items):
     """Skip gpu/slow tests unless explicitly requested via -m."""
+    # 守护默认测试面的轻量性：gpu/slow 用例默认打跳过标记，
+    # 保证纯 CPU 逻辑测试可以随时快速全量运行，不被环境依赖阻塞。
     skip_gpu = pytest.mark.skip(reason="gpu test — run with -m gpu")
     skip_slow = pytest.mark.skip(reason="slow test — run with -m slow")
     for item in items:

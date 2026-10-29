@@ -1,8 +1,12 @@
+"""AAYL 失败诊断 v3 的科学契约测试：守护 H3 突变编码的精确性、内外拆分的隔离性、
+加性正对照的可学习性，以及修复面板对三突变候选的子集覆盖完整性。"""
 import json
 import numpy as np
 from scripts import diagnose_aayl_failure_v3 as v3
 
 
+# 编码必须无损：one-hot 块中非零元素数恰为 2*突变数（位置+残基各一），且每行求和为零（差异编码），
+# 并能从编码精确还原突变集合，防止特征编码引入信息丢失或错位。
 def test_h3_encoding_preserves_exact_mutations():
     d,rows,changes=v3.base.load()
     for family in d['structures']:
@@ -17,6 +21,8 @@ def test_h3_encoding_preserves_exact_mutations():
             assert recovered==changes[i]
 
 
+# 拆分溯源：外层测试集必须与所有内层训练/验证折互斥，且难度偏移折（shift）保证内层验证难度严格更高，
+# 防止评估阶段的候选泄漏导致指标虚高。
 def test_outer_test_excluded_from_all_inner_validation():
     _,rows,changes=v3.base.load()
     splits=json.loads((v3.OUT/'splits.json').read_text())['splits']
@@ -31,6 +37,8 @@ def test_outer_test_excluded_from_all_inner_validation():
                 if shift: assert max(deg[a])<min(deg[b])
 
 
+# 正对照：纯加性信号应被拟合到 rho>0.99，且对测试集整体加常数不得改变选中的 alpha——
+# 守护"超参选择只依赖训练数据"这一管线不变量。
 def test_additive_positive_control_learns_and_test_change_does_not_select_alpha():
     rng=np.random.default_rng(31)
     x=rng.normal(size=(120,8)); y=x@np.arange(1.,9.)
@@ -41,6 +49,8 @@ def test_additive_positive_control_learns_and_test_change_does_not_select_alpha(
     assert v3.rho(y[100:],p)>.99
 
 
+# 修复面板完备性：对每个三突变候选，其全部 0/1/2 突变子集序列必须已被测量或在补测面板中，
+# 且面板不与已有单/双突变测量重复——保证加性分解分析的数据基础完整无缺口。
 def test_repair_panel_completes_exact_single_and_pair_controls():
     from itertools import combinations
     d,rows,changes=v3.base.load()

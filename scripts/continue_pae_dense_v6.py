@@ -12,6 +12,15 @@ from scripts.run_multiscaffold_v2_af2 import atomic_json
 
 
 def main():
+    # 有界续跑器：等待活跃的生成任务收尾，再依次触发下游两步。
+    #   1. 最长等 7200 秒（2 小时），每 10 秒轮询 supplement_generation.json
+    #      （读失败按"正在原子写入"处理，继续等）；expected_attempts=768 为
+    #      本轮冻结生成网格的总槽位数，仅作进度记账；直到状态为
+    #      raw_generation_complete，否则超时抛错。
+    #   2. 依次运行 prepare_pae_dense_v6.py --select（候选选择）与
+    #      run_pae_dense_v6.py（AF2 批量评分），实时计数在 progress.json。
+    #   3. 每阶段覆写 pipeline_status.json；任何异常标记为 blocked 并附带
+    #      traceback 后原样抛出（保持非零退出码）。
     started=time.time()
     while time.time()-started<7200:
         p=OUT/'supplement_generation.json'

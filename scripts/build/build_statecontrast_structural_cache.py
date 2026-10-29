@@ -28,10 +28,17 @@ from disorderflow.utils.protein.parsers import parse_biopython_structure
 
 
 def chain_ids(value):
+    # 把 SAbDab2 的链字段（'/' 分隔，'+' 表示多聚抗原）解析为干净的链 ID 列表。
     return [item.strip() for item in str(value).split("/") if item.strip() and item.strip() != "+"]
 
 
 def observed_records(records_dir, split, limit):
+    # 从 factory 分片记录中筛出指定 split、operation 为 observed_bound 的记录。
+    # 参数:
+    #   records_dir: factory 记录目录（含 manifest.json 与 gzip 分片）。
+    #   split: 目标划分（'train' 或 'validation'）。
+    #   limit: 最多收集多少条；None 表示不设上限。
+    # 返回: (manifest, records) 二元组。
     manifest = json.loads((records_dir / "manifest.json").read_text(encoding="utf-8"))
     records = []
     for shard in manifest["shards"]:
@@ -47,6 +54,8 @@ def observed_records(records_dir, split, limit):
 
 
 def merge_chains(chains):
+    # 把多条抗原链合并为一条记录：张量沿残基维拼接、列表相接、标量取第一条。
+    # 抗原可能是多聚体；下游只需要一条统一的抗原对象，不关心链边界。
     if len(chains) == 1:
         return chains[0]
     merged = {}
@@ -62,6 +71,17 @@ def merge_chains(chains):
 
 
 def parse_parent(source, row, record):
+    # 解析单个 mmcif 并构建带 IMGT 官方注释的结构父本。
+    # 参数:
+    #   source: tar 归档中该 instance 的 cif 文件流。
+    #   row: SAbDab2 官方 abag_split.csv 中的一行（声明重/轻/抗原链）。
+    #   record: factory 记录，提供官方 CDR 序列与抗原序列。
+    # 返回: 含 heavy/light/antigen 链张量与 factory_mapping（IMGT 方案、CDR 索引、
+    #   抗原索引映射）的字典，直接 pickle 进 LMDB。
+    # 校验（任一失败即记为该 instance 的构建失败）:
+    #   - 声明的重链、轻链、抗原链必须真实存在于结构中；
+    #   - 抗体链与抗原链角色不得重叠；
+    #   - 所有重原子坐标必须有限（防 NaN 污染缓存）。
     text = io.StringIO(source.read().decode("utf-8"))
     model = MMCIFParser(QUIET=True).get_structure(row["INSTANCE"], text)[0]
     heavy_id = row.get("Hchain")
@@ -112,6 +132,17 @@ def parse_parent(source, row, record):
 
 
 def main():
+    # 构建 instance 键控的权威 IMGT 结构父本缓存（LMDB）。
+    # 流程: 选定 observed_bound 记录 → 在 SAbDab2 归档中按 INSTANCE 匹配
+    # 官方链声明 → 流式解析 cif（r|gz 流式遍历，避免整包解压）→ 逐个
+    # 解析并以小写 instance 为键写入 LMDB。
+    # 稳健性设计:
+    #   - candidate-limit/max-success 限制规模（默认最多 64 候选 / 8 成功，
+    #     冒烟规模），达到 max-success 即提前终止；
+    #   - progress.json 记录成功/失败清单，--resume 可续跑且校验 factory
+    #     schema 一致；失败默认跳过，--retry-failures 清空失败表重试；
+    #   - 每写 50 个归档成员落一次进度，中断后不丢已完成工作。
+    # 报告含两个输出文件的 SHA-256；零成功则整体失败。
     parser = argparse.ArgumentParser()
     parser.add_argument("--records-dir", default="data/statecontrast_factory_v2_1")
     parser.add_argument("--archive", default="data/sabdab2_current/splits.tar.gz")

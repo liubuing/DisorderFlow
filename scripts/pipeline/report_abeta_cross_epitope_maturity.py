@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 """Summarize computation-complete A-beta candidates across epitope regions."""
+# 本脚本汇总跨表位区域的 Aβ 候选"计算完成度"：
+# N 端（1-6）区域取已通过全部计算旁证的集成证据候选，中段（13-24）区域
+# 要求折叠旁证与 repack 双通过才计为完成；统一汇总候选的稳健效应量
+# （native_delta p25/min）、全链风险与折叠/repack 指标。
+# 覆盖 ≥3 个参考且 ≥2 个表位区域时升级为"靶标内跨表位计算验证"，
+# 否则记为单表位；明确排除跨 IDP 靶标的推广声明。
+
 from __future__ import annotations
 
 import argparse
@@ -24,6 +31,9 @@ def read_csv(path):
 
 
 def main():
+    # 主流程：筛选 N 端计算完成候选 + 核对中段候选的折叠/repack 完成度 →
+    # 统一格式汇入行集 → 按覆盖的参考数与区域数判定成熟度 →
+    # 写证据 CSV、成熟度 JSON 与 Markdown 报告
     args = parse_args()
     nterm = [
         row for row in read_csv(args.nterm)

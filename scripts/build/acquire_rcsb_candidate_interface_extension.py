@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Acquire a write-once RCSB metadata snapshot for calibration extension discovery."""
 
+# 目的：候选界面扩展（candidate interface extension）的 RCSB 数据采集第一步——
+# 按冻结查询配置（SHA-256 须与扩展协议中的记录一致）调用 RCSB Search API 拿到
+# 入口 ID 列表，再用 Data API GraphQL 批量取纯元数据，落盘为"一次写入"快照
+# （search_response.json / entries.json / acquisition.json，均含哈希与时间戳溯源）。
+# 声明边界：仅元数据，不下载坐标、不做同源性声明。
+
 from __future__ import annotations
 
 import argparse
@@ -14,7 +20,7 @@ from pathlib import Path
 SEARCH_URL = "https://search.rcsb.org/rcsbsearch/v2/query"
 DATA_URL = "https://data.rcsb.org/graphql"
 USER_AGENT = "DisorderFlow-candidate-interface-extension/1"
-GRAPHQL_BATCH_SIZE = 500
+GRAPHQL_BATCH_SIZE = 500  # GraphQL 单次请求的入口 ID 批大小，避免超过服务器负载限制
 GRAPHQL_QUERY = """
 query CandidateComplexes($ids: [String!]!) {
   entries(entry_ids: $ids) {
@@ -107,6 +113,9 @@ def iso_utc(value: datetime) -> str:
 def acquire(query_path: Path, protocol_path: Path, output_dir: Path,
             opener=urllib.request.urlopen, now=lambda: datetime.now(timezone.utc),
             protocol_section: str = "discovery_contract"):
+    # 主采集流程：校验查询配置哈希与协议冻结记录一致→检索→取元数据→
+    # 以 canonical JSON（排序键、ASCII）写快照；任何写入失败都会清空并删除目录，
+    # 保证"write-once"语义不被部分写入破坏。
     query_path = Path(query_path)
     protocol_path = Path(protocol_path)
     output_dir = Path(output_dir)

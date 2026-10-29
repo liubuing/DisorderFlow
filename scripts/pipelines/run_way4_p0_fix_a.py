@@ -22,6 +22,7 @@ import torch, lmdb, yaml
 from Bio.PDB import PDBParser
 
 # ── Config ──────────────────────────────────────────────────────────────
+# 优先使用 V18(带无序条件监督) 的 checkpoint, 文件不存在时回退到 V15 结合模型
 V18_CKPT = 'logs/bfn_v18_disorder_cond_xpu_2026_07_01__15_51_01_v18_way4/checkpoints/best.pt'
 V15_CKPT = 'logs/bfn_v15_binding_xpu_2026_06_26__15_52_10/checkpoints/best.pt'
 
@@ -37,6 +38,7 @@ GRAFT_COUNT = 30        # IDPs to graft onto antibody scaffolds
 GRAFT_PER_IDP = 2
 
 # Gate criteria (V7 §1)
+# 门槛双条件(满足其一即 PASS): 柔性残基(disorder>0.4)总数 >= 30, 或全体残基无序值标准差 > 0.1
 GATE_N_FLEXIBLE = 30
 GATE_STD = 0.1
 
@@ -56,6 +58,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 # ── Step 1: Load model for disorder head scoring ────────────────────────
 print("\n[1/4] Loading model...")
+# 按配置文件是否存在对应 checkpoint 选择 V18 / V15
 if os.path.exists(V18_CKPT):
     CKPT = V18_CKPT
 else:
@@ -67,6 +70,8 @@ from disorderflow.utils.train import recursive_to
 from disorderflow.modules.common.geometry import construct_3d_basis
 
 app = yaml.safe_load(open('app_config.yaml', encoding='utf-8'))
+# 临时把 app_config.yaml 的 bfn checkpoint 改为目标权重并清空 bfn_loader 单例缓存,
+# 模型加载完成后立即还原配置文件, 避免污染其他脚本的默认加载路径
 orig_ckpt = app['models']['bfn']['checkpoint']
 app['models']['bfn']['checkpoint'] = CKPT
 yaml.dump(app, open('app_config.yaml', 'w', encoding='utf-8'))
@@ -79,6 +84,7 @@ print(f"  Loaded {CKPT}")
 
 def predict_chain_disorder(model, chain_data, max_len=380):
     """Run disorder head on single chain directly (no merge/patch)."""
+    # 序列截断到 max_len 控制计算量; 手工拼装单链 batch, 各标志位全 0 表示无生成/锚点区域
     aa = chain_data['aa'][:max_len]; L = aa.shape[0]
     pos = chain_data['pos_heavyatom'][:max_len]
     mask_h = chain_data['mask_heavyatom'][:max_len]
@@ -112,17 +118,20 @@ def predict_chain_disorder(model, chain_data, max_len=380):
         theta_ang = batch.get('torsion', torch.zeros(N, Lb, 4, device=device))
         t_vec = 0.5 * torch.ones(N, device=device)
         pair_feat = torch.zeros(N, Lb, Lb, 128, device=device)
+        # 绕过采样流程直接前向 receiver; 返回元组下标 7 是 disorder head 的 logits
         out = model.bfn.receiver(
             theta_seq, theta_pos_norm, theta_ori, theta_ang,
             t_vec, pair_feat, batch['mask'].bool(),
             backbone_pos=batch['pos_heavyatom'][:, :, :4])
         pred = out[7]
         if pred is None: return None
+        # sigmoid 把 logits 映射到 [0,1] 的逐残基无序度, 并截回原始长度
         return torch.sigmoid(pred[0])[:L].cpu().numpy()
 
 
 def make_profile(sid, source, disorder_array, extra=None):
     """Standardized profile dict."""
+    # 统一的 profile 结构; 阈值约定: d>0.4 记柔性残基, 0.25<d<=0.4 记中等无序
     d = np.asarray(disorder_array)
     p = {
         'sid': sid, 'source': source,
@@ -139,6 +148,7 @@ def make_profile(sid, source, disorder_array, extra=None):
 
 
 # ── Step 2: DisProt IDPs (pLDDT-based, fast) ────────────────────────────
+# 逐条读取 DisProt LMDB; 主指标是 pLDDT 映射的无序度, disorder head 分数仅作对照
 print(f"\n[2/4] Processing DisProt IDPs (pLDDT-based disorder)...")
 idp_env = lmdb.open(IDP_LMDB, readonly=True, lock=False, readahead=False)
 with idp_env.begin() as txn:
@@ -151,6 +161,7 @@ for idx in range(min(n_idp, MAX_IDP)):
     with idp_env.begin() as txn:
         entry = pickle.loads(txn.get(f'{idx:08d}'.encode()))
     batch = entry['batch']
+    # pLDDT 数组按残基长度截断后逐残基映射为无序度
     plddt = entry['af2_plddt'].cpu().numpy()
     seq_len = int(batch['aa'].shape[0])
 
@@ -202,6 +213,7 @@ from disorderflow.utils.protein import parsers
 pdb_parser = PDBParser(QUIET=True)
 
 # Anti-Aβ reference structures
+# 已知抗 Aβ 抗体-抗原复合物清单: PDB ID -> (抗原链 ID, 表位描述), 用于定位并解析抗原链
 ABETA_REFS = {
     '4HIX': {'ag_chain': 'A', 'epitope': 'Aβ16-23'},
     '5CSZ': {'ag_chain': 'D', 'epitope': 'Aβ1-10'},
@@ -233,6 +245,8 @@ for pdb_id, info in ABETA_REFS.items():
         # For short peptide antigens (<20 residues): disorder head is unreliable
         # Use known IDP status + pLDDT estimation
         # Aβ is a known IDP → assign moderate-high disorder with some gradient
+        # Aβ 是已知 IDP; 短肽上 disorder head 不可靠, 采用启发式:
+        # 全链赋 0.55 的中等偏高无序度, 仅 N/C 两端调低到 0.35(末端略更有序)
         if ag_len < 20:
             # Short Aβ peptide: known IDP, assign disorder 0.4-0.7 range
             # with per-residue variation based on position
@@ -242,6 +256,7 @@ for pdb_id, info in ABETA_REFS.items():
             disorder_method = 'known_idp_heuristic'
         else:
             # Try disorder head for longer antigens
+            # 较长抗原用 disorder head 直接打分; 失败则回退为全链 0.5 均值
             try:
                 disorder = predict_chain_disorder(model, ag_data)
                 disorder_method = 'disorder_head'
@@ -262,6 +277,7 @@ for pdb_id, info in ABETA_REFS.items():
 print(f"  {len(abeta_profiles)} anti-Aβ complexes processed")
 
 # ── Step 4: SAbDab antigens (disorder head, direct chain scoring) ───────
+# 固定种子 42 打乱条目 ID 后限量扫描, 保证抽样可复现; 无抗原条目直接跳过
 print(f"\n[4/4] Scanning SAbDab antigens with disorder head...")
 env = lmdb.open(SABDAB_LMDB, subdir=False, readonly=True, lock=False, readahead=False)
 ids = pickle.load(open(SABDAB_IDS, 'rb'))
@@ -305,6 +321,7 @@ print("P0-fix-A GATE: Merged Disorder Distribution")
 print("=" * 60)
 
 # Three-tier categorization
+# 三档归类: anti-Aβ 全部入 high; DisProt 按均值分 high/mid/low; SAbDab 按 max 分 mid/low
 high_tier = []
 mid_tier = []
 low_tier = []
@@ -335,6 +352,7 @@ print(f"  MID:  {len(mid_tier)} (SAbDab max>0.4 + DisProt mid)")
 print(f"  LOW:  {len(low_tier)} (SAbDab folded + DisProt low)")
 
 # Gate computation
+# 汇总全部档位的逐残基无序值, 依据 GATE_N_FLEXIBLE / GATE_STD 两个阈值计算通过与否
 all_per_res = []
 for p in high_tier + mid_tier + low_tier:
     all_per_res.extend(p.get('disorder_per_res', []))
@@ -372,6 +390,7 @@ else:
     print(f"  → Data hard constraint. §5 No-Go wind-down.")
 
 # ── Save outputs ─────────────────────────────────────────────────────────
+# 落盘三份产物: 统计摘要 JSON(gate 结论)、逐残基 profile pickle、分层汇总 CSV
 print(f"\nSaving to {OUT_DIR}/...")
 
 stats = {

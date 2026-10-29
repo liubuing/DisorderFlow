@@ -1,4 +1,8 @@
 """Summarize hard controls and audit old joint rankings under explicit seeds."""
+# 目的：ECLS 困难对照报告收尾——(1) 校验 6 组件 × 3 显式种子的评分数组哈希
+# 未变，重算 ECLS 并与旧 seed=0 运行对比（最大分差、候选组中秩不变性、
+# 3/12 召回）；(2) 汇总近天然对照/native 优势与数值不变性诊断，写 REPORT.md。
+# 证据边界已在报告中声明：对照无结合标签，种子重复不是新生物学样本。
 from __future__ import annotations
 
 import sys
@@ -35,6 +39,7 @@ def main():
             selected = np.array([r["entity_type"] == "candidate" for r in rows])
             y = [r["target"] for r in rows if r["entity_type"] == "candidate"]
             pae = [r["pae"] for r in rows if r["entity_type"] == "candidate"]
+            # screening 的第三个参数 .2 为 20% 阈值比例：以预测分数 top 20% 计算召回。
             audits.append({"scaffold": c["scaffold"], "seed": run["seed"],
                 "max_abs_ECLS_difference_all_14": float(np.max(np.abs(values - legacy))),
                 "candidate_midranks_unchanged": bool(np.array_equal(rankdata(values[selected]), rankdata(legacy[selected]))),

@@ -26,6 +26,10 @@ import numpy as np
 
 INPUT_PATH = 'oc_validation_results/oc_v14_phase1.json'
 OUTPUT_PATH = 'oc_validation_results/oc_v14_phase2.json'
+# OC（过自信）比 = BFN 自报 ipTM 均值 / AF2 实测 ipTM 均值。
+# V12 时高达 9.47x——生成器严重高估自己的界面质量；V14 的验收线是 ≤2x，
+# 同时要求 BFN ipTM 的设计间标准差 >~0.05（分布不能塌缩成常数），
+# 以及 BFN-AF2 的跨设计 Spearman ρ > 0.4（排序可用性）。
 
 
 def _spearman(a, b):

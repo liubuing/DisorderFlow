@@ -26,10 +26,11 @@ BUILD_CMD = [
 ]
 
 # Crashes that warrant immediate restart vs. those that suggest a real bug.
-RESTARTABLE = {-9, -1073741819, 1, 2}  # SIGKILL, ACCESS_VIOLATION, generic error
-BACKOFF_START = 15  # seconds
-BACKOFF_MAX = 300    # cap at 5 min
-CRASH_WINDOW = 600   # 10 min — if 3+ crashes in this window, give up
+# 可重启的崩溃退出码：SIGKILL(-9)、Windows ACCESS_VIOLATION(-1073741819)、一般错误(1/2)
+RESTARTABLE = {-9, -1073741819, 1, 2}
+BACKOFF_START = 15  # seconds——首次重试等待
+BACKOFF_MAX = 300    # cap at 5 min——指数退避上限
+CRASH_WINDOW = 600   # 10 min——10 分钟内崩溃 >=3 次则判定需要人工介入
 
 _crash_log = []  # list of (timestamp, exit_code)
 
@@ -42,6 +43,7 @@ def log(msg):
 
 
 def run_once():
+    """阻塞式运行一次构建脚本，返回退出码（目标 LMDB 由脚本自行断点续跑）。"""
     log(f"Launching: {' '.join(BUILD_CMD)}")
     t0 = time.time()
     r = subprocess.run(BUILD_CMD, capture_output=False)
@@ -51,6 +53,7 @@ def run_once():
 
 
 def main():
+    """主循环：成功退出即返回；崩溃按指数退避重启，密集崩溃则休眠 30 分钟并清空计数。"""
     backoff = BACKOFF_START
     while True:
         code = run_once()

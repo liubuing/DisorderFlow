@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 """Apply a frozen external-routing protocol to baseline and candidate reports."""
 
+# 本脚本将冻结的外部路由（external blind routing）评估协议应用到
+# 基线与候选两份报告上：先校验两份报告均标记为盲评且评估的复合物样本数一致，
+# 再逐项核对候选门槛——mismatch/shuffled 反事实 NLL 的均值与 CI95 上界、
+# shuffled 扰动引起的 logit 绝对变化与 argmax 汉明距离、
+# 以及 factual NLL 相对基线的退化上限。全部门槛通过才判定 accepted。
+# 评估报告拒绝覆盖已有文件；--require-gates 时未通过则以非零退出码结束。
+
 import argparse
 import json
 from pathlib import Path
 
 
+# 主流程：加载协议/基线/候选三份 JSON → 盲评标记与样本数一致性校验 →
+# 逐门槛检查 → 写出 JSON 评估报告。所有阈值均取自冻结协议文件，
+# 脚本本身不含任何可调参数，保证评估路径不可被本脚本篡改。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--protocol', required=True, type=Path)
@@ -25,6 +35,7 @@ def main():
     if baseline['n_complexes'] != candidate['n_complexes']:
         raise RuntimeError('Baseline and candidate evaluated different sample counts')
 
+    # 候选门槛阈值与失败策略全部来自冻结协议
     gates = protocol['external_blind']['candidate_gates']
     paired = candidate['paired_effects']
     mismatch = paired['factual_minus_mismatched_native_nll']

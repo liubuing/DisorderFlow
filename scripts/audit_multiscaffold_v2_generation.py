@@ -12,14 +12,25 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+# 20 种标准氨基酸字母表，用于校验生成序列中不含非法字符。
 AA = set("ACDEFGHIKLMNPQRSTVWY")
 
 
 def sha256(path):
+    # 计算文件 SHA-256；用于核对原始生成工件与冻结生成配置的一致性。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def main():
+    # 审计冻结 v2 原始生成的完整性与描述性多样性。
+    # 检查项:
+    #   - 槽位记账：attempt_id 应为 component|arm|seed|sample 的笛卡尔积，
+    #     不得重复、缺失或多余。
+    #   - 序列不变量：H3 序列长度须等于 H3 索引数且只含标准氨基酸；
+    #     重链全长序列在非 H3 固定位置必须与代表序列完全一致（只允许 H3 区突变）。
+    #   - 描述性统计：各臂唯一 H3 序列数、与原生 H3 相同的候选数。
+    # 全部通过才写 passed 状态，否则以退出码 1 失败（CI 可感知）。
+    # 注意：本审计只覆盖生成完整性与多样性，不涉及选择或性能端点。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--raw", default="results/multiscaffold_confirmatory_v2/raw_generation.json")

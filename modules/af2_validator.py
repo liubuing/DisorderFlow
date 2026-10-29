@@ -59,9 +59,12 @@ def validate_sequences(
     af_cfg = _load_af_config()
     af2_runtime = af_cfg.get('af2', {})
 
+    # 输出目录缺省落在项目根的 alphafold_results/ 下；exist_ok 兼容并发调用
     base_dir = Path(output_dir or af_cfg.get('output_dir', 'alphafold_results'))
     base_dir.mkdir(exist_ok=True)
 
+    # 抗原序列规格化：None => 单链折叠验证；str => 广播到每条序列；
+    # list => 必须与 sequences 一一对应
     if antigen_sequences is None:
         antigens = [None] * len(sequences)
     elif isinstance(antigen_sequences, str):
@@ -75,6 +78,7 @@ def validate_sequences(
     n_total = len(sequences)
 
     for idx, (seq, antigen_seq) in enumerate(zip(sequences, antigens)):
+        # 目录名带 hash 后缀，避免同序列重复预测时互相覆盖
         seq_name = f'af2_val_{idx}_{hash(seq) % 100000:05d}'
         result_dir = base_dir / seq_name
 
@@ -89,6 +93,8 @@ def validate_sequences(
             f.write(safe_text)
 
         # Build ColabFold command
+        # 提供抗原时 model_type=auto 解析为 Multimer（才能算有意义的 ipTM）；
+        # binder:antigen 用冒号分隔成一条 FASTA 记录的两条链
         arguments = [
             '--num-models', '1',
             '--num-recycle', str(num_recycle),
@@ -111,6 +117,7 @@ def validate_sequences(
                 continue
 
             # Find PDB
+            # 优先取 ColabFold 排名第一的模型（rank_001），找不到再退回目录里任意 PDB
             pdb_files = sorted(result_dir.glob('*_rank_001_*.pdb'))
             if not pdb_files:
                 pdb_files = sorted(result_dir.glob('*.pdb'))
@@ -122,10 +129,12 @@ def validate_sequences(
                 with open(scores_json[0]) as sf:
                     scores = json.load(sf)
                 plddt_array = scores.get('plddt', [0])
+                # pLDDT 数组取整体均值作为该设计的单一置信度分数
                 mean_plddt = sum(plddt_array) / max(len(plddt_array), 1)
                 ptm = scores.get('ptm', 0.0)
                 iptm = scores.get('iptm')
                 max_pae = scores.get('max_pae', 999.0)
+                # ipTM 只在复合物模式下有效；单链模式下置 None 防止误读
 
                 results.append({
                     'sequence': seq,

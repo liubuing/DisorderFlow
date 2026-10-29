@@ -47,6 +47,7 @@ PDB_LIST = [
 OUT_DIR = 'data/general_proteins'
 os.makedirs(OUT_DIR, exist_ok=True)
 
+# failed/downloaded 分别收集失败与成功的 PDB ID，脚本结尾汇总报告。
 failed = []
 downloaded = []
 
@@ -63,6 +64,7 @@ for pdb_id, name in PDB_LIST:
         urllib.request.urlretrieve(url, pdb_path)
         # Verify it's valid
         size = os.path.getsize(pdb_path)
+        # 小于 1000 字节视为下载被截断或返回了错误页，删掉并按失败处理。
         if size < 1000:
             os.unlink(pdb_path)
             raise ValueError(f'File too small ({size} bytes)')

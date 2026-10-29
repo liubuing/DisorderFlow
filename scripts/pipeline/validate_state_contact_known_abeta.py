@@ -36,6 +36,9 @@ def serializable_contact_map(contact_map):
 
 def main():
     args = parse_args()
+    # 已知抗 Aβ 抗体-肽复合物上的打分器健全性检查：天然序列对接触图打分
+    # 应在组成打乱对照中排到接近 100 百分位；若 percentile 偏低说明
+    # 接触打分的方向或热点提取有误，后续 StateContrast 管线不可信
     pdbs = [Path(p) for p in args.pdb] or [
         PROJECT_ROOT / "data" / "anti_abeta_refs" / "4HIX.pdb",
         PROJECT_ROOT / "data" / "anti_abeta_refs" / "5CSZ.pdb",

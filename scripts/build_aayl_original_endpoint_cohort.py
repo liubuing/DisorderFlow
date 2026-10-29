@@ -3,6 +3,13 @@
 Uses all sequence-eligible source rows, not the curated benchmark subset. Rules
 are fixed before ECLS access; the preceding endpoint diagnostic is disclosed.
 """
+
+# 角色：AAYL（AlphaSeq 数据集 1）回溯性 H3-only 队列重建——在接触任何 ECLS 得分前
+# 固定选择规则：仅取 MIT_Target 中 POI 前缀为 AAYL49_/AAYL51_ 的行，序列必须
+# 与参考结构仅 CDR-H3 不同（H3_only_coordinate_compatible）。终点为
+# 9 - median(原始 log10 Kd nM)（越大结合越强），每组恰好 3 个重复（1/2/3）。
+# 属于回溯性描述分析，非盲法确证（known_label_exposure 已声明）。输出 cohort.json。
+
 import hashlib
 import json
 import statistics
@@ -20,6 +27,7 @@ SOURCE = ROOT / "data/abbibench_sequence_mapping_v1"
 
 
 def freeze(path, value):
+    # 冻结写入：内容不同则拒绝重写已有产物，保证协议/队列文件一次定稿。
     text = json.dumps(value, indent=2) + "\n"
     if path.exists() and path.read_text() != text:
         raise RuntimeError(f"Refusing to rewrite {path}")
@@ -47,6 +55,7 @@ def main():
         "negative_original_log_values": "valid finite values, retain; never take logarithm again",
         "WT": "exclude zero-mutant parent from primary mutant correlation",
         "minimum_unique_variants_per_assay": 20,
+        # 20：每个 assay 至少 20 个独立变体才具备描述性相关性分析的意义。
         "methods": ["ECLS", "negative_complex_H3_NLL", "negative_apo_H3_NLL"],
         "primary_contrast": "Spearman(ECLS,endpoint) minus Spearman(negative_complex_H3_NLL,endpoint)",
         "seeds": [0,2281,20260916], "no_training": True,

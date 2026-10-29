@@ -24,6 +24,7 @@ from scripts.preprocess_sabdab_phase3 import build_lmdb  # noqa: E402
 
 
 def read_records(path: Path):
+    # 按 '-ids' 文件给定的顺序读取 LMDB 中的全部记录；缺键即抛错（fail-closed）。
     ids = pickle.loads(Path(f'{path}-ids').read_bytes())
     env = lmdb.open(str(path), subdir=False, readonly=True, lock=False, readahead=False)
     records = []
@@ -38,11 +39,17 @@ def read_records(path: Path):
 
 
 def digest_ids(records):
+    # 对某个划分的样本 ID 序列取 SHA-256，写入审计报告以固化划分内容。
     values = [str(record['id']) for record in records]
     return hashlib.sha256('\n'.join(values).encode('utf-8')).hexdigest()
 
 
 def assert_isolated(left, right, fields):
+    # 断言两个划分在给定字段上零重叠（不区分大小写），任何重叠即抛错。
+    # 参数:
+    #   left/right: 待比较的记录列表。
+    #   fields: 要求互斥的字段（如 pdb_id 与各序列聚类 ID）。
+    # 返回: {字段: 重叠数} 字典；正常情况下全部为 0。
     result = {}
     for field in fields:
         overlap = ({str(item[field]).casefold() for item in left}
@@ -54,6 +61,15 @@ def assert_isolated(left, right, fields):
 
 
 def main():
+    # 把外部项目池按同源性聚类切成互斥的 adaptation/dev/final 三个划分。
+    # 关键设置:
+    #   - 聚类阈值: 抗原序列 0.3、CDR-H3 0.5 序列一致性（覆盖度 0.8）；
+    #     抗原用宽松阈值、H3 用较严阈值，分别对应两者不同层次的同源性尺度。
+    #   - 划分比例: final 占 0.2，dev 再占余下部分的 0.2；两个不同种子
+    #     (2111/2113) 避免同一聚类在两级切分中被系统性分到同一侧。
+    #   - 任一划分不足 50 条即失败：样本过少会令最终评估失去统计意义。
+    # 输出: 三个 LMDB 与 split_audit.json（含隔离校验、阈值、ID 摘要）。
+    # 注意: 划分一经写盘即封存（sealed），在协议冻结前不得做任何模型前向。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--output-dir', required=True, type=Path)

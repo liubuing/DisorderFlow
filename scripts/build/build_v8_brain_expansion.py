@@ -34,6 +34,7 @@ AFDB_BASE = 'https://alphafold.ebi.ac.uk/files'
 UNIPROT_API = 'https://rest.uniprot.org/uniprotkb/search'
 
 # V8 expansion: target underrepresented brain disease categories + new areas
+# V8 扩充：覆盖 V6 中样本不足（< 30 条）的类别，并新增若干脑疾病领域
 V8_BRAIN_QUERIES = [
     # === Deeper coverage of underrepresented categories from V6 (< 30 entries) ===
     ('v8_prion_deep', '("prion" OR "PRNP" OR "PRND" OR "PRNDP" OR "SPRN" OR "shadow of prion" OR "Doppel") AND (organism_id:9606) AND (length:[50 TO 500]) AND (reviewed:true)'),
@@ -76,6 +77,7 @@ V8_BRAIN_QUERIES = [
 
 
 def fetch_uniprot_accessions(query, max_per_query=80):
+    # 查询 UniProt REST API，返回 (登录号, 蛋白名) 列表；max_per_query 限制每条查询的最大条数
     url = f'{UNIPROT_API}?query={requests.utils.quote(query)}&size={max_per_query}&format=tsv&fields=accession,length,protein_name'
     r = requests.get(url, timeout=30)
     lines = r.text.strip().split('\n')
@@ -88,6 +90,7 @@ def fetch_uniprot_accessions(query, max_per_query=80):
 
 
 def mmcif_to_temp_pdb(cif_text, accession):
+    # 借助 BioPython 将 AlphaFold mmCIF 转存为临时 PDB 文件，供后续管线读取
     from Bio.PDB.MMCIFParser import MMCIFParser
     from Bio.PDB import PDBIO
     parser = MMCIFParser(QUIET=True)
@@ -101,6 +104,7 @@ def mmcif_to_temp_pdb(cif_text, accession):
 
 
 def extract_plddt_from_mmcif(cif_text):
+    # 从 mmCIF 提取逐残基 pLDDT（CA 原子 B 因子除以 100 归一到 0~1）及对应序列
     from Bio.PDB.MMCIFParser import MMCIFParser
     parser = MMCIFParser(QUIET=True)
     structure = parser.get_structure('tmp', io.StringIO(cif_text))
@@ -117,6 +121,7 @@ def extract_plddt_from_mmcif(cif_text):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    # 将 PDB 预处理成 BFN 模型可用的 batch：mask 全链 -> merge -> patch，返回 (batch, 序列, 残基数)
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -139,6 +144,7 @@ def preprocess_pdb_for_bfn(pdb_path):
 
 
 def main():
+    # 主流程：UniProt 检索 -> 下载 AFDB 结构与 PAE -> ipTM 质量过滤 -> 预处理并写入 LMDB
     import argparse
     p = argparse.ArgumentParser(description='Build V8 brain disease expansion dataset')
     p.add_argument('--output_dir', default=str(PROJECT_DIR / 'data' / 'confidence_v8_brain_expansion'),
@@ -204,6 +210,7 @@ def main():
         print(f'[{i+1}/{len(all_accessions)}] [{category}] {acc}: {name[:60]}...', end=' ', flush=True)
 
         # Download mmCIF + PAE with version fallback (v7 -> v6 -> v5 -> v4)
+        # 按版本降级尝试下载 mmCIF 与 PAE，直到拿到可用的 PAE 矩阵
         cif_text = None
         pae_matrix = None
         for v_fallback in [args.af2_version, 6, 5, 4]:
@@ -271,7 +278,7 @@ def main():
             continue
 
         if len(plddt_list) < n_res:
-            plddt_list += [0.5] * (n_res - len(plddt_list))
+            plddt_list += [0.5] * (n_res - len(plddt_list))  # 缺失残基以中性 pLDDT=0.5 补齐
         plddt_tensor = torch.tensor(plddt_list[:n_res], dtype=torch.float32)
 
         if pae_t.shape[0] < n_res:
@@ -301,7 +308,7 @@ def main():
         plddt_mean = plddt_tensor.mean().item()
         print(f'OK (L={n_res}, pLDDT={plddt_mean:.3f}, ipTM={iptm:.3f})')
 
-        if len(entries) % 30 == 0:
+        if len(entries) % 30 == 0:  # 每累积 30 条落盘一次，便于断点续跑
             save_lmdb(str(output_dir / 'v8_brain_expansion.lmdb'), entries)
             print(f'  [saved {len(entries)} entries]')
 

@@ -13,6 +13,7 @@ from disorderflow.models.bfn_model import AntibodyBFN
 from probe_antigen_signal_usage import get_cdr_real
 
 CKPT = sys.argv[1] if len(sys.argv) > 1 else 'logs/v17c_zeroinit/bfn_v17c_zeroinit_xpu_2026_06_26__23_22_18/checkpoints/2200.pt'
+# 直接构建模型并载入权重(绕过 bfn_loader), strict=False 容忍少量参数差异
 cfg = EasyDict(yaml.safe_load(open('configs/train/bfn_v17i_pairrouting_xpu.yml', encoding='utf-8')))
 model = AntibodyBFN(cfg.model)
 ckpt = torch.load(CKPT, map_location='cpu', weights_only=False)
@@ -37,6 +38,7 @@ for idx in random.sample(range(len(ds)), min(len(ds), 50)):
     lengths = [e_ - s for s, e_, _ in cdrs.values()]
 
     for include_ag in [True, False]:
+        # 同一种子下对比 complex(含抗原)/fixbb(无抗原) 两种模式的 CDR 恢复率
         mode = 'complex' if include_ag else 'fixbb'
         seed_all(42)
         e2 = {'heavy': entry['heavy'], 'light': None, 'antigen': entry['antigen'] if include_ag else None}
@@ -60,6 +62,7 @@ for idx in random.sample(range(len(ds)), min(len(ds), 50)):
     if picked >= 3: break
 
 c = np.array(agg['complex']); f = np.array(agg['fixbb']); d = (c.mean() - f.mean()) * 100
+# 结论分级: Δ(complex-fixbb) 百分点; >5pp 视为配对路由生效的突破信号
 print(f'\n=== V17i@{ckpt["iteration"]} ===')
 print(f'complex={c.mean()*100:.1f}%  fixbb={f.mean()*100:.1f}%  Δ={d:+.2f}pp')
 if d > 5: print('BREAKTHROUGH')

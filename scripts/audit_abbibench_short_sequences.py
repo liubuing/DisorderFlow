@@ -1,4 +1,8 @@
 """Conservative short-sequence sensitivity check, retaining the original MMseqs audit."""
+
+# 目的：对 AbBiBench 结构审计候选做"短序列（<=50 aa）无 gap 重叠"的保守敏感性检查，
+# 复核 MMseqs 序列隔离审计是否遗漏相似序列。属于冻结协议中的隔离性校验一环：
+# 输出 short_sequence_sensitivity.json（含 SHA-256 溯源与明确的"敏感性非验证"分类）。
 import json
 import sys
 from pathlib import Path
@@ -15,6 +19,7 @@ def ungapped_hit(a, b, threshold, coverage=.8):
     Identity counts matches / aligned overlap. Terminal overhangs are controlled
     by coverage. This is exhaustive only over ungapped alignments, not indels.
     """
+    # coverage=.8：要求两条序列的重叠均覆盖各自长度的至少 80%，抑制末端悬垂造成的伪命中。
     if not a or not b:
         return None
     best = None
@@ -32,6 +37,9 @@ def ungapped_hit(a, b, threshold, coverage=.8):
 
 
 def main():
+    # 主流程：对 h3（CDR-H3，identity>=0.5）与 antigen（identity>=0.3）两条轴，
+    # 用穷举无 gap 平移比对找短序列重叠；两轴阈值不同是因为 H3 更短、随机匹配概率更高，
+    # 需要更严的恒等度。任何新增命中都会让对应实例合并进连通分量从而失败隔离。
     records = read(OUT / "structural_manifest.json")["records"]
     references = read(SOURCE.parent / "reference_union.json")["records"]
     original = read(OUT / "isolation_audit.json")

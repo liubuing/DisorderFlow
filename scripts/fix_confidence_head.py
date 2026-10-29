@@ -20,6 +20,12 @@ Usage:
   python scripts/fix_confidence_head.py --phase unfreeze --epochs 100
   python scripts/fix_confidence_head.py --phase all  # run all sequentially
 """
+# 置信度头（confidence heads）修复脚本：针对 BFN 置信度头在多变体设计上
+# 输出坍缩（方差趋零、与 AF2 教师标签失相关）的问题做三阶段修复：
+# Phase 1 诊断编码器特征/头输出的方差与相关性；Phase 2 冻结编码器，
+# 仅用"相关性 + 方差抗坍缩 + 分组排序"损失重训置信头；Phase 3 解冻
+# 编码器最后两层以极低学习率联合微调。训练数据为 AF2 真实教师标签。
+# 此前的 isotonic 校准保留为事后安全网，本脚本与其互补而非替代。
 
 import argparse
 import json
@@ -62,6 +68,7 @@ class PearsonCorrelationLoss(nn.Module):
 
 class VarianceAntiCollapse(nn.Module):
     """Hinge loss: penalize pred_std < fraction of target_std."""
+    # 抗坍缩合页损失：预测标准差低于目标标准差的 min_ratio（默认 0.3）时惩罚
     def __init__(self, min_ratio=0.3):
         super().__init__()
         self.min_ratio = min_ratio
@@ -74,6 +81,8 @@ class VarianceAntiCollapse(nn.Module):
 
 
 class GroupedMarginRanking(nn.Module):
+    # 组内边距排序损失：同 scaffold 组内，若 target[i] > target[j]，
+    # 要求 pred[i] > pred[j] + margin（默认 0.01），只统计 target 有差异的对
     def __init__(self, margin=0.01):
         super().__init__()
         self.margin = margin
@@ -103,6 +112,8 @@ class GroupedMarginRanking(nn.Module):
 
 def load_lmdb_batches(lmdb_path, max_entries=0, max_residues=300):
     """Load LMDB entries as a list of (batch_dict, af2_plddt_mean, af2_iptm, scaffold_id)."""
+    # 读取 LMDB 全部条目；超过 max_residues（默认 300 残基）的序列过滤掉，
+    # 以控制显存与批内长度差异
     import lmdb
     env = lmdb.open(str(lmdb_path), readonly=True, lock=False, readahead=False)
     with env.begin() as txn:
@@ -126,6 +137,8 @@ def load_lmdb_batches(lmdb_path, max_entries=0, max_residues=300):
 
 def forward_with_grad(model, batch):
     """Replicate score_fixed logic WITHOUT @torch.no_grad, so heads get gradients."""
+    # 复刻 score_fixed 的前向但去掉 no_grad，使置信头获得梯度；
+    # t 固定为 0.5（与评估/诊断一致的中点噪声水平）
     bfn = model.bfn
     x_seq = batch['aa']
     N, L = x_seq.shape
@@ -169,6 +182,9 @@ def forward_with_grad(model, batch):
 
 def entry_to_model_input(entry, device):
     """Convert LMDB entry to model-ready batch tensors."""
+    # 补齐批量维并准备编码器全上下文输入：
+    # generate_flag 全 False（作为完整上下文喂给编码器）、
+    # pair_feat 缺失时以 128 维零张量占位
     batch = entry['batch']
     # Add batch dimension
     model_batch = {}
@@ -260,6 +276,8 @@ def get_encoder_features(model, batch):
 
 def diagnose(model, val_entries):
     """Measure encoder feature variance across designs."""
+    # 诊断：在验证集上以固定 t=0.5 前向，统计头输出的均值/方差/极值、
+    # 与 AF2 教师标签的 Spearman 相关，以及同 scaffold 内方差（<0.001 判坍缩）
     print("\n" + "=" * 70)
     print("PHASE 1: DIAGNOSIS — Encoder feature variance")
     print("=" * 70)
@@ -356,6 +374,11 @@ def diagnose(model, val_entries):
 
 def train_head_only(model, train_entries, val_entries, epochs=200, lr=1e-3):
     """Freeze encoder, retrain confidence heads with anti-collapse losses."""
+    # Phase 2：冻结全部参数后仅解冻置信头（按 head_suffixes 匹配），
+    # 先对坍缩头做 Xavier（gain=0.1）重初始化以打破已学到的坍缩；
+    # 复合损失 = L1 + 0.8*相关性 + 0.5*方差抗坍缩 + 0.3*组内排序，
+    # 梯度累积 4 条、裁剪范数 1.0，余弦 warm-restart 调度（T_0=50）；
+    # 验证综合指标 = 双 Spearman + 5 倍双标准差，据此保存最优头
     print("\n" + "=" * 70)
     print("PHASE 2: HEAD-ONLY FINE-TUNE (encoder frozen)")
     print("=" * 70)
@@ -528,6 +551,8 @@ def train_head_only(model, train_entries, val_entries, epochs=200, lr=1e-3):
 
 def train_unfreeze(model, train_entries, val_entries, epochs=100, lr=2e-5):
     """Unfreeze last 2 encoder layers + heads, very low LR."""
+    # Phase 3：加载 Phase 2 最优头后，解冻编码器最后 2 层与全部置信头，
+    # 用同样损失以极低学习率（默认 2e-5）联合微调，梯度裁剪收紧到 0.5
     print("\n" + "=" * 70)
     print("PHASE 3: ENCODER UNFREEZE (last 2 layers, lr=2e-5)")
     print("=" * 70)

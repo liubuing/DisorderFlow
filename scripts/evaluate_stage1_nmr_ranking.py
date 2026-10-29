@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Evaluate a Stage 1 disorder head against held-out solution-NMR ranks."""
+"""Evaluate a Stage 1 disorder head against held-out solution-NMR ranks.
+
+Stage 1 无序度头的外部评测：对照保留的溶液 NMR 实验数据（逐残基 RMSF），
+计算预测与实验的校准/秩相关指标；同时评估基线 checkpoint，
+门槛要求训练模型总体与标注 IDP 子组（无序度 >=0.20）的 verdict 合格
+且中位 Spearman 不低于基线。未过门槛以非零退出码失败。
+"""
 
 import argparse
 import copy
@@ -26,6 +32,7 @@ from disorderflow.utils.train import recursive_to
 
 
 def load_model(config, checkpoint_path, device, strict):
+    """strict=True 按训练配置完整加载；strict=False 仅加载形状兼容权重（基线跨版本）。"""
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     model_config = checkpoint['config'].model if strict else config.model
     model = get_model(model_config).to(device)
@@ -44,6 +51,7 @@ def load_model(config, checkpoint_path, device, strict):
 
 
 def predict(model, loader, references, device, seed):
+    """用 forward hook 捕获无序度头 logits；固定 t=0.5（确定性去噪水平）逐蛋白预测。"""
     predictions = {}
     captured = {}
 
@@ -72,6 +80,7 @@ def predict(model, loader, references, device, seed):
 
 
 def score(predictions, references, minimum_proteins=10):
+    """逐蛋白计算校准指标；minimum_proteins=10 为出 verdict 的最低样本数。"""
     results = []
     for accession, prediction in predictions.items():
         reference = references[accession]
@@ -99,6 +108,7 @@ def score(predictions, references, minimum_proteins=10):
 
 
 def passes_gate(trained, baseline):
+    """放行判定：verdict 须为 rank_only/pass_physical_label，且 Spearman 不低于基线。"""
     accepted = {'rank_only', 'pass_physical_label'}
     reasons = []
     for subgroup in ('summary', 'annotated_idp'):
@@ -114,6 +124,7 @@ def passes_gate(trained, baseline):
 
 
 def main():
+    """主流程：加载数据与 NMR 参考 -> 训练/基线两模型分别预测打分 -> 门槛判定并写报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', required=True)
     parser.add_argument('--baseline-checkpoint', required=True)

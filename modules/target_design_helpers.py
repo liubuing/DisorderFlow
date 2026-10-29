@@ -108,6 +108,7 @@ def compute_residue_sasa(pdb_path, chain_id=None):
     residues = _get_chain_residues(structure, chain_id)
     for res, resseq, resname in residues:
         sasa = getattr(res, 'sasa', 0.0) or 0.0
+        # 相对 SASA = 绝对值 / 理论最大值（Tien 2013 三肽参考态），>0.15 通常视为表面
         max_s = MAX_SASA.get(resname, 200.0)
         rel_sasa = sasa / max_s if max_s > 0 else 0.0
         results.append({
@@ -184,6 +185,7 @@ def score_epitope_residues(pdb_path, chain_id=None, weights=None):
                    hydrophilicity, protrusion, combined_score, rank
     """
     if weights is None:
+        # 表位先验权重：可及面积最重要，其次亲水性，凸出度第三（三项各自批内归一）
         weights = {'sasa': 0.4, 'hydrophilicity': 0.35, 'protrusion': 0.25}
 
     # Get SASA data
@@ -283,6 +285,7 @@ def analyze_contacts(pdb_path, chain_a, chain_b, distance_cutoff=8.0):
                 resname = res.get_resname().strip()
                 one = AA_3TO1.get(resname, 'X')
                 for atom in res:
+                    # 只考虑重原子（C/N/O/S），忽略氢原子与杂原子
                     if atom.element in ('C', 'N', 'O', 'S'):
                         if cid == chain_a:
                             atoms_a.append((resseq, one, atom.name, atom.get_coord()))
@@ -357,6 +360,8 @@ def find_residues_facing_region(pdb_path, target_chain, epitope_resseqs,
     epitope_set = set(epitope_resseqs)
 
     # Collect CA atoms
+    # query_position 按残基出现顺序连续计数（1 起），得到的是"序列位置"而非 PDB 编号——
+    # 插入码/缺口残基不会破坏与 BFN mask 索引的对应关系
     epitope_cas = []
     query_cas = {}  # 1-based sequence position -> coord
     for model in structure:
@@ -571,6 +576,8 @@ def build_multimer_fasta(ab_seq, ag_seq, ab_name='antibody', ag_name='antigen'):
 
 
 def compute_interface_pae(pae_matrix, chain_a_len, chain_b_len=None):
+    # 界面 PAE：取 PAE 矩阵中"链A 行 x 链B 列"交叉子块的均值，
+    # 比全局指标更灵敏地反映两条链的相对摆放质量
     if chain_b_len is None:
         chain_b_len = pae_matrix.shape[0] - chain_a_len
     total = chain_a_len + chain_b_len
@@ -584,6 +591,8 @@ def compute_interface_pae(pae_matrix, chain_a_len, chain_b_len=None):
 
 def score_binding_quality(contacts_summary, interface_metrics, af2_iptm=None,
                           interface_pae=None, complex_plddt=None):
+    # 结合质量综合分（0-1）：ipTM 0.35 + 界面PAE 0.25 + 接触数 0.15 +
+    # 电荷互补 0.15 + 疏水匹配 0.10；各分量均截断/归一到 [0,1]
     score = 0.0
     breakdown = {}
     if af2_iptm is not None:
@@ -600,6 +609,7 @@ def score_binding_quality(contacts_summary, interface_metrics, af2_iptm=None,
     else:
         breakdown['interface_pae_score'] = 0.0
     n_contacts = contacts_summary.get('contact_count', 0)
+    # 接触数以 50 为饱和点：典型抗体-蛋白界面的经验量级
     contact_score = min(n_contacts / 50.0, 1.0)
     score += 0.15 * contact_score
     breakdown['contact_score'] = contact_score

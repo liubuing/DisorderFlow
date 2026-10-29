@@ -10,6 +10,8 @@ from state_contact_scorer import AA3_TO_1, Contact
 
 
 def kabsch_transform(moving, target):
+    # Kabsch 刚体配准：求把 moving 对齐到 target 的最优旋转+平移；
+    # 至少 3 个配对点；SVD 后若行列式为负说明解出反射，需翻转最后一列奇异向量
     moving = np.asarray(moving, dtype=float)
     target = np.asarray(target, dtype=float)
     if moving.shape != target.shape or moving.ndim != 2 or moving.shape[1] != 3:
@@ -31,6 +33,8 @@ def kabsch_transform(moving, target):
 
 
 def chain_residues(pdb_path, chain_id):
+    # 手工解析 PDB 单链残基：按 (resid, icode, resname) 去重；
+    # 只保留 altloc 为空或 'A' 的原子（备选位置取第一构象）
     residues = []
     lookup = {}
     for line in Path(pdb_path).read_text(encoding="utf-8", errors="strict").splitlines():
@@ -62,6 +66,9 @@ def ca_coordinates(pdb_path, chain_id):
 
 def transfer_pose(template_pdb, target_pdb, output_pdb, peptide_chain, target_chain,
                   heavy_chain, light_chain, abeta_start, output_antigen_chain="P"):
+    # 把模板抗体（含表位肽）的姿态迁移到全长靶标上：
+    # 先校验靶标指定区段与模板肽序列一致，再用 Kabsch 把靶标段刚体对齐到模板肽位置，
+    # 最后输出"抗体(原姿态) + 靶标(变换后姿态)"的复合 PDB
     template_sequence, template_ca = ca_coordinates(template_pdb, peptide_chain)
     target_sequence, target_ca = ca_coordinates(target_pdb, target_chain)
     start = int(abeta_start) - 1
@@ -104,6 +111,8 @@ def transfer_pose(template_pdb, target_pdb, output_pdb, peptide_chain, target_ch
 
 
 def fixed_paratope_contact_map(pdb_path, template_contact_map, peptide_chain="P", cutoff=8.0):
+    # 在迁移后的姿态上重建接触图：paratope 残基按模板清单逐一锁定
+    # （找不到或歧义即报错），接触判定用 CB（无 CB 则退回 CA）距离 <= cutoff
     peptide = chain_residues(pdb_path, peptide_chain)
     if not peptide:
         raise ValueError(f"Peptide chain {peptide_chain!r} not found in {pdb_path}")
@@ -141,6 +150,7 @@ def fixed_paratope_contact_map(pdb_path, template_contact_map, peptide_chain="P"
 
 
 def pose_geometry_audit(pdb_path, antibody_chains, antigen_chain="P"):
+    # 姿态几何审计：统计全重原子最小距离、严重位冲（<1.5Å）对数与近距（<5Å）对数
     antibody_atoms = []
     for chain in antibody_chains:
         for residue in chain_residues(pdb_path, chain):
@@ -180,6 +190,8 @@ def resolve_pose_clashes(pdb_path, antibody_chains, antigen_chain="P",
     antigen = np.array(antigen_coords)
     shifted = antibody.copy()
     delta = np.zeros(3, dtype=float)
+    # 迭代刚体后撤：每步用 <2.5Å 接触对的距离平方反比加权方向推开抗体，
+    # 步长 0.1Å；方向退化（零向量）时改用两质心连线方向
     for _ in range(int(max_shift / step) + 1):
         distances = np.linalg.norm(shifted[:, None, :] - antigen[None, :, :], axis=-1)
         if int((distances < 1.5).sum()) <= max_severe_clashes:
@@ -235,6 +247,8 @@ def refine_pose_local(pdb_path, antibody_chains, antigen_chain="P",
     antibody_tree = cKDTree(antibody)
 
     def inverse_antigen(parameters):
+        # 反向参数化：把 6 自由度扰动施加在"抗原坐标系"上（等效于反向移动抗体），
+        # 这样 KD-tree 建在固定抗体上只需建一次
         rotation = Rotation.from_rotvec(np.radians(parameters[3:])).as_matrix()
         translation = np.asarray(parameters[:3])
         return (antigen - center - translation) @ rotation + center
@@ -254,6 +268,8 @@ def refine_pose_local(pdb_path, antibody_chains, antigen_chain="P",
         motion = np.linalg.norm(parameters[:3]) + 0.05 * np.linalg.norm(parameters[3:])
         # Lexicographic priorities encoded with separated scales: remove severe
         # overlap, retain an interface, then minimize deviation from the template.
+        # 目标函数用分离量级实现字典序优先级：严重位冲(1e4) >> 穿透深度(1e3) >>
+        # 保留界面接触(-2/对) >> 偏离模板的运动量；antibody_tree 是未移动抗体原坐标
         return severe * 10000.0 + penetration * 1000.0 - min(close, 500) * 2.0 + motion
 
     bounds = [(-max_translation, max_translation)] * 3 + [
@@ -306,6 +322,7 @@ def refine_pose_contacts(pdb_path, antibody_chains, template_contact_map,
             continue
         element = line[76:78].strip() or line[12:16].strip()[0]
         if element.upper() == "H":
+            # 跳过氢原子：位冲与接触判定只看重原子
             continue
         xyz = np.array([float(line[30:38]), float(line[38:46]), float(line[46:54])])
         chain = line[21:22].strip()

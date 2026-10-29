@@ -51,11 +51,14 @@ ANTIBODIES = {
 }
 
 N_TRIALS = 20  # scramble trials per antibody
+# 显著性水平 0.05: 配对检验通过门（L0 硬门槛）。
 SIGNIFICANCE = 0.05
 
 
 def scramble_cdr_residues(structure, ab_chain, cdr_ranges):
     """Scramble CDR residue names in-place. Backbone geometry unchanged."""
+    # 就地打乱 CDR 残基名称（随机洗牌残基身份，保持骨架坐标不变）——
+    # 以晶体几何为常量、序列为变量的阴性对照。
     s = copy.deepcopy(structure)
     cdr_residues = []
     for res in s[0][ab_chain]:
@@ -70,6 +73,13 @@ def scramble_cdr_residues(structure, ab_chain, cdr_ranges):
 
 
 def run_l0_gate():
+    # L0 门（先于一切下游工作）: 用已有晶体坐标做物理打分，检验指标能否
+    # 区分原生 CDR 与同骨架打乱 CDR。每个抗体做 N_TRIALS=20 次打乱
+    # （trial 种子 42+137*t，固定可复现），统计只用序列敏感的静电+疏水项
+    # （接触数是纯几何量，重命名残基不改变它，不能作分离统计）。
+    # 通过门: Cohen's d > 0.3（小-中等效应）且原生接触数 > 0；
+    # 至少 50% 抗体通过才放行 P1。 Cohen's d 分母加 1e-4/0.001 下限，
+    # 防止打乱分布标准差为 0 时除零。
     print("=" * 70)
     print("V3 L0 GATE: Physical Scoring on Crystal Coordinates")
     print("  native CDR vs scrambled (same backbone, shuffled residue IDs)")

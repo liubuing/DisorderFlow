@@ -147,6 +147,8 @@ def complementarity_score(paratope: str, epitope: str) -> float:
     base = sum(pair_scores) / len(pair_scores)
     # Encourage bounded paratope diversity: enough aromatic residues for amyloid
     # recognition, but not an all-hydrophobic sticky patch.
+    # 芳香比例在 12%-38% 区间给奖励（识别淀粉样核心需要芳香，但过多会黏滞）；
+    # 疏水比例超过 65% 按超出量线性罚分
     aromatic_frac = sum(1 for a in p if a in AROMATIC) / len(p)
     hydro_frac = sum(1 for a in p if a in HYDROPHOBIC) / len(p)
     aromatic_bonus = 0.10 if 0.12 <= aromatic_frac <= 0.38 else -0.05
@@ -165,6 +167,7 @@ def score_candidate(candidate: Dict, spec: DesignSpec) -> Dict:
     immuno = immunogenicity_proxy(seq)
     # Conservative scalarization: specificity is primary; developability gates
     # keep sticky, low-complexity sequences from ranking highly.
+    # 特异性差距是首要信号（0.50），正例强度次之；复杂度/免疫原作可开发性软约束
     final = (
         0.50 * specificity_gap
         + 0.25 * positive
@@ -172,6 +175,7 @@ def score_candidate(candidate: Dict, spec: DesignSpec) -> Dict:
         + 0.10 * (1.0 - immuno)
     )
     failed = []
+    # 硬过滤阈值：复杂度<0.55、免疫原>0.65、差距<0.05、正例<0.35 任一命中即淘汰
     if complexity < 0.55:
         failed.append("low_complexity")
     if immuno > 0.65:
@@ -290,6 +294,8 @@ def _aa_pair_score(pa: str, ea: str) -> float:
 
 
 def _weights_from_epitope(epitope: str) -> Dict[str, float]:
+    # 由表位化学推导采样先验：表位越疏水越倾向芳香/疏水残基，
+    # 越带电越倾向互补电荷；Cys 近乎禁用(0.05)、Pro 低权重(0.35)
     epitope = _clean(epitope)
     hydrophobic_frac = sum(1 for a in epitope if a in HYDROPHOBIC) / max(1, len(epitope))
     charged_frac = sum(1 for a in epitope if a in POSITIVE or a in NEGATIVE) / max(1, len(epitope))
@@ -313,6 +319,8 @@ def _sample_sequence(rng: random.Random, weights: Dict[str, float], length: int)
 
 def _place_anchors(seq: str, epitope: str, rng: random.Random) -> str:
     """Add minimal charge/aromatic anchors implied by the epitope."""
+    # 随机采样后强制补上缺失的"锚点"化学：疏水表位补芳香、
+    # 带电表位补相反电荷，保证候选至少具备基本识别机制
     chars = list(seq)
     if not chars:
         return seq

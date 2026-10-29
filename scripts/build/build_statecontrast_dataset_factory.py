@@ -24,11 +24,14 @@ def main():
 
     output = (ROOT / args.output).resolve()
     if args.verify_only:
+        # 只验证已有 shard 的溯源与完整性；--refresh-audit 允许把验证结果
+        # 覆盖写回 audit.json（audit 是可再生缓存，不是冻结产物）
         result = verify_dataset(output)
         if args.refresh_audit:
             (output / "audit.json").write_text(
                 json.dumps(result, indent=2, sort_keys=True), encoding="utf-8")
     else:
+        # 构建路径禁止携带 --refresh-audit：防止"边建边自证"混淆审计语义
         if args.refresh_audit:
             parser.error("--refresh-audit requires --verify-only")
         config = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))

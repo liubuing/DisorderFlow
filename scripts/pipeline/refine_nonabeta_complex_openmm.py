@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Restrained local induced-fit minimization of pose-conditioned VH:VL:IDP models."""
+"""Restrained local induced-fit minimization of pose-conditioned VH:VL:IDP models.
+
+用 OpenMM 对姿态条件化复合物做受限局部弛豫（amber14 + GBn2 隐式溶剂，
+300K Langevin 中点积分器，能量最小化容差 10 kJ/mol/nm）：
+- 补缺失原子与氢（pH 7.4），但缺失残基列表清空（不补链断口）；
+- 三档约束刚度：框架 1000 / 接口主链 25 / 接口侧链自由，允许接口诱导拟合；
+- 门槛：能量下降、零严重冲突、接触保持率 >=0.75、全局主链 RMSD <=0.75Å。
+"""
 from __future__ import annotations
 
 import argparse
@@ -18,6 +25,7 @@ BACKBONE = {"N", "CA", "C", "O"}
 
 
 def io_path(path):
+    """Windows 长路径（>=248 字符）加 \\\\?\\ 前缀。"""
     resolved = str(Path(path).resolve())
     return f"\\\\?\\{resolved}" if len(resolved) >= 248 else resolved
 
@@ -44,6 +52,7 @@ def heavy_atoms(topology, positions):
 
 
 def interface_residues(topology, positions, cutoff):
+    """收集抗体链(A/B)与抗原链(C)重原子距离 <=cutoff(Å) 的接口残基。"""
     records = heavy_atoms(topology, positions)
     antibody = [(atom, xyz) for atom, xyz in records if atom.residue.chain.id in {"A", "B"}]
     antigen = [(atom, xyz) for atom, xyz in records if atom.residue.chain.id == "C"]
@@ -58,6 +67,7 @@ def interface_residues(topology, positions, cutoff):
 
 
 def interface_metrics(topology, positions):
+    """接口几何指标：最小重原子距离、严重冲突(<1.5Å)、近距(<5Å)与接触(<8Å)原子对数。"""
     records = heavy_atoms(topology, positions)
     antibody = [xyz for atom, xyz in records if atom.residue.chain.id in {"A", "B"}]
     antigen = [xyz for atom, xyz in records if atom.residue.chain.id == "C"]
@@ -92,12 +102,14 @@ def model_path(score_json):
 
 
 def minimize(input_path, output_path, args):
+    """单模型弛豫：补原子/氢 -> 建约束体系 -> 能量最小化 -> 返回前后指标。"""
     original = PDBFile(io_path(input_path))
     before_metrics = interface_metrics(original.topology, original.positions)
     before_backbone = coordinates(original.topology, original.positions, lambda atom: atom.name in BACKBONE)
 
     fixer = PDBFixer(filename=io_path(input_path))
     fixer.findMissingResidues()
+    # 清空缺失残基列表：只补缺失原子/氢，不改变链的残基构成
     fixer.missingResidues = {}
     fixer.findMissingAtoms()
     fixer.addMissingAtoms(seed=0)
@@ -111,6 +123,7 @@ def minimize(input_path, output_path, args):
     )
 
     system = forcefield.createSystem(modeller.topology, nonbondedMethod=NoCutoff, constraints=HBonds)
+    # 谐波位置约束 0.5*k*(r-r0)^2：框架重链固定、接口主链弱约束、接口侧链放开
     restraint = CustomExternalForce("0.5*k*((x-x0)^2+(y-y0)^2+(z-z0)^2)")
     restraint.addPerParticleParameter("k")
     for parameter in ("x0", "y0", "z0"):
@@ -173,6 +186,7 @@ def main():
         output_path = out / "models" / source["construct_id"] / f"conformer{source['conformer']}_seed{source['seed']}.pdb"
         print(f"[{index}/{len(evidence)}] {source['construct_id']} c{source['conformer']} s{source['seed']}", flush=True)
         metrics = minimize(input_path, output_path, args)
+        # 通过门槛：能量有限且下降 + 零严重冲突 + 接触保持 >=0.75 + 主链 RMSD <=0.75Å
         passed = (
             math.isfinite(metrics["final_energy_kj_mol"])
             and metrics["final_energy_kj_mol"] < metrics["initial_energy_kj_mol"]

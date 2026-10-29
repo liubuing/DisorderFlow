@@ -34,6 +34,8 @@ from disorderflow.utils.transforms import get_transform
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 
 # Import PDB generation from app (shared Gradio app module)
+# 复用 Gradio app 中的"序列 -> PDB 模板"生成器（α 螺旋主链骨架），
+# 使仅给 FASTA 时也能获得可用的结构模板
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app import generate_pdb_from_sequence
 
@@ -120,6 +122,8 @@ def fasta_to_pdb(fasta_path, out_dir=None):
 
 
 def design_protein(args):
+    # 主设计流程：加载配置与检查点 -> 遮蔽设计区域 -> BFN 采样多条序列 ->
+    # 计算 PPL/pLDDT/ipTM/PAE -> 打印汇总并按需落盘 JSON
     # Load config
     config, _ = load_config(args.config)
     seed_all(config.sampling.seed if hasattr(config.sampling, 'seed') else 42)
@@ -178,6 +182,7 @@ def design_protein(args):
 
     # Load model
     print(f'[INFO] Loading model: {config.model.checkpoint}')
+    # weights_only=False：检查点内含 OmegaConf 配置对象；超参以训练时保存的为准
     ckpt = torch.load(config.model.checkpoint, map_location='cpu', weights_only=False)
     model_config = ckpt['config'].model
     if hasattr(ckpt['config'], 'train') and hasattr(ckpt['config'].train, 'loss_weights'):
@@ -188,6 +193,7 @@ def design_protein(args):
     model.eval()
 
     # Sample
+    # num_recycles=3：采样时内部结构迭代精修次数（与 AF2 的 recycle 概念类似）
     sample_opt = {'deterministic': not args.stochastic, 'num_recycles': 3}
     mode_str = 'stochastic' if args.stochastic else 'deterministic'
     print(f'[INFO] Generating {args.num_samples} sequence(s), mode: {mode_str}, recycles: 3')
@@ -205,12 +211,14 @@ def design_protein(args):
         pred_seq = ''.join([AA_LETTERS[aa] if aa < 20 else 'X' for aa in pred_aa.cpu().tolist()])
 
         # Perplexity
+        # PPL = exp(生成区域上的平均负对数似然)，仅统计前 20 类标准氨基酸
         pred_logits = traj['pred_logits'][0][gen_mask]
         log_probs = torch.log_softmax(pred_logits[..., :20], dim=-1)
         nll = -log_probs[range(len(pred_aa)), pred_aa].mean()
         perplexity = torch.exp(nll).item()
 
         # BFN confidence scores
+        # pLDDT 取设计区域均值，ipTM 为全局标量，PAE 取设计区域子矩阵均值
         plddt_val = traj['plddt'][0][gen_mask].mean().item()
         iptm_val = traj['iptm'][0].item()
         pae_val = traj['pae'][0][gen_mask][:, gen_mask].mean().item()
@@ -235,6 +243,7 @@ def design_protein(args):
         results.append(result)
 
         if perplexity < best_ppl:
+            # 以 PPL 最小者为最优序列（PPL 越低模型对序列越"确信"）
             best_ppl = perplexity
             best_seq = pred_seq
 

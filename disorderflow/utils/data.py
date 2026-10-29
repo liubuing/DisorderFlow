@@ -1,3 +1,4 @@
+"""数据整理与批采样工具：变长样本 padding 拼批、LMDB 记录哈希、CDR/证据组分批采样器。"""
 import math
 import hashlib
 import lmdb
@@ -6,12 +7,16 @@ import numpy as np
 from torch.utils.data._utils.collate import default_collate
 
 
+# 各字段 padding 时使用的填充值：
+# 'aa' 用 21（20 种标准氨基酸之外的"未知/填充"类别）；
+# 'chain_id'/'icode' 是字符字段，用空格填充
 DEFAULT_PAD_VALUES = {
     'aa': 21, 
     'chain_id': ' ', 
     'icode': ' ',
 }
 
+# 这些字段是整体属性（原点向量/旋转矩阵/标量），不随残基数量 padding
 DEFAULT_NO_PADDING = {
     'origin',
     'patch_global_origin',
@@ -21,6 +26,8 @@ DEFAULT_NO_PADDING = {
 
 
 def update_lmdb_record_digest(digest, key, value):
+    # 以 (键长, 键, 值长, 值) 的确定性字节布局喂入哈希，
+    # 避免不同键值对拼接产生歧义
     digest.update(len(key).to_bytes(8, "big"))
     digest.update(key)
     digest.update(len(value).to_bytes(8, "big"))
@@ -28,6 +35,8 @@ def update_lmdb_record_digest(digest, key, value):
 
 
 def lmdb_records_sha256(path):
+    # 计算整个 LMDB 中全部 (key, value) 记录的 SHA-256，
+    # 用于训练前的"冻结数据血统"校验（与 manifest 中记录的哈希比对）
     digest = hashlib.sha256()
     environment = lmdb.open(
         str(path), readonly=True, lock=False, readahead=False,
@@ -46,8 +55,11 @@ MATRIX_KEYS = {
 }
 
 class PaddingCollate(object):
+    """把不等长的样本 dict 拼成一个 batch：统一 pad 到最大长度并生成 mask。"""
 
     def __init__(self, length_ref_key='aa', pad_values=DEFAULT_PAD_VALUES, no_padding=DEFAULT_NO_PADDING, eight=True):
+        # length_ref_key: 以哪个键的第 0 维长度作为 pad 基准（默认残基序列 'aa'）；
+        # eight: 把最大长度向上取整到 8 的倍数，利于 GPU tensor core 对齐加速
         super().__init__()
         self.length_ref_key = length_ref_key
         self.pad_values = pad_values
@@ -56,6 +68,7 @@ class PaddingCollate(object):
 
     @staticmethod
     def _pad_last(x, n, value=0):
+        # 在第 0 维末尾补 value 至长度 n；标量张量原样返回，超长直接断言失败
         if isinstance(x, torch.Tensor):
             if x.dim() == 0:  # scalar tensor —no padding
                 return x
@@ -76,6 +89,7 @@ class PaddingCollate(object):
 
     @staticmethod
     def _get_pad_mask(l, n):
+        # True 表示真实残基，False 表示 padding 位置
         return torch.cat([
             torch.ones([l], dtype=torch.bool),
             torch.zeros([n-l], dtype=torch.bool)
@@ -83,6 +97,8 @@ class PaddingCollate(object):
 
     @staticmethod
     def _get_common_keys(list_of_dict):
+        # 只保留所有样本共有的键：缺键的样本会导致整个字段被丢弃，
+        # 因此各数据集必须保证关键字段在每个样本上都存在
         keys = set(list_of_dict[0].keys())
         for d in list_of_dict[1:]:
             keys = keys.intersection(d.keys())
@@ -133,13 +149,18 @@ def apply_patch_to_tensor(x_full, x_patch, patch_idx):
     Returns:
         (N, ...)
     """
+    # 把 patch 上预测/生成的结果按索引写回全长张量（clone 避免原地修改入参）
     x_full = x_full.clone()
     x_full[patch_idx] = x_patch
     return x_full
 
 
 class CDRBatchSampler(torch.utils.data.Sampler):
+    """按 CDR 类型分组组批：每个 batch 只含同一类型（如 H_CDR3）的样本，
+    避免不同 CDR 长度/任务混批；不足一个 batch 的尾部样本被丢弃。"""
+
     def __init__(self, indices_by_type, batch_size, shuffle=True):
+        # indices_by_type: {CDR 类型: 样本索引列表}，通常来自 LMDB 的 meta_indices.pkl
         self.indices_by_type = indices_by_type
         self.batch_size = batch_size
         self.shuffle = shuffle
@@ -173,6 +194,8 @@ class CDRBatchSampler(torch.utils.data.Sampler):
 class CompleteGroupBatchSampler(torch.utils.data.Sampler):
     """Pack whole evidence groups without splitting members across batches."""
 
+    # 保证同一证据组（如同一目标的多次测量）完整落在同一个 batch 内，
+    # 供组内对比/排序损失使用；打乱时用 seed+epoch 派生确定性随机流
     def __init__(self, dataset, max_batch_records, shuffle=True, seed=0):
         groups = [tuple(group) for group in dataset.group_indices]
         if not groups:

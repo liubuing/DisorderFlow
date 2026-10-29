@@ -44,6 +44,7 @@ AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 CDR_TYPES = ['H_CDR1', 'H_CDR2', 'H_CDR3', 'L_CDR1', 'L_CDR2', 'L_CDR3']
 
 # ---- Checkpoint registry ----
+# 参与消融对比的四个训练阶段 checkpoint（Phase2 基线至 Phase3 v11 扩展）
 CHECKPOINTS = {
     'Phase2 (baseline)': './logs/bfn_idp_phase2_xpu_2026_05_28__01_22_06/checkpoints/best.pt',
     'Phase3-baseline (24cmp, no-reg)': './logs/bfn_phase3_ablation_baseline_2026_05_30__12_14_49/checkpoints/best.pt',
@@ -53,7 +54,7 @@ CHECKPOINTS = {
 
 
 def evaluate_cdr_design(model, batch, device):
-    """Evaluate single CDR design: AAR + PPL."""
+    """Evaluate single CDR design: AAR + PPL. 确定性采样，计算氨基酸回收率与困惑度。"""
     model.eval()
     with torch.no_grad():
         gen_mask = batch['generate_flag'][0].bool()
@@ -78,6 +79,7 @@ def evaluate_cdr_design(model, batch, device):
         aar = matches / len(native_seq) if len(native_seq) > 0 else 0.0
 
         if 'pred_logits' in traj:
+            # 仅取前 20 通道 logits 计算困惑度（排除掩码位）
             pred_logits = traj['pred_logits'][0][gen_mask]
             log_probs = torch.log_softmax(pred_logits[..., :20], dim=-1)
             nll = -log_probs[range(len(pred_aa)), pred_aa].mean()
@@ -238,6 +240,7 @@ def print_ablation_table(all_summaries):
 
 
 def main():
+    """主流程：加载 SAbDab test 划分 -> 逐 checkpoint 逐 CDR 评估 -> 汇总表格与 CSV/JSON。"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu')
     parser.add_argument('--sabdab_summary', type=str,

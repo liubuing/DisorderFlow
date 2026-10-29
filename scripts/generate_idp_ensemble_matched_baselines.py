@@ -27,14 +27,17 @@ from benchmark_h3_candidate_reranking import (  # noqa: E402
 
 from modules.h3_interface_contacts import write_standardized_backbone  # noqa: E402
 
+# 基线生成方法集合：ProteinMPNN、单构象 BFN 与 ESM-IF
 METHODS = ("proteinmpnn", "single_conformer_bfn", "esm_if")
 
 
 def sha256(path: Path) -> str:
+    # 文件整体 SHA256，用于绑定 checkpoint/清单/配置的血缘校验
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def display_path(path: Path) -> str:
+    # 优先输出相对仓库根的路径，便于报告可移植
     try:
         return str(path.relative_to(ROOT))
     except ValueError:
@@ -42,6 +45,7 @@ def display_path(path: Path) -> str:
 
 
 def canonicalize_component(component, output_path):
+    """将基准组件的参考结构重编号为规范 H/L/P 链命名，并校验 H3 区段映射一致。"""
     source = ROOT / component["reference_path"]
     source_chains = [component["heavy_chain"]]
     canonical_chains = ["H"]
@@ -85,6 +89,7 @@ def canonicalize_component(component, output_path):
 
 
 def parse_mpnn_fasta(path, component, chain_manifest, seed):
+    # 解析 ProteinMPNN 输出 FASTA：校验链顺序/长度/固定位置未被改动，抽取 H3 区段作为候选
     lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     chain_order = [chain for chain in ("H", "L", "P") if chain in chain_manifest]
     expected = [chain_manifest[chain]["sequence"] for chain in chain_order]
@@ -131,6 +136,7 @@ def parse_mpnn_fasta(path, component, chain_manifest, seed):
 
 
 def generate_proteinmpnn(config, component, canonical_pdb, manifest, seed, work_dir):
+    # 以固定位置 JSONL 限定仅 H3 可变，调用 ProteinMPNN 脚本采样
     settings = config["generation"]["proteinmpnn"]
     start, end = component["h3_positions_1_indexed"]
     chain_order = [chain for chain in ("H", "L", "P") if chain in manifest]
@@ -164,13 +170,14 @@ def generate_proteinmpnn(config, component, canonical_pdb, manifest, seed, work_
         "--suppress_print", "1",
         "--out_folder", output_dir.resolve().as_posix(),
     ]
-    completed = subprocess.run(command, capture_output=True, text=True, timeout=900)
+    completed = subprocess.run(command, capture_output=True, text=True, timeout=900)  # 单次调用 15 分钟超时
     if completed.returncode:
         raise RuntimeError(completed.stderr[-4000:])
     return parse_mpnn_fasta(fasta, component, manifest, seed), command
 
 
 def generate_bfn(config, component, canonical_pdb, seed):
+    # 用单构象 BFN 生成器对 H3 区段采样（关闭 disorder 引导，保持与其他基线可比）
     from modules import bfn_loader
 
     settings = config["generation"]["single_conformer_bfn"]
@@ -195,6 +202,7 @@ def generate_bfn(config, component, canonical_pdb, seed):
 
 
 def generate_esm_if(config, model, component, canonical_pdb, seed):
+    # 构造适配配置后调用共享的 ESM-IF 采样适配器
     adapter_config = {
         "generation": {
             "candidates_per_seed": config["generation"]["candidates_per_seed"],
@@ -213,6 +221,7 @@ def generate_esm_if(config, model, component, canonical_pdb, seed):
 
 
 def validate_rows(rows, component, expected):
+    # 校验槽位候选数量与每条 H3 序列的合法性（长度与氨基酸表）
     if len(rows) != expected:
         raise ValueError(f"Expected {expected} candidates, found {len(rows)}")
     length = len(component["native_h3"])
@@ -221,6 +230,7 @@ def validate_rows(rows, component, expected):
 
 
 def write_output(config_path, config, manifest_path, slots, failures, out_path):
+    # 汇总写盘：记录配置/清单哈希、请求与完成槽位、失败明细与 claim boundary
     requested_methods = [method for method in METHODS if config["generation"][method]["enabled"]]
     components = json.loads(manifest_path.read_text(encoding="utf-8"))["components"]
     expected = len(components) * len(config["generation"]["seeds"]) * len(requested_methods)
@@ -250,6 +260,7 @@ def write_output(config_path, config, manifest_path, slots, failures, out_path):
 
 
 def main():
+    # 主流程：校验配置与 checkpoint 哈希 -> 规范化组件结构 -> 逐 (组件,方法,种子) 槽位生成并增量落盘
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_matched_generation_dev_v1.yml"
@@ -282,6 +293,7 @@ def main():
     slots = []
     failures = []
     if out_path.exists():
+        # 断点续跑：已有输出必须与当前配置/清单哈希一致，否则拒绝复用
         previous = json.loads(out_path.read_text(encoding="utf-8"))
         if previous.get("config_sha256") != sha256(config_path):
             raise ValueError("Existing output was produced by a different generation config")

@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 """Summarize high-gap vs low-gap contact-variable enrichments."""
+# 本脚本汇总 StateContrast 的"接触变量"归因：比较高特异性间隙（high_gap）
+# 与低间隙（low_gap）候选组在各 paratope 位置×体积类×化学类上的富集比例，
+# 计算比例差（正=高间隙组富集），过滤 |Δ| ≥0.20 的强信号并按体积类/
+# 化学类聚合，同时列出 top-gap 候选。输出多份 CSV、JSON 摘要与报告。
+
 from __future__ import annotations
 
 import argparse
@@ -54,6 +59,7 @@ def main():
 
 
 def compute_deltas(rows):
+    # 按位置×类别分组求高/低组比例差，标记富集方向
     grouped = defaultdict(dict)
     for r in rows:
         key = (
@@ -90,6 +96,7 @@ def aggregate_by_chemistry(delta_rows):
 
 
 def aggregate_class(delta_rows, field):
+    # 按参考×类别聚合：平均 Δ、最大 |Δ| 与位置数
     values = defaultdict(list)
     for r in delta_rows:
         values[(r["reference_pdb"], r[field])].append(float(r["fraction_delta"]))
@@ -106,6 +113,7 @@ def aggregate_class(delta_rows, field):
 
 
 def top_gap_candidates(scores):
+    # 取特异性间隙增量最高的前 10 个候选的关键字段
     rows = sorted(scores, key=lambda r: float(r.get("specificity_gap_delta", 0.0)), reverse=True)
     return [
         {

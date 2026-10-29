@@ -14,6 +14,10 @@ Usage:
   python scripts/pipeline/idp_design_pipeline.py --all-idps --max 5
 """
 
+# 角色：方向 1+3 组合的 IDP 有序区抗体设计主管线（教师标签→设计）：
+# 从 V11 LMDB 载入 IDP 及 AF2 结构 → BFN 无序头预测逐残基无序分 →
+# 找有序片段（D<0.3 且长度 >=8，作为可设计表位）→ 对每个有序片段做 BFN CDR
+# 设计 → 输出可设计表位、设计序列与置信分。是有序区免疫原选择的端到端入口。
 import os, sys, pickle, lmdb, argparse, json, tempfile, time
 import torch
 import numpy as np
@@ -28,6 +32,7 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__
 
 
 def detect_device():
+    # 设备选择顺序：CUDA > XPU > CPU（仓库在 Intel GPU 环境下以 XPU 训练）。
     if torch.cuda.is_available():
         return "cuda"
     elif hasattr(torch, "xpu") and torch.xpu.is_available():

@@ -8,6 +8,11 @@ after training and calibration are frozen.
 No checkpoint, threshold, or calibration parameter may change after this run.
 """
 
+# 角色：候选界面 PAE 代理（冻结部署合同）的一次性独立最终留出评估。
+# 在训练与校准全部冻结后，对最终测试组分（V2C001-003，GP2 抗原家族）仅评估
+# 一次；应用合同中冻结的单调仿射 PAE 校准（slope/intercept），事后不得再改
+# 检查点、阈值或校准参数——这是冻结协议的密封测试环节。
+
 from __future__ import annotations
 
 import argparse
@@ -88,6 +93,7 @@ def main():
         "max_residues": 0,
     })
     sampler = CompleteGroupBatchSampler(dataset, 20, shuffle=False)
+    # batch 大小 20 且按完整组（同实体构象）组批、不 shuffle：保证聚合单位稳定可复现。
     loader = DataLoader(
         dataset, batch_sampler=sampler, collate_fn=PaddingCollate(), num_workers=0)
 

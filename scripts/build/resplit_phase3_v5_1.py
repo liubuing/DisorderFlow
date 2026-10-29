@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Create an antigen-centered Phase3 train/validation split."""
 
+# 目的：v5.1 重划分——以抗原为中心对 Phase3 数据做训练/验证切分，先按
+# MMseqs2（抗原序列 30% 恒等、80% 覆盖）标注同源聚类，再在三级聚类键
+# （PDB、CDR-H3 精确序列、抗原聚类）上做组级切分，并对硬隔离字段做零重叠检查。
+# 输出：data/phase3_v5_1_pair_clustered/{train,val}.lmdb + dataset_meta.json。
+
 import argparse
 import json
 import os
@@ -102,6 +107,7 @@ def main():
         deduplicated.setdefault(record_id, record)
     records = list(deduplicated.values())
     if len(records) < 500:
+        # 500：可用的抗体-抗原复合物最低数量，低于该值统计功效不足。
         raise RuntimeError(f'Too few usable antibody-antigen complexes: {len(records)}')
 
     annotate_homology_clusters(
@@ -124,6 +130,7 @@ def main():
     train, val = grouped_train_val_split(
         records, args.val_ratio, args.seed, cluster_fields)
     if min(len(train), len(val)) < round(0.05 * len(records)):
+        # 任一划分小于总量 5% 视为严重失衡，拒绝产出（防止验证集过小）。
         raise RuntimeError(
             f'Antigen-centered split is too imbalanced: {len(train)}/{len(val)}')
 

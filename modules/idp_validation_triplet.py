@@ -119,6 +119,7 @@ def score_complex(pdb_path: str,
                                        cdr_regions)
 
     # BFN confidence with disorder gate (I-2)
+    # 无序门控：表位平均无序度 > 0.5 时 BFN 置信度标记为不可靠（模型在折叠蛋白上训练）
     bfn_reliable = True
     if disorder_mean is not None and disorder_mean > 0.5:
         bfn_reliable = False
@@ -134,6 +135,7 @@ def score_complex(pdb_path: str,
     }
 
     # Simple composite: contacts weighted by density, penalized by distance
+    # 复合分 = 密度 x 距离衰减（15Å 处衰减为零），不需要任何外部对接工具
     triplet['composite'] = round(
         triplet['density'] * max(0, 1.0 - triplet['mean_distance'] / 15.0), 4)
 

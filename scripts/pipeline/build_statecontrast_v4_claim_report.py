@@ -38,6 +38,9 @@ def load_csv(path):
 
 
 def build_claim(summary, rules, seed_summary):
+    # 汇总 v4 位置效应主张: top10_mean_gap_delta 指标行、种子级三对照胜利
+    # （须同时超过 parent-only / random / shuffled 三个对照臂）、跨种子
+    # 复现的 paratope 位置，以及整体 decision。
     top10 = {r["reference_pdb"]: r for r in summary if r.get("metric") == "top10_mean_gap_delta"}
     seed_wins = seed_level_wins(seed_summary)
     return {
@@ -52,6 +55,8 @@ def build_claim(summary, rules, seed_summary):
 
 
 def seed_level_wins(rows):
+    # 按 (seed, reference) 分组比较四个臂; 任一臂缺失该组合即跳过
+    # （不填补），保证 win 判定基于完整对照集。
     grouped = defaultdict(dict)
     for row in rows:
         grouped[(row["seed"], row["reference_pdb"])][row["arm"]] = row
@@ -86,6 +91,8 @@ def summarize_positions(rules):
 
 
 def decision(top10):
+    # 决策规则: 全部参考都达到 stable_method_signal 且三对照胜率 = 1.0
+    # 才支持"位置发现"主张；无数据为 not_evaluable，其余为 mixed。
     if not top10:
         return "not_evaluable"
     if all(r.get("verdict") == "stable_method_signal" and float(r.get("v4_beats_parent_random_and_shuffled_rate", 0.0)) >= 1.0 for r in top10.values()):

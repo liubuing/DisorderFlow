@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Audit pose-conditioned VH:VL:IDP folds against native controls and input poses."""
+"""Audit pose-conditioned VH:VL:IDP folds against native controls and input poses.
+
+审计姿态条件化 VH:VL:IDP 折叠的 ColabFold 初猜结果：把预测模型与初始猜测
+做抗体 Kabsch 对齐后，比较表位 CA RMSD、VH/VL 相对取向、接口接触保持率、
+抗原 pLDDT 与抗体-抗原 PAE、严重冲突（<1.5Å）数。按 construct 聚合后与
+native 对照逐项作差；五构象全覆盖 + 零冲突 + 三项 delta 不劣于 native
+才判 initial_guess_interface_pass。
+"""
 from __future__ import annotations
 
 import csv
@@ -19,6 +26,7 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "outputs/non_abeta_idp_initial_guess_evidence_v1
 
 
 def io_path(path):
+    """Windows 长路径（>=248 字符）加 \\\\?\\ 前缀。"""
     resolved = str(Path(path).resolve())
     return f"\\\\?\\{resolved}" if len(resolved) >= 248 else resolved
 
@@ -57,6 +65,7 @@ def representative_coordinates(model, chain_indices):
 
 
 def contact_pairs(model, cutoff=8.0):
+    """以 CB（缺则 CA）代表残基，统计抗体(链0/1)与抗原(链2)间距离 <8Å 的残基对。"""
     antibody, antibody_labels = representative_coordinates(model, (0, 1))
     antigen, antigen_labels = representative_coordinates(model, (2,))
     distances = np.linalg.norm(antibody[:, None, :] - antigen[None, :, :], axis=-1)
@@ -67,6 +76,7 @@ def contact_pairs(model, cutoff=8.0):
 
 
 def kabsch(mobile, target):
+    """Kabsch 对齐：返回把 mobile 叠到 target 的旋转与平移（含反射修正）。"""
     mobile_center = mobile.mean(axis=0)
     target_center = target.mean(axis=0)
     covariance = (mobile - mobile_center).T @ (target - target_center)
@@ -86,6 +96,7 @@ def rmsd(mobile, target, rotation=None, translation=None):
 
 
 def severe_clashes(model):
+    """统计抗体-抗原间非氢原子对距离 <1.5Å 的严重冲突数。"""
     chains = list(model)
     antibody = np.asarray([
         atom.coord for chain in chains[:2] for residue in chain for atom in residue
@@ -191,6 +202,7 @@ def main():
         if row["construct_type"] == "native_control":
             row["status"] = "native_control"
         elif (
+            # 通过条件：5 构象全覆盖、全部模型零冲突、PAE/接触保持/RMSD 三项不劣于 native
             row["conformers"] == 5
             and row["zero_clash_models"] == row["models"]
             and row["delta_pae_vs_native"] <= 0.0

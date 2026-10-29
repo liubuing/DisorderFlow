@@ -46,6 +46,8 @@ def disorder_tolerance(disorder_score: float) -> float:
         0.2 for fully disordered (>0.9) — too unstable to stabilize
         0.3 for fully ordered (<0.1) — no IDP benefit, use standard design
     """
+    # 分段映射：中等无序(0.3-0.7)最适合"诱导折叠"策略给满分；
+    # 两端（完全折叠 / 极端无序）分别低分，避免选到无 IDP 收益或无法稳定的区域
     if disorder_score < 0.1:
         return 0.3   # fully ordered — use standard pipeline
     elif disorder_score < 0.3:
@@ -70,6 +72,8 @@ def score_epitope(epitope: Dict, weights: Optional[Dict] = None) -> Dict:
     """
     lib = _load_library()
     w = weights or lib.get('selection_weights', {})
+    # 权重从 epitope 库配置读取；聚合倾向权重最高——针对 Aβ 的治疗逻辑
+    # 是靶向聚集核心，其次才是成药性
     w_agg = w.get('aggregation_propensity', 0.40)
     w_drug = w.get('druggability', 0.35)
     w_dis = w.get('disorder_tolerance', 0.25)

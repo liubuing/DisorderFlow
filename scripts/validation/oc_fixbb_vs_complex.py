@@ -3,17 +3,22 @@ import os
 """FixBB vs Complex overconfidence comparison.
 THE definitive test: does Complex mode actually use the epitope?
 """
+# 过度自信验证之一：FixBB(仅脚手架) vs Complex(带表位上下文) 的对照实验。
+# 核心问题：BFN 的 Complex 模式是否真的"读到了"表位信息——若四种条件
+# 产出完全相同的设计序列，则说明表位整合失效，问题出在模型而非打分。
 import sys, os
 if sys.platform == 'win32':
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
+# 切换到仓库根目录并把根目录与 modules 加入 import 路径。
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(PROJECT_ROOT)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 
 import yaml, time, json, numpy as np
 
+# 固定实验设置：5IMK 纳米抗体的 B 链及其三条 CDR 区；统一使用 V11 checkpoint。
 SCAFFOLD_PDB = 'data/misfolding_targets/5IMK.pdb'
 SCAFFOLD_CHAIN = 'B'
 CDR_SPEC = 'B:26-33,51-58,97-113'
@@ -24,8 +29,11 @@ def auto_detect_device():
     return 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def run_test(label, mode, pdb_path, context_chains):
+    # 单次实验：以给定上下文链跑 10 个随机设计，汇总 pLDDT/ipTM/PPL/熵。
     from bfn_loader import run_bfn_design, load_bfn
 
+    # 与 v13 探针相同的技巧：临时把 app_config.yaml 的 checkpoint 换成
+    # 实验指定值，结束后在 finally 中还原，保证其他流程不受影响。
     cfg_path = os.path.join(PROJECT_ROOT, 'app_config.yaml')
     with open(cfg_path) as f:
         app_cfg = yaml.safe_load(f)
@@ -36,6 +44,7 @@ def run_test(label, mode, pdb_path, context_chains):
 
     try:
         import bfn_loader
+        # 清空 bfn_loader 的模块级缓存，确保重新加载新 checkpoint。
         bfn_loader._bfn_model = None
         bfn_loader._bfn_config = None
 
@@ -52,6 +61,7 @@ def run_test(label, mode, pdb_path, context_chains):
         entropies = [d.get('entropy', 0) for d in designs]
         seqs = [d['sequence'] for d in designs]
 
+        # std 保留 8 位小数：本实验关注"跨样本方差是否为 0"（过度自信信号）。
         print(f'  [{label}] {mode}: {len(designs)} designs in {dt:.0f}s')
         print(f'    pLDDT: {np.mean(plddts):.4f} std={np.std(plddts):.8f}')
         print(f'    ipTM:  {np.mean(iptms):.4f} std={np.std(iptms):.8f}')
@@ -89,6 +99,7 @@ print('\n── Test 2: Complex (scaffold + co-crystallized protein A)')
 r2 = run_test('5IMK_native', 'Complex', SCAFFOLD_PDB, ['A'])
 
 # Test 3: Abeta42 as epitope (build combined PDB)
+# 用 2NAO 的 A-beta42 片段按 6 Å 距离摆放到脚手架旁，构造合成复合物。
 print('\n── Test 3: Complex (scaffold + Abeta42 epitope)')
 from antibody_epitope_complex import position_epitope
 abeta_info = position_epitope(
@@ -120,6 +131,7 @@ for r in [r1, r2, r3, r4]:
         ppl_r, r['sequences'][0]))
 
 # Key question: are the sequences different?
+# 汇总四种条件的 top3 序列集合，两两求交集检查是否存在完全相同的序列。
 seqs_by_mode = {}
 for r in [r1, r2, r3, r4]:
     seqs_by_mode[r['mode']] = set(tuple(s) for s in r['sequences'])
@@ -134,10 +146,12 @@ for m1 in seqs_by_mode:
                 all_same = False
 
 if all_same or len(set(frozenset(v) for v in seqs_by_mode.values())) == 1:
+    # 判定失败：所有条件产出同一批序列 -> 表位上下文未被模型使用。
     print(f'\n  ❌ ALL MODES PRODUCE IDENTICAL SEQUENCES!')
     print(f'  BFN is NOT using epitope context to differentiate designs.')
 else:
     # Check if sequence sets differ between modes
+    # 判定通过：不同条件产出可区分的序列集合。
     unique_seqs = set()
     for mode, seqs in seqs_by_mode.items():
         for s in seqs:

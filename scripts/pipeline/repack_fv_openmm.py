@@ -14,10 +14,12 @@ from openmm.app import ForceField, HBonds, Modeller, NoCutoff, PDBFile, Simulati
 from pdbfixer import PDBFixer
 
 
+# 骨架主链原子名集合，约束时对这些原子施加最强 harmonic restraint
 BACKBONE = {"N", "CA", "C", "O"}
 
 
 def parse_args():
+    # 命令行参数：默认阈值面向 Fv 模型弛豫（骨架 RMSD、界面冲突、接触保持率等）
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fold-evidence", default="outputs/abeta_multiconf_fold_evidence_v1/fv_colabfold_evidence.csv")
     parser.add_argument("--result-dir", default="outputs/abeta_multiconf_integrated_evidence_v1/colabfold_fv_msa")
@@ -34,11 +36,13 @@ def parse_args():
 
 
 def load_fold_pass(path):
+    # 从折叠证据 CSV 中筛选通过 fold sidecheck 的候选行
     with open(path, newline="", encoding="utf-8") as handle:
         return [row for row in csv.DictReader(handle) if row["fold_sidecheck_status"] == "fold_sidecheck_pass"]
 
 
 def find_model(result_dir, construct_id):
+    # 定位该 construct 唯一的 rank-1 未弛豫模型；数量不为 1 视为目录异常
     matches = sorted(Path(result_dir).glob(f"{construct_id}_*_unrelaxed_rank_001_*.pdb"))
     if len(matches) != 1:
         raise ValueError(f"Expected one rank-1 model for {construct_id}, found {len(matches)}")
@@ -46,6 +50,7 @@ def find_model(result_dir, construct_id):
 
 
 def heavy_atom_records(topology, positions):
+    # 收集所有重原子（跳过氢）的索引、链、残基与埃单位坐标
     records = []
     xyz = positions.value_in_unit(unit.angstrom)
     for atom in topology.atoms():
@@ -62,6 +67,7 @@ def heavy_atom_records(topology, positions):
 
 
 def interface_residues(topology, positions, cutoff):
+    # 两条链间重原子距离 <= cutoff（埃）的残基集合，即界面残基
     records = heavy_atom_records(topology, positions)
     chains = sorted({row["chain"] for row in records})
     if len(chains) != 2:
@@ -79,6 +85,7 @@ def interface_residues(topology, positions, cutoff):
 
 
 def interface_metrics(topology, positions):
+    # 界面统计：最小重原子距离、严重冲突(<1.5A)、近距离对(<5A)与接触对(<8A)计数
     records = heavy_atom_records(topology, positions)
     chains = sorted({row["chain"] for row in records})
     left = [row for row in records if row["chain"] == chains[0]]
@@ -97,6 +104,7 @@ def interface_metrics(topology, positions):
 
 
 def structure_geometry_metrics(topology, positions):
+    # 全局几何健康检查：非局部重原子冲突、相邻 CA 距离与肽键 C-N 距离是否落在正常范围
     records = heavy_atom_records(topology, positions)
     coordinates = np.asarray([row["coord"] for row in records])
     residue_order = {}
@@ -108,7 +116,7 @@ def structure_geometry_metrics(topology, positions):
             residue_order[(chain.id, residue.id)] = index
 
     from scipy.spatial import cKDTree
-    close_pairs = cKDTree(coordinates).query_pairs(1.5)
+    close_pairs = cKDTree(coordinates).query_pairs(1.5)  # 1.5A 内的重原子对候选
     nonlocal_clashes = []
     for left_index, right_index in close_pairs:
         left = records[left_index]
@@ -147,6 +155,7 @@ def structure_geometry_metrics(topology, positions):
         "consecutive_ca_distance_max": max(ca_distances),
         "peptide_cn_distance_min": min(peptide_cn_distances),
         "peptide_cn_distance_max": max(peptide_cn_distances),
+        # CA 距离正常范围约 3.5~4.1A；肽键 C-N 约 1.15~1.55A，越界即记为几何异常
         "ca_geometry_outliers": sum(not 3.5 <= value <= 4.1 for value in ca_distances),
         "peptide_cn_geometry_outliers": sum(
             not 1.15 <= value <= 1.55 for value in peptide_cn_distances
@@ -155,6 +164,7 @@ def structure_geometry_metrics(topology, positions):
 
 
 def backbone_coordinates(topology, positions):
+    # 提取骨架原子坐标字典，键为 (链, 残基, 原子名)，用于前后 RMSD 对比
     xyz = positions.value_in_unit(unit.angstrom)
     return {
         (atom.residue.chain.id, atom.residue.id, atom.name): np.asarray(xyz[atom.index], dtype=float)
@@ -163,6 +173,7 @@ def backbone_coordinates(topology, positions):
 
 
 def coordinate_rmsd(before, after):
+    # 仅在共同原子键上计算骨架 RMSD（埃）
     keys = sorted(set(before) & set(after))
     if not keys:
         raise ValueError("No matching backbone atoms")
@@ -171,12 +182,14 @@ def coordinate_rmsd(before, after):
 
 
 def missing_atom_count(fixer):
+    # 统计 PDBFixer 检出的缺失重原子与末端原子总数
     return sum(len(atoms) for atoms in fixer.missingAtoms.values()) + sum(
         len(atoms) for atoms in fixer.missingTerminals.values()
     )
 
 
 def minimize_model(input_path, output_path, args):
+    """对单个 Fv 模型补全缺失原子并做受约束的隐式溶剂能量最小化，返回完整审计记录。"""
     original = PDBFile(str(input_path))
     before_interface = interface_metrics(original.topology, original.positions)
     before_backbone = backbone_coordinates(original.topology, original.positions)
@@ -184,19 +197,19 @@ def minimize_model(input_path, output_path, args):
 
     fixer = PDBFixer(filename=str(input_path))
     fixer.findMissingResidues()
-    fixer.missingResidues = {}
+    fixer.missingResidues = {}  # 忽略缺失残基（不重建 loop），只补缺失原子
     fixer.findMissingAtoms()
     rebuilt_atoms = missing_atom_count(fixer)
-    fixer.addMissingAtoms(seed=0)
+    fixer.addMissingAtoms(seed=0)  # 固定种子保证补原子可复现
     forcefield = ForceField("amber14-all.xml", "implicit/gbn2.xml")
     modeller = Modeller(fixer.topology, fixer.positions)
-    modeller.addHydrogens(forcefield, pH=7.4)
+    modeller.addHydrogens(forcefield, pH=7.4)  # 生理 pH 加氢
     interface = interface_residues(modeller.topology, modeller.positions, args.interface_cutoff)
 
     system = forcefield.createSystem(
         modeller.topology, nonbondedMethod=NoCutoff, constraints=HBonds,
     )
-    restraint = CustomExternalForce("0.5*k*((x-x0)^2+(y-y0)^2+(z-z0)^2)")
+    restraint = CustomExternalForce("0.5*k*((x-x0)^2+(y-y0)^2+(z-z0)^2)")  # 平底/谐振子位置约束
     restraint.addPerParticleParameter("k")
     for parameter in ("x0", "y0", "z0"):
         restraint.addPerParticleParameter(parameter)
@@ -204,6 +217,8 @@ def minimize_model(input_path, output_path, args):
     restrained_backbone = 0
     restrained_noninterface = 0
     for atom in modeller.topology.atoms():
+        # 约束策略：骨架原子用强约束（保全局折叠），界面侧链不约束（允许重组），
+        # 非界面侧链用弱约束（局部弛豫）
         if atom.element is None or atom.element.symbol == "H":
             continue
         key = (atom.residue.chain.id, atom.residue.id)
@@ -221,7 +236,7 @@ def minimize_model(input_path, output_path, args):
 
     integrator = LangevinMiddleIntegrator(
         300.0 * unit.kelvin, 1.0 / unit.picosecond, 0.002 * unit.picoseconds,
-    )
+    )  # 300K、1/ps 碰撞频率、2 fs 步长（HBonds 约束下稳定）
     platform = Platform.getPlatformByName(args.platform)
     properties = {"Precision": "mixed"} if args.platform == "OpenCL" else {}
     simulation = Simulation(modeller.topology, system, integrator, platform, properties)
@@ -294,6 +309,7 @@ def minimize_model(input_path, output_path, args):
 
 
 def main():
+    # 主流程：遍历 fold-pass 候选 -> 逐个弛豫 -> 汇总 JSON 审计与 Markdown 报告
     args = parse_args()
     rows = load_fold_pass(args.fold_evidence)
     if not rows:

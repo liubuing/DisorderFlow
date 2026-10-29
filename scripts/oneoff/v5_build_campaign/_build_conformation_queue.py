@@ -28,6 +28,9 @@ for i in range(total):
         continue
 
     # Filter: keep IDP or partially disordered entries
+    # 三条判据取或：disorder_fraction > 0（部分无序）、来源标记为 idp、
+    # 或 disorder_mask 中有任何无序位——三条任一成立即收入队列，
+    # 保证"纯折叠蛋白"被排除而"任何带无序属性的样本"都保留
     disorder_frac = data.get('disorder_fraction', 0)
     disorder_source = data.get('disorder_source', '')
     disorder_mask = data.get('disorder_mask', None)

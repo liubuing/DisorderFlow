@@ -42,6 +42,8 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.resolve()
 
+# 待对比的 checkpoint 清单：从"无负样本基线"到"负样本/校准/组合"训练阶段，
+# 用于量化负样本训练对过度自信的抑制效果。
 CHECKPOINTS = {
     'phase3': {
         'path': 'logs/bfn_phase3_disorder_2026_05_31__14_52_47/checkpoints/best.pt',
@@ -71,6 +73,8 @@ CHECKPOINTS = {
 }
 
 DESIGN_CONFIG = {
+    # 设计设置：5IMK 脚手架 B 链的三条 CDR；context_chains=None 表示
+    # Complex 模式（表位对模型可见）。
     'scaffold_pdb': 'data/misfolding_targets/5IMK.pdb',
     'scaffold_chain': 'B',
     'target_pdb': 'data/misfolding_targets/2NAO_model1_A_1-42.pdb',
@@ -82,6 +86,8 @@ DESIGN_CONFIG = {
 }
 
 AF2_CONFIG = {
+    # AF2 验证设置：默认走 JAX 原生 runner，亦可切换 colabfold CLI；
+    # 单条设计 30 分钟超时，防止挂死整个验证流程。
     'num_recycle': 3,
     'use_jax': True,  # JAX-native runner; False = colabfold CLI
     'colabfold_exe': 'colabfold_batch',
@@ -92,6 +98,7 @@ AF2_CONFIG = {
 
 def update_app_config(ckpt_path):
     """Temporarily update app_config.yaml to point to a specific checkpoint."""
+    # 仅读取并返回当前配置与原 checkpoint（配合 set_app_checkpoint 使用）。
     import yaml
     cfg_path = PROJECT_ROOT / 'app_config.yaml'
     with open(cfg_path) as f:
@@ -101,6 +108,7 @@ def update_app_config(ckpt_path):
 
 def set_app_checkpoint(ckpt_path):
     """Update the checkpoint path in app_config.yaml."""
+    # bfn_loader 通过 app_config.yaml 定位权重，这里直接改写该文件实现切换。
     import yaml
     cfg_path = PROJECT_ROOT / 'app_config.yaml'
     with open(cfg_path) as f:
@@ -112,6 +120,7 @@ def set_app_checkpoint(ckpt_path):
 
 def verify_checkpoints(models):
     """Verify that all specified checkpoint files exist."""
+    # 预检：任一 checkpoint 缺失则提前报错，避免跑到一半才失败。
     missing = []
     for name in models:
         ckpt = PROJECT_ROOT / CHECKPOINTS[name]['path']
@@ -124,6 +133,9 @@ def verify_checkpoints(models):
 
 def run_phase1(models, output_path, device='cuda'):
     """Run BFN CDR design with each checkpoint. Saves intermediate JSON."""
+    # Phase 1：对每个 checkpoint 用同一脚手架/CDR 设定生成设计，
+    # 记录 BFN 自报置信度，并把 top-N 设计嫁接回完整重链序列，
+    # 供 Phase 2 的 AF2 独立验证使用。
     import numpy as np
     import yaml
 
@@ -174,6 +186,7 @@ def run_phase1(models, output_path, device='cuda'):
 
         try:
             # Force reload model with new checkpoint
+            # 清空 bfn_loader 模块级缓存，确保加载的是当前 checkpoint。
             import bfn_loader
             bfn_loader._bfn_model = None
             bfn_loader._bfn_config = None
@@ -249,6 +262,9 @@ def run_phase1(models, output_path, device='cuda'):
 
 def run_phase2(input_path, output_path):
     """Run AF2 multimer on all designs from Phase 1. Enriches JSON."""
+    # Phase 2：对 Phase 1 的每条设计做 AF2 multimer 独立预测，
+    # 并计算过度自信比(OC ratio) = BFN 自报置信度 / AF2 独立评估，
+    # 大于 1 表示 BFN 比真实情况更自信。
     with open(input_path) as f:
         data = json.load(f)
 
@@ -302,6 +318,7 @@ def run_phase2(input_path, output_path):
                 print(f"FAILED: {r.get('error', '?')[:80]}")
 
         # Compute per-model stats
+        # 分母用 max(af2 值, 0.001) 防止 AF2 打分为 0 时除零。
         import numpy as np
         ratios_plddt = []
         ratios_iptm = []
@@ -357,6 +374,8 @@ def run_phase2(input_path, output_path):
 
 def run_phase3(input_path):
     """Analyze overconfidence ratios and produce a comparison report."""
+    # Phase 3：纯分析（可在 CPU 上运行）。产出对比表、最优校准模型、
+    # 两两差值与逐设计明细。校准质量用 |OC - 1| 度量（1.0x 为完美校准）。
     with open(input_path) as f:
         data = json.load(f)
 
@@ -421,6 +440,7 @@ def run_phase3(input_path):
                   f"{bfn_i:>10.4f} {af2_i:>10.4f} {oc_iptm:>9.2f}x")
 
             # Best = closest to 1.0 (perfect calibration)
+            # 以两个 OC 比偏离 1.0 的绝对值之和作为校准误差，取最小者为 winner。
             oc_avg = abs(oc_plddt - 1.0) + abs(oc_iptm - 1.0)
             if oc_avg < best_oc:
                 best_oc = oc_avg
@@ -537,6 +557,7 @@ def main():
     phase2_path = output_dir / 'oc_phase2_af2_validated.json'
 
     # Determine what to run
+    # 无任何旗标时自动续跑：优先 Phase 3，其次从 Phase 2 续，最后全流程。
     run_all = args.all
     run_p1 = args.phase1 or run_all
     run_p2 = args.phase2 or run_all
@@ -569,6 +590,8 @@ def main():
             sys.exit(1)
 
     # Phase 2
+    # Phase 2 依赖 Phase 1 的 JSON；Phase 3 缺 Phase 2 数据时回退用
+    # Phase 1 数据（只显示 BFN 自报置信度）。
     if run_p2:
         p1_path = phase1_path if phase1_path.exists() else phase1_path
         run_phase2(str(p1_path), str(phase2_path))

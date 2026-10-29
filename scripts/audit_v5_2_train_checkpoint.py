@@ -17,6 +17,16 @@ from disorderflow.data_factory import sha256_file
 
 
 def main():
+    # 审计有界 v5.2 训练的 checkpoint 门。
+    # 输入三个 checkpoint（source=起点、raw=本轮训练产物、best=EMA 权重），
+    # 校验:
+    #   - 迭代数与优化器步数达到预期（默认 3 次迭代 / 2 步优化，冒烟规模）；
+    #   - 验证损失有限（非 NaN/Inf）；
+    #   - 权重记账：raw 标记为 raw、best 标记为 ema，且两者确实不同；
+    #   - 参数冻结边界：只有 allowed_modules 中的可训练模块发生变化，
+    #     其余张量必须与 source 逐位一致（用 L1 差值量化变化幅度）。
+    # 任一检查失败则以异常退出；报告与两个 checkpoint 的 SHA-256 一并落盘，
+    # 保证审计结果本身可溯源。
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True)
     parser.add_argument("--raw", required=True)
@@ -36,6 +46,7 @@ def main():
     raw = torch.load(raw_path, map_location="cpu", weights_only=False)
     best = torch.load(best_path, map_location="cpu", weights_only=False)
 
+    # 只有这两个模块允许在受限训练中更新；其余任何张量变化都算违规。
     allowed_modules = ("contrastive_head", "contrastive_cdr_conv")
     changed = [
         key for key, value in raw["model"].items()

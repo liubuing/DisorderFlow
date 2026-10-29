@@ -14,10 +14,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sequence_sha256(sequence):
+    # 对氨基酸序列取 SHA-256；截前 12 位十六进制作为候选 ID 后缀以避免明文泄漏。
     return hashlib.sha256(sequence.encode("ascii")).hexdigest()
 
 
 def candidate_template(candidate_path):
+    # 从候选集生成待填写的发展性（developability）测量模板。
+    # 参数: candidate_path — 候选集 JSON，含 components 列表（每项有 component_id 与序列）。
+    # 返回: 模板字典——每条 (component_id, sequence) 去重后一行，测量字段全部留空，
+    #   由实验人员填写实测值（表达量 mg/L、SEC 单体比例、聚集比例、
+    #   多特异性、Tm 摄氏度等）。
+    # 注意: 计算代理值不被接受，模板 note 明确要求只填实测数据。
     source = json.loads(candidate_path.read_text(encoding="ascii"))
     rows = []
     seen = set()
@@ -48,6 +55,14 @@ def candidate_template(candidate_path):
 
 
 def audit(config_path, measurements_path, output_path):
+    # 按冻结配置审计实测发展性数据是否达标。
+    # 参数:
+    #   config_path: 冻结门槛配置（YAML），给出各测量的最小/最大阈值。
+    #   measurements_path: 实测记录 JSON（通常由模板填写而来）。
+    #   output_path: 审计结果输出 JSON 路径。
+    # 返回: payload 字典——逐条记录的完整性检查、阈值检查与总体 pass/blocked 状态。
+    # 检查项方向约定：表达量与 SEC 单体比例需 >= 下限；聚集比例与多特异性
+    # 需 <= 上限；阈值全部来自冻结配置，不在代码中硬编码。
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
     measurements = json.loads(measurements_path.read_text(encoding="ascii"))
     thresholds = config["required_measurements"]
@@ -104,6 +119,7 @@ def audit(config_path, measurements_path, output_path):
 
 
 def main():
+    # 命令行入口：--template-from 生成测量模板，或 --measurements 执行审计（二选一）。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=Path(
         "configs/benchmarks/developability_measurement_gate_v1.yml"))

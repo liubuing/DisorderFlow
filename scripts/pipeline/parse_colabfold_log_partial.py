@@ -8,6 +8,9 @@ import re
 from pathlib import Path
 
 
+# 匹配 ColabFold 逐模型日志行: 模型名 recycle 次数 pLDDT pTM ipTM。
+# 只在最终 JSON/PDB 缺失时用作部分证据，因此提取的值保留字符串原样，
+# 并标注 evidence_status 以免下游误当作完整结果。
 PATTERN = re.compile(
     r"(?P<model>alphafold\S+) recycle=(?P<recycle>\d+) "
     r"pLDDT=(?P<plddt>[0-9.]+) pTM=(?P<ptm>[0-9.]+) ipTM=(?P<iptm>[0-9.]+)"
@@ -23,6 +26,8 @@ def parse_args():
 
 
 def main():
+    # 从日志提取部分指标并写成 CSV；每行带 evidence_status=
+    # partial_log_metric_no_final_json_or_pdb 与来源日志路径（可溯源）。
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

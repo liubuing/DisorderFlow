@@ -20,9 +20,11 @@ def main():
     def acquire(item):
         name = Path(item["path"]).name
         path = dest / name
+        # 按 GitHub tree 的 commit sha 固定版本，避免上游漂移
         url = f"https://raw.githubusercontent.com/mit-ll/AlphaSeq_Antibody_Dataset/{tree['sha']}/{item['path']}"
         if not path.exists():
             raw = urllib.request.urlopen(url, timeout=120).read()
+            # 下载长度必须与 tree 记录一致，防截断/替换
             if len(raw) != item["size"]:
                 raise ValueError("Original archive length differs from GitHub tree")
             path.write_bytes(raw)
@@ -32,10 +34,13 @@ def main():
                 raise ValueError("Expected exactly one CSV")
             with archive.open(names[0]) as stream:
                 source_rows = csv.reader(io.TextIOWrapper(stream, encoding="utf-8-sig"))
+                # 表头必须包含五个核心列才视为 AlphaSeq 原始格式
                 fields = next(row for row in source_rows if {"HC", "LC", "Target", "Pred_affinity"}.issubset(row))
                 reader = (dict(zip(fields, values)) for values in source_rows if values)
                 target_key = next(k for k in fields if k.casefold() == "target")
                 assay_key = next(k for k in fields if k.casefold() == "assay")
+                # 只统计目标/测定的计数分布用于模式审计——数值标签本身
+                # 不做任何分析（见结果中的 numeric_label_values_analyzed=False）
                 targets, assays = Counter(), Counter()
                 count = 0
                 for row in reader:

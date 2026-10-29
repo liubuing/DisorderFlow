@@ -14,6 +14,8 @@ def score_state_contrast(sequence: str, positive_states: Iterable, negative_stat
     pos_score = sum(r["state_contact_score"] for r in pos_rows) / max(1, len(pos_rows))
     neg_max = max((r["state_contact_score"] for r in neg_rows), default=0.0)
     neg_mean = sum(r["state_contact_score"] for r in neg_rows) / max(1, len(neg_rows))
+    # 特异性差距用"正例均值 - 负例最大值"：只要有一个负例能结合就算失分，
+    # 这是比均值更保守（也更安全）的状态特异性判据
     gap = pos_score - neg_max
     return {
         "sequence": sequence,
@@ -42,6 +44,8 @@ def rank_state_contrast_candidates(variants: Iterable[Dict], positive_states: Li
             "specificity_gap": s["specificity_gap"],
             "native_specificity_gap": native_gap,
             "specificity_gap_delta": round(gap_delta, 4),
+            # 综合分 = 0.70*相对天然的差距提升 + 0.30*正例绝对分：
+            # 以"比天然更特异"为主目标，同时不放弃正例结合强度
             "statecontrast_score": round(0.70 * gap_delta + 0.30 * s["positive_score"], 4),
         })
     rows.sort(key=lambda r: (r["statecontrast_score"], r["specificity_gap_delta"], r["positive_score"]), reverse=True)

@@ -35,10 +35,11 @@ from scripts.protein_mpnn_prefix_adapter import build_model  # noqa: E402
 
 ALPHABET = "ACDEFGHIKLMNPQRSTVWYX"
 CHAIN_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-MAX_ATTEMPTS = 200
+MAX_ATTEMPTS = 200  # 每个桶内候选重采样尝试上限，防止死循环
 
 
 def sha256(path):
+    # 文件 SHA256，用于绑定 checkpoint 血缘
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
@@ -62,6 +63,7 @@ class BatchedPoseAdapter:
 
     @torch.no_grad()
     def next_log_probs(self, prefix, position):
+        # 给定已采样前缀，返回该 H3 位置在所有 pose 上等权平均后的对数概率分布
         if len(prefix) != position:
             raise ValueError("Prefix length must equal the requested H3 position")
         # Every pose starts from its native sequence tensor. Only the sampled
@@ -88,6 +90,7 @@ class BatchedPoseAdapter:
         return log_probs.mean(dim=0).detach().cpu().numpy()
 
     def native_sequence_score(self, native):
+        # 对天然 H3 序列逐位求对数概率之和，作为每臂的 native 对照分数
         score = 0.0
         for position, aa in enumerate(native):
             values = self.next_log_probs(native[:position], position)
@@ -112,6 +115,7 @@ class HeterogeneousPoseAdapter:
         self.call_count = 0
 
     def next_log_probs(self, prefix, position):
+        # 布局不同的 pose 需分组分别前向，再对各适配器的对数概率取均值
         values = np.stack([
             adapter.next_log_probs(prefix, position) for adapter in self.adapters
         ])
@@ -119,6 +123,7 @@ class HeterogeneousPoseAdapter:
         return values.mean(axis=0)
 
     def native_sequence_score(self, native):
+        # 与 BatchedPoseAdapter 相同的 native 对照分数计算
         score = 0.0
         for position, amino_acid in enumerate(native):
             values = self.next_log_probs(native[:position], position)
@@ -128,6 +133,7 @@ class HeterogeneousPoseAdapter:
 
 def canonicalize_chains(item, antibody_chains, antigen_chains):
     """Relabel chain IDs deterministically for ProteinMPNN featurization."""
+    # 按抗体链在前、抗原链在后的顺序确定性地重命名为 A、B、C…
     ordered = list(antibody_chains) + list(antigen_chains)
     if len(ordered) != len(set(ordered)):
         raise ValueError("Antibody and antigen chain roles overlap")
@@ -157,6 +163,7 @@ def canonicalize_chains(item, antibody_chains, antigen_chains):
 
 def find_observed_subsequence_positions(sequence, query):
     """Map an ungapped H3 sequence back to indices in a gapped parsed chain."""
+    # 在含 gap（'-'）的解析序列中定位无 gap 查询串，返回其原始索引
     observed = [(index, amino_acid) for index, amino_acid in enumerate(sequence)
                 if amino_acid != "-"]
     observed_sequence = "".join(amino_acid for _, amino_acid in observed)
@@ -170,6 +177,7 @@ def find_observed_subsequence_positions(sequence, query):
 
 def featurize_arm(model, pose_rows, arm_name, native_h3, device):
     """Create a pose adapter and auditable H3/chain provenance for one arm."""
+    # 特征化一臂的全部 pose：相同布局合批，异构布局分组；输出 adapter 与可审计溯源
     items = []
     chain_dict = {}
     h3_mappings = {}
@@ -252,6 +260,7 @@ def featurize_arm(model, pose_rows, arm_name, native_h3, device):
 
 
 def count_substitutions(candidate, native):
+    # 统计候选与天然 H3 的替换数（长度必须一致）
     if len(candidate) != len(native):
         raise ValueError("Candidate and native H3 lengths differ")
     return sum(left != right for left, right in zip(candidate, native, strict=True))
@@ -259,6 +268,7 @@ def count_substitutions(candidate, native):
 
 def generate_component(component, seeds, buckets, native_h3, pose_rows, model, device):
     """Generate matched ensemble and single-state candidates for one component."""
+    # 双臂生成：ensemble 用全部接受 pose，single_state 仅用自身实验 pose；种子/桶/预算均匹配
     arms = {}
     # The two arms differ only in structural context. Checkpoint, seed,
     # mutation buckets, and candidate budget remain matched by construction.
@@ -316,6 +326,7 @@ def generate_component(component, seeds, buckets, native_h3, pose_rows, model, d
 
 def generate(panel_path, admission_path, readiness_path, poses_path, checkpoint,
              output_dir, components_filter):
+    # 主生成流程：加载冻结面板/准入/就绪/pose 清单 -> 逐组件生成并写独立 JSON
     panel = json.loads(panel_path.read_text(encoding="ascii"))
     admission = json.loads(admission_path.read_text(encoding="ascii"))
     readiness = json.loads(readiness_path.read_text(encoding="ascii"))
@@ -374,6 +385,7 @@ def generate(panel_path, admission_path, readiness_path, poses_path, checkpoint,
 
 
 def main():
+    # 命令行入口：必填面板/准入/就绪/pose/checkpoint/输出目录，可按组件过滤
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panel", type=Path, required=True)
     parser.add_argument("--admission", type=Path, required=True)

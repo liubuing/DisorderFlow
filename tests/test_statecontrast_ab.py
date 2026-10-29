@@ -1,3 +1,6 @@
+"""状态对比（state contrast）A/B 工作流的契约测试：守护负状态可打分、正负态特异性差距、
+候选排名、接触变量归因分类与引导变体修复、工作流阶段/声明等级的保守性、
+已验证参考计数审计，以及真实系综模式对缺失 PDB 的阻塞。"""
 from idp_state_ensemble import build_negative_states, positive_state
 from state_contact_scorer import Contact, score_sequence_on_contact_map
 from state_contrast_scorer import rank_state_contrast_candidates, score_state_contrast
@@ -13,6 +16,7 @@ from contact_variable_attribution import (
 )
 
 
+# 辅助函数：构造小型接触图（paratope YWK × 肽 FD，三条 4.0-4.5 Å 接触）。
 def toy_contact_map():
     return {
         "paratope_sequence": "YWK",
@@ -30,6 +34,7 @@ def toy_contact_map():
     }
 
 
+# 负状态可打分：构造的 3 个负状态接触图都能对 native 序列正常打分——防止负例构造损坏结构。
 def test_negative_states_are_scoreable():
     cmap = toy_contact_map()
     neg = build_negative_states(cmap, "toy")
@@ -39,6 +44,7 @@ def test_negative_states_are_scoreable():
         assert "state_contact_score" in score
 
 
+# 特异性差距：正态分数必须为正且结果含 specificity_gap 字段——防止正负对比退化为单一绝对分。
 def test_state_contrast_scores_gap():
     cmap = toy_contact_map()
     pos = [positive_state("toy_pos", cmap)]
@@ -48,6 +54,7 @@ def test_state_contrast_scores_gap():
     assert "specificity_gap" in score
 
 
+# 排名方向：native 的状态对比排名为 1、弱序列靠后——防止对比分数排序方向写反。
 def test_rank_state_contrast_candidates():
     cmap = toy_contact_map()
     pos = [positive_state("toy_pos", cmap)]
@@ -61,6 +68,7 @@ def test_rank_state_contrast_candidates():
     assert len(ranked) == 2
 
 
+# 归因分类锚点：体积/化学类映射符合直觉（G 小、W 大、Y 芳香、K 正电），防止规则引擎分类漂移。
 def test_contact_variable_attribution_classes():
     assert volume_class("G") == "small"
     assert volume_class("W") == "large"
@@ -68,6 +76,7 @@ def test_contact_variable_attribution_classes():
     assert chemistry_class("K") == "positive"
 
 
+# 高低分组：按 specificity_gap 中位切分后高/低组各 1 条并产出特征行——防止归因分析丢样本。
 def test_compare_high_low_gap_outputs_features():
     cmap = toy_contact_map()
     rows = [
@@ -80,6 +89,8 @@ def test_compare_high_low_gap_outputs_features():
     assert out["feature_rows"]
 
 
+# 规则门槛：只有 |fraction_delta| ≥0.20 的信号才进规则（0.25 入选、-0.19 淘汰），
+# 且规则按 paratope 位置索引——防止弱信号制造噪声引导。
 def test_compile_guidance_rules_uses_only_threshold_signals():
     rows = [
         {
@@ -106,6 +117,7 @@ def test_compile_guidance_rules_uses_only_threshold_signals():
     assert rules["toy"][0]["preferred"][0]["chemistry_class"] == "aromatic"
 
 
+# 修复方向：引导变体的目标位置必须落在偏好类（large+aromatic）内——防止"归因引导"随机突变。
 def test_attribution_guided_variants_repair_preferred_class():
     cmap = toy_contact_map()
     rules = {
@@ -120,6 +132,8 @@ def test_attribution_guided_variants_repair_preferred_class():
     assert all(residue_matches_classes(v["sequence"][0], "large", "aromatic") for v in variants)
 
 
+# 工作流契约：首阶段为 domain_intake、GPU 阶段显式标记，CPU-only 支持基准对照且必须含 parent_only 对照——
+# 防止控制组缺失或阶段声明漂移。
 def test_statecontrast_workflow_contract_marks_cpu_and_gpu_stages():
     stages = workflow_stages()
     assert stages[0]["stage"] == "domain_intake"
@@ -129,11 +143,14 @@ def test_statecontrast_workflow_contract_marks_cpu_and_gpu_stages():
     assert "parent_only" in req["required_controls"]
 
 
+# 声明保守：最小支持度下只允许 proof_of_concept，充分支持+双验证才允许 validated_domain_workflow——
+# 防止声明等级越阶。
 def test_integration_claim_level_is_conservative():
     assert integration_claim_level(2, False, False) == "proof_of_concept_position_discovery"
     assert integration_claim_level(8, True, True) == "validated_domain_workflow"
 
 
+# 参考审计：未审核或可靠性存疑的参考不计入有效数（3 申明→1 有效→fail）——防止引用未验证结构。
 def test_verified_reference_count_excludes_unreviewed_entries():
     refs = [
         {"pdb": "GOOD", "reliability": "reliable", "provenance_verified": True},
@@ -146,6 +163,7 @@ def test_verified_reference_count_excludes_unreviewed_entries():
     assert result["status"] == "fail"
 
 
+# 审计放行：全部可靠且溯源已验证的参考达到最小值时通过——保证审计门槛双向有效。
 def test_verified_reference_count_accepts_reviewed_entries():
     refs = [
         {"pdb": str(index), "reliability": "reliable", "provenance_verified": True}
@@ -156,6 +174,8 @@ def test_verified_reference_count_accepts_reviewed_entries():
     assert result["status"] == "pass"
 
 
+# 系综阻塞：任一系综 PDB 缺失时整体 blocked，且就绪条目在无姿态时接触打分也标记 blocked——
+# 防止对缺失结构静默跳过或伪造状态证据。
 def test_real_ensemble_status_reports_missing_and_ready_entries(tmp_path):
     ready = tmp_path / "ready.pdb"
     ready.write_text(

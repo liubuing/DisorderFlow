@@ -90,6 +90,8 @@ def parse_pdb_ensemble(
     current_model = 1
     explicit_models = False
     in_model = False
+    # 手工逐行解析（不依赖 Biopython）：MODEL/ENDMDL 配对做严格校验，
+    # 非标准残基（不在 _AA3 表内）直接跳过，坐标超出 ±1e6 视为损坏
     for line_number, line in enumerate(lines, 1):
         record = line[:6].strip().upper()
         if record == "MODEL":
@@ -195,6 +197,8 @@ def parse_pdb_ensemble(
     return {
         "schema_version": "statecontrast.pdb_geometry.v1",
         "source_pdb": str(path),
+        # geometry_only=True 是本模块的刻意边界：只给坐标与元数据，
+        # 不推断抗体姿态、不推 antigen-antibody 接触（见模块 docstring）
         "selected_models": selected_models,
         "selected_chains": selected_chains,
         "conformer_count": len(conformers),
@@ -257,6 +261,8 @@ def audit_ensemble_entries(entries: Iterable[dict], project_root: str | Path = "
             {chain_row["chain_id"] for chain_row in conformer["chains"]}
             for conformer in geometry["conformers"]
         ]
+        # 只有当声明的抗体链在所有所选 model 中都齐全时，才认为存在可用姿态；
+        # 缺姿态只封锁接触打分，不影响几何就绪判定
         has_pose = bool(antibody_chains) and all(
             set(antibody_chains).issubset(present) for present in present_by_model
         )

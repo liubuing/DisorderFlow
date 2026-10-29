@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Evaluate contact prediction and CDR recovery on audited SAbDab2 complexes."""
 
+# 本脚本在经审计的 SAbDab2 外部抗体-抗原复合物上做盲评估：
+# 加载 v5.1 EMA 检查点，对每个复合物在固定 t=0.5 下前向一次，
+# 通过 forward hook 抓取 receiver 输出，计算 CDR 区天然序列的
+# NLL/困惑度/恢复率以及接触预测的二元指标（sigmoid 概率 vs 标签）。
+# 评估范围明确排除无序条件化与对比兼容性（外部抗原无逐残基无序标签）。
+
 import argparse
 import copy
 import json
@@ -24,6 +30,9 @@ from evaluate_v5_1_phase3 import binary_metrics, contact_targets, load_checkpoin
 
 
 def evaluate_sample(model, source_batch, device, seed):
+    # 单样本评估：深拷贝批次避免污染数据集 → 固定 t=0.5（中点噪声水平，
+    # 保证确定性单次前向）→ hook 捕获 receiver 输出 → 掩码出 CDR 生成区，
+    # 计算天然序列 NLL（ppl 以 exp(min(nll,20)) 截断防溢出）与恢复率
     batch = recursive_to(copy.deepcopy(source_batch), device)
     batch["fixed_t"] = 0.5
     captured = {}
@@ -60,6 +69,9 @@ def evaluate_sample(model, source_batch, device, seed):
 
 
 def main():
+    # 主流程：加载检查点与外部 LMDB → 逐样本评估（失败样本单独记录，
+    # 不中断整体）→ 汇总天然 CDR 指标与接触分类指标 → 结合审计文件的
+    # 独立性声明写外部评估 JSON；种子按样本索引递增保证可复现
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--lmdb", default="data/sabdab2_abag_external/test.lmdb")

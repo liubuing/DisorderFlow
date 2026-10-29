@@ -25,16 +25,21 @@ from disorderflow.datasets.confidence_dataset import ConfidenceRegressionDataset
 
 
 def sha256(path):
+    # 计算数据集清单的 SHA-256，登记进输出以保证诊断结果可溯源。
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def composition(aa, mask, classes=20):
+    # 掩码区域的 20 类氨基酸组成频率（bincount 归一化）；空区域返回全零。
     selected = aa[mask].long()
     counts = torch.bincount(selected.clamp(0, classes - 1), minlength=classes)
     return (counts.float() / max(selected.numel(), 1)).numpy()
 
 
 def record_features(batch):
+    # 每条记录的序数特征: 候选区/抗原区氨基酸组成（各 20 维）+ 10 维几何摘要
+    # （两侧残基数与候选-抗原 CA 最小距离的均值/标准差/四分位数，以及
+    # <6/<8/<10 埃的比例——6 埃内视为直接接触，8/10 埃为宽松阈值）。
     candidate = batch["generate_flag"].bool()
     antigen = batch["pae_supervision_antigen_mask"].bool()
     aa = batch["aa"]
@@ -62,6 +67,9 @@ def record_features(batch):
 
 
 def record_targets(batch):
+    # 回归目标三元组: 候选区平均 pLDDT、ipTM、候选-抗原界面平均 PAE。
+    # PAE 单位为埃、越低越好；未归一化时除以 31.0（AF2 PAE 的实际分辨率
+    # 上限）映射到近 0-1，与 pLDDT/ipTM 的量纲对齐。
     candidate = batch["generate_flag"].bool()
     antigen = batch["pae_supervision_antigen_mask"].bool()
     interface = candidate.unsqueeze(1) & antigen.unsqueeze(0)
@@ -76,6 +84,7 @@ def record_targets(batch):
 
 
 def rankdata(values):
+    # 平均秩（并列取平均）：mergesort 保证稳定；与 scipy.stats.rankdata 一致。
     values = np.asarray(values)
     order = np.argsort(values, kind="mergesort")
     ranks = np.empty(len(values), dtype=float)
@@ -97,6 +106,10 @@ def spearman(left, right):
 
 
 def metrics(prediction, target, groups):
+    # 评估指标: MAE、预测/目标标准差之比（<1 表示过度收缩）、方差比，
+    # 以及"支架内 Spearman 中位数"——只在每个支架组内部计算秩相关再取
+    # 中位数，衡量模型对同支架候选的排序能力（跨支架分数不可比时这
+    # 才是公平口径）。零方差组（秩相关无定义）被剔除并计数。
     group_correlations = []
     for group in sorted(set(groups)):
         mask = groups == group
@@ -119,6 +132,9 @@ def metrics(prediction, target, groups):
 
 
 def load_entities(dataset):
+    # 按 construct_id 聚合实体: 特征与目标在 6 个 AF2 条件（2 模型 x 3 种子）
+    # 上取均值，组标签取支架家族——交叉验证按支架分组（GroupKFold），
+    # 防止同一支架的实体同时出现在训练/验证两侧而高估泛化。
     entities = defaultdict(lambda: {"features": [], "targets": [], "scaffold": None})
     for index in range(len(dataset)):
         batch = dataset[index]
@@ -136,6 +152,11 @@ def load_entities(dataset):
 
 
 def main():
+    # 只用训练数据拟合两个朴素基线（5 折 GroupKFold 下的折外预测）:
+    #   - fold_train_mean: 训练折的目标均值（无特征基线）;
+    #   - ridge: 标准化 + Ridge(alpha=1.0 默认) 的线性回归。
+    # 作用是为更复杂模型提供"必须显著超过"的下限参照。
+    # --evaluation-dataset 可选: 用全部训练实体重新拟合后在独立开发集上评估。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--dataset",

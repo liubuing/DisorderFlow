@@ -1,5 +1,10 @@
 """V3 Robust: fast grid-search pose + cross-conformation p25. Optimized: 
 no PDB I/O per pose, contacts computed directly, full L3 only on best pose."""
+# V3 稳健版：网格搜索快速定位肽姿态 + 跨 Aβ42 构象的 p25 稳健指标。
+# 优化思路：每个姿态不再做 PDB I/O，先用 Cβ 坐标直接数接触
+# （4×4×4=64 网格点），只有最优偏移（接触 ≥5）才构建 PDB 跑完整 L3 打分；
+# 最终以各构象复合分的 25 分位（p25）为设计排序指标，
+# 并与旧复合分做 Kendall tau 相关检验。
 import sys,os,json,time,argparse,copy; sys.path.insert(0,'.'); sys.path.insert(0,'modules')
 import numpy as np
 from scipy.spatial import cKDTree
@@ -15,7 +20,7 @@ AA3={'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C','GLU':'E','GLN':'Q','GLY'
      'THR':'T','TRP':'W','TYR':'Y','VAL':'V'}
 CONTACT_CUT=8.0
 
-# Grid: 4x4x4=64 poses (was 125)
+# 网格：三轴各 4 点共 64 个姿态偏移（旧版 125 点），dx∈[8,22] 埃为 CDR-肽距离
 DX=np.linspace(8,22,4);DY=np.linspace(-2,6,4);DZ=np.linspace(-3,6,4)
 
 
@@ -76,6 +81,7 @@ def main():
         for conf_pdb in ABETA_CONFS:
             best_contacts=0;best_offset=None
             # Fast grid search: find offset with max contacts
+            # 第一遍：纯坐标快速数接触，找最大接触数的偏移
             for dx in DX:
              for dy in DY:
               for dz in DZ:

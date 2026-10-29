@@ -29,6 +29,10 @@ This script is retained for reproducibility/ablation only.
 ################################################################################
 """
 import sys, os
+# 角色：置信度头（confidence head）的基础数据集构建——为同一骨架生成"native/BFN 中等/
+# 打乱低质"三类 CDR 变体并乘以质量系数构造对比标签。注意 docstring 中的弃用声明：
+# 该标签是合成启发式（未运行真实 AF2），仅保留用于复现/消融，V14 起改用
+# build_design_variant_dataset.py。
 if sys.platform == 'win32':
     import io; sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
@@ -131,7 +135,7 @@ def build(n_backbones=500, device='cuda'):
 
         n_aug = 0
         n_skip = 0
-        next_key = n_data  # sequential numeric keys
+        next_key = n_data  # sequential numeric keys（新条目接在原始条目之后顺序编号）
 
         with src_env.begin() as src_txn, dst_env.begin(write=True) as dst_txn:
             # Copy all originals
@@ -159,6 +163,9 @@ def build(n_backbones=500, device='cuda'):
                 gen_idx = gen_mask.nonzero(as_tuple=True)[0]
 
                 def update_entry(seq, quality_mult, tag):
+                    # 以合成质量系数缩放原 AF2 标签构造伪标签：
+                    # pLDDT/ipTM 乘 quality_mult，PAE 乘 (2 - quality_mult) 并截断到 0.95，
+                    # 使同骨架不同 CDR 获得不同的置信度监督信号（该启发式已弃用，见文件头）。
                     aug_batch = dict(batch)
                     aug_aa = aa_orig.clone()
                     for j, pos in enumerate(gen_idx):

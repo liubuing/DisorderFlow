@@ -11,6 +11,10 @@ Break the CDR diversity ceiling by:
 Usage:
     python run_v17i_library_screen.py [--samples 200] [--top 20]
 """
+# 角色：§4.2 CDR 文库筛选——突破 CDR 多样性上限：多种子 + 无序引导采样探索，
+# 复合打分（BFN ipTM + pLDDT - 无序惩罚 + 多样性奖励），序列聚类去重后
+# 取 Top-K（默认 20）送 AF2 终评。支架为 3STB/5IMK，抗原为 3 条 Aβ42 构象
+# （seed 0/2/4），覆盖多构象表位上下文。
 import sys, os, json, time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import torch, yaml, numpy as np

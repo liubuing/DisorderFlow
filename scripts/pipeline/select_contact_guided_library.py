@@ -49,6 +49,11 @@ def _coerce(row):
 
 
 def strict_filter(rows, args):
+    # 硬过滤（全部通过才保留）: 既有过滤器、接触保留率区间
+    # [0.90, 1.12]、复杂度下限、免疫原性代理上限、突变数上限、
+    # 同字母连续 >= 4 的 homopolymer。max_retention=1.12 上限拒绝
+    # "过度优化"的打分工件——保留率超过原生反而可疑。
+    # 每条被剔除候选记录失败原因，保证筛选可审计。
     out = []
     for r in rows:
         reasons = []
@@ -75,6 +80,10 @@ def strict_filter(rows, args):
 
 
 def select_library(rows, args):
+    # 平衡多样性小库选择: 每个参考结构内按 (分数, 保留率, -免疫原性)
+    # 排序后，在低/中/高突变强度桶之间轮转选择（避免库全是 1 突变
+    # 近原生或全是激进变体），桶内候选与已选集的最小 Hamming 距离
+    # 须 >= min-hamming（默认 2，保证序列不雷同）。最后全局截取 top。
     by_ref = defaultdict(list)
     for r in rows:
         by_ref[r["reference_pdb"]].append(r)
@@ -134,6 +143,7 @@ def _is_diverse_enough(cand, selected, min_hamming):
 
 
 def _hamming(a, b):
+    # Hamming 距离；长度不同视为完全不同（返回较长长度）。
     if len(a) != len(b):
         return max(len(a), len(b))
     return sum(x != y for x, y in zip(a, b))
@@ -200,6 +210,8 @@ def write_outputs(selected, filtered, all_rows, ref_summaries, out_dir: Path, ar
 
 
 def main():
+    # 入口: 加载全部候选 → 硬过滤 → 桶间轮转多样选择 → 写 CSV/FASTA/
+    # JSON/Markdown。产物是平衡的 paratope 小库，不是完整抗体构造体。
     args = parse_args()
     rows = load_rows(args.candidates)
     filtered = strict_filter(rows, args)

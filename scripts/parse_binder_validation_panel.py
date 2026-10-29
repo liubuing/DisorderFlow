@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Parse multi-seed ColabFold outputs for the 3STB binder validation panel."""
+"""Parse multi-seed ColabFold outputs for the 3STB binder validation panel.
+
+解析 3STB 同 scaffold 结合验证面板的多 seed ColabFold 输出：
+- 每个成员分别汇总 monomer（pLDDT/PTM）与 multimer（ipTM/接口 PAE/跨链接触）；
+- 按 manifest 的门槛判定 monomer_gate 与 multimer_gate；
+- 关键对照：native 减 scrambled 的平均 ipTM 差值仅作弱拒绝门槛
+  （multimer_use=weak_rejection_gate_only）。输出 panel_report.json。
+"""
 
 from __future__ import annotations
 
@@ -15,6 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def interface_pae(score: dict, chain_lengths: list[int]) -> float | None:
+    """取 PAE 矩阵两个链间象限的均值作为接口 PAE（仅支持双链）。"""
     if len(chain_lengths) != 2 or "pae" not in score:
         return None
     split = chain_lengths[0]
@@ -24,6 +32,7 @@ def interface_pae(score: dict, chain_lengths: list[int]) -> float | None:
 
 
 def residue_contacts(pdb_path: Path, cutoff: float = 5.0) -> int:
+    """统计前两条链之间重原子距离 <=5Å 的残基对接触数（跨链接触代理）。"""
     residues: dict[tuple[str, str], list[tuple[float, float, float]]] = {}
     for line in pdb_path.read_text(encoding="ascii", errors="ignore").splitlines():
         if not line.startswith("ATOM"):
@@ -67,6 +76,7 @@ def summarize(values: list[float]) -> dict:
 
 
 def parse_arm(directory: Path, name: str, chain_lengths: list[int]) -> dict:
+    """汇总某成员某 arm（monomer/multimer）的全部 seed 预测并统计均值/极值。"""
     score_files = sorted(directory.glob(f"{name}_scores_*.json"))
     records = []
     for score_path in score_files:
@@ -96,6 +106,7 @@ def parse_arm(directory: Path, name: str, chain_lengths: list[int]) -> dict:
 
 
 def main() -> None:
+    """主流程：逐面板成员解析两 arm -> 门槛判定 -> native/scrambled 对照 -> 写报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panel-dir", default="results/binder_validation/3stb_panel_v1")
     args = parser.parse_args()

@@ -13,6 +13,14 @@ Usage:
 
 Output: idp_design_results/p3_top20_<timestamp>.json
 """
+# P3 阶段：IDP 感知的抗体设计（IDP_DESIGN_SCHEME_V2 §P3）四步流程：
+# 1) 构建 3STB VHH 骨架 + Aβ 表位（伸展多丙氨酸迹线）复合物；
+# 2) ProteinMPNN 在 CDR 区生成候选（温度 0.5，淀粉样先验偏置芳香/疏水，
+#    禁用半胱氨酸以回避二硫键复杂度）；
+# 3) 接触打分 + 抗退化过滤（连续同残基 ≥6、香农熵 <1.0、芳香占比 <0.08 拒绝），
+#    复合分 = 接触密度×距离衰减 + 0.5×MPNN 质量倒数；
+# 4) 加入 4HIX/5CSZ 已知抗体 CDR 作阳性对照基线，并用 BFN V14 检查点
+#    对 top 候选做置信打分（预期与接触分 Spearman ρ>0.4）。
 import sys, os, json, time, tempfile, subprocess, shutil, random, argparse
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import numpy as np
@@ -229,6 +237,7 @@ def graft_and_score(cdr_seq, scaffold_pdb, scaffold_chain, cdr_spec,
 
 def anti_degen_filter(cdr_seq, max_run=6, min_shannon=1.0, min_aromatic=0.08):
     """§P3-2: reject low-complexity CDRs."""
+    # 三重退化防护：连续同残基运行长度、序列香农熵、芳香残基占比
     import math
     # Consecutive run check
     run = 1
@@ -336,6 +345,7 @@ def main():
         d['density'] = cs['density']
         d['mean_distance'] = cs['mean_distance']
         # Composite: contact density + MPNN score (lower=better, invert)
+        # 复合分：接触密度×(1-均距/15 埃的衰减) + 0.5×MPNN 分数倒数（越低越好）
         mpnn_quality = 1.0 / (1.0 + d.get('mpnn_score', 1.0))  # [0.33, 1.0]
         d['composite'] = round(d['density'] * max(0, 1.0 - cs['mean_distance']/15.0) + 0.5 * mpnn_quality, 4)
         scored.append(d)

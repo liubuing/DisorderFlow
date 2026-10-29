@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Build a conservative wet-lab handoff for computation-complete A-beta Fv candidates."""
+"""Build a conservative wet-lab handoff for computation-complete A-beta Fv candidates.
+
+为"计算侧证据完整、湿实验待做"的 A-beta Fv 候选构建保守的湿实验移交包：
+- 按 (native_delta_p25, multiconf_robust_score) 降序排定湿实验优先级；
+- 产出候选清单 CSV、重/轻链 FASTA 与湿实验门槛规范 JSON
+  （五道有序门槛：表达与身份 -> 溶液可开发性 -> 直接结合 -> 状态特异性 ->
+  正交确认）及声明升级规则；明确当前不支持任何结合/合成声明。
+"""
 from __future__ import annotations
 
 import argparse
@@ -16,6 +23,7 @@ def parse_args():
 
 
 def load_candidates(path):
+    """只保留计算侧证据完整的候选（状态字段精确匹配）。"""
     with open(path, newline="", encoding="utf-8") as handle:
         return [
             row for row in csv.DictReader(handle)
@@ -25,6 +33,7 @@ def load_candidates(path):
 
 
 def main():
+    """主流程：筛选候选 -> 排序编号 -> 写清单/序列/门槛规范/报告四件套。"""
     args = parse_args()
     candidates = load_candidates(args.integrated)
     if not candidates:

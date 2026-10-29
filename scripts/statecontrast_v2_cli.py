@@ -11,6 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 COMMANDS = {
+    # StateContrast-v2 全流程的单命令入口：就绪审计 → 状态准备 → 清单 →
+    # 交叉验证准备 → 隔离/fold 加载器双审计 → 训练 → 评估 → OOF 聚合 →
+    # 候选生成 → 覆盖/可开发性审计。步骤顺序即数据依赖顺序。
     "readiness": "scripts/audit_statecontrast_v2_expanded_readiness.py",
     "prepare-states": "scripts/prepare_statecontrast_v2_explicit_states.py",
     "build-manifest": "scripts/build_statecontrast_v2_manifest.py",

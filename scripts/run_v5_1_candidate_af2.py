@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Run GPU AF2-Multimer screening for corrected v5.1 A-beta candidates."""
 
+# 目的：对纠偏后的 v5.1 Aβ 候选做 GPU AF2-Multimer 批量筛选：候选以
+# 重链:轻链（Fv 局部）或全长抗体序列组成双链输入，表位为 Aβ42 全长；
+# 默认 3 次 recycle、首序列作 WSL 预热。提取 AF2 ipTM/ptm/抗体与表位 pLDDT/
+# 界面 PAE 等指标并按预注册阈值（如 ipTM>=0.25 等，见 af2_pass 逻辑）判定通过。
+# 结果写入 af2_screen.json，结构落盘 af2_structures。
+
 import argparse
 import csv
 import json

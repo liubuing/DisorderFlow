@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Download and structurally annotate newly discovered SAbDab peptide complexes."""
+"""Download and structurally annotate newly discovered SAbDab peptide complexes.
+
+物化多骨架确认候选：下载新发现的 SAbDab 抗体-肽复合物（裁剪后的 mmCIF），
+提取重/轻链与唯一 5-50 aa 肽段序列，再用 ANARCII 以 Chothia 方案编号可变域、
+抽取六条 CDR 与 H3 锚定索引；不合格记录写入 exclusions。
+产物为 structural_manifest.json（编号工具/版本/方案留档）。
+"""
 
 from __future__ import annotations
 
@@ -15,6 +21,7 @@ from Bio.SeqUtils import seq1
 ROOT = Path(__file__).resolve().parents[2]
 API = "https://sabdab.opig.stats.ox.ac.uk/api/download/structures"
 AA = set("ACDEFGHIKLMNPQRSTVWY")
+# Chothia 编号下的六条 CDR 残基位置区间（含端点）；H3 以 Cys92/Trp103 锚定
 CHOTHIA_CDR_RANGES = {
     "H": {"H1": (26, 32), "H2": (52, 56), "H3": (93, 102)},
     "L": {"L1": (24, 34), "L2": (50, 56), "L3": (89, 97)},
@@ -22,6 +29,7 @@ CHOTHIA_CDR_RANGES = {
 
 
 def chain_sequence(chain):
+    """提取链的标准残基（含 MSE->M）；跳过插入码外的 HETATM 与缺 CA 残基。"""
     residues = []
     for residue in chain.get_residues():
         if residue.id[0] != " " or "CA" not in residue:
@@ -37,6 +45,7 @@ def chain_sequence(chain):
 
 
 def download_crop(row, path, retries=3):
+    """调用 SAbDab API 下载裁剪复合物；响应非 mmCIF 或网络失败时按指数退避重试。"""
     body = json.dumps({
         "structures": [{
             "pdb_id": f"pdb_0000{row['pdb_id']}",
@@ -65,6 +74,7 @@ def download_crop(row, path, retries=3):
 
 
 def number_variable_domains(rows):
+    """用 ANARCII（accuracy 模式，Chothia 方案）编号重/轻链，抽取 CDR 序列与 H3 索引。"""
     from anarcii import Anarcii
 
     model = Anarcii(seq_type="antibody", mode="accuracy", batch_size=32,
@@ -104,6 +114,7 @@ def number_variable_domains(rows):
 
 
 def main():
+    """主流程：下载/解析 -> 结构资格筛选（成对可变链 + 唯一短肽）-> 编号 -> 出清单。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--discovery", default="data/multiscaffold_confirmatory_v1/discovery.json")
@@ -146,6 +157,7 @@ def main():
             antigen_chain, antigen = antigen_options[0]
             annotated.append({
                 **row,
+                # 记录相对 ROOT 的路径，保证清单可跨机器复核
                 "cif_path": cif_path.relative_to(ROOT).as_posix(),
                 "heavy_sequence": "".join(item["aa"] for item in heavy),
                 "light_sequence": "".join(item["aa"] for item in light),
@@ -167,6 +179,7 @@ def main():
         heavy_cdrs = heavy_domain.get("cdrs", {})
         light_cdrs = light_domain.get("cdrs", {})
         sequence = heavy_cdrs.get("H3", "")
+        # H3 长度限定 3-35 aa：过短/过长说明编号失败或非典型锚定，不可作可靠设计锚
         if not 3 <= len(sequence) <= 35:
             exclusions.append({
                 "instance": row["instance"],

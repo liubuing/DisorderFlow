@@ -23,12 +23,14 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 AA3 = {
+    # 三字母 -> 单字母氨基酸映射
     "ALA": "A", "ARG": "R", "ASN": "N", "ASP": "D", "CYS": "C",
     "GLU": "E", "GLN": "Q", "GLY": "G", "HIS": "H", "ILE": "I",
     "LEU": "L", "LYS": "K", "MET": "M", "PHE": "F", "PRO": "P",
     "SER": "S", "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
 }
 
+# 训练/验证各自的冻结 AF2 bundle 根目录；训练用 8B9V/3STB 家族，验证用 5MP3 家族（骨架不相交）
 TRAIN_ROOTS = (
     "outputs/alpha_synuclein_redesign_validation_v2/colabfold_multiseed_gpu",
     "results/binder_validation/3stb_panel_v1/multimer_results",
@@ -41,10 +43,12 @@ VAL_ROOTS = (
 
 
 def sha256(path):
+    # 文件 SHA256，作为 bundle 的来源身份标识
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def chain_sequences(path):
+    # 解析 PDB 各链序列（仅统计含 CA 的标准残基）
     model = PDBParser(QUIET=True).get_structure(Path(path).stem, str(path))[0]
     return {
         chain.id: "".join(
@@ -57,11 +61,13 @@ def chain_sequences(path):
 
 
 def read_construct_rows(path):
+    # 读取 construct 元数据 CSV 为字典行列表
     with Path(path).open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
 
 
 def load_constructs():
+    # 汇总各来源 construct（VH/VL/抗原序列）与 3STB native 对照，返回 (constructs, manifest)
     rows = read_construct_rows(
         ROOT / "outputs/alpha_synuclein_redesign_validation_v2/redesign_constructs.csv")
     rows += read_construct_rows(
@@ -95,6 +101,7 @@ def load_constructs():
 
 
 def variable_positions(constructs, family, chain_id):
+    # 找出家族内所有候选相对 native 对照发生替换的 1-based 位置（即可设计区）
     family_rows = [
         row for row in constructs.values()
         if row["family"] == family and chain_id in row["chains"]
@@ -113,6 +120,7 @@ def variable_positions(constructs, family, chain_id):
 
 
 def family_contracts(constructs, manifest):
+    # 为每个抗体家族定义候选位置契约（哪些链哪些位置可设计、抗原链是哪条）
     contracts = {}
     for family in ("8B9V", "5MP3"):
         positions = {
@@ -140,6 +148,7 @@ def family_contracts(constructs, manifest):
 
 
 def region_spec(positions):
+    # 将候选位置字典序列化为 "链:位置,位置;…" 的区域描述串
     return ";".join(
         f"{chain}:{','.join(str(value) for value in values)}"
         for chain, values in positions.items()
@@ -147,11 +156,13 @@ def region_spec(positions):
 
 
 def paired_pdb(score_path):
+    # 由 scores JSON 文件名推导对应的 unrelaxed PDB 路径
     name = score_path.name.replace("_scores_", "_unrelaxed_")
     return score_path.with_name(Path(name).with_suffix(".pdb").name)
 
 
 def construct_for_path(path, constructs):
+    # 按文件名前缀匹配 construct；取最长前缀避免歧义
     candidates = [
         construct_id for construct_id in constructs
         if path.name.startswith(construct_id + "_")
@@ -162,6 +173,7 @@ def construct_for_path(path, constructs):
 
 
 def pose_and_seed(path):
+    # 从路径提取 conformer 编号与 AF2 seed；缺 seed 视为命名不合规
     pose = next(
         (part for part in path.parts if re.fullmatch(r"conformer\d+", part)),
         "single_pose",
@@ -173,6 +185,7 @@ def pose_and_seed(path):
 
 
 def discover_bundles(roots, constructs):
+    # 递归发现 (scores JSON, PDB) 成对 bundle，按内容哈希与条件键去重，并按家族过滤到指定 split
     rows = []
     seen = set()
     seen_conditions = set()
@@ -212,6 +225,7 @@ def discover_bundles(roots, constructs):
 
 
 def unbatch_and_trim(batch):
+    # 去掉 batch 维并按 mask 截断 padding，返回 (单样本 dict, 有效长度)
     padded_length = batch["mask"].shape[1]
     valid_length = int(batch["mask"][0].sum())
     output = {}
@@ -232,6 +246,7 @@ def unbatch_and_trim(batch):
 
 
 def build_entry(bundle, constructs, contracts, scaffold_id):
+    """将单个 AF2 bundle 转成数据集条目：校验序列/形状/有限性，切片出候选区 pLDDT 与 PAE。"""
     from modules.bfn_loader import build_region_batch
 
     metadata = constructs[bundle["construct_id"]]
@@ -300,6 +315,7 @@ def build_entry(bundle, constructs, contracts, scaffold_id):
 
 
 def write_lmdb(path, entries):
+    # 将条目列表按序号写入 LMDB（map_size 4 GiB），并记录 __len__
     env = lmdb.open(str(path), map_size=1 << 32)
     with env.begin(write=True) as transaction:
         for index, entry in enumerate(entries):
@@ -310,6 +326,7 @@ def write_lmdb(path, entries):
 
 
 def summarize(entries):
+    # 分组摘要：家族计数与每个 scaffold 组的 construct 数量范围
     families = defaultdict(int)
     groups = defaultdict(set)
     for entry in entries:
@@ -325,6 +342,8 @@ def summarize(entries):
 
 
 def main():
+    # 主流程：载入 constructs 与契约 -> 发现 train/val bundle -> 构建 LMDB 与 manifest
+    # split 契约：train 仅 8B9V/3STB，验证仅 5MP3（骨架不相交）；拒绝覆盖已有输出
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--out", default="data/confidence_candidate_interface_v1")

@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Build and audit template-transferred antibody poses on A-beta42 conformers."""
+# 本脚本把晶体复合物中的抗体姿态经 Kabsch 叠合"模板转移"到多个 Aβ42 构象上，
+# 构建多构象 pose 面板并做几何审计：表位拟合 RMSD、严重碰撞（<1.5 埃对数，
+# 超标时触发限幅局部精修）、界面接触数、paratope 序列保真等六项检查。
+# 面板级门槛：总体通过率 ≥0.90 且每个参考至少 4 个 pose 通过；
+# 产出明确声明为"计算模板转移、非实验结合测量"。
+
 from __future__ import annotations
 
 import argparse
@@ -34,6 +40,9 @@ def parse_args():
 
 
 def main():
+    # 主流程：加载参考配置 → 收集 ≥5 个 Aβ42 构象 → 对每个(参考, 构象)对
+    # 转移姿态 → 碰撞退让/限幅局部精修（种子由参考与构象名的字符和决定）→
+    # 固定 paratope 接触图与几何审计 → 六项检查 → 面板级判定与报告输出
     args = parse_args()
     with open(PROJECT_ROOT / args.config, encoding="utf-8") as handle:
         config = yaml.safe_load(handle)

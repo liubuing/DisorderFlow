@@ -10,7 +10,11 @@ Usage:
         --inputs data/phase3_processed data/sabdab_phase3_processed \
         --output data/phase3_expanded
 """
-
+# 本脚本把 SAbDab 预处理数据与既有 Phase 3 抗体复合物数据合并：
+# 读取各输入目录的 train/val LMDB（按 ID 去重，PDB 冲突时偏向 SAbDab 版本，
+# 其元数据更完整），为旧版条目回填五轴序列元数据（VH/VL/抗原/CDR-H3），
+# 再按四条轴做 MMseqs2 同源聚类并以簇为单位做防泄漏训练/验证划分，
+# 输出统一的 train/val LMDB 与 meta.json 摘要。
 import os
 import sys
 import json
@@ -31,6 +35,7 @@ logger = logging.getLogger(__name__)
 
 def load_lmdb_entries(lmdb_path):
     """Load all entries from an LMDB database."""
+    # 依赖伴随的 *-ids pickle 逐 ID 读取（非连续键），数据库缺失则告警返回空
     ids_path = lmdb_path + '-ids'
     entries = {}
     if not os.path.exists(lmdb_path) or not os.path.exists(ids_path):
@@ -95,6 +100,8 @@ def main():
     logger.info(f"Total unique entries after merge: {len(all_entries)}")
 
     # Recover sequence metadata from legacy Phase 3 entries before clustering.
+    # 旧版 Phase 3 条目没有字符串序列字段，从索引张量回填：
+    # aa 值 <20 映射到 20 字母表，否则写 'X'；CDR-H3 由 cdr_flag==3 掩码切出
     all_list = list(all_entries.values())
     alphabet = 'ACDEFGHIKLMNPQRSTVWY'
     for entry in all_list:
@@ -113,6 +120,8 @@ def main():
                 alphabet[int(value)] if int(value) < 20 else 'X'
                 for value in heavy['aa'][mask])
 
+    # 同源防泄漏划分：VH/VL/CDR-H3 用 0.5 恒等度阈值（抗体序列需更宽松），
+    # 抗原序列用 0.3（更严格），任一轴同簇即视为同源，划分以簇为单位
     annotate_homology_clusters(
         all_list,
         {'vh_sequence': 0.5, 'vl_sequence': 0.5,

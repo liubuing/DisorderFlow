@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Validate and merge all v3 per-component candidate artifacts."""
 
+# 本脚本校验并合并 IDP ensemble v3 的逐成分候选产物：
+# 对面板计划中的每个成分，检查其候选 JSON 状态完整、种子与替换桶预算
+# 与冻结面板一致、两臂（ensemble / single_state）候选数与桶长度匹配、
+# 序列唯一、每条候选的实际替换数与声明桶一致、天然对照零替换、
+# 以及 ensemble 臂 ≥2 个 pose、single_state 臂恰 1 个 pose。
+# 全部通过才合并写出总候选文件（拒绝覆盖），并记录全部来源哈希。
+
 from __future__ import annotations
 
 import argparse
@@ -10,15 +17,19 @@ from pathlib import Path
 
 
 def sha256(path):
+    # 计算文件 SHA-256，记录面板计划与逐成分来源产物指纹
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 统计候选与天然 H3 的逐位替换数；长度不一致直接报错
 def substitutions(sequence, native):
     if len(sequence) != len(native):
         raise ValueError("Candidate and native H3 lengths differ")
     return sum(left != right for left, right in zip(sequence, native, strict=True))
 
 
+# 合并主流程：逐成分做全套预算/臂/桶/对照校验（任一不符即中止），
+# 汇总为总候选文件；候选总数 = 成分数 × 2 臂 × 桶数
 def finalize(panel_path, candidate_dir, output):
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite candidates: {output}")
@@ -88,6 +99,7 @@ def finalize(panel_path, candidate_dir, output):
 
 
 def main():
+    # 主入口：面板、候选目录与输出路径均为必填，完成后打印计数摘要
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panel", type=Path, required=True)
     parser.add_argument("--candidate-dir", type=Path, required=True)

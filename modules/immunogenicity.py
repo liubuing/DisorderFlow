@@ -100,15 +100,19 @@ def _score_proxy(seq: str) -> float:
     motif_score = (sum(anchor_counts) / len(anchor_counts)) if anchor_counts else 0.0
 
     # 3. Length exposure: very long designed regions add epitope surface area.
+    # 以 20 残基为基线线性增长，100 残基封顶
     len_score = min(1.0, max(0.0, (n - 20) / 80.0)) if n > 20 else 0.0
 
     # Weighted blend, clamped to [0, 1].
+    # 疏水窗口权重最高（与聚集/T细胞表位相关性最强），motif 次之，长度最弱
     raw = 0.50 * hydro_score + 0.35 * motif_score + 0.15 * len_score
     return float(max(0.0, min(1.0, raw)))
 
 
 def _score_netmhciipan(seq, exe, allele, verbose):
     """NetMHCIIpan CLI backend. Returns 0–1 (binding affinity rank), or None."""
+    # 任何失败（二进制缺失/超时/非零退出）都返回 None，
+    # 由调用方回退到 proxy——保证过滤环节永不静默放行
     binary = exe or shutil.which("netMHCIIpan")
     if not binary:
         return None
@@ -157,6 +161,7 @@ def score_designs_immunogenicity(
     **kwargs,
 ) -> List[Dict]:
     """Convenience: attach 'immunogenicity' to each design."""
+    # 优先用完整抗体序列（full_ab_seq），缺失时退回设计序列本身
     for d in designs:
         seq = d.get(seq_field) or d.get("sequence", "")
         d["immunogenicity"] = predict_immunogenicity(seq, **kwargs)

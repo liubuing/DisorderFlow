@@ -30,6 +30,8 @@ from typing import Dict, List, Optional
 
 # Default TfR / Tf structures (populated by scripts/download_tfr_targets.py).
 # These are placeholders; the actual files must be downloaded.
+# 6GZV = TfR-Tf 复合物（正向靶标）；1A8E = apo 转铁蛋白（负设计脱靶蛋白）；
+# 5IMK = 淀粉样纤维结合纳米抗体骨架（重链 B）
 TFR_TARGETS_DIR = os.path.join("data", "tfr_targets")
 DEFAULT_TFR_PDB = os.path.join(TFR_TARGETS_DIR, "6GZV.pdb")       # TfR-Tf complex
 DEFAULT_TFR_CHAIN = "A"
@@ -165,6 +167,7 @@ def apply_negative_design_ranking(
         d["off_target_iptm"] = off_iptm
         d["off_target_rejected"] = off_iptm > off_target_iptm_max
         # Specificity composite: keep on-target score but subtract off-target signal.
+        # 特异性分 = 靶上综合分 - 0.5*脱靶 ipTM：软性降权，配合硬阈值一起使用
         d["specificity_score"] = float(d.get("composite_score", 0.0)) - off_iptm * 0.5
         enriched.append(d)
 

@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 """Summarize ANARCI Chothia numbering outputs for VH/VL shortlist."""
+# 本脚本汇总 ANARCI Chothia 编号输出（重链 *_H.csv 与轻链 *_KL.csv）：
+# 按 anarci_id 的 "construct|chain" 约定拆分构造 ID 与链标签，
+# 逐链登记编号状态/HMM 物种/E-value/得分，逐构造检查重轻链是否齐全，
+# 缺任一条链记为 anarci_incomplete。输出链级/构造级 CSV、JSON 摘要与报告。
+
 from __future__ import annotations
 
 import argparse
@@ -23,10 +28,12 @@ def load_csv(path):
 
 
 def construct_id(anarci_id):
+    # anarci_id 约定为 "construct_id|chain_label"，取第一段
     return str(anarci_id).split("|", 1)[0]
 
 
 def chain_label(anarci_id):
+    # 取 anarci_id 的第二段（heavy/light 链标签），缺失返回空串
     parts = str(anarci_id).split("|")
     return parts[1] if len(parts) > 1 else ""
 
@@ -47,6 +54,8 @@ def summarize_row(r):
 
 
 def main():
+    # 主流程：读重/轻链编号 CSV → 逐链与逐构造汇总（重轻齐备才算完整）
+    # → 写两份 CSV、JSON 摘要与 Markdown 报告
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

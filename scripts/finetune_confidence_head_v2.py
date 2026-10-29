@@ -76,6 +76,9 @@ class VarianceRegularization(nn.Module):
         self.threshold = target_std_threshold
 
     def forward(self, pred, target, mask=None):
+        # 铰链式反塌缩: 预测标准差低于 max(threshold, 目标标准差) 时受罚。
+        # threshold=0.02 是 0-1 标签下的最小"非常数"标准差参考，
+        # 防止目标本身方差极小时把模型推向任意大的方差。
         if mask is not None:
             pred = pred[mask]
             target = target[mask]
@@ -95,6 +98,8 @@ class GroupedRankingLoss(nn.Module):
     For designs sharing the same scaffold, if AF2 says design A > design B,
     then BFN prediction should also rank A > B (with margin).
     """
+    # 组内排序的 margin=0.02: 标签为 0-1 的 AF2 分数，同支架候选间差异细微，
+    # margin 取小值只为惩罚逆序与过近平局，不追求大间隔。
     def __init__(self, margin=0.02):
         super().__init__()
         self.margin = margin
@@ -302,6 +307,8 @@ def train_standalone(args):
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
 
+    # 损失权重（相对 SmoothL1）: 相关性 0.5、反塌缩 0.3、组内排序 0.2——
+    # 主项仍是逐点回归，辅助项用于对抗常数输出退化和保持组内有序。
     # Loss weights
     w_l1 = 1.0
     w_corr = 0.5
@@ -470,6 +477,9 @@ def train_full_model(args):
     model = get_model(mc).to(device)
     model.load_state_dict(ckpt['model'], strict=False)
 
+    # 冻结除置信度头之外的全部参数: trainable_suffixes 枚举各版本
+    # （v12/v14）置信度头的参数名后缀，其余参数 requires_grad=False，
+    # 保证微调不破坏已冻结的主干（冻结协议）。
     # Freeze everything except confidence heads
     trainable_suffixes = ['head_plddt', 'head_iptm', 'head_pae',
                           'v12_plddt', 'v12_iptm', 'v12_pae', 'v12_seq_emb',
@@ -503,6 +513,8 @@ def train_full_model(args):
         epoch_loss = 0
         n_batches = 0
         for batch in train_loader:
+            # fixed_t=0.5: 固定桥/扩散时间步，只微调头部在单一条件下的输出，
+            # 避免全时间步采样的方差干扰小容量头的训练。
             # Move to device
             batch = {k: v.to(device) if isinstance(v, torch.Tensor) else v
                      for k, v in batch.items()}

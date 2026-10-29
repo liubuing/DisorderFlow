@@ -49,6 +49,7 @@ def dock_complex(receptor_pdb: str, ligand_pdb: str,
         return {'error': f'Submit HTTP {resp.status_code}'}
 
     # Extract job ID from response URL or content
+    # HDOCK 服务端响应格式不稳定：依次尝试多种 jobid 提取模式
     html = resp.text
     job_url = resp.url
     job_id = None
@@ -146,6 +147,7 @@ def dock_complex(receptor_pdb: str, ligand_pdb: str,
         with open(score_file) as f:
             for line in f:
                 # Parse: "model_1.pdb  -185.23  0.00"  (score, ligand_rmsd)
+                # 只取排名第一批（model_1）的分数
                 parts = line.strip().split()
                 if len(parts) >= 2 and parts[0].startswith('model'):
                     try:

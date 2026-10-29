@@ -27,11 +27,12 @@ from idp_antibody_design import (  # noqa: E402
 
 
 ABETA42 = "DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA"
+# 两个纳米抗体 scaffold（3STB/5IMK）及其 CDR 区段定义
 SCAFFOLDS = [
     ("3STB", "data/misfolding_targets/3STB.pdb", "A", "A:26-33,51-58,97-113"),
     ("5IMK", "data/misfolding_targets/5IMK.pdb", "B", "B:26-33,51-58,97-113"),
 ]
-SEEDS = [0, 2, 4]
+SEEDS = [0, 2, 4]  # A-beta42 构象种子（对照组使用全零条件，与 factual 同种子配对）
 AA3 = {
     "ALA": "A", "ARG": "R", "ASN": "N", "ASP": "D", "CYS": "C",
     "GLN": "Q", "GLU": "E", "GLY": "G", "HIS": "H", "ILE": "I",
@@ -41,6 +42,7 @@ AA3 = {
 
 
 def read_ca(path):
+    """读取 P 链 CA 原子：返回序列与坐标（按残基去重）。"""
     sequence = []
     coordinates = []
     seen = set()
@@ -58,6 +60,7 @@ def read_ca(path):
 
 
 def align_to_reference(mobile, reference):
+    """Kabsch 对齐：SVD 求最优旋转（含反射修正），把 mobile 刚体叠合到 reference。"""
     mobile_center = mobile.mean(axis=0)
     reference_center = reference.mean(axis=0)
     covariance = (mobile - mobile_center).T @ (reference - reference_center)
@@ -70,6 +73,10 @@ def align_to_reference(mobile, reference):
 
 
 def rmsf_profile(seed_paths):
+    """由 5 个 A-beta42 构象计算逐残基 CA RMSF，并以 tanh(RMSF/2) 作为模型条件。
+
+    除以 2.0 把典型 RMSF（Å）压入 [0,1)，避免条件信号饱和。
+    """
     structures = []
     for path in seed_paths:
         sequence, coordinates = read_ca(path)
@@ -98,6 +105,7 @@ def shannon(sequence):
 
 
 def nglyco_count(sequence):
+    """统计 N-糖基化序列子 N-X-S/T（X 不为 P）出现次数。"""
     return sum(
         sequence[index] == "N" and sequence[index + 1] != "P" and sequence[index + 2] in "ST"
         for index in range(len(sequence) - 2)
@@ -105,6 +113,7 @@ def nglyco_count(sequence):
 
 
 def quality_metrics(cdr, full_sequence, scaffold_sequence, result):
+    """序列质量守门：多样性/香农熵/连续重复/新 Cys/新 N-糖基化/PPL/熵七项。"""
     metrics = {
         "unique_aa": len(set(cdr)),
         "shannon": shannon(cdr),
@@ -113,6 +122,8 @@ def quality_metrics(cdr, full_sequence, scaffold_sequence, result):
         "new_nglyco_motifs": max(0, nglyco_count(full_sequence) - nglyco_count(scaffold_sequence)),
     }
     failures = []
+    # 阈值：去重氨基酸 >=8、香农熵 >=1.8、最长同聚 <=3、无新 Cys/新糖基化、
+    # PPL <=200、熵落在 [0.25, 2.95]
     if metrics["unique_aa"] < 8:
         failures.append("low_diversity")
     if metrics["shannon"] < 1.8:
@@ -133,6 +144,7 @@ def quality_metrics(cdr, full_sequence, scaffold_sequence, result):
 
 
 def candidate_score(result):
+    """候选综合分：接触分为主（0.50），辅以 pLDDT/ipTM/逆 PPL/熵质量项。"""
     contact = result.get("contact_score", 0.0)
     plddt = result.get("plddt", 0.0)
     iptm = result.get("iptm", 0.0)
@@ -142,6 +154,7 @@ def candidate_score(result):
 
 
 def main():
+    """主流程：RMSF 条件 -> 逐 scaffold/构象种子生成 factual+零条件对照 -> 质量筛选去重。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--output-dir", default="results/v5_1_candidates/abeta42")
@@ -215,6 +228,7 @@ def main():
             print(f"Generated {name} seed {seed_index}: {len(factual)} factual + {len(zero)} zero", flush=True)
 
     candidates.sort(key=lambda item: (item["passes_quality"], item["candidate_score"]), reverse=True)
+    # 选出送 AF2 的 top 候选：质量合格优先，全局去重，且每个 (scaffold, seed) 最多 2 条
     selected = []
     seen_sequences = set()
     per_context = Counter()

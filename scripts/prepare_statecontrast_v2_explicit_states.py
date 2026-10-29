@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Materialize target/peptide-stripped-apo state pairs for fixed candidates."""
 
+# 本脚本为固定候选物化 statecontrast v2 的显式状态对：
+# 每成分每臂每替换桶的候选，在其 pose 面板上展开三类状态——
+# target（结合靶标姿态，带独立教师接触化学分）、apo（剥除肽/抗原链的
+# 抗体框架，非实验观测的游离构象集合）、off_target（跨靶标供体序列的
+# 合成序列错配负态，训练权重降为 0.25 且明确标注非实验非结合证据）。
+# pose 选择按"实验/采样"两源轮询确定性取前 5 个，全部输入记录 SHA-256。
+
 from __future__ import annotations
 
 import argparse
@@ -23,6 +30,7 @@ def sha256(path):
 
 
 class _KeepChains(Select):
+    # PDBIO 链过滤器：仅保留指定抗体链，写出剥除抗原的 apo 姿态
     def __init__(self, chains):
         self.chains = set(chains)
 
@@ -41,6 +49,7 @@ def write_apo_pose(target_path, antibody_chains, output_path):
 
 
 def antigen_sequence(pose):
+    # 从 pose PDB 拼接抗原链的标准氨基酸序列（须有 CA 原子）
     model = PDBParser(QUIET=True).get_structure(
         pose["pose_id"], str(ROOT / pose["path"]))[0]
     return "".join(
@@ -52,6 +61,8 @@ def antigen_sequence(pose):
 
 def select_source_balanced_poses(poses, maximum=5):
     """Deterministically round-robin broad pose sources before score access."""
+    # 确定性两源轮询（experimental/sampled 交替），在访问任何分数之前完成，
+    # 避免"按分数挑 pose"引入选择偏差
     if len(poses) <= maximum:
         return list(poses)
     grouped = {"experimental": [], "sampled": []}
@@ -80,6 +91,9 @@ def select_source_balanced_poses(poses, maximum=5):
 
 def prepare(candidates_path, poses_path, scorer_path, plan_path, output_dir,
             maximum_poses_per_component=5):
+    # 物化主流程：读四路冻结输入 → 为每成分挑选长度最接近的跨靶标供体 →
+    # 逐候选逐 pose 展开三类状态（apo 坐标按需生成并缓存）→
+    # 汇总写出 explicit_states.json（训练前冻结）
     candidates = json.loads(candidates_path.read_text(encoding="ascii"))
     poses = json.loads(poses_path.read_text(encoding="ascii"))
     scorer = json.loads(scorer_path.read_text(encoding="ascii"))
@@ -236,6 +250,7 @@ def prepare(candidates_path, poses_path, scorer_path, plan_path, output_dir,
 
 
 def main():
+    # 主入口：四个输入与输出目录均有默认值；每成分 pose 上限默认 5
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidates", type=Path, default=Path(
         "reviewer_outputs/idp_ensemble_expanded_development_v2/candidates.json"))

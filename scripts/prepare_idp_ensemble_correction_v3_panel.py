@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Freeze the v3 candidate execution plan after cohort admission."""
 
+# 目的：v3 纠偏面板的执行计划冻结——在队列准入（untouched_cohort_admitted）通过后、
+# 接触任何候选序列之前，把配对比较臂、独立生成种子、每组候选/对照数与突变空间
+# （可变区域/替换桶/最大 H3 替换数）一次性冻结为计划 JSON。冻结顺序保证
+# "先注册计划、后生成候选"，杜绝事后选择偏差。
+
 from __future__ import annotations
 
 import argparse
@@ -23,6 +28,8 @@ def resolve(path):
 
 
 def prepare(config_path, admission_path, output_path):
+    # 冻结流程：拒绝覆盖→校验准入状态与三项最低配额（>=12 精确新结构、
+    # >=12 独立谱系、>=3 靶标）→校验组分 ID 与抗体谱系均唯一→写出计划。
     if output_path.exists():
         raise FileExistsError(f"Refusing to overwrite v3 panel plan: {output_path}")
     config = yaml.safe_load(Path(config_path).read_text(encoding="ascii"))

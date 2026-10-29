@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Download and freeze official CAID3 reference files before evaluation."""
 
+# 本脚本在正式评估之前一次性下载并冻结 CAID3 官方参考文件
+# （无序/binding/linker 等五套基准），同时把每个文件的 SHA-256、字节数与
+# 记录数写入 manifest.json，声明"方法在下载前已冻结"以保证前瞻性。
+# manifest 已存在时拒绝覆盖（--force 除外），防止参考集被悄悄替换。
+
 from __future__ import annotations
 
 import argparse
@@ -22,14 +27,19 @@ REFERENCES = (
 
 
 def sha256_bytes(data):
+    # 计算字节串 SHA-256，记录参考文件的冻结指纹
     return hashlib.sha256(data).hexdigest()
 
 
 def count_records(data):
+    # 统计 FASTA 记录数（以 ">" 开头的行数）
     return sum(line.startswith(b">") for line in data.splitlines())
 
 
 def main():
+    # 主流程：逐个下载参考文件（校验响应确实以 FASTA header 开头）→
+    # 写入冻结目录并记录哈希 → 生成 manifest（内含方法冻结声明与
+    # 检查点/校准文件的预置哈希），manifest 一经写出不可覆盖。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out-dir", default=str(ROOT / "data/caid3/frozen_raw"))
     parser.add_argument("--force", action="store_true")

@@ -34,6 +34,7 @@ RCSB_FILES = 'https://files.rcsb.org/download'
 
 def fetch_uniprot_with_pdb(max_results=200, min_len=50, max_len=250):
     """Fetch UniProt Swiss-Prot entries that have PDB cross-references."""
+    # 分页拉取有 PDB 交叉引用的 reviewed 序列，解析分号分隔的 PDB ID 列表
     print(f'Querying UniProt for reviewed entries (L={min_len}-{max_len}) with PDB structures...')
     query = f'(length:[{min_len} TO {max_len}] AND reviewed:true)'
     results = []
@@ -41,7 +42,7 @@ def fetch_uniprot_with_pdb(max_results=200, min_len=50, max_len=250):
 
     url = f'{UNIPROT_API}?query={query}&size=500&format=tsv&fields=accession,length,xref_pdb'
 
-    for _ in range(20):  # Max 20 pages (10000 entries)
+    for _ in range(20):  # Max 20 pages (10000 entries)  # 最多翻 20 页（每页 500 条），防止无限拉取
         if len(results) >= max_results:
             break
 
@@ -95,6 +96,7 @@ def fetch_uniprot_with_pdb(max_results=200, min_len=50, max_len=250):
 
 def get_pdb_resolution(pdb_id):
     """Get experimental resolution for a PDB ID."""
+    # 查询 RCSB 元数据：返回 (分辨率, 蛋白聚合体数, 沉积链实例数)；查询失败返回 (None, 0, 0)
     try:
         url = f'https://data.rcsb.org/rest/v1/core/entry/{pdb_id}'
         r = requests.get(url, timeout=10)
@@ -121,6 +123,7 @@ def get_pdb_resolution(pdb_id):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    # PDB -> BFN 训练 batch：mask 全链 -> merge -> patch，返回 (batch, 序列, 残基数)
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -146,6 +149,7 @@ def preprocess_pdb_for_bfn(pdb_path):
 
 
 def extract_plddt_from_mmcif(cif_text):
+    # 从 AF2 mmCIF 提取逐残基 pLDDT（CA 原子 B 因子 / 100）
     from Bio.PDB.MMCIFParser import MMCIFParser
     parser = MMCIFParser(QUIET=True)
     structure = parser.get_structure('tmp', io.StringIO(cif_text))
@@ -161,12 +165,13 @@ def extract_plddt_from_mmcif(cif_text):
 
 
 def main():
+    # 主流程：UniProt+PDB 检索 -> 选最高分辨率结构 -> 下载 PDB/AF2 -> 预处理对齐 -> 划分保存
     import argparse
     p = argparse.ArgumentParser(description='Build PDB+AF2 dataset via UniProt xrefs')
     p.add_argument('--max_proteins', type=int, default=100)
     p.add_argument('--min_len', type=int, default=50)
     p.add_argument('--max_len', type=int, default=250)
-    p.add_argument('--max_resolution', type=float, default=2.5)
+    p.add_argument('--max_resolution', type=float, default=2.5)  # 分辨率上限（埃）
     p.add_argument('--start_from', type=int, default=0, help='Resume from this UniProt entry index')
     p.add_argument('--output_dir', default=str(PROJECT_DIR / 'data' / 'confidence_dataset_pdb'))
     p.add_argument('--pdb_cache_dir', default=str(PROJECT_DIR / 'data' / 'pdb_cache'))
@@ -201,8 +206,8 @@ def main():
 
         # 2. Find best PDB structure (highest resolution)
         best_pdb = None
-        best_res = 999
-        for pdb_id in pdb_candidates[:5]:
+        best_res = 999  # 初始化为正无穷替代值，保证任何有效分辨率都会更优
+        for pdb_id in pdb_candidates[:5]:  # 每个 UniProt 最多检查 5 个候选 PDB
             resolution, polymer_count, instance_count = get_pdb_resolution(pdb_id)
             if resolution and polymer_count >= 1:
                 if resolution < best_res:
@@ -292,7 +297,7 @@ def main():
 
         # 6. Download AF2 PAE
         pae_t = torch.zeros(n_res, n_res)
-        iptm = 0.5
+        iptm = 0.5  # PAE 缺失时以中性 ipTM=0.5 兜底
         pae_url = f'{AFDB_BASE}/AF-{uniprot}-F1-predicted_aligned_error_v6.json'
         try:
             r_pae = requests.get(pae_url, timeout=30)
@@ -348,7 +353,7 @@ def main():
         print('No entries!')
         sys.exit(1)
 
-    split_and_save_entries(results, output_dir, train_split=0.8, seed=2026)
+    split_and_save_entries(results, output_dir, train_split=0.8, seed=2026)  # 8:2 划分，固定种子保证可复现
 
     print(f'\nDone!')
 

@@ -87,6 +87,7 @@ def score_pose(pdb_path, rec_chain='H', lig_chain='P', cdr_ranges=None):
     contacts = int((dists < CONTACT_CUT).sum())
     e_contact = contacts/max(n_rec,1)
     # E_bsa
+    # 埋藏面积以 500 Å² 为饱和点归一到 [0,1]（典型抗体-肽界面的经验量级）
     bsa_val = _bsa(pdb_path, rec_chain, lig_chain)
     e_bsa = min(1.0, bsa_val/500.0)
     # All-pairs distance matrix
@@ -115,9 +116,11 @@ def score_pose(pdb_path, rec_chain='H', lig_chain='P', cdr_ranges=None):
             elif rh<0 and lh<0: e_hydro += w*0.3
     e_hydro_n = e_hydro/max(nh,1)
     # E_shape
+    # 接触距离越集中说明贴合越均匀（std 相对 8Å 截断的偏差）
     cd = dists[dists<CONTACT_CUT]
     e_shape = 1.0-cd.std()/CONTACT_CUT if len(cd)>1 else 0.0
         # Composite — zero if contacts < 5 (invalid dock)
+    # 少于 5 个接触视为无效对接，直接判 composite=0 并打 invalid 标记
     if contacts < 5:
         return {'contacts':contacts,'e_contact':round(e_contact,4),'bsa':round(bsa_val,1),
                 'e_bsa':round(e_bsa,4),'e_elec':round(e_elec_n,4),'e_hydro':round(e_hydro_n,4),
@@ -129,6 +132,8 @@ def score_pose(pdb_path, rec_chain='H', lig_chain='P', cdr_ranges=None):
 
 
 def three_way_vote(physical_score, inverse_fold_score=None, single_chain_plddt=None):
+    # 三票表决门：E1 物理界面分为必选项；E2（逆折叠得分）与 E3（单链 pLDDT）
+    # 至少满足其一才放行——防止单一指标误判
     e1_ok = physical_score > 0.2
     e2_ok = inverse_fold_score is not None and inverse_fold_score > 0.5
     e3_ok = single_chain_plddt is not None and single_chain_plddt > 0.4

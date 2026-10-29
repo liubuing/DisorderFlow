@@ -17,6 +17,8 @@ def main():
     manifest = json.loads((OUT / "splits.json").read_text())
     predictions = json.loads((OUT / "predictions.json").read_text())["records"]
     # Verify saved metrics independently against candidate-level predictions.
+    # 独立校验: 用逐候选预测按 (谱系,预算,种子,模型) 重组分组, 重算 report 中每个
+    # 指标单元并逐项断言一致; stratum="all" 或按 covered/uncovered 过滤测试索引
     groups = {}
     for p in predictions:
         key = (p["family"], p["budget"], p["seed"], p["model"])
@@ -32,11 +34,14 @@ def main():
         for k, value in v.items():
             assert r[k] is None if value is None else np.isclose(r[k], value)
     freeze(OUT / "verification.json", {"metric_cells_recomputed": len(report["metrics"]),
+        # 冻结校验回执: 记录重算单元数与全部产物哈希; compatibility 说明首轮
+        # weights_only 反序列化问题的修复方式(白名单 argparse.Namespace)
         "prediction_records": len(predictions), "unique_candidate_count": len(rows),
         "artifact_sha256": {f: digest(OUT / f) for f in ["protocol.json", "splits.json", "report.json", "fits.json", "predictions.json", "embedding_receipt.json"]},
         "compatibility": "first launch stopped before fitting: Torch weights_only rejected argparse.Namespace; rerun with this stdlib class allowlisted; unchanged protocol and benchmark script",
         "runner_sha256": digest(ROOT / "scripts/run_aayl_learnability.py")})
     lines = ["# AAYL 亲和力排序：第一阶段可学习性结果", "", "日期：2026-09-16。已完成开发实验；不是独立验证或投稿达标证明。", "",
+        # 报告正文(中文)逐行拼接: 结论 -> 冻结设计 -> 主结果表 -> 学习曲线 -> 分层 -> 门槛
         "## 结论", "", "当前单突变监督向双、三突变推广的信号较弱。冻结小型 ESM2 表示没有稳定超过位置编码 Ridge，预设复杂模型投入门槛未通过。暂不据此开展昂贵结构融合或大模型训练。这个结果只约束本轮数据、表示和任务，不能排除其他方法可行。", "",
         "## 冻结设计与信息条件", "", "原始 AlphaSeq 完整三重复读数共 508 个候选；端点为 9 − median(log10 estimated Kd[nM])。单突变训练，双突变、三突变分别测试。训练预算 20、50、全部；20/50 各 5 个预设随机子集，全部预算只运行一次。89/55 个单突变不支持 100 标签预算。", "",
         "三种监督基线：位置×氨基酸 Ridge、同编码 RBF 核 Ridge、冻结 ESM2 t6 8M 的 H3 平均表示＋Ridge。模型选择仅使用训练内五折 CV，目标中心化和 ESM 特征缩放均在折内拟合。三种原始 ProteinMPNN 分数为零样本对照，信息条件不同。ECLS 此处用 apo NLL − complex NLL（越高越好）。", "",
@@ -48,6 +53,8 @@ def main():
     lines += ["", "## 学习曲线", "", "下表为全体相应测试候选的 Spearman 均值 [最小, 最大]。子集之间共享测试集；该范围不是置信区间，不构成五次独立验证。", "",
               "| 谱系 | 测试 | 标签预算 | 方法 | Spearman 均值 [范围] |", "|---|---|---|---|---|"]
     for family in sorted(data["structures"]):
+        # 学习曲线: 全部 (谱系 x 阶数 x 预算 x 模型) 组合的 Spearman 均值与范围;
+        # 各随机子集共享同一测试集, 范围只是离散度展示而非置信区间
         for degree in [2, 3]:
             for budget in [20, 50, "all"]:
                 for model in ["position_ridge", "position_rbf", "esm2_ridge"]:
@@ -56,6 +63,7 @@ def main():
     lines += ["", "## 替换覆盖分层", "", "covered 要求每一个具体位点＋替换氨基酸都在训练出现过。以下全部预算结果显示纯组合外推样本很少，尤其 AAYL51；n=3 的相关性不宜用于科学结论。", "",
               "| 谱系 | 阶数 | 分层 | n | Ridge ρ | ESM2 ρ |", "|---|---|---|---:|---:|---:|"]
     for family in sorted(data["structures"]):
+        # 替换覆盖分层: covered = 每个位点+替换都在训练出现过; 全预算下比较 Ridge 与 ESM2
         for degree in [2, 3]:
             for stratum in ["covered", "uncovered"]:
                 values = {r["model"]: r for r in report["metrics"] if r["family"] == family and r["degree"] == degree and r["budget"] == "all" and r["stratum"] == stratum}

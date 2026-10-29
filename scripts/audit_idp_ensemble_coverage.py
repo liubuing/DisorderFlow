@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Audit whether pose panels extend beyond local native-neighborhood replicas."""
 
+# 目的：审计 IDP 集成姿态面板的覆盖度是否超出"本地近邻构象复制"——即姿态是否
+# 具有真实的多来源与多样性。方法：抗体主链叠合后计算抗原界面的 CA-RMSD，
+# 近重复对与坐标哈希相同的姿态并入并查集得到"有效姿态数"，再逐项检查配置要求。
+# 输入：YAML 要求配置 + 姿态清单 JSON；输出：逐组分 coverage_ready 判定的 JSON。
+
 from __future__ import annotations
 
 import argparse
@@ -28,6 +33,8 @@ def ca_coordinates(path, chain_ids):
 
 
 def kabsch_rmsd(reference, mobile):
+    # Kabsch 算法：SVD 求最优旋转后计算 CA-RMSD；检测旋转矩阵行列式为负时
+    # 翻转最后一个奇异向量以排除镜像解。少于 3 个原子无法定义刚体叠合，返回 None。
     if reference.shape != mobile.shape or len(reference) < 3:
         return None
     ref = reference - reference.mean(axis=0)
@@ -42,6 +49,8 @@ def kabsch_rmsd(reference, mobile):
 
 
 def antibody_aligned_antigen_rmsd(ref_antibody, mob_antibody, ref_antigen, mob_antigen):
+    # 以抗体为参照做刚体叠合，再把变换应用到抗原上，度量"界面姿态"差异：
+    # 抗体内部差异被消除，剩余差异反映抗原相对抗体的摆放（对接姿态）而非整体折叠。
     if (ref_antibody.shape != mob_antibody.shape
             or ref_antigen.shape != mob_antigen.shape
             or len(ref_antibody) < 3 or len(ref_antigen) < 1):
@@ -61,6 +70,8 @@ def antibody_aligned_antigen_rmsd(ref_antibody, mob_antibody, ref_antigen, mob_a
 
 
 def effective_pose_count(pose_ids, coordinate_hashes, duplicate_pairs):
+    # 用并查集把坐标完全相同（哈希一致）与界面近重复的姿态合并，
+    # 返回不重复等价类的个数，即"有效姿态数"，防止同一构象被重复计数虚增多样性。
     parent = {pose_id: pose_id for pose_id in pose_ids}
 
     def find(value):
@@ -86,6 +97,9 @@ def effective_pose_count(pose_ids, coordinate_hashes, duplicate_pairs):
 
 
 def audit(config_path, manifest_path, output_path):
+    # 主审计：逐组分计算两两界面 RMSD，标记低于近重复阈值的姿态对，
+    # 再对照配置要求（最小原始/有效姿态数、来源类别数、非本地姿态数、中位 RMSD 下限）
+    # 生成 coverage_ready 布尔判定。
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
     manifest = json.loads(manifest_path.read_text(encoding="ascii"))
     requirements = config["requirements"]

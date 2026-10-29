@@ -29,10 +29,18 @@ from scripts.build_candidate_interface_confidence_v1 import (  # noqa: E402
 from disorderflow.utils.data import update_lmdb_record_digest  # noqa: E402
 
 
+# 各指标的"噪声尺度"参考：把跨重复的样本标准差除以该尺度再平方后平均，
+# 得到无量纲不稳定度（std 达到该尺度 => 方差贡献 1）。0.05/0.05/0.10 分别
+# 对应 pLDDT、ipTM 的典型重复波动与归一化 PAE 的更大容许波动，为协议约定。
 NOISE_SCALES = {"plddt": 0.05, "iptm": 0.05, "pae_normalized": 0.10}
 
 
 def load_inputs(results_paths, split_path):
+    # 加载并交叉校验多协议 AF2 结果与划分清单:
+    #   - 所有结果必须 af2_complete 且登记的 split manifest 哈希一致；
+    #   - 各协议的 entity 契约必须完全相同；
+    #   - 各协议必须使用不同的 AF2 model_number（否则聚合去重无从谈起）。
+    # 任一不满足即抛错（fail-closed）。支持轮询等待 AF2 结果就绪。
     result_sets = [json.loads(path.read_text(encoding="utf-8")) for path in results_paths]
     split = json.loads(split_path.read_text(encoding="utf-8"))
     for results in result_sets:
@@ -52,6 +60,8 @@ def load_inputs(results_paths, split_path):
 
 
 def residue_plddt_and_sequences(path):
+    # 从 AF2 PDB 提取逐残基 pLDDT（AF2 把 pLDDT 写入 B-factor 列，0-100 原始值）
+    # 与各链观测序列；只统计含 CA 原子的标准氨基酸残基。
     model = PDBParser(QUIET=True).get_structure(path.stem, str(path))[0]
     sequences = {}
     values = []
@@ -73,6 +83,8 @@ def residue_plddt_and_sequences(path):
 
 
 def load_prediction_arrays(result):
+    # 校验 PDB/PAE 哈希后加载预测数组; pLDDT 归一化到 0-1（除以 100），
+    # PAE 保持原始单位（埃，越低越好）。
     pdb_path = ROOT / result["pdb"]
     pae_path = ROOT / result["pae_npz"]
     if sha256(pdb_path) != result["pdb_sha256"]:
@@ -85,6 +97,12 @@ def load_prediction_arrays(result):
 
 
 def aggregate_targets(result_sets, entities, components, allowed_components=None):
+    # 按 entity 聚合全部重复（2 个 AF2 模型 x 3 个种子）的预测为目标统计:
+    # 均值 pLDDT/ipTM/PAE、各自 std 与 SEM（std/sqrt(重复数)）、以及稳定权重
+    # weight = clip(1/(1+三指标 scaled 方差均值), 0.1, 1.0)——重复间越一致
+    # 权重越接近 1。PAE 摘要取 H3-抗原界面子矩阵均值并除以 31.0（约等于
+    # AF2 PAE 的实际分辨率上限，将其映射到近 0-1 区间）。重复不齐或任一失败
+    # 即抛错；链序固定为 A=重链/B=轻链/C=抗原。
     rows_by_entity = {}
     for results in result_sets:
         for row in results["results"]:
@@ -146,6 +164,13 @@ def aggregate_targets(result_sets, entities, components, allowed_components=None
 def build_entry(
         result, entity, component, scaffold_id, protocol_id, target,
         uncertainty_version="v1"):
+    # 把单条 AF2 预测打包成训练条目: 用 H3 区域批（上下文链 B/C、抗原链 C）
+    # 构造模型输入，并附聚合目标统计中该 patch 对应的 pLDDT/ipTM/PAE 切片。
+    # 校验: 观测序列与 entity 契约一致、数组形状/有限性/PAE 非常数、
+    # PDB 逐残基 pLDDT 均值与结果记录一致（容差 5e-4，因 0-100 到 0-1 的
+    # 舍入）、patch 长度与 H3 生成掩码数量一致。
+    # uncertainty_version=v2 时额外限制抗原上下文（cap=16）并记录逐重复
+    # 原始指标（下划线开头字段），供 apply_v2_uncertainty 计算层级 SEM。
     from modules.bfn_loader import build_region_batch
 
     pdb_path = ROOT / result["pdb"]
@@ -312,6 +337,8 @@ def apply_v2_uncertainty(entries):
 
 
 def write_lmdb(path, entries):
+    # 写 LMDB 并对流式计算逐记录 SHA-256 摘要（含 __len__ 记录），
+    # 返回十六进制摘要供清单登记——下游可据此校验数据未被改动。
     env = lmdb.open(str(path), map_size=1 << 34)
     digest = hashlib.sha256()
     with env.begin(write=True) as transaction:
@@ -330,6 +357,12 @@ def write_lmdb(path, entries):
 
 
 def main():
+    # 主流程: 等待并校验 AF2 结果 → 仅导出 train/calibration 划分
+    # （test 划分默认封存，需显式 --include-test 才解锁，防止测试集泄漏进
+    # 开发数据集）→ 按 (component, protocol, seed) 分组编号 → 构建条目
+    # （可选 v2 不确定度）→ 写各划分 LMDB 与 manifest.json。
+    # manifest 记录噪声尺度、稳定权重公式与成对噪声阈值公式，保证后续
+    # 校准协议可直接引用同一约定。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--results", nargs="+", default=[

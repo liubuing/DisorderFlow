@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Emit an opaque 108-construct v3 assay manifest and sealed blind key."""
+"""Emit an opaque 108-construct v3 assay manifest and sealed blind key.
+
+为 v3 实验检测生成不透明的 108 构建体盲测清单与密封盲钥：
+每个组件产生 ensemble/single_state 两条候选 + 一条 native 对照，
+共 3×36=108 条；用固定种子 12041 洗牌隐藏分组信息。
+清单不含序列与分支信息（交给实验方），盲钥单独封存（不得交给检测分析员）。
+"""
 
 from __future__ import annotations
 
@@ -11,11 +17,14 @@ from pathlib import Path
 
 
 def sha256(path):
+    """计算文件 sha256，用于把盲测清单绑定到具体候选输入。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def blind(candidates_path, panel_path, manifest_path, key_path):
+    """生成盲测清单与盲钥；输入不完整或数量不符 108 则拒绝。"""
     if manifest_path.exists() or key_path.exists():
+        # 盲测产物不可覆盖，保证实验移交物唯一
         raise FileExistsError("Refusing to overwrite blinded v3 outputs")
     candidates = json.loads(candidates_path.read_text(encoding="ascii"))
     panel = json.loads(panel_path.read_text(encoding="ascii"))
@@ -55,7 +64,9 @@ def blind(candidates_path, panel_path, manifest_path, key_path):
             "native_control": True,
         })
     if len(selected) != 108:
+        # 108 = 36 组件 × (2 候选分支 + 1 native 对照)，数量异常说明上游有缺漏
         raise RuntimeError(f"Expected 108 constructs, found {len(selected)}")
+    # 固定随机化种子 12041：洗牌顺序可复现，保证盲钥与清单对得上
     random.Random(12041).shuffle(selected)
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     key_path.parent.mkdir(parents=True, exist_ok=True)
@@ -84,6 +95,7 @@ def blind(candidates_path, panel_path, manifest_path, key_path):
 
 
 def main():
+    """命令行入口：候选面板 + 面板计划 -> 盲测清单与密封盲钥。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidates", type=Path, required=True)
     parser.add_argument("--panel", type=Path, required=True)

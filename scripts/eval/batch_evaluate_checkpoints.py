@@ -49,6 +49,7 @@ CDR_TYPES = ['H_CDR1', 'H_CDR2', 'H_CDR3', 'L_CDR1', 'L_CDR2', 'L_CDR3']
 
 def evaluate_single_cdr(model, batch, device):
     """Evaluate a single CDR and return metrics."""
+    # 确定性采样单个 CDR，计算氨基酸恢复率（AAR）与困惑度（PPL）
     model.eval()
     
     with torch.no_grad():
@@ -93,6 +94,7 @@ def evaluate_single_cdr(model, batch, device):
 
 def evaluate_structure_all_cdrs(pdb_id, pdb_path, heavy_chain, light_chain, model, device, antigen_id=None, gt_pdb_path=None):
     """Evaluate all CDRs for a single structure."""
+    # 单结构评估：重编号 -> 预处理 -> 逐 CDR mask+采样；可选提供 GT PDB 校准 native_aa
     results = []
     
     temp_files = []
@@ -183,8 +185,10 @@ def evaluate_structure_all_cdrs(pdb_id, pdb_path, heavy_chain, light_chain, mode
 
 def evaluate_checkpoint(ckpt_path, config, test_df, chothia_dir, device, output_dir, gt_dir=None, detect_antigen=False):
     """Evaluate a single checkpoint and return summary."""
-    
+    # 单 checkpoint 全测试集评估：加载模型 -> 逐结构逐 CDR -> 保存 CSV/JSON 汇总
+
     # Load model
+    # 加载模型（含训练期 loss 权重）
     ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
     
     model_config = ckpt['config'].model
@@ -306,6 +310,7 @@ def evaluate_checkpoint(ckpt_path, config, test_df, chothia_dir, device, output_
 
 def print_summary(ckpt_name, summary_data, output_dir):
     """Print formatted summary."""
+    # 按固定列宽打印各 CDR 与整体 AAR/PPL 摘要表
     print(f"\n{'='*70}")
     print(f"CHECKPOINT: {ckpt_name}")
     print(f"{'='*70}")
@@ -328,6 +333,7 @@ def print_summary(ckpt_name, summary_data, output_dir):
 
 
 def main():
+    # 主流程：从 config 或参数定位 checkpoint 目录，按 step 间隔批量评估并落盘
     parser = argparse.ArgumentParser(description='Batch evaluate checkpoints on test set')
     parser.add_argument('--config', type=str, required=True, help='Config YAML file')
     parser.add_argument('--test_set', type=str, required=True, help='Test set CSV file')

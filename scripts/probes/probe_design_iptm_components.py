@@ -23,6 +23,7 @@ CKPT = os.environ.get('V14_CKPT',
     'logs/bfn_v14_grouped_conf_xpu_2026_06_26__01_06_36/checkpoints/best.pt')
 
 # Point app_config at the V14-unfreeze checkpoint so load_bfn picks it up.
+# 临时改写 app_config.yaml 指向 V14-unfreeze checkpoint, finally 块中还原
 import yaml
 cfg_path = 'app_config.yaml'
 with open(cfg_path, encoding='utf-8') as f:
@@ -33,6 +34,7 @@ with open(cfg_path, 'w', encoding='utf-8') as f:
     yaml.dump(app_cfg, f, default_flow_style=False)
 
 captured = []  # list of (iptm_seq, iptm_bb) per design
+# 每条设计捕获一组 (iptm_seq, iptm_bb) 标量, 用于方差分解
 try:
     import bfn_loader
     bfn_loader._bfn_model = None
@@ -49,6 +51,7 @@ try:
     # Patch sample to capture components after each design.
     # run_bfn_design calls model.sample(...) per design. We wrap receiver so
     # the LAST forward's components are grabbed.
+    # 用包装函数替换 receiver.forward: 每次前向后读取 stash 的 (seq, bb) 分量标量
     orig_forward = model.bfn.receiver.forward
     def wrapped_forward(*a, **kw):
         out = orig_forward(*a, **kw)
@@ -77,6 +80,7 @@ try:
         print(f'{i+1:>3} {d["iptm"]:>11.6f} {s:>11.6f} {b:>11.6f} {d.get("ppl",0):>6.0f}')
 
     if captured:
+        # 方差判定: 某分量 std < 1e-4 视为常数, 定位 ipTM 塌缩发生在哪条通路
         seqs = np.array([c[0] for c in captured])
         bbs = np.array([c[1] for c in captured])
         preds = np.array([d['iptm'] for d in designs[:len(captured)]])

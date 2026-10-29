@@ -8,6 +8,10 @@ neurodevelopmental, brain tumor, epilepsy, and psychiatric disorder proteins.
 import sys, os, json, pickle, time, io, tempfile, re
 from pathlib import Path
 
+# 用途：构建脑/神经系统疾病蛋白的置信度训练数据集（BFN confidence training）。
+# 流程：按疾病类别向 UniProt 检索人源蛋白（organism_id:9601 之外用 9606，
+# 长度 50-400、reviewed 且非片段）→ 下载 AFDB AlphaFold v{N} mmCIF 及 PAE →
+# 提取 pLDDT/序列 → 预处理为 BFN batch → 写入 LMDB（支持 --resume 断点续跑）。
 if sys.platform == 'win32':
     import io as _io
     sys.stdout = _io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -77,6 +81,10 @@ BRAIN_DISEASE_QUERIES = [
 
 
 def fetch_uniprot_accessions(query, max_per_query=80):
+    """按查询串调用 UniProt REST API（TSV），返回 (accession, 蛋白名) 列表。
+
+    max_per_query=80 为每类疾病上限，控制数据集规模与抓取时长。
+    """
     url = f'{UNIPROT_API}?query={requests.utils.quote(query)}&size={max_per_query}&format=tsv&fields=accession,length,protein_name'
     r = requests.get(url, timeout=30)
     lines = r.text.strip().split('\n')
@@ -102,6 +110,7 @@ def mmcif_to_temp_pdb(cif_text, accession):
 
 
 def extract_plddt_from_mmcif(cif_text):
+    """从 mmCIF 提取逐残基 pLDDT（存于 CA 原子 B 因子，AlphaFold 约定 /100 归一化）。"""
     from Bio.PDB.MMCIFParser import MMCIFParser
     parser = MMCIFParser(QUIET=True)
     structure = parser.get_structure('tmp', io.StringIO(cif_text))
@@ -119,6 +128,7 @@ def extract_plddt_from_mmcif(cif_text):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    """把单链 PDB 预处理成 BFN 训练用的 batch：遮蔽全部残基（generate_flag 全开）。"""
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -240,6 +250,7 @@ def main():
             continue
 
         if len(plddt_list) < n_res:
+            # 残基数不齐时以中性 0.5 补齐（不确定状态），并截断到 n_res
             plddt_list += [0.5] * (n_res - len(plddt_list))
         plddt_tensor = torch.tensor(plddt_list[:n_res], dtype=torch.float32)
 
@@ -257,6 +268,7 @@ def main():
             pass
 
         if pae_matrix is None:
+            # PAE 缺失时记数并用全零矩阵占位（iptm 由 compute_ptm_from_pae 决定）
             n_pae_miss += 1
             pae_matrix = [[0.0] * n_res for _ in range(n_res)]
 
@@ -292,6 +304,7 @@ def main():
         entries.append(entry)
         print(f'OK (L={n_res}, pLDDT={plddt_tensor.mean():.3f}, pTM={iptm:.3f})')
 
+        # 每 30 条落盘一次，长抓取中断时可 --resume 恢复
         if len(entries) % 30 == 0:
             save_lmdb(str(output_dir / 'brain_disease.lmdb'), entries)
             print(f'  [saved {len(entries)} entries so far]')

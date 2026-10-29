@@ -6,6 +6,10 @@ Tests 3 SAbDab complexes, 5 designs each, complex vs fixbb mode.
 Free: BFN inference only, no AF2.
 Output: recovery rate Δ(complex-fixbb) for each model.
 """
+# 角色：快速探针——检验 V17c 是否真正利用抗原信号：3 个 SAbDab 复合物、
+# 每个采样 5 条设计，比较 complex（含抗原上下文）与 fixbb（无抗原）模式下的
+# native CDR 恢复率差 Δ(complex-fixbb)；若 V17c 的 Δ 明显大于 V15 基线，
+# 说明配对路由/抗原通路生效。纯 BFN 推理，无 AF2 开销。
 import sys, os, warnings
 warnings.filterwarnings('ignore')
 if sys.platform == 'win32':
@@ -27,8 +31,8 @@ APP = 'app_config.yaml'
 app = yaml.safe_load(open(APP, encoding='utf-8'))
 ORIG_CKPT = app['models']['bfn']['checkpoint']
 
-N_COMPLEX = 3
-N_SAMPLES = 5
+N_COMPLEX = 3   # 抽查的复合物数量（快速诊断，不追求统计功效）
+N_SAMPLES = 5   # 每个复合物的设计采样数
 TMPDIR = 'oc_validation_results/_diag'
 os.makedirs(TMPDIR, exist_ok=True)
 

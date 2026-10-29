@@ -49,6 +49,7 @@ def load_refs(path):
 
 
 def region_label(chain, resid):
+    # 依据宽泛残基窗口粗标 CDR 区（仅用于风险标注，不是正式编号方案）。
     chain = str(chain).upper()
     windows = CDR_WINDOWS.get(chain, [])
     for idx, (start, end) in enumerate(windows, 1):
@@ -82,6 +83,8 @@ def infer_chain_roles(contact_map):
 
 
 def build_plan_for_candidate(row, contact_map):
+    # 把候选序列与原生 paratope 序列逐位对齐（长度必须一致），
+    # 为每个突变生成残基级计划行（链/角色/编号/原残基/突变残基）。
     native = contact_map["paratope_sequence"]
     candidate = row["sequence"]
     residues = contact_map["paratope_residues"]
@@ -112,6 +115,10 @@ def build_plan_for_candidate(row, contact_map):
 
 
 def risk_summary(plan):
+    # 构建风险摘要（合成前风险标签，不是功能预测）:
+    #   - 0 个突变 → no_mutations; 落入框架/未知区 → high risk;
+    #   - 突变总数 > 4 → too_many_mutations（>3 即 medium，合成可行性风险）;
+    #   - 引入半胱氨酸 → introduces_cys（可能形成非预期二硫键）。
     n = len(plan)
     framework = [p for p in plan if p["region_label"] == "framework_or_unknown"]
     cdr = [p for p in plan if p["region_label"] != "framework_or_unknown"]
@@ -134,6 +141,9 @@ def risk_summary(plan):
 
 
 def main():
+    # 主流程: 白名单参考结构提取接触图（默认 8.0 Å 重原子接触截断，
+    # 是接触图方法的常规上界）→ 逐候选生成残基级突变计划与风险摘要 →
+    # 输出 CSV/JSON/Markdown 四件套（含接触图详情与风险提示）。
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

@@ -7,9 +7,11 @@ from collections import defaultdict
 from typing import Dict, Iterable, List
 
 
+# 氨基酸按体积三分类（small/medium/large），集合互斥覆盖 20 标准残基
 SMALL = set("GAS")
 MEDIUM = set("CTDNVP")
 LARGE = set("EQHILKMFYRW")
+# 化学性质分类（可重叠：如 Y 既 aromatic 又 polar，按 chemistry_class 的判断顺序取先命中者）
 AROMATIC = set("FWY")
 POSITIVE = set("KRH")
 NEGATIVE = set("DE")
@@ -18,6 +20,7 @@ AA = "ACDEFGHIKLMNPQRSTVWY"
 
 
 def volume_class(aa: str) -> str:
+    # 体积类别查询；未知字符返回 'other'
     aa = aa.upper()
     if aa in SMALL:
         return "small"
@@ -59,6 +62,7 @@ def residue_matches_classes(aa: str, volume: str, chemistry: str) -> bool:
 
 def compile_guidance_rules(signal_rows: Iterable[Dict], min_abs_delta: float = 0.20) -> Dict[str, Dict[int, Dict]]:
     """Convert high/low-gap enrichment deltas into per-position design rules."""
+    # min_abs_delta=0.20：富集分数差至少 0.2 才视为显著信号，避免噪声进入规则
     rules: Dict[str, Dict[int, Dict]] = defaultdict(dict)
     for row in signal_rows:
         delta = float(row.get("fraction_delta", 0.0))
@@ -92,10 +96,12 @@ def generate_attribution_guided_variants(
     rng = random.Random(seed)
     native = contact_map["paratope_sequence"]
     parents = list(parent_rows) or []
+    # 亲本池末尾加入原生序列，保证变体总有一支"贴近天然"的来源
     parents.append({"candidate_id": "native", "sequence": native})
     seen = {native}
     variants = []
     attempts = 0
+    # attempts 上限 = n*1000：防止规则过严导致死循环（可能提前停止而数量不足 n）
     while len(variants) < n and attempts < n * 1000:
         attempts += 1
         parent = rng.choice(parents)
@@ -120,6 +126,9 @@ def generate_attribution_guided_variants(
 
 
 def apply_guidance_rules(seq: List[str], native: str, rules: Dict[int, Dict], rng: random.Random) -> List[str]:
+    # 对规则位点逐一施加引导：已匹配 preferred 则保护不动；
+    # 命中 avoid 或有 preferred 时尝试"修复"为偏好类别残基；
+    # 无偏好可选且当前残基比天然残基更差时回退为天然残基
     changes = []
     for pos, rule in rules.items():
         if pos < 0 or pos >= len(seq):
@@ -141,6 +150,8 @@ def apply_guidance_rules(seq: List[str], native: str, rules: Dict[int, Dict], rn
 
 
 def mutate_extra_positions(seq: List[str], native: str, rules: Dict[int, Dict], rng: random.Random, max_mutations: int, changes: List[str]) -> None:
+    # 探索性突变：在规则位点之外的随机位置引入 1~剩余配额个额外突变；
+    # 排除半胱氨酸（避免引入不成对二硫键）和 avoid 类别
     current = sum(1 for a, b in zip(seq, native) if a != b)
     budget = max(0, max_mutations - current)
     if budget <= 0:
@@ -165,6 +176,7 @@ def avoid_match(aa: str, rule: Dict) -> bool:
 
 
 def preferred_residues(rule: Dict) -> List[str]:
+    # 偏好类别展开成具体残基字母表；排除 C（半胱氨酸需谨慎设计二硫键）
     out = []
     for cls in rule.get("preferred", []):
         out.extend(residues_for_classes(cls["volume_class"], cls["chemistry_class"]))
@@ -194,6 +206,8 @@ def per_position_features(sequence: str, contact_map: Dict, group: str, candidat
 
 
 def compare_high_low_gap(rows: Iterable[Dict], contact_map: Dict, top_fraction: float = 0.25) -> Dict:
+    # 特征归因主体：按特异性差距排序，取前/后各 25% 作为高/低分组，
+    # 再统计两组在各位点的体积/化学类别频率，差值即"归因信号"
     ranked = sorted(rows, key=lambda r: float(r.get("specificity_gap", 0.0)), reverse=True)
     n = max(1, int(len(ranked) * top_fraction))
     high = ranked[:n]
@@ -207,6 +221,8 @@ def compare_high_low_gap(rows: Iterable[Dict], contact_map: Dict, top_fraction: 
 
 
 def summarize_position_classes(feature_rows: Iterable[Dict]) -> List[Dict]:
+    # 按 (组, 位点, 链, 残基号, 体积类, 化学类) 六元组聚合计数，
+    # 并以组内位点总数为分母换算成频率
     counts = defaultdict(int)
     totals = defaultdict(int)
     for r in feature_rows:

@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Run ANARCII H3 localization and H3-antigen contact admission."""
 
+# 本脚本对 IDP ensemble 扩展开发面板 v2 做结构准入审计：
+# 解析各成分 mmCIF 坐标（重链 + 已分型的抗原链），用 Anarcii 做 Chothia 编号
+# 定位 H3 环，再用 cKDTree 计算 H3-抗原重原子接触；按配置门槛检查
+# 坐标就绪、H3 编号就绪、链型、H3 长度与接触残基数，全部通过才"结构准入"。
+# 输入哈希在结构冻结后不得变化，否则直接报错；输出结构准入审计 JSON。
+
 from __future__ import annotations
 
 import argparse
@@ -20,9 +26,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256 摘要，用于冻结输入与坐标文件的来源校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 提取一条链的残基行：仅保留带 CA 原子的标准氨基酸，
+# 收集全部非氢重原子坐标供后续接触计算使用
 def chain_rows(chain):
     rows = []
     for residue in chain:
@@ -41,6 +50,9 @@ def chain_rows(chain):
     return rows
 
 
+# 对全部重链做 Chothia 抗体编号并抽取 H3 环（位置范围由配置给定，含端点）：
+# 跳过 gap（"-"），记录 H3 残基的 0-based 序列下标与序列；
+# 编号失败或无 H3 残基时 ready=False，后续审计据此阻断。
 def number_h3(sequences, residue_range):
     model = Anarcii(
         seq_type="antibody", mode="accuracy", batch_size=24,
@@ -76,6 +88,9 @@ def number_h3(sequences, residue_range):
     return results
 
 
+# 基于 cKDTree 计算 H3-抗原重原子接触：对每个 H3 残基的每个重原子查询
+# 抗原原子树中最近邻与 cutoff 半径内的邻居，统计接触的 H3 残基位置、
+# 接触原子对总数与全局最小距离（埃）；无抗原原子时返回空指标。
 def contact_metrics(heavy_rows, antigen_rows, h3_indices, cutoff):
     antigen_atoms = np.concatenate([
         row["atoms"] for row in antigen_rows if len(row["atoms"])
@@ -110,6 +125,12 @@ def contact_metrics(heavy_rows, antigen_rows, h3_indices, cutoff):
     }
 
 
+# 审计主流程：
+# 1) 输出文件已存在则拒绝覆盖（保护冻结产物）；
+# 2) 校验面板与坐标审计两个冻结输入的 SHA-256；
+# 3) 解析 mmCIF、提取链、Anarcii 编号、计算接触；
+# 4) 逐成分检查五项门槛并判定结构准入；
+# 5) 写出审计 JSON（本阶段仅开发用途，未来确认性合格数固定为 0）。
 def audit(config_path, output):
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite structural admission: {output}")
@@ -219,6 +240,7 @@ def audit(config_path, output):
     return payload
 
 
+# 主入口：读取配置并驱动 audit()，打印准入/阻断计数摘要。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

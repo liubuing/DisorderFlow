@@ -4,6 +4,11 @@
 Runs AlphaFold2-multimer-v3 to predict complex structures of AQP4 epitope
 with optimized nanobody sequences, then scores interface confidence (ipTM, pLDDT, PAE).
 """
+
+# 角色：AF2-Multimer 教师验证——用 ColabFold(alphafold2_multimer_v3) 对
+# "AQP4 C 端表位肽 + 优化纳米抗体"复合物做结构预测，提取 pLDDT/ipTM/PAE
+# 等界面置信度指标并按阈值分级（EXCELLENT/GOOD/MODERATE/POOR），
+# 结果写入 af2_validation_results.json 供下游筛选。
 import os, sys, json, subprocess, time
 from pathlib import Path
 
@@ -65,12 +70,13 @@ def run_af2_multimer(epitope_seq, nanobody_seq, output_dir, name='complex'):
         '--num-recycle', '3',
         '--model-type', 'alphafold2_multimer_v3',
         '--rank', 'auto',
-        '--stop-at-score', '80',
+        '--stop-at-score', '80',  # 预测置信打分达 80（ptm+iptm 等加权）即提前停止，节省算力
     ]
 
     env = os.environ.copy()
     env['PATH'] = str(VENV / 'Scripts') + os.pathsep + env.get('PATH', '')
 
+    # timeout=1800s：单次 AF2 预测的 30 分钟上限，防止卡死。
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800,
                             cwd=str(PROJECT_DIR), env=env)
 
@@ -191,6 +197,8 @@ def main():
                 print(f'  Interface PAE:      {af2["interface_pae"]:.1f}')
 
             # Quality assessment
+            # 分级阈值：ipTM>0.6 且纳米抗体 pLDDT>0.7 为 EXCELLENT；
+            # ipTM>0.4 且 pLDDT>0.6 为 GOOD；ipTM>0.2 为 MODERATE；其余 POOR。
             nb_plddt = af2['plddt_nanobody']
             iptm = af2['iptm'] or 0
 

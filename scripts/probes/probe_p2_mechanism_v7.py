@@ -12,6 +12,9 @@ import torch, yaml, lmdb, random
 from collections import defaultdict
 
 # Config
+# 各版本 checkpoint: V7/V19/V20 为逐残基无序条件化，V18 为标量无序条件化。
+# 探测目的:比较高/低柔性表位上的 CDR 熵梯度（机制假设——逐残基条件化
+# 应在高柔性表位产生更大的 CDR 多样性）。
 V7_CKPT = 'logs/bfn_v18_v7_per_residue_xpu_2026_07_02__00_48_49_v18_v7_run/checkpoints/best.pt'
 V18_CKPT = 'logs/bfn_v18_disorder_cond_xpu_2026_07_01__15_51_01_v18_way4/checkpoints/best.pt'
 V19_CKPT = 'logs/bfn_v19_diversity_xpu_2026_07_02__14_23_57_v19_final/checkpoints/best.pt'
@@ -58,6 +61,8 @@ lookup = pickle.load(open(LOOKUP, 'rb'))
 print("  Profiles: %d antigens" % len(lookup))
 
 # Select samples
+# 柔性分组阈值: 组内 profile 最大值 > 0.4 记高柔性、< 0.2 记低柔性
+# （中间带剔除，保证两组分离）；固定种子 42 抽样。
 high_flex = [(k, v) for k, v in lookup.items() if v.max() > 0.4]
 low_flex = [(k, v) for k, v in lookup.items() if v.max() < 0.2]
 random.seed(42)
@@ -81,6 +86,8 @@ transform = get_transform([
 ])
 
 def build_batch(sid, disorder_mode, disorder_arr):
+    # 从 SAbDab Phase3 LMDB 构建掩码 CDR 的设计批，按 disorder_mode
+    # 注入无序条件（逐残基 profile 或标量）。
     with env.begin() as txn:
         raw = txn.get(sid.encode())
         if raw is None: return None, None

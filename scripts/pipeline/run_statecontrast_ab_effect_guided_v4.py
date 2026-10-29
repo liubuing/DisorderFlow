@@ -1,5 +1,13 @@
 #!/usr/bin/env python
-"""Run leave-seed-out mutation effect-size guided StateContrast-Ab v4."""
+"""Run leave-seed-out mutation effect-size guided StateContrast-Ab v4.
+
+效应量引导的 v4 基准：先做 v2 接触引导发现池，从留一 seed 的训练行提取
+跨 seed 复现的正向突变/位点效应规则（min_support=4、min_effect=0.004、
+min_recurrence=2），用规则引导生成 v4 变体，并在 held-out 负态上与四个
+对照臂（v2 池 / 仅 top 亲本 / 随机规则 / 打乱位置规则）比较
+specificity_gap_delta。verdict 只有在 v4 同时胜过全部对照且胜率 >=0.8
+时才给 stable_method_signal。
+"""
 from __future__ import annotations
 
 import argparse

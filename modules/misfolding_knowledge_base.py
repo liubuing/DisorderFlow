@@ -12,6 +12,9 @@ Usage:
 """
 
 # ── Misfolding disease targets ──
+# 人工整编的静态知识库（非运行时生成）：每个条目聚合疾病背景、
+# 病理构象（PDB+区段+分辨率）、文献抗体表位与 IDP 设计警告。
+# region 为 (起始, 结束) 1 起编号；None 表示使用整条链
 # fmt: off
 MISFOLDING_TARGETS = {
     # ═══════════════════════════════════════════════════════════════════
@@ -529,6 +532,7 @@ MISFOLDING_TARGETS = {
 }
 
 # ── Nanobody scaffolds for antibody design ──
+# CDR 区间按 Chothia 编号（1 起编号）；sequence 为 None 的条目在运行时从 PDB 提取
 NANOBODY_SCAFFOLDS = {
     'nanobody_cAb1': {
         'name': 'cAb1 (4W6Y)',
@@ -739,6 +743,7 @@ def get_default_conformation(disease_key):
 
 def get_target_summary(disease_key):
     """Return a formatted English summary string for the target."""
+    # 仅供终端展示的汇总视图，不参与任何计算逻辑
     target = MISFOLDING_TARGETS.get(disease_key)
     if target is None:
         return f'Unknown target: {disease_key}'

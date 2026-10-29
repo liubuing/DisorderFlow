@@ -76,8 +76,11 @@ def create_physics_scorer(target_pdb_path: str,
     Gracefully degrades if PyRosetta is unavailable.
     """
     _has_pyrosetta = False
+    # PyRosetta 为可选依赖：不可用时物理评分优雅降级（dG 等置 None），
+    # 闭环流程继续只用 AF2 置信度排序
     try:
         import pyrosetta
+        # -mute all 关闭日志刷屏；-use_input_sc 输入侧链坐标直接打分，避免重新打包
         pyrosetta.init(' '.join([
             '-mute', 'all', '-use_input_sc',
             '-ignore_unrecognized_res',
@@ -107,6 +110,7 @@ def create_physics_scorer(target_pdb_path: str,
         from pyrosetta.rosetta.protocols.analysis import InterfaceAnalyzerMover
 
         # Compute reference dG if target PDB available
+        # ddG = 设计体 dG - 参考复合物 dG，衡量相对参考结构的能量变化（越小越好）
         dG_ref = None
         if target_pdb_path and os.path.exists(str(target_pdb_path)):
             try:
@@ -141,6 +145,7 @@ def create_physics_scorer(target_pdb_path: str,
                 r['ddG'] = None
 
             # Relaxation (optional)
+            # FastRelax 极限迭代 200 次：完整 relax 很慢，这里只取放松后的总能量
             r['relax_e'] = None
             if enable_relax:
                 try:
@@ -345,6 +350,7 @@ class ClosedLoopOrchestrator:
 
             # ═══ Step 1: Design ═══
             all_designs = []
+            # 多模板时把总样本数均分到各模板（至少每个模板 1 条）
             samples_per_template = max(1, self.n_samples // max(len(current_pdbs), 1))
 
             for pdb_path in current_pdbs:
@@ -384,6 +390,7 @@ class ClosedLoopOrchestrator:
                                for seq in sequences]
 
             # Merge AF2 with design data
+            # 以序列为键合并设计数据与 AF2 置信度；AF2 失败的样本置信度取 0，由后续阈值过滤
             af2_map = {r['sequence']: r for r in af2_results if r.get('success')}
             merged = []
             for d in all_designs:
@@ -472,6 +479,8 @@ class ClosedLoopOrchestrator:
                 result.best_overall_composite = best_comp
 
             # ═══ Step 6: Select Top-K Templates ═══
+            # 下一轮模板优先用 AF2 预测出的新 PDB，缺失时回退到本轮所用模板；
+            # 全部缺失则回退到初始模板，保证循环不因路径问题中断
             selected = self._select_top_k(ranked, self.top_k)
             current_pdbs = []
             for r in selected:
@@ -488,6 +497,7 @@ class ClosedLoopOrchestrator:
             self._log(f"  Selected {len(selected)} designs, {len(current_pdbs)} PDB templates")
 
             # ═══ Step 7: Fine-Tuning (optional) ═══
+            # 每隔 finetune_every_n_cycles 个循环用当前 top 设计做一次奖励加权微调
             if (self.finetune_fn and
                 cycle_idx > 0 and
                 cycle_idx % self.finetune_every_n_cycles == 0):

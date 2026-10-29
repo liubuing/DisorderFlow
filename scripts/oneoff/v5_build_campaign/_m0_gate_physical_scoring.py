@@ -22,7 +22,7 @@ CDR_RANGES = [
     (52, 61),   # H2
     (95, 104),  # H3
 ]
-
+# 对照组数：10 条随机打乱 CDR 足以估计 composite 的背景分布
 AA3TO1 = {
     'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C',
     'GLU':'E','GLN':'Q','GLY':'G','HIS':'H','ILE':'I',
@@ -141,6 +141,7 @@ def main():
     print(f'  Scrambled contacts mean: {np.mean(scrambled_contacts):.1f} ± {np.std(scrambled_contacts):.1f}')
 
     sep = native_result['composite'] - np.mean(scrambled_composites)
+    # z 分数 = 分离度 / 打乱组标准差（下限 0.0001 防除零）
     z_score = sep / max(np.std(scrambled_composites), 0.0001)
 
     print(f'\n  Separation (native - mean scrambled): {sep:.4f}')
@@ -154,6 +155,7 @@ def main():
         print(f'  {metric:12s}: native={native_val:.4f}, scrambled={np.mean(scram_vals):.4f} ± {np.std(scram_vals):.4f}')
 
     # ── 4. Verdict ──
+    # 门槛：分离度 >0.05 且 z>2.0 视为 PASS；>0.01 为 MARGINAL；否则 FAIL
     if native_result.get('invalid', False):
         print(f'\n  ❌ GATE FAIL: Native 5CSZ score is INVALID (contacts<5)')
         print(f'     Problem is in the scoring, not the designs.')

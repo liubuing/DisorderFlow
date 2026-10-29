@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Build a same-scaffold 3STB VHH validation panel for ColabFold."""
+"""Build a same-scaffold 3STB VHH validation panel for ColabFold.
+
+构建同一 3STB scaffold（125 aa VHH）上的结合验证面板：native、
+V17i/V5_1 最优、4HIX/5CSZ 移植，以及 CDR 组成保持打乱的阴性对照。
+输出 monomer/multimer-Abeta42 两种 FASTA 与固定 ColabFold 协议、
+判定门槛（pLDDT/ipTM/接口 PAE）的 manifest，保证面板成员间可比。
+"""
 
 from __future__ import annotations
 
@@ -11,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ABETA42 = "DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA"
+# CDR 区段（0-based 半开区间）：CDR-H1/H2/H3 的残基范围
 CDR_SLICES = ((25, 33), (50, 58), (96, 113))
 
 PANEL = {
@@ -23,11 +30,13 @@ PANEL = {
 
 
 def composition_scramble(sequence: str, seed: int) -> str:
+    """只打乱 CDR 区段内残基顺序、保持氨基酸组成不变，构造组成匹配的阴性对照。"""
     positions = [index for start, end in CDR_SLICES for index in range(start, end)]
     native = [sequence[index] for index in positions]
     rng = random.Random(seed)
     scrambled = native[:]
     for _ in range(100):
+        # 至多洗 100 次，确保结果与原 CDR 不同（防退化对照）
         rng.shuffle(scrambled)
         if scrambled != native:
             break
@@ -44,6 +53,7 @@ def write_fasta(path: Path, records: dict[str, str]) -> None:
 
 
 def main() -> None:
+    """生成面板 FASTA 与 manifest；校验所有成员保持 125 残基 scaffold 长度。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", default="results/binder_validation/3stb_panel_v1")
     parser.add_argument("--scramble-seed", type=int, default=4201)

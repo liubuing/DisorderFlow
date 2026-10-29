@@ -6,6 +6,12 @@ evidence artifacts and evaluates preregistered engineering/scientific gates.
 Its purpose is to prevent a collection of individually favorable diagnostics
 from being reported as level-2 success when any required axis still fails.
 """
+# 本脚本对 DisorderFlow level-2 计算证据做"失败即关闭"的裁定：
+# 只校验不可变证据产物的哈希并评估 YAML 中预注册的工程/科学门槛，
+# 不计算任何新的生物学分数。门槛支持四类规则：字段等于期望值、
+# 分数不低于/不高于阈值、最低/最高占比（分母为空按 0 计，绝不空过）、
+# 以及"某臂占比须同时不低于阈值与对照臂"的对比规则。
+# 已有失败证据优先于缺失确认：补采新队列不能抹去已观察到的方法失败。
 
 from __future__ import annotations
 
@@ -20,11 +26,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256，用于证据产物的冻结哈希校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def nested(payload, field):
     """Read a dotted JSON field such as ``method_summary.proteinmpnn.passed``."""
+    # 按点号路径逐层取值；任一层缺失会抛 KeyError（失败即关闭）
     value = payload
     for part in field.split("."):
         value = value[part]
@@ -33,6 +41,9 @@ def nested(payload, field):
 
 def evaluate_gate(rule, evidence):
     """Evaluate one declarative YAML gate and retain the observed value."""
+    # 单条门槛求值：按规则键分派（expected / minimum_fraction /
+    # maximum_fraction / minimum / arm_fraction_at_least），
+    # 未识别的规则类型直接报错，绝不静默通过
     payload = evidence[rule["source"]]
     observed = None
     if "expected" in rule:
@@ -74,6 +85,7 @@ def evaluate_gate(rule, evidence):
     return {"passed": passed, "observed": observed, "category": rule["category"]}
 
 
+# 生成 Markdown 裁定报告：门槛明细表 + 失败/缺失证据清单 + 决策与声明边界
 def write_report(path, payload):
     lines = [
         "# DisorderFlow Level-2 Computational Validation", "",
@@ -168,6 +180,8 @@ def check(config_path, output_path=None):
 
 
 def main():
+    # 主入口：默认使用 idp_level2_computational_validation_v1 配置；
+    # --output 仅覆盖状态 JSON 路径，输出到配置默认位置时才同时写 Markdown 报告
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

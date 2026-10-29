@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 """Select frozen v2 pre-AF2 candidates using seed coverage and H3 diversity only."""
 
+# 多骨架确认实验 v2 的 AF2 前候选筛选：只依据"seed 覆盖度 + H3 序列多样性"
+# 这两类与结构无关的准则，从原始生成尝试中为每个 (component, arm) 组合
+# 挑选固定数量的候选槽位。刻意不使用任何结构/打分信息，避免引入
+# AF2 之前的选择偏差；不足时槽位记为 failed 并注明原因。
 from __future__ import annotations
 
 import argparse
@@ -16,16 +20,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 文件 sha256：冻结输入完整性校验。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def hamming(first, second):
+    # 两条 H3 序列的汉明距离；仅支持等长比较（本实验中 H3 长度固定）。
     if len(first) != len(second):
         raise ValueError("Cannot compare H3 sequences with different lengths")
     return sum(a != b for a, b in zip(first, second, strict=True))
 
 
 def combination_score(rows):
+    # 组合打分的字典序比较键（元组越大越优）：
+    # 1) 覆盖的 seed 数越多越好；
+    # 2) 最小两两汉明距离越大越好（避免选到近似重复序列）；
+    # 3) 总两两汉明距离越大越好（整体多样性）；
+    # 4) sample_index 之和取负：优先选择更早采样的候选（确定性偏好）。
     distances = [
         hamming(first["sequence"], second["sequence"])
         for first, second in combinations(rows, 2)]
@@ -38,6 +49,9 @@ def combination_score(rows):
 
 
 def choose_rows(rows, target):
+    # 穷举所有 size=target 的组合（唯一序列数不足时按唯一数截断），
+    # 挑选打分最优的组合；完全平局时按 attempt_id 字典序取最小者，
+    # 保证筛选过程完全确定、可复现。
     unique_count = len({row["sequence"] for row in rows})
     size = min(target, unique_count)
     best_score = None
@@ -66,6 +80,7 @@ def main():
 
     config_path = ROOT / args.config
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    # 三个冻结输入（生成结果、完整性审计、生成配置）必须全部通过哈希校验。
     raw_path = ROOT / config["raw_generation"]
     audit_path = ROOT / config["raw_generation_audit"]
     generation_config_path = ROOT / config["generation_config"]
@@ -81,6 +96,7 @@ def main():
         raise ValueError("Raw generation integrity audit did not pass")
     raw = json.loads(raw_path.read_text(encoding="utf-8"))
     target = int(config["selection"]["slots_per_arm_component"])
+    # seed_order 固定 seed 的排序依据，使最终选择的槽位顺序确定。
     seed_order = {seed: index for index, seed in enumerate(raw["requested"]["seeds"])}
     grouped = defaultdict(list)
     for row in raw["attempts"]:
@@ -91,6 +107,8 @@ def main():
     group_audit = []
     for component in raw["requested"]["components"]:
         for arm in raw["requested"]["arms"]:
+            # 每个 (component, arm) 独立挑选 target 个槽位；
+            # 候选不足时剩余槽位显式记为 failed（而非静默缩减）。
             rows = grouped[(component, arm)]
             chosen, objective, unique_count = choose_rows(rows, target)
             chosen.sort(key=lambda row: (
@@ -126,6 +144,7 @@ def main():
                     "seed": row["seed"],
                     "sample_index": row["sample_index"],
                 })
+            # 审计信息：记录原始尝试数、唯一序列数、选择目标函数各分量。
             group_audit.append({
                 "component_id": component,
                 "arm": arm,
@@ -161,6 +180,7 @@ def main():
         "group_audit": group_audit,
         "claim_boundary": config["claim_boundary"],
     }
+    # 槽位总数必须与冻结契约一致，否则筛选流程本身出了问题。
     if len(selections) != int(config["expected_slots"]):
         raise ValueError("Selection slot count differs from frozen contract")
     out_path = ROOT / (args.out or config["output"])

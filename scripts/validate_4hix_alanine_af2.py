@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """AF2 counterfactual alanine scan of native 4HIX contacting H3 residues."""
 
+# 目的：4HIX 接触性 H3 残基的反事实丙氨酸扫描（纯计算，非实验突变证据）：
+# 提取 native 重原子距离 <=4.5Å 的 H3 接触残基，逐个突变为 A 后用
+# AF2-Multimer（默认 3 recycle、种子 5101/5111/5121 等距 10）预测复合物，
+# 记录 ipTM/PAE 变化以评估各接触残基的计算贡献。
+
 from __future__ import annotations
 
 import argparse

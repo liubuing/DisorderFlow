@@ -1,6 +1,10 @@
 import os
 #!/usr/bin/env python
 """Probe BFN encoder attention v2 — simplified, correct pipeline."""
+# 角色：诊断探针——以简化的正确管线加载 V11 检查点，构建 5IMK 纳米抗体(B 链)
+# + Aβ42 表位(A 链)复合物，掩蔽 CDR 区（26-33/51-58/97-113）后前向，
+# 检查编码器注意力图/中间特征（attention v2 调试用）。临时切换检查点并在
+# finally 中还原 app_config.yaml。
 import sys, os
 if sys.platform == 'win32':
     import io

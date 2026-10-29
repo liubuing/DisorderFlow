@@ -1,4 +1,8 @@
 """Verify AAYL coordinate parents against original published sequences and contacts."""
+# 溯源核查脚本：把 AbBiBench 中 AAYL 系列结构（AF3 预测坐标）的
+# 重/轻链序列与 Engelhart 2022 原文表格中的亲本(seed)序列逐一比对，
+# 并对存疑的 5a12-VEGF 链分配做只读几何检查（不修改任何链标签）。
+# 输出 parent_provenance.json 供下游审计引用。
 import hashlib
 import json
 import xml.etree.ElementTree as ET
@@ -13,6 +17,8 @@ STRUCT = ROOT / "data/abbibench_structural_audit_v1"
 
 
 def main():
+    # 第一步：解析 Engelhart 2022 全文 XML，提取含 "Seed" 表格的
+    # 7 条亲本序列（Target + 三对 VH/VL）。
     source = OUT / "engelhart2022.xml"
     xml = ET.parse(source)
     seeds = {}
@@ -24,8 +30,11 @@ def main():
             cells = ["".join(c.itertext()).strip() for c in row]
             if len(cells) == 2 and cells[0] in ("Target", "14-VH", "14-VL", "91-VH", "91-VL", "95-VH", "95-VL"):
                 seeds[cells[0]] = cells[1]
+    # 必须 7 条齐全，否则原文解析不完整，比对结论不可信。
     if len(seeds) != 7:
         raise ValueError("Published parent table incomplete")
+    # 第二步：逐条比对 AAYL 结构的重/轻链与抗原肽序列，
+    # 仅当两条链各恰好唯一命中一个亲本且抗原完全一致时判定 verified。
     structures = json.loads((STRUCT / "structural_manifest.json").read_text())["records"]
     matches = []
     for row in structures:
@@ -42,10 +51,16 @@ def main():
                         "structure_source": "https://arxiv.org/pdf/2506.04235v2#page=18",
                         "experimental_sequence_source": "https://www.nature.com/articles/s41597-022-01779-4/tables/2"})
     # Inspect, but do not change, the disputed 5a12 VEGF chain assignment.
+    # 第三步（只读检查）：对 ABB007/5a12 计算 H3 各位点到抗原非氢原子的
+    # 最小距离，用几何事实核对链标签争议；chain_selection_changed=False
+    # 表示本脚本不改任何链分配，label_values_used=False 表示不采信
+    # 元数据中的表位/配体标签，仅以抗体编号与几何为准。
     row = next(r for r in structures if r["instance"] == "ABB007")
     model = PDBParser(QUIET=True).get_structure("5a12", str(STRUCT / "structures" / Path(row["file"]).name))[0]
+    # 仅保留标准残基(插入码为空格)且含 CA 原子的重链残基。
     hr = [r for r in model[row["heavy_chain"]] if r.id[0] == " " and "CA" in r]
     antigen = np.array([a.coord for c in row["antigen_chains"] for a in model[c].get_atoms() if a.element not in ("H", "D")])
+    # 逐 H3 位点计算与抗原全部非氢原子的最小欧氏距离。
     mins = []
     for i in row["h3_indices_zero_based_observed_heavy"]:
         atoms = np.array([a.coord for a in hr[i] if a.element not in ("H", "D")])

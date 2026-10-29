@@ -99,6 +99,7 @@ def design_cdrs_for_segment(model, config, scaffold_pdb, epitope_pdb,
         cdr_spec = f"{scaffold_chain}:26-33,51-58,97-113"
 
     # Build complex
+    # 表位放置距离取 6.0Å（贴近接触范围），模拟抗体-表位结合几何
     complex_info = position_epitope(
         scaffold_pdb, epitope_pdb,
         scaffold_chain=scaffold_chain,
@@ -227,6 +228,8 @@ def graft_cdrs(scaffold_seq, designed_seq, cdr_ranges):
     framework = list(scaffold_seq)
     pos = 0
     mutations = []
+    # 逐 CDR 替换并记录突变；替换后断言框架区完全未被改动，
+    # 防止范围错位导致骨架序列被静默污染
     for start, end, length in cdr_ranges:
         if start < 1 or end < start or end - start + 1 != length:
             raise ValueError(f'Invalid CDR range: {(start, end, length)}')
@@ -376,6 +379,8 @@ def _parse_af2_multimer_output(output_dir, label, ab_seq, epi_seq):
     max_pae = scores.get('max_pae', 999.0)
 
     # Compute interface PAE
+    # 界面 PAE = PAE 矩阵中"抗体行 x 表位列"的交叉子块均值，
+    # 是比全局 max_pae 更灵敏的界面质量指标；矩阵缺失时回退为 None
     ab_len = len(ab_seq)
     pae = scores.get('pae', None)
     if pae is not None:
@@ -403,7 +408,9 @@ def _parse_af2_multimer_output(output_dir, label, ab_seq, epi_seq):
 
     return {
         'success': True,
+        # ColabFold 的 pLDDT 为 0-100 标度，归一到 0-1 与 BFN 置信度对齐
         'plddt': mean_plddt / 100.0,
+        # 复合物模式没有 ipTM 时用 ptm 兜底，避免 None 传入下游打分
         'iptm': iptm if iptm is not None else ptm,
         'ptm': ptm,
         'max_pae': max_pae,
@@ -692,6 +699,8 @@ def composite_score(design, weights=None, use_af2=True):
 
     ppl_score = max(0.0, 1.0 - ppl / 200.0)
     entropy_score = max(0.0, 1.0 - entropy / 3.0)
+    # 三项"越低越好"指标的线性归一化：PPL 满 200、熵满 3（20 类均匀分布的熵上限）、
+    # PAE 满 30Å 时得分归零，超出截断
     pae_score = max(0.0, 1.0 - pae / 30.0)
 
     score += weights.get('ppl', 0.2) * ppl_score
@@ -750,6 +759,7 @@ def rank_designs(all_designs, use_af2=True):
     for rank, entry in enumerate(ranked):
         entry['rank'] = rank + 1
         cs = entry['composite_score']
+        # 质量分档阈值：>=0.70 HIGH、>=0.45 MEDIUM，其余 LOW
         if cs >= 0.70:
             entry['quality_label'] = 'HIGH'
         elif cs >= 0.45:
@@ -1046,6 +1056,7 @@ def run_idp_antibody_design(target_pdb, target_chain, scaffold_pdb,
                   f"with AF2 multimer (recycle={af2_num_recycle})...")
 
         # Collect all designs across segments
+        # AF2 校验按设计逐条执行；_seg_start/_seg_end 用于校验后按区段重新归组
         all_designs_flat = []
         for seg_result in segment_results:
             seg_start = seg_result.get('segment_start')

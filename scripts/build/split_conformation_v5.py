@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Create homology-disjoint train/val LMDBs from a completed v5 build."""
 
+# 本脚本从已完成的 v5 构建产物中切分"同源不相交"的训练/验证/校准 LMDB：
+# 先按 MMseqs2 全序列聚类（恒等度 0.3、覆盖率 0.8）标注同源簇，
+# 校准报告中的 holdout 下标所在簇整体作为校准集（calibration holdout），
+# 其余开发样本再按簇整体随机划分为训练/验证（默认 8:2，固定种子 2031）。
+# 任一环节失败都会清空输出目录重新抛错，保证不留下半成品数据集。
+
 import argparse
 import json
 import pickle
@@ -20,6 +26,8 @@ from disorderflow.utils.homology_split import (  # noqa: E402
 )
 
 
+# 读取源 LMDB 全部条目的元数据（下标/PDB ID/序列）；缺序列或条目缺失
+# 均视为源构建不完整，直接报错
 def _read_metadata(env):
     metadata = []
     with env.begin() as txn:
@@ -41,6 +49,8 @@ def _read_metadata(env):
     return metadata
 
 
+# 把指定条目从源 LMDB 原样（字节级）拷贝到新 LMDB：
+# 每 100 条一批写事务，最后写入 __len__；目标目录必须不存在（防覆盖）
 def _copy_split(source_env, entries, destination):
     destination.mkdir(parents=True, exist_ok=False)
     output = lmdb.open(str(destination), map_size=source_env.info()['map_size'])
@@ -58,6 +68,9 @@ def _copy_split(source_env, entries, destination):
 
 
 def main():
+    # 主流程：读源数据并核对 expected_count（默认 1289，与构建目标一致）→
+    # 聚类标注 → 核对 RMSF 校准报告的样本数与 holdout 下标 →
+    # 按簇切分三份 LMDB → 校验训练/验证簇不相交 → 写 split_manifest.json。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', default=(
         'data/confidence_conformation_v5/confidence_train.lmdb'))

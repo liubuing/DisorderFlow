@@ -53,6 +53,8 @@ def predict_disorder(
         raise ValueError(f"Cannot parse structure: {pdb_path}")
 
     transform = get_transform([
+        # 不指定任何设计区域 => 全蛋白作为上下文（context-only），
+        # 只走 disorder 头做逐残基无序预测，不做生成
         {'type': 'mask_region', 'regions': {}},  # no design regions, context-only
         {'type': 'merge_protein'},
         {'type': 'patch_protein'},
@@ -89,6 +91,7 @@ def predict_disorder(
             'checkpoint_sha256': artifact.get('checkpoint_sha256'),
         }
     else:
+        # 无校准文件时直接 sigmoid 成概率；有校准时用 Platt 缩放修正系统偏差
         disorder_scores = torch.sigmoid(disorder_logits).cpu().numpy()
 
     aa = batch['aa'][0][mask_res]
@@ -109,6 +112,7 @@ def predict_disorder(
 
 def _extract_residue_ids(structure, chain_id, expected_len):
     """Extract 1-indexed residue numbers from structure data."""
+    # 从结构数据中取真实 PDB 残基编号；缺失时退化为 1..L 连续编号
     for chain in structure['chains']:
         if chain['chain_id'] == chain_id:
             data = chain['data']
@@ -149,6 +153,8 @@ def find_ordered_segments(disorder_scores, residue_ids=None, threshold=0.3,
 
     segments = []
     i = 0
+    # 线性扫描切分片段：允许最多 gap_tolerance 个连续无序残基被"桥接"进片段，
+    # 桥接可避免因个别残基略超阈值把长片段切碎
     while i < n:
         if not ordered[i]:
             i += 1
@@ -184,6 +190,7 @@ def find_ordered_segments(disorder_scores, residue_ids=None, threshold=0.3,
             })
         i = seg_end
 
+    # 排序优先级：平均无序度越低越靠前，其次片段越长越靠前
     segments.sort(key=lambda s: (s['mean_disorder'], -s['length']))
     return segments
 

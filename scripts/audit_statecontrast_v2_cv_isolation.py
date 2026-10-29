@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Verify that all records for a scientific unit stay in one CV fold."""
 
+# 本脚本审计 statecontrast v2 训练清单的交叉验证隔离性：
+# 按"科学单元"（抗体谱系簇 × 全局序列簇）、teacher 组与候选组三个层级
+# 检查同一单元/组的全部记录是否只出现在一个 CV 折内；任一跨折即为泄漏。
+# 同时核对观测折集合与期望折数完全一致。隔离不通过则禁止训练
+# （decision: train_only_when_isolation_passes），输出隔离审计 JSON。
+
 from __future__ import annotations
 
 import argparse
@@ -11,6 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# 审计主流程：逐条记录登记科学单元/teacher 组/候选组出现过的折号，
+# 某键对应的折号集合大小大于 1 即视为泄漏；再核对折号集合与期望一致。
 def audit(manifest_path, output_path):
     manifest = json.loads(manifest_path.read_text(encoding="ascii"))
     unit_folds = defaultdict(set)
@@ -58,6 +66,7 @@ def audit(manifest_path, output_path):
     return payload
 
 
+# 主入口：解析 --manifest 与 --output 路径并驱动审计，打印折摘要与泄漏清单。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=Path(

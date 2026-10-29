@@ -11,6 +11,11 @@ import numpy as np
 
 
 def aggregate_pose_log_probs(pose_log_probs, weights=None):
+    """把多个构象体条件的逐位置分布加权聚合为一个混合分布。
+
+    输入校验刻意严格（≥2 个分布、全部有限、权重非负且和为 1）——
+    聚合是采样正确性的关键点，坏输入必须在入口失败而非静默传播。
+    """
     values = np.asarray(pose_log_probs, dtype=np.float64)
     if values.ndim != 2 or values.shape[0] < 2:
         raise ValueError("At least two pose-conditioned distributions are required")
@@ -27,18 +32,20 @@ def aggregate_pose_log_probs(pose_log_probs, weights=None):
 
 
 def sample_autoregressive(native, pose_models, rng, max_substitutions, alphabet):
-    """Sample one H3 sequence by recomputing every pose distribution per prefix.
+    """逐位置自回归采样一条 H3 序列：每个前缀都重新查询各构象体分布。
 
-    Each adapter receives the same prefix and position. It must implement
-    ``next_log_probs(prefix, position)`` using the actual model, not cached
-    per-position probabilities. A single adapter may itself aggregate a pose
-    batch; two or more adapters are aggregated here with equal weights.
+    契约：adapter 必须用真实模型对 (prefix, position) 计算 next_log_probs，
+    禁止使用缓存的逐位置概率 shortcuts（文件 docstring 的"No fixed
+    conditional-NPZ shortcut"即指此）。多 adapter 等权聚合；
+    max_substitutions 用尽后余下位置锁定天然残基——限制突变数保证
+    采样序列仍贴近天然参考。
     """
     if len(pose_models) < 1:
         raise ValueError("Sampling requires at least one pose model")
     sequence = []
     substitutions = 0
     for position, native_aa in enumerate(native):
+        # 每个位置对每个构象体重算分布——这是"真自回归"而非查表的关键
         pose_log_probs = [
             np.asarray(model.next_log_probs("".join(sequence), position),
                        dtype=np.float64)
@@ -50,6 +57,7 @@ def sample_autoregressive(native, pose_models, rng, max_substitutions, alphabet)
                 raise ValueError("Pose-conditioned log probabilities must be finite")
         else:
             log_probs = aggregate_pose_log_probs(pose_log_probs)
+        # 减最大值做数值稳定的 softmax
         log_probs = log_probs - np.max(log_probs)
         probabilities = np.exp(log_probs)
         probabilities /= probabilities.sum()

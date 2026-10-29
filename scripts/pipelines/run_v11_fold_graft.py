@@ -10,6 +10,12 @@ back into scaffold (framework stays native scaffold coords) → HDOCK.
 Run in WSL (uses af2_jax_runner). Usage:
     wsl python run_v11_fold_graft.py
 """
+# V11 步骤 0+1："先折叠后对接"，打破 V10 中 CDR 骨架主导的问题——
+# V10 的嫁接只改残基名，各设计 CDR 骨架 CA RMSD 恒为 0，HDOCK 分数无差别。
+# V11 修正：每个设计先经 AF2 单链折叠，取真实随序列变化的 CDR 环骨架
+# （N/CA/C/O 坐标），仅把 CDR 环段接回骨架（框架保持原始坐标）再跑 HDOCK。
+# 门控：天然 CDR vs 打乱 CDR 的 HDOCK top1（越小越好）做 Mann-Whitney 检验，
+# p<0.05 才算通过。需在 WSL 环境运行（依赖 af2_jax_runner 与 HDOCKlite）。
 import sys, os, json, time, random, subprocess, tempfile, shutil
 import numpy as np
 os.chdir("/mnt/d/biological/DisorderFlow")
@@ -35,7 +41,7 @@ NATIVES = [
      "ligand":"data/anti_abeta_refs/5CSZ.pdb","ligand_chain":"D"},  # D=11aa peptide
 ]
 N_SCRAM = 3
-NATIVE_SEEDS = 3  # fold runs per design (fold stochasticity)
+NATIVE_SEEDS = 3  # 每个设计的折叠运行次数（吸收折叠随机性；本脚本未逐种子循环）
 
 def parse_cdr_spec(spec):
     """H:26-33,H:51-58,H:95-102 -> [(26,33),(51,58),(95,102)]"""
@@ -118,6 +124,8 @@ def build_fold_graft_receptor(scaffold_pdb, scaffold_chain, cdr_spec, fold_pos, 
 
 def run_hdock(receptor_pdb, ligand_pdb, out_name):
     """Run HDOCK, return top1 score (min). Reuse V10 logic."""
+    # 经 wsl 调用 HDOCKlite（超时 300 秒），解析输出第 7 列分数；
+    # top1 取最小值（HDOCK 分数越低越好）
     cmd=(f'cd {HDOCK_DIR} && LD_LIBRARY_PATH=. ./hdock {receptor_pdb} {ligand_pdb} '
          f'-out {out_name} 2>&1')
     try:
@@ -191,6 +199,8 @@ for nat in NATIVES:
     results["results"][ab]=ab_scores
 
 # Stats: Mann-Whitney native vs scrambled
+# 门控统计：native 分数均值应低于 scrambled（top1 越小越好），
+# 单侧 Mann-Whitney U 检验（alternative="less"）p<0.05 判通过
 from scipy.stats import mannwhitneyu
 nat_scores=all_scores["native"]; scr_scores=all_scores["scrambled"]
 print("\n=== Gate ===")

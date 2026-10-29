@@ -64,6 +64,7 @@ def fetch_alphafold_structure(uniprot_id, output_dir=None, version=4):
     pdb_path = output_dir / pdb_name
 
     if pdb_path.exists() and pdb_path.stat().st_size > 1000:
+        # 文件大于 1KB 视为有效缓存（避免半截下载被当作成功）
         return pdb_path
 
     url = f'https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v{version}.pdb'
@@ -76,6 +77,7 @@ def fetch_alphafold_structure(uniprot_id, output_dir=None, version=4):
         return pdb_path
     except Exception:
         # Try v4 fallback
+        # 指定版本不可得时回退到 v4（AFDB 的长期稳定版本）
         if version != 4:
             return fetch_alphafold_structure(uniprot_id, output_dir, version=4)
         return None
@@ -206,6 +208,8 @@ def prepare_misfolding_target(disease_key, target_data, conformation_key=None):
     cache_key = f'{disease_key}_{conformation_key or "default"}'
 
     # Check cache first (valid for 7 days)
+    # 命中缓存且文件仍存在即直接返回，避免重复下载；
+    # 缓存内容与知识库的警告/设计建议取并集（警告始终来自知识库最新值）
     if cache_key in cache:
         entry = cache[cache_key]
         pdb_path = Path(entry['pdb_path'])
@@ -250,6 +254,7 @@ def prepare_misfolding_target(disease_key, target_data, conformation_key=None):
     resolution = conf.get('resolution', 'unknown')
 
     # Download PDB
+    # 优先 RCSB 实验结构；失败时回退到 AlphaFold DB 预测结构（按 UniProt ID）
     pdb_path = fetch_rcsb_structure(pdb_id)
     if pdb_path is None:
         # Try AlphaFold DB as fallback
@@ -325,5 +330,6 @@ def batch_prepare_all_targets(targets_dict, max_per_disease=3):
                 print(f'  [{key}/{conf_key}] OK: {result["pdb_path"]}')
             else:
                 print(f'  [{key}/{conf_key}] FAIL: {result["error"]}')
+            # 0.3s 间隔：对下载源限速，避免触发 RCSB 的访问限制
             time.sleep(0.3)
     return results

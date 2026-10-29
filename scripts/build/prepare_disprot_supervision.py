@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Prepare CAID-excluded, UniRef50-split DisProt experimental supervision."""
+"""Prepare CAID-excluded, UniRef50-split DisProt experimental supervision.
+
+构建 DisProt 实验型无序度监督：仅保留"Structural state"命名空间下
+证据码 EXP/IDA 的 order/disorder 区域，冲突残基置 unknown；
+剔除 CAID 目标及其 UniRef50 同源簇，按簇哈希稳定划分 train/dev，
+可选把 LMDB 中 (accession, sequence) 精确匹配的本地结构记录并入，
+并按 pLDDT 阈值补充 AFDB 有序代理负标签。输出 JSONL + 审计 JSON。
+"""
 
 from __future__ import annotations
 
@@ -13,6 +20,7 @@ import lmdb
 
 
 def fasta_ids(path):
+    """从 FASTA 头行提取 ID 集合。"""
     ids = set()
     with Path(path).open(encoding="utf-8") as handle:
         for line in handle:
@@ -22,6 +30,7 @@ def fasta_ids(path):
 
 
 def load_caid_ids(caid_root):
+    """汇总 CAID 参考集所有目标 ID，用于从监督集中剔除。"""
     return {
         target_id
         for fasta in Path(caid_root).glob("*/sequences.fasta")
@@ -42,6 +51,7 @@ def experimental_profile(entry):
         if state not in {"disorder", "order"}:
             continue
         if region.get("ec_go") not in {"EXP", "IDA"}:
+            # 只接受实验证据（EXP 直接实验 / IDA 序列同源推断的实验依据）
             continue
         start = max(0, int(region["start"]) - 1)
         end = min(length, int(region["end"]))
@@ -56,6 +66,7 @@ def experimental_profile(entry):
 
 
 def stable_dev_cluster(cluster_id, dev_fraction):
+    """按簇 ID 哈希做确定性划分：值 < dev_fraction 归 dev，与运行顺序无关。"""
     digest = hashlib.sha256(str(cluster_id).encode("utf-8")).hexdigest()
     value = int(digest[:15], 16) / float(16**15)
     return value < dev_fraction
@@ -87,6 +98,7 @@ def load_lmdb_index(lmdb_path):
 
 def prepare(entries_path, caid_root, output_dir, dev_fraction=0.1, lmdb_path=None,
             afdb_ordered_threshold=None):
+    """主构建流程：CAID/簇剔除 -> 实验档案 -> 稳定划分 ->（可选）本地结构与代理负标签。"""
     entries_envelope = json.loads(Path(entries_path).read_text(encoding="utf-8"))
     entries = entries_envelope.get("data", entries_envelope)
     caid_ids = load_caid_ids(caid_root)
@@ -187,6 +199,7 @@ def prepare(entries_path, caid_root, output_dir, dev_fraction=0.1, lmdb_path=Non
 
 
 def main():
+    """命令行入口：默认读取 data/disprot_current/entries.json，产出 train/dev JSONL。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--entries", type=Path, default=Path("data/disprot_current/entries.json"))
     parser.add_argument("--caid-root", type=Path, default=Path("data/caid2"))

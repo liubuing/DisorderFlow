@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Generate and state-rank versioned H3 candidates from a trained v2 model."""
 
+# 本脚本用训练好的 statecontrast v2 模型生成并按"状态得分"排序 H3 候选：
+# 对每个成分的两组状态（ensemble=全部 target 状态，single_state=首个实验状态）
+# 以天然 H3 为初始做随机序列采样（每臂默认 40 次尝试、4 个基础种子轮转），
+# 收集去重后的候选序列，再在全部状态上评分（state_gap 聚合），
+# 从替换数 2/4/6/8 四个桶中各选 state_gap 最高者；缺失桶如实记录为失败，
+# 绝不插补。输出带完整溯源（检查点/配置哈希）的开发候选 JSON。
+
 from __future__ import annotations
 
 import argparse
@@ -32,13 +39,17 @@ ALPHABET = "ACDEFGHIKLMNPQRSTVWY"
 
 
 def sha256(path):
+    # 计算文件 SHA-256，记录检查点与配置的来源指纹
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 逐位替换数（序列长度必须一致，strict zip 保证）
 def substitutions(left, right):
     return sum(a != b for a, b in zip(left, right, strict=True))
 
 
+# 把候选 H3 序列注入批次的设计区（generate_flag 掩码位），
+# 长度与设计区不符即报错；张量全部克隆，避免污染数据集缓存
 def inject_h3(batch, sequence):
     output = {key: value.clone() if isinstance(value, torch.Tensor) else value
               for key, value in batch.items()}
@@ -60,6 +71,8 @@ def load_model(config_path, checkpoint_path, device):
     return model, config
 
 
+# 候选评分：把候选序列注入该成分全部状态样本，取状态得分与 pose 质量
+# logit，再用 aggregate_state_score 按模型配置聚合（如 state_gap）
 def score_candidate(model, dataset, indices, manifest_rows, sequence, model_cfg, device):
     scores, logits, rows = [], [], []
     for index in indices:
@@ -74,6 +87,8 @@ def score_candidate(model, dataset, indices, manifest_rows, sequence, model_cfg,
     return values
 
 
+# 生成主流程：加载数据与模型（用训练配置、全部记录、无折划分）→
+# 逐成分逐臂随机采样候选 → 按替换桶选择 → 汇总写 JSON
 def generate(config_path, checkpoint_path, output_path, device="cuda",
              attempts_per_arm=40, seeds=(8301, 8311, 8321, 8331),
              component_filter=None):

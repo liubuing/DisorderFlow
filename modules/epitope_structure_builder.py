@@ -30,6 +30,8 @@ def build_epitope_helix(sequence, chain_id='A', start_res=1, output_dir=None):
     """
     from app import generate_pdb_from_sequence
 
+    # 复用 app 中的序列->α螺旋模板生成器（~3.6 残基/圈、1.5Å 上升），
+    # 生成的是理想几何，仅作 BFN/MPNN/ESM-IF 的结构上下文
     pdb_content = generate_pdb_from_sequence(sequence, chain_id, start_res)
     if pdb_content is None:
         raise ValueError(f"Cannot generate PDB for sequence: {sequence[:20]}...")
@@ -86,6 +88,7 @@ def extract_epitope_pdb(pdb_path, chain_id, resseq_range, output_dir=None,
         )
 
     # Rewrite chain ID if needed
+    # 输出链 ID 默认保留原值；重写时保持列位对齐（第 22 列，0 起 21）
     if output_chain != chain_id:
         rewritten = []
         for line in extracted_atoms:
@@ -123,12 +126,15 @@ def build_epitope_structure(segment, target_seq=None, target_pdb=None,
         dict with keys: pdb_path, sequence, mode ('helix' or 'extracted')
     """
     if target_pdb and os.path.exists(target_pdb):
+        # 提取模式：从真实结构切出表位区段，固定改写为 B 链（与抗体 A 链共存的约定）
         pdb_path = extract_epitope_pdb(
             target_pdb, chain_id,
             (segment['start'], segment['end']),
             output_dir, output_chain='B'
         )
         # Read the extracted sequence from the generated PDB
+        # 用 Biopython 从切出的 PDB 反读序列，确保序列与坐标严格一致；
+        # 解析失败时 seq 置空，由调用方决定是否可用
         from Bio.PDB import PDBParser
         aa3to1 = {'ALA': 'A', 'CYS': 'C', 'ASP': 'D', 'GLU': 'E', 'PHE': 'F',
                   'GLY': 'G', 'HIS': 'H', 'ILE': 'I', 'LYS': 'K', 'LEU': 'L',
@@ -146,6 +152,7 @@ def build_epitope_structure(segment, target_seq=None, target_pdb=None,
     else:
         if target_seq is None:
             raise ValueError("target_seq required when no PDB is provided")
+        # De novo 模式：segment 的 start/end 是 1 起编号，Python 切片需转换
         # Extract subsequence for the segment
         start_idx = segment['start'] - 1
         end_idx = segment['end']

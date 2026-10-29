@@ -8,6 +8,11 @@ two nested-handler `global` mutations in create_ui are touched. The old app.py
 stays recoverable via git.
 """
 
+# 角色：一次性（oneoff）重构脚本，将 3216 行的 Django/Gradio 单体 Web 应用 app.py
+# 按 AST 顶层定义机械拆分为 webapp/ 包（state/sequtils/design/baselines/af2/
+# pipelines/ui 等模块）。函数体保持逐字不变，仅调整模块边界、import 头与
+# create_ui 内两处嵌套 handler 的 global 声明。拆分映射见 PARTITION 字典。
+
 from __future__ import annotations
 
 import ast
@@ -57,6 +62,9 @@ pkg_header = header.replace(
 assert 'sys.path.insert' in pkg_header, 'header lost the sys.path bootstrap'
 
 PARTITION = {
+    # 顶层名字 → 目标子模块的拆分表；state 存全局模型/配置状态，
+    # sequtils 处理序列/PDB 工具，design 与 baselines 是生成与基线入口，
+    # af2/pipelines 为教师预测与批处理管线，ui 是界面组装。
     'state': ['PROJECT_DIR', 'CONFIG_FILE', 'DEFAULT_MODEL_CONFIG', 'AA_LETTERS',
               '_detect_device', 'DEVICE', '_bfn_model', '_bfn_config', '_esmif_model',
               '_app_config', 'load_app_config', 'get_bfn_ckpt', 'load_bfn', 'load_esmif',

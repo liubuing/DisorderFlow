@@ -20,10 +20,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256；冻结 AF2 配置与结果工件先验哈再使用。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def main():
+    # 用独立的 PRODIGY（基于接触的亲和力预测器，输出 delta_G，
+    # 单位 kcal/mol，越负结合越强）对冻结 v2 的全部 AF2 结构重打分，
+    # 作为与 BFN/启发式分数独立的第二意见。
+    # 前置校验: AF2 配置/结果哈希、PRODIGY 包版本必须与冻结配置一致
+    # （打分器版本变化会改变分数标度），AF2 工件必须完整。
+    # 子进程超时 7200 秒；温度等打分参数全部来自冻结配置。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/multiscaffold_confirmatory_v2_prodigy.yml")

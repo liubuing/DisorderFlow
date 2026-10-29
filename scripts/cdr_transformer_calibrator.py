@@ -202,6 +202,8 @@ class CDRSequenceDataset(Dataset):
 # ─── Losses ──────────────────────────────────────────────────────────────────
 
 class PearsonLoss(nn.Module):
+    # 负 Pearson 相关系数损失：直接优化秩相关式的单调一致性；
+    # 样本数 < 3 时相关系数无意义，返回 0 不参与梯度。
     def forward(self, pred, target):
         if pred.numel() < 3:
             return torch.tensor(0.0, device=pred.device)
@@ -211,12 +213,17 @@ class PearsonLoss(nn.Module):
         return -corr
 
 class VarianceLoss(nn.Module):
+    # 方差塌缩惩罚：当预测标准差低于目标标准差的 0.3 倍时施加 ReLU 罚项，
+    # 防止模型退化为输出常数（相关系数类损失对常数输出不敏感）。
     def forward(self, pred, target):
         if pred.numel() < 4:
             return torch.tensor(0.0, device=pred.device)
         return F.relu(target.std() * 0.3 - pred.std())
 
 class GroupedRankLoss(nn.Module):
+    # 组内成对排序损失（scaffold 分组）: 同一支架内目标值不同的对，
+    # 预测逆序或差距小于 margin=0.01 即罚；margin 很小是因为标签为
+    # 0-1 的 pLDDT/ipTM，组内差异本身细微。仅统计有效对并归一化。
     def __init__(self, margin=0.01):
         super().__init__()
         self.margin = margin
@@ -241,6 +248,13 @@ class GroupedRankLoss(nn.Module):
 # ─── Training ────────────────────────────────────────────────────────────────
 
 def train(args):
+    # 训练循环: 复合损失 = SmoothL1(beta=0.05，对小误差更敏感)
+    #   + 0.8 x 负 Pearson + 0.5 x 方差惩罚 + 0.3 x 组内排序，
+    #   两个头（pLDDT/ipTM，均 0-1）对称求和。
+    # 优化: AdamW + 余弦退火warm重启（T_0=50，周期翻倍）；梯度裁剪 1.0
+    # 防止 Transformer 早期梯度爆炸。每 10 个 epoch 在验证集上算 Spearman，
+    # 以 sp_p + sp_i + 3x(std_p + std_i) 作选型指标——同时奖励秩相关与
+    # 非塌缩方差，保存最优 checkpoint 到 calibration_artifacts。
     print(f"Device: {DEVICE}")
     print(f"CDR Transformer Calibrator | d_model={args.d_model} layers={args.layers} "
           f"nhead={args.nhead}")
@@ -373,6 +387,8 @@ def train(args):
 
 
 def main():
+    # 命令行入口：默认 300 epoch / batch 16 / lr 3e-4 / d_model 128 / 4 头 4 层。
+    # max_seq_len=200 覆盖本数据集中抗体全长序列（超长条目在建库时被剔除）。
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', type=int, default=300)
     parser.add_argument('--batch-size', type=int, default=16)

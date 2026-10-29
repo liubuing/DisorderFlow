@@ -22,6 +22,8 @@ def main():
     records = payload["records"]
     tiers = Counter(row["extraction_tier"] for row in records)
     endpoints = Counter(row["endpoint"] for row in records)
+    # 单点突变才可作明确归因；再筛出"精确数值文本 + Kd/倍数损失"这两类
+    # 无删失的定量记录——只有它们支持定量相关分析
     point_mutations = [row for row in records if row["mutation_count"] == 1]
     exact_uncensored = [
         row for row in point_mutations
@@ -39,6 +41,8 @@ def main():
         "extraction_tiers": dict(tiers),
         "endpoints": dict(endpoints),
         "n_exact_uncensored_quantitative_point_mutations": len(exact_uncensored),
+        # 预设门槛：无删失定量记录 ≥10 才允许做合并定量相关；本面板异质性
+        # 太高（多抗体/多终点/多提取层级），默认只支持定性/删失检查
         "quantitative_correlation_permitted": len(exact_uncensored) >= 10,
         "decision": (
             "Public evidence supports qualitative/censored mutation-effect checks only; "

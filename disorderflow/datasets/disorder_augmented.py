@@ -13,6 +13,9 @@ import torch
 
 def _supervision_arrays(entry):
     """Return values, evidence mask, and confidence for old or v3 lookups."""
+    # 兼容两种查找表条目格式：
+    # - v3+ schema：dict，含 values（逐残基无序值）、mask（证据掩码）、confidence（可信度）
+    # - 旧格式：裸 ndarray，此时 mask 退化为有限值判断，confidence 全 1
     if entry is None:
         return None, None, None
     if isinstance(entry, dict) and 'values' in entry:
@@ -46,6 +49,8 @@ class DisorderAugmentedDataset:
         self._sample_weights = self._build_sample_weights(float(balance_boost))
 
     def _build_sample_weights(self, boost):
+        # boost>0 时按"无序覆盖度 x 证据置信度 x 平均无序值"提升高柔性样本的采样权重，
+        # 缓解无序残基占比极低导致的类别不平衡；boost<=0 时沿用基类的权重（可能为 None）
         if boost <= 0:
             return getattr(self._base, '_sample_weights', None)
         weights = np.ones(len(self._ids), dtype=np.float64)
@@ -64,6 +69,7 @@ class DisorderAugmentedDataset:
 
     def __getitem__(self, idx):
         sid = self._ids[idx]
+        # 样本 ID 查找失败时再按 casefold（大小写不敏感）重试一次
         disorder_arr = self._lookup.get(sid) if self._lookup else None
         if disorder_arr is None and self._lookup:
             disorder_arr = self._lookup.get(str(sid).casefold())
@@ -79,6 +85,7 @@ class DisorderAugmentedDataset:
                 confidence = torch.zeros_like(profile)
                 values, source_mask, source_confidence = _supervision_arrays(disorder_arr)
                 if values is not None and len(values) > 0:
+                    # 查找表长度可能短于 patch 后序列，只复制重叠部分，其余保持 0
                     n_copy = min(profile.shape[0], len(values))
                     profile[:n_copy] = torch.as_tensor(
                         values[:n_copy], dtype=torch.float32)
@@ -129,6 +136,7 @@ class DisorderAugmentedDataset:
         if values is not None and len(values) > 0:
             ag_indices = torch.empty(0, dtype=torch.long)
             if fragment_type is not None:
+                # fragment_type 约定：3 表示抗原残基（抗体-抗原复合物中只给抗原挂无序标签）
                 ag_indices = (fragment_type == 3).nonzero(as_tuple=True)[0]
             # Confidence/IDP LMDB records are single proteins rather than
             # antibody-antigen complexes, so full-length evidence maps directly.
@@ -155,6 +163,7 @@ class DisorderAugmentedDataset:
 
     @staticmethod
     def _add_scalar_mean(data):
+        # 把逐残基无序谱压缩成标量（优先取抗原残基均值），供标量条件/统计使用
         profile = data['epitope_disorder_profile']
         fragment_type = data.get('fragment_type')
         if fragment_type is not None:
@@ -169,6 +178,8 @@ class DisorderAugmentedDataset:
 
     def _add_negative_profiles(self, data, idx):
         """Attach deterministic position-shuffled and cross-sample profiles."""
+        # 负例 1（位置打乱）：同一样本抗原值整体 roll 半个长度，
+        # 保留数值分布但破坏"残基位置 <-> 无序值"的对应关系
         factual = data['epitope_disorder_profile']
         fragment_type = data.get('fragment_type')
         shuffled = torch.zeros_like(factual)
@@ -184,6 +195,9 @@ class DisorderAugmentedDataset:
                 shuffled[antigen_indices] = values
         data['epitope_disorder_shuffled_profile'] = shuffled
 
+        # 负例 2（跨样本错配）：取半个数据集之外的"供体"样本的无序谱，
+        # 线性插值到本样本抗原长度后再做分布匹配（rank 对齐），
+        # 使负例与正例的全局均值/方差一致，只能靠跨样本顺序区分
         donor_idx = (idx + max(1, len(self) // 2)) % len(self)
         donor_id = self._ids[donor_idx]
         donor = self._lookup.get(donor_id) if self._lookup else None
@@ -225,6 +239,8 @@ class ContrastiveNegativeDataset:
         self._base = base_dataset
 
     def __getitem__(self, idx):
+        # 把另一个复合物的真实 CDR 序列线性重采样到当前生成区域长度，
+        # 作为"抗原错配"负例（contrastive_negative_aa 字段）
         data = self._base[idx]
         donor_idx = (idx + max(1, len(self) // 2)) % len(self)
         donor = self._base[donor_idx]
@@ -264,6 +280,7 @@ class DisorderBalancedSampler:
         n = len(dataset)
 
         # Compute per-sample mean disorder
+        # 权重 = 1 + boost * 平均无序值：无序程度越高越可能被过采样
         weights = np.ones(n, dtype=np.float64)
         for i in range(n):
             sid = sample_ids[i] if i < len(sample_ids) else None
@@ -321,6 +338,8 @@ def load_disorder_lookup(path, expected_split=None, expected_ids=None, require_e
                 raise ValueError(f'Disorder lookup ID set mismatch: {path}')
     if artifact.get('schema_version', 1) >= 3:
         return profiles
+    # 旧版 schema：按 source_contract 推断每个条目的置信度——
+    # 启发式来源（电荷/亲水）证据弱给低置信度，未标注来源给中等，默认全 1
     source = artifact.get('source_contract', {}).get('primary_source')
     confidence = {
         'charge_hydropathy_heuristic_v1': 0.10,

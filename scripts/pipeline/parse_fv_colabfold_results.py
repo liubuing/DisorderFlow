@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Parse ColabFold Fv side-check outputs into a fold evidence table."""
+# 目的：解析 Fv 旁证抽查的 ColabFold 输出（rank_001 分数 JSON），提取平均 pLDDT
+# 与 ipTM，生成折叠旁证表。判定阈值：pLDDT>=70 且 ipTM>=0.5 记 fold_sidecheck_pass；
+# 冒烟模式（smoke）只证明工具可用，不作为折叠通过证据。
 from __future__ import annotations
 
 import argparse

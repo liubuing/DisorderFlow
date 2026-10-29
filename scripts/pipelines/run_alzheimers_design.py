@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 """Alzheimer's antibody design: BFN on 5IMK nanobody CDRs targeting Abeta42 fibril."""
+# 阿尔茨海默病（Aβ42 纤维）抗体设计端到端演示脚本，五个步骤：
+# 1) 表位分析（SASA/亲水性/突出度综合打分，与知识库已知治疗表位对照）；
+# 2) BFN 在 5IMK VHH 纳米抗体的 H1/H2/H3 CDR 区做随机序列设计（20 条）；
+# 3) 错误折叠级联过滤（iPTM/pLDDT/ppl/熵/PAE 复合打分）；
+# 4) IDP 风险提示（Aβ 为内在无序靶标，置信分解释需谨慎）；
+# 5) 把最优 CDR 序列嫁接回骨架，写出抗体+Aβ 多聚体 FASTA 供 AF2 验证。
+# 注意：脚本顶部硬编码了历史工作目录 chdir，属于一次性演示入口。
 import os, sys, json, time
 os.chdir(r'C:\biological\AntibodyDesignBFN-main\AntibodyDesignBFN-main')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
@@ -68,7 +75,7 @@ print("  STEP 2: BFN CDR Design on 5IMK Nanobody")
 print("─" * 80)
 
 scaffold_pdb = 'data/misfolding_targets/5IMK.pdb'
-# Design CDR regions: H1=26-33, H2=51-58, H3=97-113 on chain A
+# 设计 CDR 区间：H1=26-33、H2=51-58、H3=97-113（Kabat 风格编号，A 链）
 region_spec = "A:26-33,51-58,97-113"
 num_samples = 20
 stochastic = True
@@ -152,6 +159,7 @@ print(f"Total CDR design length: {total_cdr_len}")
 print(f"Best design sequence ({len(best_design)} AA): {best_design}")
 
 # Graft the designed CDRs
+# 把按 H1→H2→H3 顺序拼接的设计序列按区间写回骨架序列副本
 full_ab_seq = list(scaffold_seq)
 pos = 0
 for name, (start, end, length) in cdr_lengths.items():
@@ -164,6 +172,7 @@ for name, (start, end, length) in cdr_lengths.items():
 full_ab_seq_str = ''.join(full_ab_seq)
 
 # Abeta sequence - known from knowledge base / PDB extraction
+# 从靶标 PDB 的 A 链按残基号顺序提取 Aβ 序列（保留首次出现的残基）
 aa3to1 = {'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C','GLN':'Q','GLU':'E',
           'GLY':'G','HIS':'H','ILE':'I','LEU':'L','LYS':'K','MET':'M','PHE':'F',
           'PRO':'P','SER':'S','THR':'T','TRP':'W','TYR':'Y','VAL':'V'}

@@ -29,6 +29,7 @@ from disorderflow.utils.train import recursive_to  # noqa: E402
 
 
 def binary_metrics(scores, labels):
+    # 二分类指标：AUROC（含并列平均秩处理）与 AUPRC；单一类别时返回 None
     scores = np.asarray(scores, dtype=np.float64)
     labels = np.asarray(labels, dtype=np.int64)
     n_pos = int(labels.sum())
@@ -61,6 +62,7 @@ def binary_metrics(scores, labels):
 
 
 def rank_correlation(x, y):
+    # Spearman 秩相关（经 argsort 的秩近似）；样本 <3 或零方差返回 None
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
     if len(x) < 3 or np.std(x) == 0 or np.std(y) == 0:
@@ -69,6 +71,7 @@ def rank_correlation(x, y):
 
 
 def paired_summary(values, seed=2081, n_bootstrap=2000):
+    # 配对均值 + bootstrap 95% 置信区间（种子固定保证可复现）
     values = np.asarray(values, dtype=np.float64)
     if not len(values):
         return {'n': 0, 'mean': None, 'ci95': None}
@@ -82,6 +85,7 @@ def paired_summary(values, seed=2081, n_bootstrap=2000):
 
 
 def load_checkpoint(path, device, allow_raw=False):
+    # 加载 checkpoint；权威评估默认要求 EMA 权重，并关闭辅助训练前向以免 hook 捕获负样本臂
     checkpoint = torch.load(path, map_location=device, weights_only=False)
     if checkpoint.get('weights_kind') != 'ema' and not allow_raw:
         raise RuntimeError('Authoritative evaluation requires an EMA best checkpoint')
@@ -96,6 +100,7 @@ def load_checkpoint(path, device, allow_raw=False):
 
 
 def build_dataset(config, lmdb_path=None, lookup_path=None, lookup_split=None):
+    # 构建验证数据集：可选覆盖 LMDB 与 disorder lookup，过滤掉无 disorder 值的样本
     dataset_config = copy.deepcopy(config.dataset.val)
     if lmdb_path:
         dataset_config.lmdb_path = lmdb_path
@@ -118,6 +123,7 @@ def build_dataset(config, lmdb_path=None, lookup_path=None, lookup_split=None):
 
 
 def contact_targets(batch):
+    # 由 CBR 原子（缺 CB 用 CA）到抗原的距离 <8A 生成接触标签
     mask_gen = batch['generate_flag'].bool()
     mask_antigen = batch['mask_antigen'].bool()
     cb = batch['pos_heavyatom'][:, :, 4]
@@ -135,7 +141,8 @@ def contact_targets(batch):
 
 
 def condition_batch(batch, arm, donor_profile=None, seed=0):
-    if arm == 'factual':
+    """对表位无序度条件做反事实修改：shuffled/zero/one/mismatched 四种臂。"""
+    if arm == 'factual':  # factual 臂保持原条件不动
         return
     profile = batch['epitope_disorder_profile']
     antigen = batch['fragment_type'] == 3
@@ -177,6 +184,7 @@ def condition_batch(batch, arm, donor_profile=None, seed=0):
 
 
 def evaluate_arm(model, source_batch, device, seed, arm='factual', donor_profile=None, shuffle_cdr=False):
+    """在给定反事实臂下前向一次，捕获 receiver 输出并计算 NLL/PPL/恢复率/熵等指标。"""
     batch = recursive_to(copy.deepcopy(source_batch), device)
     condition_batch(batch, arm, donor_profile, seed)
     if shuffle_cdr:
@@ -188,7 +196,7 @@ def evaluate_arm(model, source_batch, device, seed, arm='factual', donor_profile
                     batch['aa'][row, indices] = negative_aa[row, indices]
                 else:
                     batch['aa'][row, indices] = batch['aa'][row, indices.roll(1)]
-    batch['fixed_t'] = 0.5
+    batch['fixed_t'] = 0.5  # 确定性评估固定扩散时刻
     captured = []
 
     def hook(_module, _inputs, output):
@@ -234,6 +242,7 @@ def evaluate_arm(model, source_batch, device, seed, arm='factual', donor_profile
 
 
 def mean_metrics(records):
+    # 各臂标量指标的样本均值
     return {
         key: float(np.mean([record[key] for record in records]))
         for key in ('native_nll', 'native_ppl', 'recovery', 'entropy')
@@ -241,6 +250,7 @@ def mean_metrics(records):
 
 
 def paired_logit_effect(reference, alternate):
+    # 配对比较两条臂的 CDR logits：平均绝对变化、JS 散度与 argmax 汉明率
     ref_logits = reference['cdr_logits']
     alt_logits = alternate['cdr_logits']
     ref_probs = F.softmax(ref_logits, dim=-1)
@@ -259,6 +269,8 @@ def paired_logit_effect(reference, alternate):
 
 
 def main():
+    # 主流程：加载模型 -> 逐复合物跑 factual/zero/one/shuffled/mismatched 五臂 ->
+    # 汇总配对效应、门控判定并写报告；--require-gates 时不通过则退出码 1
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', required=True)
     parser.add_argument('--device', default='cuda')

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """Convert an official CAID three-line reference FASTA for benchmark_caid.py."""
+# 本脚本把 CAID 官方三行式 FASTA（header/序列/逐残基标签）转换为
+# benchmark_caid.py 可用的基准目录：sequences.fasta + 逐目标 .label 文件
+# （"-" 标签写作 nan），并记录来源 URL、SHA-256 与 0/1/- 标签计数。
+# 用途声明：仅作盲外部评估，绝不用于训练。
 
 import argparse
 import hashlib
@@ -8,6 +12,7 @@ from pathlib import Path
 
 
 def load_reference(path):
+    # 解析三行式 FASTA：每记录 3 行，校验 header 与序列/标签等长
     lines = [line.strip() for line in Path(path).read_text(encoding='utf-8').splitlines()
              if line.strip()]
     records = []

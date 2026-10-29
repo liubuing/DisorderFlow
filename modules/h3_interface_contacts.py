@@ -18,6 +18,7 @@ AA3_TO_1 = {
     "SER": "S", "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
 }
 AA1_TO_3 = {value: key for key, value in AA3_TO_1.items()}
+# 主链原子集合与侧链化学分类，用于接触判定与相容性打分
 BACKBONE_ATOMS = frozenset({"N", "CA", "C", "O", "OXT"})
 AROMATIC = frozenset("FWY")
 HYDROPHOBIC = frozenset("AILMFWYV")
@@ -62,6 +63,7 @@ def extract_h3_interface(
     light_chain: Optional[str] = None,
     expected_h3_sequence: Optional[str] = None,
     expected_peptide_sequence: Optional[str] = None,
+    # 主链重原子接触判定 4.5Å；侧链-侧链单独记录到 5.0Å（侧链接触才参与化学打分）
     contact_cutoff: float = 4.5,
     sidechain_cutoff: float = 5.0,
     model_index: int = 0,
@@ -88,6 +90,7 @@ def extract_h3_interface(
     if not heavy or not peptide:
         raise ValueError(f"Configured chains have no resolved amino acids in {pdb_path}")
     h3, anchors = infer_anchor_bounded_h3(heavy)
+    # 期望序列校验：与冻结基准清单不一致时直接报错，防止静默错配
     h3_sequence = "".join(residue.aa for residue in h3)
     peptide_sequence = "".join(residue.aa for residue in peptide)
     if expected_h3_sequence and h3_sequence != expected_h3_sequence:
@@ -159,6 +162,8 @@ def infer_anchor_bounded_h3(
     """Find the variable-domain C...WG motif and return residues between it."""
     sequence = "".join(residue.aa for residue in heavy_residues)
     candidates = []
+    # 启发式锚点搜索：在前 150 个残基内找 Cxxx...WG 保守基序
+    # （C 距起点 70 起、WG 距 C 至少 4 至多 36），要求唯一命中
     upper = min(len(sequence) - 1, 150)
     for c_index in range(70, upper):
         if sequence[c_index] != "C":
@@ -171,6 +176,7 @@ def infer_anchor_bounded_h3(
         raise ValueError(
             f"Expected one variable-domain C...WG H3 anchor pair, found {len(candidates)}")
     c_index, w_index = candidates[0]
+    # H3 = 两锚点之间（不含锚点）；长度合理范围 3-30，超出即判定锚点识别失败
     h3 = list(heavy_residues[c_index + 1:w_index])
     if not 3 <= len(h3) <= 30:
         raise ValueError(f"Anchor-bounded H3 length is implausible: {len(h3)}")
@@ -192,6 +198,7 @@ def score_h3_sequence(sequence: str, interface: Dict) -> Dict:
     for contact in contacts:
         if contact.min_sidechain_distance is None:
             continue
+        # 距离衰减权重：3Å 满权重，每远 1.5Å 权重衰减约 1/e，近接触主导打分
         weight = math.exp(-max(0.0, contact.min_sidechain_distance - 3.0) / 1.5)
         compatibility = _pair_compatibility(
             sequence[contact.h3_index], contact.epitope_aa)
@@ -318,6 +325,8 @@ def _chain_residues(chain, chain_id: str) -> List[_ResidueGeometry]:
 
 
 def _resolved_heavy_atoms(residue) -> Tuple[Tuple[str, Tuple[float, float, float]], ...]:
+    # 收集已解析的重原子：跳过氢/氘；同名原子多构象时按
+    # (occupancy, 空白 altloc, 'A' altloc) 优先级取最优一个
     selected = {}
     atoms = residue.get_unpacked_list() if residue.is_disordered() else list(residue)
     for atom in atoms:
@@ -351,6 +360,8 @@ def _minimum_atom_distance(atoms_a, atoms_b):
 
 
 def _pair_compatibility(h3_aa: str, epitope_aa: str) -> float:
+    # 化学相容性经验打分：盐桥(0.45) > 疏水(0.35) > 芳香堆叠(0.25) > 极性(0.20)；
+    # H3 半胱氨酸罚 0.20（避免设计出不成对二硫键），总分截断到 [-0.20, 1.0]
     score = 0.0
     if h3_aa in HYDROPHOBIC and epitope_aa in HYDROPHOBIC:
         score += 0.35

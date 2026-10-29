@@ -1,6 +1,9 @@
 ﻿"""Shared utilities for dataset builder scripts.
 Reduces code duplication across build_*.py files.
 """
+# 数据集构建脚本的共享工具集：pTM 计算、带重试的 HTTP GET、
+# PDB → BFN 批次预处理、序列提取、LMDB 保存与"同源簇安全"的训练/验证划分。
+# 被 build_af2_dataset / build_disease_idp_dataset 等脚本复用。
 import sys, os, json, pickle, shutil
 from pathlib import Path
 import numpy as np
@@ -34,6 +37,7 @@ def compute_ptm_from_pae(pae_matrix):
     if L < 2:
         return 0.0
     d0 = max(1.24 * (L - 15) ** (1 / 3) - 1.8, 0.5)
+    # 长度小于 2 无法定义 pTM，直接返回 0；d0 下限 0.5 防止极短序列退化
     best = 0.0
     for i in range(L):
         f_ij = 1.0 / (1.0 + (pae[i, :] / d0) ** 2)
@@ -43,6 +47,7 @@ def compute_ptm_from_pae(pae_matrix):
 
 def resilient_get(url, timeout=30, retries=3, raise_on_404=False):
     """HTTP GET with retry logic."""
+    # 指数退避重试（2^attempt 秒）；默认非 200 直接返回响应交由调用方处理
     import requests
     for attempt in range(retries):
         try:
@@ -103,7 +108,9 @@ def save_lmdb(db_path, entries):
     import lmdb
     if os.path.exists(db_path):
         shutil.rmtree(db_path)
-    # Estimate from multiple samples to handle variable protein sizes
+    # 先抽样（最多 20 条）估计平均条目大小；
+    # LMDB map_size 取"平均大小 × 条数 × 5 倍余量 + 200MB 开销"，下限 2GB，
+    # 以容纳 PAE 矩阵等大小波动较大的字段
     n_samples_est = min(20, len(entries))
     total_sample = sum(len(pickle.dumps(entries[i])) for i in range(n_samples_est))
     avg_entry = total_sample / n_samples_est
@@ -127,6 +134,8 @@ def split_and_save_entries(entries, output_dir, train_split=0.8, seed=2026):
 
     if not any(entry.get('sequence') for entry in entries):
         raise ValueError('Entries need a sequence field for homology-safe splitting')
+    # 同源安全划分：先用 MMseqs2（序列恒等度阈值 0.3）标注序列同源簇，
+    # 再按簇整体划分训练/验证，避免同源序列跨集泄漏
     annotate_homology_clusters(entries, {'sequence': 0.3})
     train, val = grouped_train_val_split(
         entries, val_ratio=1.0 - train_split, seed=seed,

@@ -9,11 +9,16 @@ ORIGINAL = "https://www.nature.com/articles/s41597-022-01779-4"
 
 
 def main():
+    # 在接触任何数值标签之前，把 17 张表的终点语义（测量类别、已报告的变换、
+    # 方向声明、来源）按文献冻结成字典——这是"先冻结语义、后看数值"的
+    # 顺序防线：字典一旦落盘就不允许改写（见末尾的拒写检查）。
     headers = json.loads((OUT / "headers.json").read_text())
     rows = []
     for h in headers["rows"]:
         name = Path(h["file"]).stem.replace("_benchmarking_data_trimmed", "").replace("_benchmarking_data", "")
         family = name.split("_")[0]
+        # 默认未解决；各家族按其测定方法归类。aayl 系列需要区分主文献与
+        # ML 扩展版（aayl49 的 ML 表来自另一篇通讯）
         kind, transform, source = "unresolved", None, PAPER
         if family.startswith("aayl"):
             kind, transform = "AlphaSeq_calibrated_affinity_estimate", "already_negative_log_Kd_molar_by_benchmark_description"
@@ -42,6 +47,7 @@ def main():
                "numeric_values_inspected": False, "policy": "sequence-only feasibility can proceed; unresolved numeric endpoints must not be scored"}
     text = json.dumps(payload, indent=2) + "\n"
     path = OUT / "endpoint_dictionary.json"
+    # write-once：已存在且内容不同 → 拒绝重写并抛错（语义漂移必须显式暴露）
     if path.exists() and path.read_text() != text:
         raise RuntimeError("Refusing to rewrite endpoint snapshot")
     path.write_text(text)

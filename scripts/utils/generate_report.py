@@ -1,4 +1,5 @@
 """生成 BFN V5 训练项目详细报告（2026-05-16/17 项目日）"""
+# 说明：本脚本用 python-docx 生成 V5 训练项目日的 Word 报告，内容为项目历史快照
 from docx import Document
 from docx.shared import Inches, Pt, Cm, RGBColor
 from docx.enum.table import WD_TABLE_ALIGNMENT
@@ -25,6 +26,7 @@ for level in range(1, 4):
     hs.element.rPr.rFonts.set(qn('w:eastAsia'), 'Microsoft YaHei')
 
 def add_table(headers, rows):
+    # 添加带表头样式的表格：表头加粗居中，数据行统一 9pt 字号
     table = doc.add_table(rows=1 + len(rows), cols=len(headers))
     table.style = 'Light Grid Accent 1'
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -47,6 +49,7 @@ def add_table(headers, rows):
     return table
 
 def add_para(text, bold=False, size=10):
+    # 添加普通段落，可指定加粗与字号
     p = doc.add_paragraph()
     run = p.add_run(text)
     run.bold = bold

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Discover peptide-antibody structures absent from the previously exposed archive."""
 
+# 目的：确证性（confirmatory）发现步骤——从 SAbDab2 汇总表中找出"肽类抗原、
+# 且不在此前已暴露档案（先前划分 + 3STB/4HIX 等固定 PDB）"的候选结构实例。
+# 仅做元数据发现（claim_boundary 声明），不做模型推理与同源独立性声明；
+# 输出 discovery.json，供后续确证性材料化使用。
+
 from __future__ import annotations
 
 import argparse
@@ -30,6 +35,8 @@ def archive_pdbs(path):
 
 
 def exposed_pdbs(audit_paths):
+    # 已暴露集合 = 此前划分审计中的全部 PDB + 固定对照 3STB/4HIX（该对照复合物
+    # 在管线中已被反复分析，必须从"新数据"中排除）。
     exposed = {"4hix", "3stb"}
     for path in audit_paths:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -103,6 +110,7 @@ def main():
         },
         "n_candidate_instances": len(ordered),
         "n_candidate_pdbs": len({row["pdb_id"] for row in ordered}),
+        # 12：确证性阶段要求的最少抗原骨架组分数（配置级常量，记录于报告供审查）。
         "minimum_required_antigen_components": 12,
         "candidates": ordered,
     }

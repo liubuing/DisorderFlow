@@ -12,6 +12,13 @@ OUT = ROOT / 'data/pae_public_crosscheck_v8'
 
 
 def main():
+    # 打包回顾性公共候选（不授予任何验证状态）:
+    #   - 对 MMseqs 干净组件选代表（既有几何接触 + 分辨率规则，无模型分数），
+    #     显式标记 short_sequence_sensitivity_pass=False 与
+    #     pretraining_overlap='unresolved'——只报告事实，不下独立确认结论;
+    #   - freeze 落盘候选包并登记全部上游工件的 SHA-256;
+    #   - 生成中文 Markdown 报告（docs/PAE_PUBLIC_CROSSCHECK_V8.md），
+    #     固化筛选漏斗计数与"必须保留的限制"。
     source = read(OUT / 'audit.json')
     structure = read(OUT / 'structures/structural_manifest.json')
     components = read(OUT / 'structure_sequence_audit/components.json')

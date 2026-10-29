@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Generate contact-guided paratope variants from A-beta whitelist references."""
+"""Generate contact-guided paratope variants from A-beta whitelist references.
+
+从 A-beta 参考白名单生成接触引导的 paratope 变体：逐参考提取接触图
+（8Å 截断），按接触拓扑采样突变变体（默认每参考 200 条、最多 4 个突变、
+可限制在 Chothia H3 内），再按接触保持度/热点/复杂度/免疫原性代理打分
+排序。输出 top 候选 CSV/FASTA、全量 CSV、设计契约详情 JSON 与 MD 报告。
+"""
 from __future__ import annotations
 
 import argparse
@@ -39,6 +45,7 @@ def parse_args():
 
 
 def allowed_paratope_positions(contact_map, cdr):
+    """返回允许突变的 paratope 位点（--cdr H3 时限定 Chothia H3 区间，0-based）。"""
     if cdr is None:
         return None
     if cdr != "H3":
@@ -51,6 +58,7 @@ def allowed_paratope_positions(contact_map, cdr):
 
 
 def main():
+    """主流程：读白名单 -> 逐参考生成并打分变体 -> 全局排序选 top -> 写产物。"""
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

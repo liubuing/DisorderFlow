@@ -24,9 +24,12 @@ import time, json, yaml, numpy as np
 
 CKPT = 'logs/bfn_v12_seqconf_xpu_2026_06_20__02_54_40/checkpoints/best.pt'
 N_DESIGNS = 10
+# 表位构象数上限 5: 种子 pickle 中只有 5 个构象（种子 1/3/5/7/9）。
 N_CONFS = 5  # must be <= 5 (we have 5 seeds in the pickle)
 
 # ── Setup checkpoint ──
+# 临时替换 app_config.yaml 中的 BFN checkpoint 指向，finally 中恢复原值，
+# 保证全局配置不被本次实验污染。
 cfg_path = os.path.join(PROJECT_ROOT, 'app_config.yaml')
 with open(cfg_path) as f:
     app_cfg = yaml.safe_load(f)
@@ -72,6 +75,8 @@ try:
     # ── 3. AF2 multi-seed scoring ──
     # Different seeds → different predicted epitope conformations.
     # This captures IDP conformational heterogeneity.
+    # 固定奇数种子 1/3/5/7/9 的子集: 每个种子诱导一个不同表位构象，
+    # 以捕捉 IDP 构象异质性；全局种子 42 保证设计阶段可复现。
     seeds = [1, 3, 5, 7, 9][:N_CONFS]
     print(f'\nStep 2: AF2 multi-seed ({N_DESIGNS} designs × {N_CONFS} seeds = {N_DESIGNS*N_CONFS} runs)...')
 
@@ -133,6 +138,9 @@ try:
         ensemble.append(entry)
 
     # ── 6. Compare rankings ──
+    # 排名对比: 集合均值 ipTM vs 最差构象 ipTM vs 单构象 vs PPL。
+    # 方向约定: ipTM 越高越好（0-1），PPL 越低越好。
+    # 相关性阈值 0.3 用于粗判 PPL 对集合 ipTM 是否有预测力。
     print(f'\n{"="*70}')
     print(f'  P2 AF2 ENSEMBLE RESULTS')
     print(f'{"="*70}')

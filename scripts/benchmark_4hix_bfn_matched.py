@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 """Run matched 4HIX generation with current and parent BFN checkpoints."""
 
+# 目的：消融诊断（非设计验证）——在相同的 4HIX 复合物、H3 区域与种子下，
+# 匹配比较三个生成臂：当前检查点开/关 disorder 引导、父级 BFN 预训练检查点，
+# 统计原生 H3 序列恢复率与困惑度（ppl），并记录 CUDA 峰值显存与耗时。
+
 from __future__ import annotations
 
 import argparse
@@ -23,10 +27,10 @@ CURRENT_CHECKPOINT = (
 )
 PARENT_CHECKPOINT = ROOT / "data/pretrained_candidates/AntibodyDesignBFN_best.pt"
 CALIBRATION = ROOT / "calibration_artifacts/disorder_v4_balanced_s2032.json"
-REGION_SPEC = "H:96-107"
-NATIVE_H3 = "VRYDHYSGSSDY"
-CONTEXT_CHAINS = ["L", "A"]
-DEFAULT_SEEDS = [4101, 4111, 4121]
+REGION_SPEC = "H:96-107"          # 重链 H3 环区（Kabat 96-107）为设计目标区域
+NATIVE_H3 = "VRYDHYSGSSDY"        # 4HIX 原生 CDR-H3 序列，作为恢复率参照
+CONTEXT_CHAINS = ["L", "A"]       # 生成时保留的上下文链：轻链 L 与抗原肽 A
+DEFAULT_SEEDS = [4101, 4111, 4121]  # 默认采样种子（等距 10 递增，便于区分多次运行）
 
 
 def sha256(path):
@@ -44,6 +48,8 @@ def sequence_recovery(sequence):
 
 
 def reset_loader(checkpoint):
+    # 通过环境变量切换检查点并清空 bfn_loader 的模块级缓存单例，
+    # 同时重置 CUDA 统计，保证三个臂在干净状态下运行。
     import modules.bfn_loader as loader
 
     os.environ["DISORDERFLOW_CHECKPOINT"] = str(checkpoint)
@@ -73,6 +79,8 @@ def current_disorder_profile(loader, device):
 
 
 def run_arm(name, checkpoint, seeds, samples, device, profile=None):
+    # 运行一个对比臂：每个种子以 stochastic 采样生成 samples 条设计，
+    # profile 非空时启用 disorder 引导（disorder_guided=True）。
     loader = reset_loader(checkpoint)
     rows = []
     started = time.perf_counter()

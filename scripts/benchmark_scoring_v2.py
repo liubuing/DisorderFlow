@@ -27,6 +27,7 @@ from collections import defaultdict
 
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 AA3TO1 = {
+    # 三字母 -> 单字母氨基酸映射
     'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C','GLN':'Q','GLU':'E',
     'GLY':'G','HIS':'H','ILE':'I','LEU':'L','LYS':'K','MET':'M','PHE':'F',
     'PRO':'P','SER':'S','THR':'T','TRP':'W','TYR':'Y','VAL':'V',
@@ -39,6 +40,7 @@ AA3TO1 = {
 #   1. High structural complementarity to their antigen (known binding)
 #   2. Specific amino acid compositions (enriched in Tyr, Ser, Gly in CDRs)
 #   3. Non-random sequence patterns
+# 已知天然 CDR 阳性对照：来自结构数据库且已知结合抗原的抗体 CDR
 
 NATIVE_CDRS = [
     # 1BJ1 — anti-VEGF bevacizumab H3 (heavy chain CDR3)
@@ -72,14 +74,17 @@ ABETA_DESIGNS = [
 
 def compute_seq_features(seq):
     """Compute a comprehensive set of sequence features."""
+    # 计算序列特征：氨基酸组成、理化类别比例、复杂度与 CDR 相关指标
     n = len(seq)
     features = {}
 
     # Composition
+    # 逐氨基酸频率
     for aa in AA_LETTERS:
         features[f'freq_{aa}'] = seq.count(aa) / n
 
     # Categories
+    # 理化性质类别集合：疏水/亲水/芳香/带电/柔性/刚性/氢键供受体
     hydrophobic = set('AILMFWYV')
     hydrophilic = set('RKDENQ')
     aromatic = set('FYW')
@@ -101,10 +106,12 @@ def compute_seq_features(seq):
     features['hbond_acceptor'] = sum(seq.count(aa) for aa in hbond_acceptor) / n
 
     # Complexity
+    # 复杂度：独特氨基酸占比与 A/G/P 合计比例
     features['unique_aa'] = len(set(seq)) / n
     features['ala_gly_pro'] = (seq.count('A') + seq.count('G') + seq.count('P')) / n
 
     # Key CDR indicators
+    # CDR 关键指标：芳香识别（Y+W）、氢键（S+T）、电荷（D+E/R+K）、半胱氨酸
     features['tyr_trp'] = (seq.count('Y') + seq.count('W')) / n  # aromatic recognition
     features['ser_thr'] = (seq.count('S') + seq.count('T')) / n  # hydrogen bonding
     features['asp_glu'] = (seq.count('D') + seq.count('E')) / n  # negative charge
@@ -125,6 +132,7 @@ def compute_seq_features(seq):
 
 def generate_negative_controls(native_seq, n_per_type=5):
     """Generate negative controls from a native sequence."""
+    # 生成阴性对照：打乱 / 均匀随机 / 全 Ala / 全 Gly / 仅疏水；固定 seed=42 保证可复现
     random.seed(42)
     negs = []
 
@@ -155,6 +163,7 @@ def generate_negative_controls(native_seq, n_per_type=5):
 
 def run_part_a():
     """Part A: Do sequence features distinguish native CDRs from random?"""
+    # Part A：对每个特征计算 native vs 阴性的标准化分离度（σ），并评估 Abeta42 设计的归属
     print("=" * 70)
     print("  PART A: Native vs Negative CDR Sequence Features")
     print("=" * 70)
@@ -213,9 +222,10 @@ def run_part_a():
         a_mean = np.mean(a_vals) if a_vals else 0
 
         pooled_std = np.sqrt((n_std**2 + neg_std**2) / 2)
-        sep = abs(n_mean - neg_mean) / max(pooled_std, 1e-9)
+        sep = abs(n_mean - neg_mean) / max(pooled_std, 1e-9)  # Cohen d 型标准化分离度
 
         # Determine if this feature can help
+        # 分离度阈值分级：>2σ 强 / >1σ 中等 / >0.5σ 弱 / 其余视为噪声
         if sep > 2.0:
             sig = 'STRONG'
         elif sep > 1.0:
@@ -277,6 +287,7 @@ def run_part_a():
 
 def run_part_b(device='cuda'):
     """Part B: BFN design on EGFR (ordered) vs Abeta42 (IDP) — AF2 validation."""
+    # Part B：分别对有序目标（VEGF/EGFR）与 IDP 对照（Abeta42）跑 BFN 设计并对比 PPL
     print("\n" + "=" * 70)
     print("  PART B: BFN Design Quality — Ordered vs IDP Target")
     print("=" * 70)
@@ -332,6 +343,7 @@ def run_part_b(device='cuda'):
 
     # ── Run BFN design for each target ──
     # Save & set checkpoint
+    # 临时切换到 V11 seqconf checkpoint，跑完在 finally 中恢复原配置
     cfg_path = os.path.join(PROJECT_ROOT, 'app_config.yaml')
     with open(cfg_path) as f:
         app_cfg = yaml.safe_load(f)

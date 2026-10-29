@@ -1,5 +1,9 @@
 ﻿#!/usr/bin/env python
 """Build LMDB from existing AF2 results — matches PDBs to AF2 outputs by sequence."""
+# 用途：把已有 AF2 结果与通用蛋白 PDB 按序列配对，构建置信度训练 LMDB。
+# 流程：扫描 af2_results 下各任务的 rank_001 输出建 (序列->AF2 文件) 映射 ->
+# 逐 PDB 预处理成 BFN batch -> 精确/子串序列匹配 -> 附 pLDDT/ipTM/PAE ->
+# 按固定种子 2026 做 8:2 训练/验证划分并写 LMDB 与 summary。
 import sys, os, json, pickle, time
 from pathlib import Path
 import torch
@@ -29,6 +33,7 @@ AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 
 
 def load_pdb_sequence(pdb_path):
+    """读取 PDB 各链的标准氨基酸序列（三字母转单字母，杂原子跳过）。"""
     parser = PDBParser(QUIET=True)
     structure = parser.get_structure('pdb', str(pdb_path))
     model = structure[0]
@@ -44,6 +49,7 @@ def load_pdb_sequence(pdb_path):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    """把首链 PDB 预处理为 BFN batch（mask_region 全残基 -> merge -> patch）。"""
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -69,6 +75,7 @@ def preprocess_pdb_for_bfn(pdb_path):
 
 
 # ── Build AF2 mapping ──
+# 只取 rank_001（AF2 最佳预测）的 unrelaxed 结构、scores 与 PAE 文件
 af2_map = {}  # sequence -> {dir, scores, pae}
 for d in sorted(af2_dir.iterdir()):
     if not d.is_dir():
@@ -126,6 +133,7 @@ for i, pdb_path in enumerate(pdb_files):
     with open(match['scores']) as f:
         scores = json.load(f)
     plddt_array = scores.get('plddt', [])
+    # ipTM 缺失时退回 pTM，再退回中性 0.5（不确定状态占位）
     iptm = scores.get('iptm') or scores.get('ptm') or 0.5
 
     # Load PAE
@@ -183,6 +191,7 @@ if not entries:
     sys.exit(1)
 
 # Split train/val
+# 固定种子 2026 保证划分可复现；80/20 为小数据集的常用经验比例
 np.random.seed(2026)
 indices = np.random.permutation(len(entries))
 split_idx = int(len(entries) * 0.8)

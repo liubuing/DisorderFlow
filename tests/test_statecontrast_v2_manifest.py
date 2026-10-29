@@ -1,15 +1,20 @@
+"""状态对比 v2 清单构建的契约测试：守护拆分/折指派对来源独立且确定（同聚类同参数同结果），
+以及显式状态组（target/apo/off_target）必须完整冻结后才可入清单。"""
 import hashlib
 import json
 
 from scripts.build_statecontrast_v2_manifest import assign_fold, assign_split, build
 
 
+# 指派确定性：同一聚类与参数下 split 与 fold 指派必须可复现——防止拆分随运行漂移。
 def test_split_assignment_is_source_independent_and_deterministic():
     assert assign_split("cluster", 5, 0.8, 0.1) == assign_split(
         "cluster", 5, 0.8, 0.1)
     assert assign_fold("cluster", 5, 5) == assign_fold("cluster", 5, 5)
 
 
+# 冻结前置：状态冻结声明（explicit_states_frozen_before_training）+ 三态齐全 + 坐标哈希校验
+# 才能构建有效清单；每条记录归入 5 折之一且三态类型完整——防止未冻结状态混入训练。
 def test_manifest_builds_complete_explicit_state_group(tmp_path, monkeypatch):
     coordinate = tmp_path / "pose.pdb"
     coordinate.write_text("MODEL\nEND\n", encoding="ascii")

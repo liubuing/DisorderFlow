@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Transfer-evaluate v2 confidence checkpoints on independent calibration-extension scaffolds."""
+"""Transfer-evaluate v2 confidence checkpoints on independent calibration-extension scaffolds.
+
+迁移评估：把在原始 15 个 scaffold 训练集上训练的 v2 置信度 checkpoint，
+拿到 6 个独立外部校准 scaffold 上评估（刻意跳过血缘清单校验，属迁移模式）。
+逐 seed 报告 pLDDT/PAE 的 MAE、scaffold 级 Spearman、方差比与配对准确率门槛；
+ipTM 因跨 scaffold 可靠配对不足而弃权。仅开发用途，不触最终测试集。
+"""
 
 from __future__ import annotations
 
@@ -24,6 +30,7 @@ from disorderflow.utils.data import CompleteGroupBatchSampler, PaddingCollate  #
 from disorderflow.utils.data import lmdb_records_sha256  # noqa: E402
 
 CKPTS = [
+    # 三个不同种子（2041/2053/2069）的 v2 候选接口置信度 checkpoint
     "logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_13_52_dual_sem_v2_s2041/checkpoints/best.pt",
     "logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_29_06_dual_sem_v2_s2053/checkpoints/best.pt",
     "logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__21_10_10_dual_sem_v2_s2069_retry/checkpoints/100.pt",
@@ -31,10 +38,12 @@ CKPTS = [
 
 
 def sha256(path: Path) -> str:
+    """文件 sha256，用于 checkpoint/数据集血缘记录。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def main():
+    """主流程：清单哈希校验 -> 逐 checkpoint 迁移评估与汇总 -> 写 transfer_summary。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--checkpoints", nargs="+", default=CKPTS,
@@ -77,6 +86,7 @@ def main():
             checkpoint_path, loader, args.device,
             expected_manifest_sha256=None)
         summary = summarize_selection(evaluation, bootstrap_seed=2041 + index)
+        # bootstrap_seed 与 checkpoint 种子对齐，保证多 seed 汇总可复现
         selections.append(summary)
         sources.append({
             "path": relative,

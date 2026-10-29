@@ -11,15 +11,16 @@ from pathlib import Path
 
 
 KD = {
+    # Kyte-Doolittle 疏水标度：正值疏水、正值越大越疏水；用于滑窗疏水性
     "A": 1.8, "R": -4.5, "N": -3.5, "D": -3.5, "C": 2.5,
     "Q": -3.5, "E": -3.5, "G": -0.4, "H": -3.2, "I": 4.5,
     "L": 3.8, "K": -3.9, "M": 1.9, "F": 2.8, "P": -1.6,
     "S": -0.8, "T": -0.7, "W": -0.9, "Y": -1.3, "V": 4.2,
 }
-POS = set("KRH")
-NEG = set("DE")
-AROM = set("FWY")
-HYDRO = set("AILMFWYV")
+POS = set("KRH")       # 碱性残基（净电荷计算）
+NEG = set("DE")        # 酸性残基
+AROM = set("FWY")      # 芳香族（自聚集风险相关）
+HYDRO = set("AILMFWYV")  # 疏水残基集合（占比统计）
 
 
 def parse_args():
@@ -71,14 +72,23 @@ def _store(records, header, seq):
 
 
 def score_sequence(seq):
+    """启发式可开发性风险评分（0-1，越高越差）。
+
+    风险项与权重（人为预设，非拟合）：疏水滑窗 0.20、疏水占比 0.15、
+    芳香占比 0.10、奇数 Cys 0.15（二硫键配对困难）、净电荷绝对值 0.10、
+    同聚物 run 0.10、N-糖基化基序 0.10、脱酰胺 0.05、氧化位点 0.05。
+    各项先归一到 [0,1] 再加权。仅为合成前粗筛，不能替代表达/聚集/
+    免疫原性实验（报告尾部亦声明）。
+    """
     seq = "".join(a for a in seq.upper() if a in KD)
     n = max(1, len(seq))
     charge = sum(1 for a in seq if a in POS) - sum(1 for a in seq if a in NEG)
     hydro_frac = sum(1 for a in seq if a in HYDRO) / n
     arom_frac = sum(1 for a in seq if a in AROM) / n
     cys_count = seq.count("C")
-    max_hydro9 = max_window_hydropathy(seq, 9)
+    max_hydro9 = max_window_hydropathy(seq, 9)  # 9 残基滑窗：经典聚集体核心尺度
     max_run = max_homopolymer(seq)
+    # N-糖基化基序 N-X-S/T（X≠P）；脱酰胺高风险 NG/NS/NT/NQ；M/W 易氧化
     n_glyco = len(re.findall(r"N[^P][ST]", seq))
     n_deamidation = len(re.findall(r"N[GSTNQ]", seq))
     n_oxidation = seq.count("M") + seq.count("W")
@@ -216,7 +226,12 @@ def main():
 
 
 def classify_inherited_flags(rows, max_risk):
-    """Split systematic reference-level flags from candidate-specific flags."""
+    """Split systematic reference-level flags from candidate-specific flags.
+
+    关键区分：同一参考结构下所有候选共有的 flags 是亲本骨架"继承"的，
+    不应让具体候选背锅；只有候选特有的 flags 才触发 review。
+    NAS（未合成）状态为 retained 的也进 review——保留亲和力但未验证可合成性。
+    """
     by_ref = defaultdict(list)
     for r in rows:
         by_ref[r["reference_pdb"]].append(r)

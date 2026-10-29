@@ -7,6 +7,9 @@ L3: interface scoring on docked pose. L4/L5: placeholder for GPU.
 
 Usage: python run_v3_pipeline.py --top 20
 """
+# 角色：V3 统一管线——用物理度量对 P3 设计重排：L1 晶体接触/电荷/疏水分析，
+# L2 FFT 姿态生成（受体重建→表位对接），L3 界面打分 + 三方投票；
+# L4/L5 为 GPU 扩展占位。流程：移植 CDR→FFT 对接→界面打分排序。
 import sys, os, json, time, argparse, tempfile
 sys.path.insert(0,'.'); sys.path.insert(0,'modules')
 import numpy as np

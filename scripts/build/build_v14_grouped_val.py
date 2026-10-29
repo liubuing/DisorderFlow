@@ -35,7 +35,7 @@ DST_DIR = 'data/confidence_design_variants_v14'
 
 
 def read_all(src):
-    """Return list of (key_int, entry) from a V14 LMDB."""
+    """Return list of (key_int, entry) from a V14 LMDB. 按 key 数序读出全部条目。"""
     env = lmdb.open(src, readonly=True, lock=False, readahead=False)
     with env.begin() as txn:
         keys = []
@@ -52,7 +52,8 @@ def read_all(src):
 
 
 def write_split(path, entries):
-    env = lmdb.open(path, map_size=1 << 35)
+    """把条目重编号后写入 LMDB（键从 0 递增），返回条数。"""
+    env = lmdb.open(path, map_size=1 << 35)  # 32GB 虚拟地址空间上限，实际按需分配
     key_idx = 0
     with env.begin(write=True) as txn:
         for _, entry in entries:
@@ -64,6 +65,7 @@ def write_split(path, entries):
 
 
 def main():
+    """按 scaffold 整组划分：默认 15% scaffold 进 val（--val_frac/--seed 可调）。"""
     ap = argparse.ArgumentParser()
     ap.add_argument('--src', default=SRC)
     ap.add_argument('--dst_dir', default=DST_DIR)
@@ -94,6 +96,7 @@ def main():
 
     rng = random.Random(args.seed)
     rng.shuffle(scaffolds)
+    # 至少留 1 个 scaffold 进 val，保证 grouped loss 在 val 上可计算
     n_val_scaff = max(1, int(round(len(scaffolds) * args.val_frac)))
     val_scaff = set(scaffolds[:n_val_scaff])
     train_scaff = [s for s in scaffolds if s not in val_scaff]

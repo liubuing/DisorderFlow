@@ -157,6 +157,9 @@ KNOWN_IDPS = [
 
 
 def parse_args():
+    # 命令行参数：min_len=30/max_len=500 与 AF2/置信度张量的可用尺寸对齐
+    # （MAX_SEQ_LEN=500 是下游批处理约定）；seed=2026 为固定划分种子；
+    # afdb_version 默认 6（当前 AlphaFold DB 版本），下载失败会回退 v4。
     p = argparse.ArgumentParser(description='Build IDP confidence dataset v3')
     p.add_argument('--output', default=str(PROJECT_DIR / 'data' / 'confidence_idp_v3'),
                    help='Output LMDB directory')
@@ -350,6 +353,9 @@ def fetch_af2_confidence(accession, version=6):
 
 def _compute_ptm_from_pae(pae):
     """Compute pTM from PAE matrix."""
+    # PAE 单位为埃、越低越好；d0 是 TM-score 的长度归一化尺度
+    # （标准 TM-score 公式：d0 = 1.24*(L-15)^(1/3) - 1.8，下限 0.5），
+    # 对 PAE 行取均值后逐行最大值即 pTM 近似（单体情形 ipTM 退化为 pTM）。
     pa = np.array(pae)
     L = pa.shape[0]
     d0 = max(1.24 * (L - 15) ** (1.0 / 3) - 1.8, 0.5)
@@ -546,17 +552,21 @@ if __name__ == '__main__':
 
         af2 = fetch_af2_confidence(acc, version=args.afdb_version)
         plddt = af2.get('plddt_array')
+        # pLDDT 已归一化到 0-1（原始值 0-100 除以 100），越高越可信。
         if not plddt:
             print(f'SKIPPED (no AF2 confidence data)')
             n_skipped_nopdb += 1
             continue
 
         avg_plddt = np.mean(plddt)
+        # 长度不齐时以 0.5（中性置信度）补齐/截断到 batch_nres。
         if len(plddt) < batch_nres:
             plddt = list(plddt) + [0.5] * (batch_nres - len(plddt))
         plddt = plddt[:batch_nres]
 
         pae = af2.get('pae_matrix')
+        # PAE 矩阵缺省时保留全零占位（下游可按需判别）；PAE 越低代表
+        # 残基对相对位置越可信，是 v20+ PAE 类端点的教师信号来源。
         af2_pae_tensor = torch.zeros(batch_nres, batch_nres)
         if pae is not None:
             pae_np = np.array(pae)
@@ -564,12 +574,14 @@ if __name__ == '__main__':
                 af2_pae_tensor = torch.from_numpy(pae_np[:batch_nres, :batch_nres]).float()
 
         # Truncate/pad disorder_mask to match batch_nres
+        # 补齐段填 0.5（无信息先验），而不是 0/1，避免伪造监督信号；
         if disorder_mask is not None:
             if len(disorder_mask) < batch_nres:
                 disorder_mask = np.pad(disorder_mask, (0, batch_nres - len(disorder_mask)), mode='constant', constant_values=0.5)
             disorder_mask = disorder_mask[:batch_nres]
             disorder_tensor = torch.from_numpy(disorder_mask.copy()).float()
         else:
+            # -1 = unknown（缺失标签哨兵值，训练侧据此忽略）
             disorder_tensor = torch.full((batch_nres,), -1.0)  # -1 = unknown
 
         entry = {

@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 def warning_count(row):
+    # 统计一条候选命中的序列 QC 警告类别数（糖基化/脱酰胺/异构化/氧化）。
     return sum(bool(row[key]) for key in (
         "n_linked_glycosylation_motifs",
         "deamidation_motifs",
@@ -20,12 +21,16 @@ def warning_count(row):
 
 
 def hamming(left, right):
+    # 匹配对 H3 序列的 Hamming 距离；长度不同视为配对错误，直接抛错。
     if len(left) != len(right):
         raise ValueError("Matched H3 sequences have different lengths")
     return sum(a != b for a, b in zip(left, right, strict=True))
 
 
 def summarize(analysis_path, output):
+    # 只做描述性汇总（无统计主张）: 按臂（ensemble/single_state）统计
+    # QC 警告与疏水/电荷代理的中位数，再对 (组件, 突变桶) 配对的两臂
+    # 做逐对对比。输出拒绝覆盖；配对不完整即失败。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite nonviral summary: {output}")
     analysis = json.loads(analysis_path.read_text(encoding="ascii"))

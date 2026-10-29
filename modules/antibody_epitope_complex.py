@@ -24,6 +24,8 @@ def _read_ca_positions(pdb_path, chain_id=None):
     positions = []
     residue_ids = []
     atom_lines = []
+    # 手工按 PDB 列位解析（避免强依赖 Biopython）：只挑 CA 原子收集坐标；
+    # atom_lines 保留所有行（含 TER/END 等非原子行，其链/编号为 None）供写出时重建文件
     with open(pdb_path) as f:
         for line in f:
             if not (line.startswith('ATOM') or line.startswith('HETATM')):
@@ -83,6 +85,7 @@ def position_epitope(scaffold_pdb, epitope_pdb, scaffold_chain='A',
         raise ValueError(f"No CA atoms found in epitope {epitope_pdb}")
 
     # CDR positions (nanobody CDR definitions: H1~26-33, H2~51-58, H3~97-113)
+    # 先用第一条残基编号推算编号偏移，使 CDR 区间定义与 PDB 的实际编号方式解耦
     scaffold_offset = scaff_ids[0][1] - 1  # residue numbering offset
     cdr_ranges = [
         (26 - scaffold_offset, 33 - scaffold_offset),
@@ -106,6 +109,8 @@ def position_epitope(scaffold_pdb, epitope_pdb, scaffold_chain='A',
     epitope_center = epitope_ca.mean(axis=0)
 
     # Direction: from scaffold center through CDR center
+    # 表位放置方向：从骨架整体质心指向 CDR 面；两者几乎重合时退化为 +z 方向，
+    # 避免零向量导致归一化除零
     direction = cdr_center - scaffold_center
     dir_norm = np.linalg.norm(direction)
     if dir_norm < 0.5:
@@ -115,6 +120,7 @@ def position_epitope(scaffold_pdb, epitope_pdb, scaffold_chain='A',
         direction = direction / dir_norm
 
     # Target position: epitope center placed at CDR_center + distance * direction
+    # 平移量 = 目标表位质心 - 当前表位质心，仅平移不旋转
     target_epitope_center = cdr_center + distance * direction
     translation = target_epitope_center - epitope_center
 
@@ -177,9 +183,11 @@ def analyze_contact_potential(complex_pdb, epitope_chain='B',
         complex_pdb, 'A')  # assume scaffold is chain A
 
     if len(epitope_ca) == 0 or len(scaffold_ca) == 0:
+        # 无原子可比较时返回"无穷远"哨兵值，调用方按不可接触处理
         return {'nearby_residues': 0, 'min_distance': float('inf')}
 
     # Compute all pairwise distances
+    # 广播计算骨架 CA x 表位 CA 的全对距离，再对每个骨架残基取最近表位距离
     dists = np.linalg.norm(
         scaffold_ca[:, None, :] - epitope_ca[None, :, :], axis=-1
     )

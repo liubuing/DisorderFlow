@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Direct ensemble-conditioned design for A-beta middle-epitope antibodies."""
+# 目的：Aβ 中段表位抗体的集成条件设计——对 4XXD/5VZY 多构象接触图面板做
+# 束搜索式单点突变（beam-width 250、最多 4 个突变），按稳健聚合分
+# （0.45*p25 + 0.25*min + 0.20*mean - 0.10*std，惩罚跨构象方差）排序，
+# 每个参考结构保留前 20 条、全链可开发性风险 <=0.55，输出候选 CSV/FASTA。
 from __future__ import annotations
 
 import argparse

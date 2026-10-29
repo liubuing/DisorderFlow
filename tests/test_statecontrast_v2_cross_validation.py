@@ -1,3 +1,5 @@
+"""状态对比 v2 交叉验证配置准备的契约测试：守护每折配置把整折同时留出
+（train 排除该折、val 使用该折）且继承允许的初始化器谱系——防止折间泄漏。"""
 import json
 from pathlib import Path
 
@@ -6,6 +8,8 @@ import yaml
 from scripts.prepare_statecontrast_v2_cross_validation import prepare
 
 
+# 折级隔离：5 折契约逐一生成，fold_3 的 train 必须留出第 3 折、val 角色为 validation——
+# 防止验证折数据混入训练。
 def test_cv_configs_hold_out_whole_fold(tmp_path, monkeypatch):
     root = tmp_path
     base = root / "base.yml"

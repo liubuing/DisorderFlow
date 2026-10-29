@@ -33,11 +33,18 @@ from scripts.protein_mpnn_prefix_adapter import (  # noqa: E402
 
 
 def resolve(path):
+    # 相对路径统一解析到仓库根（脚本可能从任意 cwd 调用）。
     path = Path(path)
     return path if path.is_absolute() else ROOT / path
 
 
 def build_pose_adapter(pdb_path, model, component, device):
+    # 为单个姿态构建 ProteinMPNN 前缀适配器:
+    #   - 解析 PDB 并按链契约（重链 B、可见链 A/P）特征化;
+    #   - 在重链序列中精确查找原生 H3，计算 H3 位点的前缀偏移
+    #     （tied_featurize 会把设计链排在可见链之前，注释见下）;
+    #   - 记录原生 H3 的氨基酸索引，供运行时 trace 对齐。
+    # 任一姿态找不到 H3 即失败。
     parsed = parse_PDB(str(pdb_path))
     dataset = StructureDatasetPDB(parsed, truncate=None, max_length=1000, verbose=False)
     item = dataset[0]
@@ -75,6 +82,10 @@ def build_pose_adapter(pdb_path, model, component, device):
 
 
 def run(pose_paths, checkpoint, output):
+    # 运行时冒烟验证: 两个姿态共用同一序列/H3 布局时，执行一次零替换
+    # （max_substitutions=0）的自回归采样——不产生新序列，只为驱动完整
+    # 前缀条件化前向并收集 runtime_trace。种子 12001 为该验证固定种子。
+    # 输出仅为运行时验证记录，不构成任何结合或确认性证据。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite runtime trace: {output}")
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

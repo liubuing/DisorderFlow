@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.build.materialize_rcsb_candidate_interface_extension import number_sequences
 from scripts.audit_successor_v3_isolation import AXES, connected_components, run_mmseqs_search, mmseqs_version, write_fasta
 
+# 输入: AbBiBench 元数据快照目录; 输出: 结构重叠审计产物目录; MMSEQS: 本机 mmseqs2 可执行文件
 SOURCE = ROOT / "data/ecls_independent_feasibility_v1/abbibench_metadata"
 OUT = ROOT / "data/abbibench_structural_audit_v1"
 MMSEQS = "C:/biological/Metabolic model prediction/Integrated_Yeast_MetaTwin_Deployment/tools/mmseqs2/mmseqs/bin/mmseqs.exe"
@@ -27,10 +28,12 @@ def read(path):
 
 
 def digest(path):
+    # 文件内容的 SHA256, 用于来源与产物的可追溯性记录
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def freeze(path, data):
+    # 冻结式写入: 已存在但内容不同则抛错, 保证产物一旦生成不再被静默改动
     text = json.dumps(data, indent=2) + "\n"
     if path.exists():
         if path.read_text(encoding="utf-8") != text:
@@ -41,6 +44,8 @@ def freeze(path, data):
 
 
 def resolve_path(requested, files):
+    # 把元数据中的相对路径映射到仓库实际文件: 先精确匹配, 再做大小写不敏感的唯一匹配,
+    # 两者都失败则返回 (None, missing_or_ambiguous)
     requested = requested.removeprefix("./data/")
     if requested in files:
         return requested, "exact"
@@ -51,6 +56,8 @@ def resolve_path(requested, files):
 
 
 def prepare():
+    # 阶段一(准备): 元数据映射 -> 按修订号下载结构 -> 链角色/序列校验 ->
+    # 抗体重轻链编号 -> H3-抗原几何接触指标 -> 冻结 structural_manifest.json
     info, metadata = read(SOURCE / "repository.json"), read(SOURCE / "metadata.json")
     files = [r["rfilename"] for r in info["siblings"]]
     mappings, grouped = [], {}
@@ -67,12 +74,14 @@ def prepare():
         mappings.append(mapping)
         if path is None:
             continue
+        # 多个数据集常共用同一结构: 按 (结构路径, 重链, 轻链, 抗原链集合) 签名去重
         signature = (path, item["heavy_chain"], item["light_chain"], tuple(item["antigen_chains"]))
         grouped.setdefault(signature, []).append(key)
     freeze(OUT / "mapping.json", {"revision": info["sha"], "rows": mappings,
             "source_hashes": {p.name: digest(p) for p in (SOURCE / "metadata.json", SOURCE / "repository.json")}})
     raw = []
     numbering_inputs = {}
+    # 逐结构处理: 缺失时从 HuggingFace 下载(锚定元数据 sha 修订), 校验 ATOM 记录后落盘
     for index, ((remote, heavy, light, antigen), datasets) in enumerate(sorted(grouped.items()), 1):
         path = OUT / "structures" / Path(remote).name
         if not path.exists():
@@ -97,6 +106,7 @@ def prepare():
                     "heavy_chain": heavy, "light_chain": light, "antigen_chains": list(antigen),
                     "sequences": sequences, "residues": residues})
     cache = OUT / "numbering.json"
+    # 抗体编号结果缓存: 已冻结则复用, 避免重复调用编号流程
     if cache.exists():
         numbered = read(cache)
     else:
@@ -114,6 +124,7 @@ def prepare():
         if not h3 or max(h3) >= len(hr):
             raise ValueError(f"H3 indexing failed: {instance}")
         ag = [r for c in row["antigen_chains"] for r in row["residues"][c]]
+        # 几何接触指标: H3 CDR 与抗原残基的 CA 距离矩阵 -> 最小距离与 8A 内的 H3 位置数
         a = np.array([hr[i]["CA"].coord for i in h3])
         b = np.array([r["CA"].coord for r in ag])
         distances = np.linalg.norm(a[:, None] - b[None, :], axis=-1)
@@ -139,6 +150,8 @@ def prepare():
 
 
 def audit():
+    # 阶段二(独立性审计): 按 AXES 各轴做 MMseqs 检索——对参考联合库(排他性检查)
+    # 与自比对(连通分量), 任一轴命中参考库即判为未通过项目序列筛选
     records = read(OUT / "structural_manifest.json")["records"]
     reference_path = SOURCE.parent / "reference_union.json"
     reference = read(reference_path)
@@ -149,6 +162,7 @@ def audit():
     for axis, (field, threshold) in AXES.items():
         candidates = records
         aliases = {r["instance"]: r["instance"] for r in records}
+        # 抗原轴特例: 每条抗原链单独作为查询序列, 命中即排除整个结构(用别名映射回实例)
         if axis == "antigen":
             candidates, aliases = [], {}
             for row in records:
@@ -173,6 +187,7 @@ def audit():
             bucket[axis] = [{**r, "query": aliases[r["query"]],
                             "target": aliases[r["target"]] if name == "self" else r["target"]} for r in payload["hits"]]
     rows = []
+    # 逐实例汇总判定: 任一轴命中参考库, 或文件名解析出的 PDB 与参考精确重叠, 均不通过
     for row in records:
         rid = row["instance"]
         failed = [axis for axis in AXES if any(h["query"] == rid for h in hits[axis])]

@@ -14,6 +14,11 @@ Usage:
   python scripts/verify_calibration_comparison.py
 """
 
+# 目的：校准方法横向验证——在同一批 OC（过度自信）验证数据上并排比较四种
+# 置信度校准：raw BFN 基线、Isotonic（方案B）、PPL 增强 Ridge（方案B）、
+# 序列校准器（方案C），报告 Spearman/Pearson、MAE、OC ratio 与输出方差，
+# 并产出组合的 best-of 打分函数，用于选择部署用的置信度校准方案。
+
 import json
 import pickle
 import sys

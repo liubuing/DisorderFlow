@@ -15,6 +15,13 @@ mode), and let it DESIGN, does it recover the real binding CDR sequence?
 Free: BFN inference only, no AF2. Uses V15 (seq_only, well-trained decoder) —
 no co-design so the sequence pathway is the only variable.
 """
+# 架构诊断探针：BFN 序列解码器能否"恢复"真实抗 Aβ CDR？
+# 把 5CSZ（阿杜卡努单抗类似 Fab）重链截断到 Fv（前 120 残基，使 Chothia
+# CDR 区间 26-102 适用），遮罩 H1/H2/H3 后以 complex 模式（Aβ42 抗原可见）
+# 交给 BFN 设计 20 条，统计对真实 CDR 的逐位恢复率（随机基线约 5%）。
+# 判读：高恢复 → 架构可学，失败归因于数据（可用真实结合标签做拒绝采样）；
+# 低/随机 → 架构在该上下文下无法产出结合 CDR，需根本性改动。
+# 只做 BFN 推理（无 AF2、无共设计），用 V15 序列通道解码器隔离变量。
 import sys, os, re, json
 if sys.platform == 'win32':
     import io; sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')

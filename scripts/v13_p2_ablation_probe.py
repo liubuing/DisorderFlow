@@ -12,9 +12,13 @@ import numpy as np
 import torch, yaml, lmdb
 from collections import defaultdict
 
+# 标准氨基酸字母表（索引与模型输出 logits 的类别一一对应）。
 AA = 'ARNDCQEGHILKMFPSTWYV'
 
 def load_model(ckpt_path):
+    # 加载指定 checkpoint 的 BFN 模型（强制 CPU 推理，保证探针结果不受
+    # GPU 状态影响）。通过临时改写 app_config.yaml 再立即还原的方式
+    # 复用 bfn_loader 的标准加载逻辑；清空其模块级缓存避免读到旧权重。
     import bfn_loader
     app = yaml.safe_load(open('app_config.yaml', encoding='utf-8'))
     orig = app['models']['bfn']['checkpoint']
@@ -27,17 +31,23 @@ def load_model(ckpt_path):
     return model
 
 def run_probe(model, n_samples=8, n_seeds=3):
+    # 探针主流程：取高柔性(max>0.4)与低柔性(max<0.2)两组抗原，
+    # 各抽 n_samples 个，分别在 per_residue / none 两种 disorder 条件下
+    # 采样 CDR，每样本跑 n_seeds 个随机种子，统计多样性/熵指标。
     from disorderflow.utils.data import PaddingCollate
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.transforms import get_transform
 
+    # 柔性分组：按抗原紊乱度剖面最大值划分高/低柔性组。
     lookup = pickle.load(open('data/sabdab_disorder_lookup.pkl', 'rb'))
     high_flex = [(k, v) for k, v in lookup.items() if v.max() > 0.4]
     low_flex = [(k, v) for k, v in lookup.items() if v.max() < 0.2]
+    # 固定 seed=42 抽样，保证不同 checkpoint 的探针使用同一批测试抗原。
     random.seed(42)
     test_high = random.sample(high_flex, min(n_samples, len(high_flex)))
     test_low = random.sample(low_flex, min(n_samples, len(low_flex)))
 
+    # 只保留训练 LMDB 中实际存在的 id，避免后续读取时 KeyError。
     env_check = lmdb.open('data/sabdab_phase3_processed/train.lmdb', subdir=False, readonly=True, lock=False, readahead=False)
     valid_ids = set(pickle.load(open('data/sabdab_phase3_processed/train.lmdb-ids', 'rb')))
     env_check.close()
@@ -45,10 +55,14 @@ def run_probe(model, n_samples=8, n_seeds=3):
     test_low = [(k, v) for k, v in test_low if k in valid_ids]
     print(f"Test: {len(test_high)}H, {len(test_low)}L", flush=True)
 
+    # 与训练一致的预处理链：掩码多条 CDR -> 合并链 -> 围绕锚点裁剪 patch。
     transform = get_transform([{'type': 'mask_multiple_cdrs'}, {'type': 'merge_chains'}, {'type': 'patch_around_anchor'}])
     env = lmdb.open('data/sabdab_phase3_processed/train.lmdb', subdir=False, readonly=True, lock=False, readahead=False)
 
     def build_batch(sid, dm, darr):
+        # 从 LMDB 取样本并构建推理 batch；按 disorder 模式注入条件：
+        # - per_residue：把紊乱度剖面填入 batch 尾部的抗原区段；
+        # - scalar：使用剖面均值。
         with env.begin() as txn:
             raw = txn.get(sid.encode())
             if raw is None: return None, None
@@ -59,6 +73,7 @@ def run_probe(model, n_samples=8, n_seeds=3):
         L = batch['aa'].shape[1]
         ag_len = len(e['antigen']['aa'])
         if dm == 'per_residue' and darr is not None:
+            # 抗原位于序列末尾：对齐起点并截断到 patch 长度。
             d = np.zeros(L)
             ag_start = L - min(ag_len, L)
             n_copy = min(len(darr), L - ag_start)
@@ -66,12 +81,15 @@ def run_probe(model, n_samples=8, n_seeds=3):
             batch['epitope_disorder_profile'] = torch.tensor(d, dtype=torch.float32).unsqueeze(0)
         elif dm == 'scalar' and darr is not None:
             batch['epitope_disorder'] = torch.tensor([[darr.mean()]], dtype=torch.float32)
+        # 掩码约定：generate_flag 内的 CDR 位点为待生成区；抗原仅作条件。
         batch['mask_antigen'] = torch.zeros(1, L).bool()
         batch['mask_antigen'][0, -ag_len:] = True
         batch['mask'] = torch.ones(1, L).bool()
         return batch, e
 
     def sample_cdr(model, batch, seed):
+        # 采样一条 CDR 并计算统计：平均熵、唯一氨基酸数、最高频占比、
+        # 是否出现 6-mer 连续重复（退化信号）。
         torch.manual_seed(seed)
         with torch.no_grad():
             try:
@@ -82,6 +100,7 @@ def run_probe(model, n_samples=8, n_seeds=3):
         if not gen_flag.any(): return {'error': 'no gen'}
         logits = traj['pred_logits'][0, gen_flag]
         probs = torch.softmax(logits, dim=-1).cpu().numpy()
+        # +1e-8 防止 log(0)。
         entropy = -(probs * np.log(probs + 1e-8)).sum(axis=-1)
         pred_aa = logits.argmax(dim=-1).cpu().numpy()
         pred_seq = ''.join(AA[a] for a in pred_aa)
@@ -100,6 +119,7 @@ def run_probe(model, n_samples=8, n_seeds=3):
 
     all_results = []
     total = 0
+    # 双层遍历：高/低柔性 x per_residue/none 条件 x 多 seed。
     for label, samples in [('high_flex', test_high), ('low_flex', test_low)]:
         for sid, darr in samples:
             for dm in ['per_residue', 'none']:
@@ -120,6 +140,7 @@ def run_probe(model, n_samples=8, n_seeds=3):
 
 
 if __name__ == '__main__':
+    # 命令行入口：对任意消融 checkpoint 运行 P2 探针并保存结果。
     parser = argparse.ArgumentParser(description='V13.1 Ablation P2 Probe')
     parser.add_argument('checkpoint', type=str, help='Path to checkpoint')
     parser.add_argument('label', type=str, help='Ablation label (e.g. A1_nodiv)')
@@ -139,6 +160,7 @@ if __name__ == '__main__':
     results = run_probe(model, n_samples=args.n_samples, n_seeds=args.n_seeds)
 
     # Spearman analysis
+    # 按 disorder 模式分组，计算"紊乱度 vs 多样性/熵"的相关与汇总统计。
     print("\n" + "="*60)
     print(f"SPEARMAN: {args.label}")
     print("="*60)
@@ -167,6 +189,7 @@ if __name__ == '__main__':
         print(f"    Summary: ent={e:.4f}  uniq={u:.1f}  top_aa={t:.3f}  6mer={n6}")
 
     # Save
+    # 结果带时间戳落盘，便于不同消融标签之间对比。
     os.makedirs('idp_design_results', exist_ok=True)
     ts = time.strftime('%Y%m%d_%H%M%S')
     out = f'idp_design_results/way4_ablate_{args.label}_p2_{ts}.json'

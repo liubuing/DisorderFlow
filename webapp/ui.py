@@ -31,6 +31,9 @@ from webapp.state import AA_LETTERS, CONFIG_FILE, DEVICE, PROJECT_DIR, get_bfn_c
 
 
 def create_ui():
+    # 构建 Gradio Blocks 界面（约 10 个功能页签：单步设计/批量/结构预测/设置/
+    # 靶点设计/迭代精修/置信度评估/统一工作流/错误折叠疾病/闭环优化）。
+    # 页面内部用大量闭包回调直接组装业务逻辑；返回 (Blocks 实例, CSS)
     css = """
     /* ══════════════════════════════════════════════════════════════════
        Protein Design Platform — Layered Functional Depth Theme
@@ -1650,6 +1653,8 @@ def create_ui():
                        convergence, ag_chain, ab_chain, enable_relax,
                        enable_finetune, finetune_freq, progress=gr.Progress()):
                 """Execute the full closed-loop optimization."""
+                # 把 UI 参数装配成编排器所需的三个可调用对象（design/validate/finetune），
+                # 实际闭环循环全部委托给 ClosedLoopOrchestrator
                 if not pdb_path or not os.path.exists(str(pdb_path)):
                     return "错误: 请先上传靶点 PDB 文件", pd.DataFrame()
 
@@ -1672,6 +1677,8 @@ def create_ui():
                 # ── Build af2_validator ──
                 def af2_validator(sequences, output_dir, **kwargs):
                     """Validate binder-antigen complexes with explicit antigen context."""
+                    # 闭环验证必须以 multimer 模式携带抗原序列，ipTM 才有界面意义；
+                    # 失败时返回 success=False 的占位结果而非抛异常，循环不至于中断
                     try:
                         from af2_validator import validate_sequences
                         antigen_sequence = tdh.extract_seq_from_pdb(str(pdb_path), str(ag_chain))

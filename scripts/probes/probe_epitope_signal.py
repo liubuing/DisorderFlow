@@ -5,6 +5,12 @@ import os
 Runs model.forward() on two complexes with same backbone but different epitope AA,
 then compares internal feature differences.
 """
+# 表位信号探针：检验表位残基身份是否真的改变 BFN 内部表征。
+# 对同一骨架、仅表位序列不同（天然 vs 全 Ala 突变）的两个复合物，
+# 用 V11 检查点各跑一次 forward，逐层捕获 GA encoder 的注意力图 alpha，
+# 分别统计"骨架→表位"方向的平均注意力与整体/最大差异。
+# 判读：最终层最大差异 <1e-4 视为零影响（注意力完全忽略表位化学），
+# <0.001 视为可忽略，否则认为表位身份确实改变注意力模式。
 import sys, os
 if sys.platform == 'win32':
     import io
@@ -23,7 +29,7 @@ from antibody_epitope_complex import position_epitope
 from disorderflow.utils.misc import seed_all
 
 V11_CKPT = 'logs/bfn_v11_seqconf_xpu_2026_06_19__23_01_18/checkpoints/best.pt'
-CDR_SPEC = 'B:26-33,51-58,97-113'
+CDR_SPEC = 'B:26-33,51-58,97-113'  # B 链上的 H1/H2/H3 设计区（1-based 闭区间）
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 import re
@@ -40,6 +46,7 @@ for cid, spec in re.findall(r'([A-Za-z0-9]+):([0-9,\-\s]+)', CDR_SPEC):
     regions[cid] = sorted(set(indices))
 
 def create_variant_pdb(template_pdb, chain_id, aa_func, output_path):
+    # 以文本方式重写指定链的残基三字母名（仅改 17-20 列，坐标不变）
     with open(template_pdb) as f:
         lines = f.readlines()
     with open(output_path, 'w') as f:
@@ -154,7 +161,7 @@ try:
 
         # Per-region analysis
         L = native_alpha.shape[0]
-        # scaffold: indices 0-103, epitope: 104-223
+        # 结构布局：骨架在前（下标 0-103，5IMK B 链 Fv），表位随后（104 起）
         scaff_idx = list(range(0, 104))
         epi_idx = list(range(104, L))
 

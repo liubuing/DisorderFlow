@@ -8,6 +8,10 @@ Used by the training data pipeline to inject epitope_disorder_profile.
 This is the data bridge between P0-fix-A (profile computation) and P0-fix-B
 (per-residue receiver integration).
 """
+# 用途：为全部 SAbDab 训练抗原预计算逐残基无序度（disorder）档案。
+# 产物：{sample_id: 逐残基 disorder 数组} 的 pickle 查找表，
+# 供训练管线注入 epitope_disorder_profile；是 P0-fix-A（档案计算）
+# 与 P0-fix-B（逐残基 receiver 接入）之间的数据桥。
 import sys, os, pickle, time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import numpy as np
@@ -24,6 +28,7 @@ print("Pre-computing per-residue disorder for training antigens")
 print("=" * 60)
 
 # Load model
+# 与 benchmark.py 同法：临时改写 app_config.yaml 的 checkpoint 再还原，并清空单例缓存
 import bfn_loader
 from disorderflow.utils.data import PaddingCollate
 from disorderflow.utils.train import recursive_to
@@ -41,6 +46,7 @@ print("Model loaded")
 
 
 def predict_chain_disorder(model, chain_data, max_len=380):
+    """对单链抗原跑 BFN 无序度头，返回逐残基 sigmoid 概率（长度超过 max_len=380 截断）。"""
     aa = chain_data['aa'][:max_len]; L = aa.shape[0]
     pos = chain_data['pos_heavyatom'][:max_len]
     mask_h = chain_data['mask_heavyatom'][:max_len]
@@ -72,6 +78,7 @@ def predict_chain_disorder(model, chain_data, max_len=380):
             batch['pos_heavyatom'][:, :, 2],
             batch['pos_heavyatom'][:, :, 0])
         theta_ang = batch.get('torsion', torch.zeros(N, Lb, 4, device=device))
+        # t_vec=0.5 为噪声水平中点；pair_feat 置零表示不提供成对先验
         t_vec = 0.5 * torch.ones(N, device=device)
         pair_feat = torch.zeros(N, Lb, Lb, 128, device=device)
         out = model.bfn.receiver(
@@ -80,6 +87,7 @@ def predict_chain_disorder(model, chain_data, max_len=380):
             backbone_pos=batch['pos_heavyatom'][:, :, :4])
         pred = out[7]
         if pred is None: return None
+        # out[7] 为 logits，经 sigmoid 压到 [0,1] 作为 disorder 分数
         return torch.sigmoid(pred[0])[:L].cpu().numpy()
 
 
@@ -131,6 +139,7 @@ if ag_lens:
     print(f"  Disorder means:  {np.mean(disorder_means):.4f} +/- {np.std(disorder_means):.4f}")
     print(f"  Disorder maxes:  {np.min(disorder_maxes):.4f} - {np.max(disorder_maxes):.4f}")
     n_flex = sum(1 for m in disorder_maxes if m > 0.4)
+    # 0.4 为"柔性残基"经验分界（明显高于随机/背景水平），仅作汇总参考
     print(f"  Antigens with flex residues (>0.4): {n_flex}/{n_ok}")
 
 # Save

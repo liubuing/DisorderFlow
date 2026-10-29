@@ -20,6 +20,7 @@ from scripts.build.materialize_multiscaffold_candidates import (  # noqa: E402
 )
 from scripts.prepare_sabdab2_external import load_training_records  # noqa: E402
 
+# 候选评估涉及的五条序列轴及其在记录中的字段名
 AXIS_FIELDS = {
     "vh": "vh_sequence",
     "vl": "vl_sequence",
@@ -27,6 +28,7 @@ AXIS_FIELDS = {
     "paired_cdr": "paired_cdr_sequence",
     "antigen": "antigen_sequence",
 }
+# 各轴做 MMseqs2 自相似检索时的最低序列一致性阈值（抗原轴较宽松）
 SEARCH_MINIMUMS = {
     "vh": 0.5,
     "vl": 0.5,
@@ -37,10 +39,14 @@ SEARCH_MINIMUMS = {
 
 
 class UnionFind:
+    """并查集：用于把高相似序列聚成连通分量，统计独立骨架数量。"""
+
     def __init__(self, values):
+        # 初始时每个元素自成一个集合
         self.parent = {value: value for value in values}
 
     def find(self, value):
+        # 先找根，再做路径压缩以加速后续查询
         root = value
         while self.parent[root] != root:
             root = self.parent[root]
@@ -56,10 +62,12 @@ class UnionFind:
 
 
 def clean_sequence(value):
+    # 仅保留 20 种标准氨基酸大写字母，剔除其余非法字符
     return "".join(aa for aa in str(value).upper() if aa in "ACDEFGHIKLMNPQRSTVWY")
 
 
 def write_fasta(path, rows, field, id_field):
+    # 将指定字段的清洗后序列写成 FASTA，供 MMseqs2 检索使用
     with path.open("w", encoding="ascii") as handle:
         for row in rows:
             sequence = clean_sequence(row.get(field, ""))
@@ -68,6 +76,7 @@ def write_fasta(path, rows, field, id_field):
 
 
 def annotate_reference_cdrs(references, cache_path):
+    """用 ANARCII（经 number_variable_domains 封装）为参考库补全配对 CDR 序列，结果按 ID 哈希缓存。"""
     if cache_path.exists():
         payload = json.loads(cache_path.read_text(encoding="utf-8"))
         if payload["reference_ids_sha256"] == ids_sha256(references):
@@ -102,11 +111,13 @@ def annotate_reference_cdrs(references, cache_path):
 
 
 def ids_sha256(rows):
+    # 由排序后的参考 ID 列表生成确定性哈希，用作缓存键
     value = "\n".join(sorted(row["reference_id"] for row in rows))
     return hashlib.sha256(value.encode("ascii")).hexdigest()
 
 
 def easy_search(mmseqs, query, target, output, work, identity, threads):
+    # 调用 MMseqs2 easy-search 做序列相似性检索，identity 为最低一致性阈值
     command = [
         mmseqs, "easy-search", str(query), str(target), str(output), str(work),
         "--min-seq-id", str(identity), "-c", "0.8", "--cov-mode", "0",
@@ -132,6 +143,7 @@ def easy_search(mmseqs, query, target, output, work, identity, threads):
 
 
 def component_counts(rows, self_hits, thresholds):
+    # 统计独立候选在全体轴 / 仅抗原轴下的连通分量数，用于评估保留样本的多样性
     ids = [row["instance"] for row in rows]
     all_axes = UnionFind(ids)
     antigen = UnionFind(ids)
@@ -151,6 +163,7 @@ def component_counts(rows, self_hits, thresholds):
 
 
 def freeze_component_representatives(rows, self_hits, thresholds):
+    """按自相似连通分量冻结独立样本：每个分量选分辨率最高（数值最小）的成员为代表。"""
     ids = [row["instance"] for row in rows]
     connected = UnionFind(ids)
     for axis, hits in self_hits.items():
@@ -182,6 +195,7 @@ def freeze_component_representatives(rows, self_hits, thresholds):
 
 
 def main():
+    # 主流程：载入候选与参考库 -> 逐轴序列检索 -> 扫描隔离阈值方案 -> 冻结独立样本代表
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--manifest", default="data/multiscaffold_confirmatory_v1/structural_manifest.json")
@@ -246,6 +260,7 @@ def main():
             for command in commands]
 
     schemes = {}
+    # 网格扫描可变区（VH/VL）与配对 CDR 的一致性阈值组合，评估各方案能否产出足够的独立分量
     for variable_identity in (0.8, 0.9, 0.95):
         for paired_cdr_identity in (0.6, 0.7, 0.8):
             name = f"vhvl_{int(variable_identity * 100)}_pairedcdr_{int(paired_cdr_identity * 100)}"
@@ -269,13 +284,13 @@ def main():
                 "n_independent_records": len(independent),
                 "n_all_axis_components": all_components,
                 "n_antigen_components": antigen_components,
-                "gate_passed": antigen_components >= 12,
+                "gate_passed": antigen_components >= 12,  # 门控：抗原轴独立分量至少 12 个才算可行
                 "excluded_by_axis": {
                     axis: len(hit_ids[axis]) for axis in AXIS_FIELDS},
                 "independent_ids": sorted(row["instance"] for row in independent),
             }
 
-    proposed_name = "vhvl_90_pairedcdr_70"
+    proposed_name = "vhvl_90_pairedcdr_70"  # 提案方案：可变区阈值 0.9、配对 CDR 阈值 0.7
     proposed = schemes[proposed_name]
     proposed_ids = set(proposed["independent_ids"])
     proposed_rows = [row for row in candidates if row["instance"] in proposed_ids]

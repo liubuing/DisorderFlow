@@ -15,15 +15,19 @@ import time
 from pathlib import Path
 
 os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+# 强制 UTF-8 运行环境，避免 Windows 控制台编码问题影响上传日志与文件名。
 os.environ.setdefault("PYTHONUTF8", "1")
 
 from huggingface_hub import HfApi
 
+# 上传目标：HF 数据集仓库与本地 data/ 目录。
 REPO_ID = "liubuing/disorderflow"
 REPO_TYPE = "dataset"
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 # File patterns to track with LFS (large binary/data files)
+# 需要 Git LFS 跟踪的大文件类型：LMDB/权重/数组/序列化对象/压缩包/
+# 结构文件等二进制或大体积数据。
 LFS_PATTERNS = [
     "*.mdb",
     "*.lmdb",
@@ -47,6 +51,7 @@ def main():
     api = HfApi()
 
     # Verify auth
+    # 第一步：确认 HF 凭证有效，未登录则提示并退出。
     try:
         user = api.whoami()["name"]
         print(f"[auth] Logged in as: {user}")
@@ -56,6 +61,7 @@ def main():
         sys.exit(1)
 
     # Verify repo exists
+    # 第二步：目标仓库不存在时自动创建（公开数据集仓库）。
     try:
         api.repo_info(REPO_ID, repo_type=REPO_TYPE)
         print(f"[repo] Target: {REPO_ID} ({REPO_TYPE})")
@@ -64,6 +70,7 @@ def main():
         api.create_repo(REPO_ID, repo_type=REPO_TYPE, private=False, exist_ok=True)
 
     # Set LFS tracking patterns
+    # 第三步：预登记 LFS 跟踪规则；已设置过的模式会抛异常，直接忽略。
     print("[lfs] Setting LFS patterns...")
     for pattern in LFS_PATTERNS:
         try:
@@ -72,6 +79,8 @@ def main():
             pass  # Pattern may already be set
 
     # Upload using upload_large_folder (designed for large datasets)
+    # 第四步：用 upload_large_folder 整目录上传（自动分批 + 断点续传）。
+    # data/ 体积约 220GB，中断后重新运行即可从已完成处继续。
     print(f"[upload] Source: {DATA_DIR}")
     print(f"[upload] This will take a long time for ~220GB of data.")
     print(f"[upload] Using upload_large_folder with auto-resume and batching.\n")

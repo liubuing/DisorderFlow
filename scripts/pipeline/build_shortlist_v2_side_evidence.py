@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Build shortlist v2 evidence package and Fv fold side-check inputs."""
+# 目的：为合成候选短名单 v2 汇总"旁证"材料：合并短名单、可开发性与可变区
+# 构建证据 CSV，并探测本机 ColabFold/alphafold 可用性，生成 Fv 折叠抽查
+# （side-check）的输入 FASTA。旁证仅辅助人工审查，不改变主评分。
 from __future__ import annotations
 
 import argparse

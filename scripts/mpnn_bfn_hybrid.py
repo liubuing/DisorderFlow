@@ -25,7 +25,7 @@ AA = 'ACDEFGHIKLMNPQRSTVWY'
 
 
 def build_complex_pdb(scaffold_pdb, scaffold_chain, antigen_pdb, antigen_chain):
-    """Merge scaffold + antigen into a single PDB for ProteinMPNN."""
+    """Merge scaffold + antigen into a single PDB for ProteinMPNN. 合并两链为临时复合物 PDB。"""
     from Bio.PDB import PDBParser, PDBIO, Structure, Model, Chain
     parser = PDBParser(QUIET=True)
     s1 = parser.get_structure('scaffold', scaffold_pdb)
@@ -178,6 +178,7 @@ def score_with_bfn(designs, complex_pdb, region_spec, bfn_ckpt=None,
                 continue
 
         # Extract metrics
+        # 取 CDR 区段的熵/最大概率均值，PPL 以最大对数概率近似
         pred_seq = pred.get('pred_seq_logits', pred.get('pred_seq',
                               torch.zeros(1, L, 20)))
         probs = torch.softmax(pred_seq, dim=-1)
@@ -201,6 +202,8 @@ def score_with_bfn(designs, complex_pdb, region_spec, bfn_ckpt=None,
         disorder_mean = disorder[cdr_mask].mean().item() if cdr_mask.any() else 0
 
         # Composite score via cascade filter (includes V18 complexity penalty)
+        # 综合分权重：ipTM 0.35 / pLDDT 0.25 / 逆 PPL 0.10 / 熵质量 0.05 /
+        # 无序抑制 0.15；再由级联过滤器附加复杂度奖励 0.10
         composite = (0.35 * iptm_val + 0.25 * plddt_mean +
                      0.10 * (1.0 / max(ppl, 1e-6)) +
                      0.05 * (1.0 - cdr_entropy / 3.0) +
@@ -247,6 +250,7 @@ def score_with_bfn(designs, complex_pdb, region_spec, bfn_ckpt=None,
 
 
 def main():
+    """命令行入口：scaffold+antigen 合并 -> ProteinMPNN 生成 -> BFN 打分排序输出。"""
     parser = argparse.ArgumentParser(description='ProteinMPNN + BFN hybrid CDR designer')
     parser.add_argument('--scaffold', required=True, help='Scaffold PDB path')
     parser.add_argument('--scaffold-chain', default='B', help='Scaffold chain ID')

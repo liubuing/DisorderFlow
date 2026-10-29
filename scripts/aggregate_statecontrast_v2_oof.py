@@ -15,10 +15,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件内容的 SHA-256 摘要，用于把每个 fold 评估结果锚定到本聚合报告，
+    # 保证 provenance 可复核（文件被改动后哈希即失配）。
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def display_path(path):
+    # 把绝对路径转成相对仓库根目录的 POSIX 风格路径，便于在报告里展示；
+    # 若路径不在仓库内（ValueError）则原样返回字符串形式。
     try:
         return path.relative_to(ROOT).as_posix()
     except ValueError:
@@ -26,6 +30,10 @@ def display_path(path):
 
 
 def bootstrap_mean(values, trials=10000, seed=7201):
+    # 对组分效应均值做自助法（bootstrap）重采样，返回 95% 置信区间 [q2.5, q97.5]。
+    # trials=10000 为常规重采样次数，足以稳定估计分位数；seed=7201 为冻结协议
+    # 预先指定的随机种子，保证结果可精确复现。重采样为有放回抽取（replace=True），
+    # 与原样本等长的均值分布。
     values = np.asarray(values, dtype=np.float64)
     generator = np.random.default_rng(seed)
     means = generator.choice(
@@ -34,6 +42,26 @@ def bootstrap_mean(values, trials=10000, seed=7201):
 
 
 def aggregate(contract_path, gate_path, evaluations, output_path):
+    """聚合五个 held-out fold 的评估结果并执行冻结判定门（gate）。
+
+    参数:
+        contract_path: 交叉验证契约 JSON，声明全部 fold 编号（缺一不可）。
+        gate_path: 冻结的 YAML 判定门配置，含各阈值与 claim_boundary。
+        evaluations: {fold 号: 评估 JSON 路径}，每个 fold 恰好对应一份结果，
+            且该结果必须是在验证角色（split=="val"）上产生的。
+        output_path: 聚合报告输出路径。
+
+    关键约束（防挑选偏差）:
+        - 任一 component 不得出现在多个 fold 中（否则说明数据泄漏/重复计数）；
+        - 每个 fold 的评估文件与 checkpoint 均记录 SHA-256 作为 provenance；
+        - 阈值含义: positive_fraction 要求多数组分效应为正（ensemble 优于
+          single-state，效应越大越好）；source_fraction 要求各 source 面板方向
+          一致；teacher_fraction 要求独立评分器也倾向 ensemble（非自我评价）；
+          target_noninferior >= 0.5 表示至少半数配对达到目标态非劣；
+          hard_failure 份额受上限约束（可开发性硬失败越少越好）。
+    全部门通过则 status 置为 passed，决策为"冻结现有方法并用于一个全新
+    未触碰的 IDP 面板"；否则不得接触未触碰面板。
+    """
     contract = json.loads(contract_path.read_text(encoding="ascii"))
     gate = yaml.safe_load(gate_path.read_text(encoding="ascii"))
     expected_folds = {int(row["fold"]) for row in contract["folds"]}
@@ -123,6 +151,8 @@ def aggregate(contract_path, gate_path, evaluations, output_path):
 
 
 def main():
+    # 命令行入口：以 FOLD=path 形式逐个传入各 fold 的评估文件（可重复 --evaluation），
+    # contract/gate 默认指向仓库内冻结配置，输出路径必填。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--contract", type=Path, default=Path(
         "reviewer_outputs/statecontrast_v2_cross_validation_v2/contract.json"))

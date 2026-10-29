@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Audit v5.2 structural caches and the full-group FP16 training gate."""
 
+# 本脚本审计 statecontrast 结构缓存（v2.1）与全组 FP16 训练门槛：
+# 校验训练/验证两个父结构 LMDB 及其 ID pickle 的 SHA-256 与构建报告一致、
+# 训练/验证父结构 ID 不相交，并复核 FP16 冒烟门槛（全组对比损失、有限且
+# 非零的更新量）、正式训练门槛（EMA 检查点）与生产训练门槛。
+# 全部检查通过才输出 status=pass，否则以异常终止训练流程。
+
 import argparse
 import json
 import pickle
@@ -18,10 +24,12 @@ from disorderflow.data_factory import sha256_file
 from disorderflow.datasets.statecontrast_structural import StateContrastStructuralDataset
 
 
+# 读取 UTF-8 JSON 文件的简单包装
 def read_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# 汇总某个 split 的数据集规模：记录数、组数以及组大小分布直方图
 def dataset_summary(split, parent_lmdb):
     dataset = StateContrastStructuralDataset(EasyDict({
         "records_dir": str(ROOT / "data/statecontrast_factory_v2_1"),
@@ -58,6 +66,11 @@ def main():
     train_ids = set(pickle.loads(train_ids_path.read_bytes()))
     validation_ids = set(pickle.loads(validation_ids_path.read_bytes()))
 
+    # 逐项硬性检查：
+    # - 两个 LMDB 及 ID pickle 的 SHA-256 必须与各自构建报告一致；
+    # - 父结构 ID 训练/验证不得重叠；
+    # - full_group 门槛要求批形状第一维为 13 或 14（全组批大小的合法取值）；
+    # - production 门槛要求恰好完成 2000 次迭代且优化器步数一致、无 NaN/Inf 事件。
     checks = {
         "factory_schema": factory["schema_version"] == "statecontrast_factory_v2_1",
         "train_build_pass": train_report["status"] == "pass",
@@ -85,6 +98,7 @@ def main():
             and production["successful_optimizer_steps"] == 2000
             and production["checks"]["no_nonfinite_training_events"]),
     }
+    # 汇总审计结果；任何一项失败都会在写盘后抛错，阻断下游训练
     audit = {
         "status": "pass" if all(checks.values()) else "fail",
         "factory_fingerprint": factory["canonical_fingerprint"],

@@ -14,6 +14,11 @@ def load(path):
 
 
 def main():
+    # 非 Aβ 靶点的计算工作完成度总账：把六个已完成的计算模块（几何 off 态
+    # 对照、序列 off 态筛选、≤2/≤4 突变对比设计、跨表位迁移、alpha-syn
+    # 保守重设计）与仅能靠实验回答的问题（表达/SEC/DSF、BLI/SPR、特异性
+    # 确认）分开列账。claim_boundary 写死三条否认性边界：计算零命中不证明
+    # 不结合，几何阻挡不证明实验特异性，未过冻结门的候选不晋级。
     sequence_screen = load("outputs/non_abeta_idp_sequence_offstate_v1/sequence_offstate_summary.json")
     contrast2 = load("outputs/non_abeta_idp_sequence_contrastive_design_v1/contrastive_design_summary.json")
     contrast4 = load("outputs/non_abeta_idp_sequence_contrastive_design_v1_max4/contrastive_design_summary.json")

@@ -1,5 +1,8 @@
 ﻿#!/usr/bin/env python
 """Generate comprehensive work log as Word document on desktop."""
+# 角色：开发日志生成器——把 BFN 置信头微调阶段的工作记录（任务概览、关键 bug
+# 与修复、实验结论）用 python-docx 排版输出到桌面 Word 文档。内容为历史快照
+# （2026-05-16 生成），仅作文档记录用，不参与科研管线计算。
 import os, sys, time
 from pathlib import Path
 from docx import Document

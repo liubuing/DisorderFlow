@@ -27,6 +27,10 @@ def parse_args():
 
 
 def main():
+    # 重复实验驱动器: 默认 5 个种子（31/41/51/61/71，互质间隔的奇数种子
+    # 便于区分随机流）逐个运行单种子过拟合控制，再聚合为跨种子摘要
+    # 与 Markdown 报告。samples-per-ref=150 / max-mutations=4 /
+    # min-abs-delta=0.20 为效果信号判定的协议约定阈值。
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -49,6 +53,8 @@ def main():
 
 
 def run_single(seed, seed_dir, args):
+    # 调用单种子过拟合控制脚本（子进程，参数透传，seed 隔离输出目录）；
+    # check=True: 任一重复失败立即中止整个重复实验。
     cmd = [
         sys.executable,
         str(SINGLE_RUN),
@@ -63,6 +69,8 @@ def run_single(seed, seed_dir, args):
 
 
 def aggregate_replicates(rows):
+    # 跨种子聚合: 按参考结构分组，对四个 gap-delta 指标分别汇总
+    # （均值/标准差/胜率等，见 summarize_metric）。
     by_ref = {}
     for row in rows:
         by_ref.setdefault(row["reference_pdb"], []).append(row)

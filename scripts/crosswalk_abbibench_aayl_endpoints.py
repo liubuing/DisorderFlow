@@ -1,4 +1,9 @@
 """Audit a frozen expected score transformation on H3-compatible AAYL candidates."""
+# 用途：对 H3 兼容的 AAYL 候选做"数值端点交叉核验"（非模型评估）。
+# 流程：读取冻结的 crosswalk 协议（容差 1e-5）-> 按哈希核对来源 CSV ->
+# 用原始 MITLL AAlphaBio 数据的 Pred_affinity 重复测量（取均值后做 9-x 变换）
+# 复算预期基准分，与人工整理分对照，验证换算规则；
+# 结果标注暴露说明（曾出现两次轻链变体值，不声称完全标签盲态）。
 import csv
 import hashlib
 import io
@@ -15,6 +20,7 @@ OUT = ROOT / "data/abbibench_sequence_mapping_v1"
 
 
 def original_rows(path):
+    """从 zip 内 CSV 迭代读取 HC/LC/Pred_affinity/Target 等字段的原始行。"""
     with zipfile.ZipFile(path) as archive:
         name = next(n for n in archive.namelist() if n.endswith(".csv"))
         with archive.open(name) as stream:
@@ -26,6 +32,7 @@ def original_rows(path):
 
 
 def finite_value(value):
+    """转 float；非法或非有限值一律返回 None。"""
     try:
         value = float(value)
     except (ValueError, TypeError):
@@ -34,6 +41,7 @@ def finite_value(value):
 
 
 def main():
+    """主流程：协议/哈希校验 -> 整理标签缓存 -> 原始重复值对照复算 -> 出报告。"""
     protocol = OUT / "AAYL_endpoint_crosswalk_protocol.json"
     rules = json.loads(protocol.read_text())
     if rules["comparison_tolerance"] != .00001:
@@ -52,6 +60,7 @@ def main():
     else:
         for table, selected in sorted(by_table.items()):
             raw = urllib.request.urlopen(schemas[table]["url"], timeout=60).read()
+            # 下载内容必须与冻结哈希一致，防止来源漂移
             if hashlib.sha256(raw).hexdigest() != receipts[table]["raw_transmitted_csv_sha256"]:
                 raise ValueError("Fixed CSV hash mismatch")
             indices = {r["source_data_row"] for r in selected}
@@ -85,6 +94,7 @@ def main():
         comparisons = []
         for (assay, poi), observations in sorted(groups.items()):
             finite = [o["value"] for o in observations if o["value"] is not None]
+            # 换算规则：benchmark 分 = 9 - 平均 -log10 摩尔亲和度（协议冻结值）
             expected = 9-statistics.mean(finite) if finite else None
             residual = score-expected if score is not None and expected is not None else None
             comparisons.append({"assay": assay, "poi": poi, "replicate_ids": [o["replicate"] for o in observations],

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Rescore fixed v3 candidates on experimental, sampled, and mixed poses."""
 
+# 目的：v3 来源敏感性分析——用 ProteinMPNN 前缀适配器（以冻结检查点构建）在
+# 三种姿态来源（纯实验/纯受约束采样/混合）上对固定候选重打分（teacher-forcing
+# 逐位置对数概率均值），并用 Spearman 相关比较各来源下的候选排序是否一致，
+# 检验结论对姿态来源选择的敏感性。
+
 from __future__ import annotations
 
 import argparse
@@ -27,6 +32,8 @@ from scripts.protein_mpnn_prefix_adapter import build_model  # noqa: E402
 
 
 def score_sequence(adapter, sequence):
+    # 教师强制打分：逐位置以前缀取 next-token 对数概率并累加，返回平均
+    # 序列对数概率（ProteinMPNN 序列似然的负对数近似，用于候选比较）。
     score = 0.0
     for position, amino_acid in enumerate(sequence):
         values = adapter.next_log_probs(sequence[:position], position)

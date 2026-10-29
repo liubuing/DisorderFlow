@@ -7,6 +7,10 @@ Fallback for API failures: use af2_plddt < 50 as disorder indicator.
 Output: confidence_merged_v10/ (train + val LMDBs with updated disorder_mask).
 """
 
+# 角色：RCSB/EBI 数据采集与监督标签构建环节——把 v9 LMDB 中的合成无序标签替换为
+# EBI Proteins API 的 MobiDB-lite 逐残基实验无序区（IDP 条目）；折叠条目全零掩码；
+# API 失败时回退用 AF2 pLDDT<50 作为无序指示。输出 v10 LMDB 与摘要 JSON。
+
 import os, sys, pickle, json, time, urllib.request
 import lmdb
 import numpy as np
@@ -56,6 +60,7 @@ def fetch_disorder_regions(uniprot_id, seq_len, retries=2):
 
 def af2_plddt_fallback(af2_plddt, threshold=50.0):
     """Use AF2 pLDDT < threshold as disorder indicator."""
+    # 50.0：常用的 pLDDT"低置信≈无序"阈值（AF2 官方约定 pLDDT<50 区域可信度低）。
     plddt = np.array(af2_plddt, dtype=np.float32)
     mask = (plddt < threshold).astype(np.float32)
     return mask, 'af2_plddt_fallback'
@@ -113,6 +118,7 @@ def patch_lmdb(src_path, dst_path, split_name):
             entry['disorder_source'] = 'folded'
 
         # Delay between EBI API calls to avoid rate limiting
+        # 0.3s：EBI API 调用间隔，规避速率限制（约 3 req/s）。
         if is_idp and i < n_entries - 1:
             time.sleep(0.3)
 

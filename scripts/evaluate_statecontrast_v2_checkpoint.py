@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Evaluate a StateContrast-v2 checkpoint on a frozen manifest split."""
 
+# 目的：在冻结清单划分上评估 StateContrast-v2 检查点：逐姿态打分后按
+# "来源约束的姿态加权"（grouped_source_constrained_pose_weights）聚合出
+# target/apo/off_target 三种状态的分数与状态差（state_gap = target - max(negatives)），
+# 并用 bootstrap（默认 10000 次、seed 6201）给出组级指标的置信区间与门控判定。
+
 from __future__ import annotations
 
 import argparse
@@ -44,6 +49,8 @@ def bootstrap_mean(values, trials, seed):
 
 
 def hard_developability_failure(sequence):
+    # 可开发性硬失败判据：序列含 N-X-S/T（X≠P）糖基化基序，或疏水残基
+    # （AILMFWVY）连续超过 4 个（易聚集）。任一命中即判失败。
     hydrophobic = set("AILMFWVY")
     run = longest = 0
     for amino_acid in sequence:

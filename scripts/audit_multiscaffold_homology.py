@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Audit fresh multi-scaffold candidates against all structural model exposure."""
+"""Audit fresh multi-scaffold candidates against all structural model exposure.
+
+用 MMseqs2 对新多骨架（multi-scaffold）候选做四轴同源性审计
+（重链/轻链/CDR-H3/抗原），参照库为全部已暴露的结构模型 LMDB：
+任一轴命中即视为"非独立"；通过四轴独立性的候选再按抗原序列聚类，
+按分辨率选代表并检查独立抗原组分数是否达到确认面板门槛。
+输出 homology_audit.json（含阈值、命令与逐条审计记录）。
+"""
 
 from __future__ import annotations
 
@@ -18,6 +25,8 @@ sys.path.insert(0, str(ROOT))
 from scripts.prepare_sabdab2_external import load_training_records  # noqa: E402
 
 AXES = {
+    # 四条同源性审计轴：字段 -> (序列字段, 最小同一性阈值)
+    # 抗原用 0.3（同 audit_dataset_splits），抗体链用更严格的 0.5
     "vh": ("vh_sequence", 0.5),
     "vl": ("vl_sequence", 0.5),
     "cdr_h3": ("cdr_h3_sequence", 0.5),
@@ -26,10 +35,12 @@ AXES = {
 
 
 def clean_sequence(value):
+    """只保留 20 种标准氨基酸大写字母，过滤 FASTA 中的非法字符。"""
     return "".join(aa for aa in str(value).upper() if aa in "ACDEFGHIKLMNPQRSTVWY")
 
 
 def write_fasta(path, rows, field, id_field):
+    """把记录的指定序列字段写成 FASTA，返回写出条数（空序列跳过）。"""
     count = 0
     with path.open("w", encoding="ascii") as handle:
         for row in rows:
@@ -42,6 +53,7 @@ def write_fasta(path, rows, field, id_field):
 
 
 def easy_search(mmseqs, query, target, output, work, identity, threads):
+    """调用 mmseqs easy-search，返回 {query_id: [命中...]} 与实际命令（留档审计）。"""
     command = [
         mmseqs, "easy-search", str(query), str(target), str(output), str(work),
         "--min-seq-id", str(identity), "-c", "0.8", "--cov-mode", "0",
@@ -66,6 +78,7 @@ def easy_search(mmseqs, query, target, output, work, identity, threads):
 
 
 def cluster_antigens(mmseqs, rows, temporary, threads):
+    """对独立候选的抗原序列做 mmseqs easy-cluster，返回 {成员: 代表} 映射。"""
     fasta = temporary / "eligible_antigens.fasta"
     write_fasta(fasta, rows, "antigen_sequence", "instance")
     prefix = temporary / "antigen_components"
@@ -86,6 +99,7 @@ def cluster_antigens(mmseqs, rows, temporary, threads):
 
 
 def main():
+    """主流程：加载候选与参照库 -> 四轴搜索 -> 独立性判定 -> 抗原聚类 -> 出报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--manifest", default="data/multiscaffold_confirmatory_v1/structural_manifest.json")
@@ -147,6 +161,7 @@ def main():
 
     for row in independent:
         row["antigen_component"] = components[row["instance"]]
+    # 每个抗原组分内按 (分辨率缺失优先排后, 分辨率越小越优, instance 字典序) 选代表
     representatives = []
     by_component = {}
     for row in independent:
@@ -159,6 +174,7 @@ def main():
         ))
         representatives.append({**selected, "component_size": len(rows)})
 
+    # 确认面板门槛：独立抗原组分数 >= 12 才允许进入确认性生成
     minimum = 12
     passed = len(by_component) >= minimum
     failed_by_axis = Counter(

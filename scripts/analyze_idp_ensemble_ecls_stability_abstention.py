@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Measure jackknife-consensus abstention coverage after ECLS v2 failure."""
 
+# 目的：ECLS v2 面板失败后的稳定性/弃权（abstention）诊断。对每个组分的刀切法
+# （jackknife）共识选择做留一折验证，统计共识覆盖率、严格合格（strict eligible）
+# 折的比例以及"集成相对单态"的效应均值，并记录弃权原因分布。
+# 输入：冻结哈希校验过的 ECLS v2 组分得分 JSON + YAML 配置；
+# 输出：JSON 汇总 + Markdown 报告。属于 IDP 集成管线的暴露面板事后诊断，不作为确认性证据。
+
 from __future__ import annotations
 
 import argparse
@@ -20,6 +26,8 @@ def sha256(path):
 
 
 def robust_value(values, aggregation):
+    # 稳健聚合打分：p25 分位与最小值的加权组合，再减去标准差惩罚（权重来自配置），
+    # 用于在少量构象上抑制离群值带来的乐观偏差。
     values = np.asarray(values, dtype=np.float64)
     return float(
         float(aggregation["p25_weight"]) * np.percentile(values, 25)
@@ -38,6 +46,8 @@ def robust_winner(matrix, conformers, sequences, aggregation):
 
 
 def consensus_selection(matrix, training, sequences, aggregation):
+    # 内层刀切法共识：逐个删除训练构象后重复稳健选择，只有所有内层折赢家一致
+    # 且严格间隔均为正（或因无可比对象为 None）时才认定达成共识，否则弃权。
     inner = []
     for deleted in training:
         conformers = [index for index in training if index != deleted]
@@ -57,12 +67,15 @@ def consensus_selection(matrix, training, sequences, aggregation):
 
 
 def analyze_component(component, method_row, config):
+    # 对单个组分的增益矩阵做留一折（leave-one-conformer-out）评估：
+    # 记录共识是否达成、是否存在选择器恒等、训练信号是否过低，以及共识相对单态中位分的效应。
     sequences = method_row["sequences"]
     matrix = np.asarray(method_row["epitope_conditioning_gain"], dtype=np.float64)
     aggregation = config["selector"]["robust_aggregation"]
     range_threshold = float(
         config["secondary_abstention"]["minimum_median_training_candidate_range"]
     )
+    # range_threshold：训练候选列极差的median低于该阈值视为"训练信号过低"，触发弃权。
     folds = []
     for holdout in range(matrix.shape[1]):
         training = [index for index in range(matrix.shape[1]) if index != holdout]
@@ -174,6 +187,7 @@ def write_report(path, output):
 
 
 def main():
+    # 入口：加载 YAML 配置，校验全部冻结输入的 SHA-256 后逐方法分析并落盘 JSON/报告。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",

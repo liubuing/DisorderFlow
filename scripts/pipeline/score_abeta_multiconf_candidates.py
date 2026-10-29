@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Rank fixed paratope candidates across the audited A-beta pose panel."""
+# 本脚本在通过审计的 Aβ 多构象 pose 面板上对固定 paratope 候选排名：
+# 对每个候选在每个通过 pose 的接触图上打分，并相对天然 paratope 求增量；
+# 稳健分 = 0.45*p25 + 0.25*最小值 + 0.20*均值 - 0.10*标准差（偏悲观组合），
+# 再乘以 pose 覆盖率（缺失构象受罚）。入选门槛：选中候选覆盖率均 ≥0.8。
+# 产出为计算姿态假设排名，不构成亲和力或结合声明。
+
 from __future__ import annotations
 
 import argparse
@@ -32,6 +38,7 @@ def parse_args():
 
 
 def load_candidates(path):
+    # 按 (参考, 序列) 去重，保留 statecontrast_score 更高的那行
     unique = {}
     with open(path, newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
@@ -43,6 +50,9 @@ def load_candidates(path):
 
 
 def main():
+    # 主流程：校验 pose 面板已通过 → 预计算每参考的 pose 接触图与天然分 →
+    # 逐候选打分并计算稳健分 → 参考内排名并选前 top_per_reference（默认 25）
+    # → 写全量/选中两份 CSV、摘要与报告；门槛不过即退出失败
     args = parse_args()
     with open(PROJECT_ROOT / args.config, encoding="utf-8") as handle:
         config = yaml.safe_load(handle)

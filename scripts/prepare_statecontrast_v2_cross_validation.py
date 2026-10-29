@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Freeze five component-level StateContrast-v2 fold configurations."""
 
+# 目的：冻结 StateContrast-v2 的 5 折组分级交叉验证配置：以基础训练配置为模板，
+# 逐折写入 heldout_fold/fold_role（train 与 validation 同折互斥），生成
+# fold_0..4.yml 与 contract.json（含各折配置 SHA-256 与允许的初始化器哈希）。
+# 输出目录除 isolation_audit.json 外必须为空，保证交叉验证合同一次冻结。
+
 from __future__ import annotations
 
 import argparse
@@ -18,6 +23,8 @@ def sha256(path):
 
 
 def prepare(base_config_path, manifest_path, output_dir, folds=5):
+    # 主流程：校验清单声明的折数一致、输出目录干净→逐折派生配置并记录哈希→
+    # 汇总为冻结合同（评估统一用 val 划分）。
     base = yaml.safe_load(base_config_path.read_text(encoding="utf-8"))
     manifest = json.loads(manifest_path.read_text(encoding="ascii"))
     observed = int(manifest.get("cross_validation_folds", 0))

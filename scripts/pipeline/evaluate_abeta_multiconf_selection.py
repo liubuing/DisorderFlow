@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Evaluate ensemble selection on held-out A-beta conformers."""
+# 目的：在留出的 Aβ 构象上评估"集成条件选择"：候选序列的稳健聚合分
+# （0.45*p25 + 0.25*min + 0.20*mean - 0.10*std）在留出构象上与 native、
+# 单态选择、随机选择（默认 100 次重复、seed 2031）三种基线比较，
+# 统计胜率与均值差，检验多构象打分是否泛化。
 from __future__ import annotations
 
 import argparse

@@ -1,4 +1,9 @@
 """Check primary paper identity, active upload contents, and source integrity."""
+# 目的：投稿一致性校验——检查主稿身份、有效上传包内容与来源完整性：
+# (1) 审稿包 zip 的外层摘要/内部 MANIFEST/逐文件校验和与当前稿件、图表、
+#     可移植证据（SOURCE_PROVENANCE 记录的原始/公开哈希与路径改写）逐项比对；
+# (2) 投稿元数据阻塞项检查（作者拼写/单位、贡献/资助/利益冲突声明、许可与
+#     全体作者批准等）；计划中的 DOI 不得被静默当作"已验证发表"。
 import hashlib
 import json
 from pathlib import Path

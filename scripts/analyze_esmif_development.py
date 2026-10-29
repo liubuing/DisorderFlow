@@ -24,10 +24,14 @@ def main():
     rows = [row for row in payload["results"] if row["generator"] == "esm_if"]
     candidates = [candidate for row in rows for candidate in row["candidates"]]
     failures = [row for row in payload["failures"] if row["generator"] == "esm_if"]
+    # 期望原始候选数 = 抗原单元数 × 种子数 × 每单元 8 个候选——不足即为
+    # 静默失败，须与 failures 数对账
     expected = len({row["unit"] for row in rows}) * len({row["seed"] for row in rows}) * 8
     aggregate = payload["aggregate"]["generators"]["esm_if"]
     output = {
         "schema_version": 1,
+        # 边界声明：这些结果来自开发集（development），从未接触封存的终评数据，
+        # 不能当独立确证证据
         "status": "development_only; no sealed final accessed",
         "input_sha256": hashlib.sha256(input_path.read_bytes()).hexdigest(),
         "model": "esm_if1_gvp4_t16_142M_UR50",

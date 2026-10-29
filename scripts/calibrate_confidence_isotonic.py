@@ -37,6 +37,7 @@ OUT_DIR.mkdir(exist_ok=True)
 
 def collect_paired_data():
     """Extract all (bfn_plddt, bfn_iptm, bfn_ppl, af2_plddt, af2_iptm) tuples."""
+    # 兼容多种历史 JSON 布局（嵌套 models / 扁平 designs），统一抽取 (BFN, AF2) 配对样本
     records = []
 
     # --- V12, V14: nested under models.{version}.af2_results ---
@@ -110,6 +111,7 @@ def collect_paired_data():
 
 def fit_affine(x, y):
     """Fit y = a*x + b via least squares. Returns (a, b)."""
+    # 最小二乘拟合仿射映射 y = a*x + b
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
     A = np.column_stack([x, np.ones_like(x)])
@@ -120,12 +122,14 @@ def fit_affine(x, y):
 
 def fit_calibrators(records):
     """Fit multiple calibration strategies."""
+    # 拟合四类校准器：全局保序回归 / 按模型仿射 / PPL 增广 Ridge / 全局仿射
     bfn_plddt = np.array([r["bfn_plddt"] for r in records])
     bfn_iptm = np.array([r["bfn_iptm"] for r in records])
     af2_plddt = np.array([r["af2_plddt"] for r in records])
     af2_iptm = np.array([r["af2_iptm"] for r in records])
 
     # PPL features (some may be None)
+    # 缺失 PPL 以中性值 50 填充，并做 log1p 压缩量纲
     has_ppl = [r["bfn_ppl"] is not None for r in records]
     bfn_ppl = np.array([r["bfn_ppl"] if r["bfn_ppl"] is not None else 50.0
                         for r in records])
@@ -181,6 +185,7 @@ def fit_calibrators(records):
 
 def evaluate(records, calibrators):
     """Compute before/after metrics for each calibration method."""
+    # 各校准方法的前后指标对比：Spearman / MAE / 过自信比值（BFN/AF2 均值）
     bfn_plddt = np.array([r["bfn_plddt"] for r in records])
     bfn_iptm = np.array([r["bfn_iptm"] for r in records])
     af2_plddt = np.array([r["af2_plddt"] for r in records])
@@ -258,6 +263,7 @@ def evaluate(records, calibrators):
     }
 
     # LOO cross-validation for Ridge (honest estimate)
+    # 留一交叉验证给出 Ridge 的诚实（非过拟合）估计
     loo = LeaveOneOut()
     loo_pred_p = np.zeros_like(af2_plddt)
     loo_pred_i = np.zeros_like(af2_iptm)
@@ -284,6 +290,7 @@ def evaluate(records, calibrators):
 
 def make_calibration_fn(calibrators, method="isotonic"):
     """Return a callable: (bfn_plddt, bfn_iptm, ppl) -> (cal_plddt, cal_iptm)."""
+    # 依据所选方法构造推理期校准闭包，输出均裁剪到 [0, 1]
     if method == "isotonic":
         iso_p = calibrators["isotonic_plddt"]
         iso_i = calibrators["isotonic_iptm"]
@@ -316,6 +323,7 @@ def make_calibration_fn(calibrators, method="isotonic"):
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
+    # 主流程：收集配对数据 -> 拟合多策略校准器 -> 评估前后指标 -> 落盘 pkl 与 JSON 报告
     print("=" * 70)
     print("BFN Confidence Head Calibration (方案B)")
     print("=" * 70)

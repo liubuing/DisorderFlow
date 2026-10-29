@@ -6,6 +6,13 @@ control. It reports chain lengths, inferred peptide chain, whether the peptide
 looks like a contiguous A-beta fragment, contact-map size, and native vs
 scrambled separation for the v2 contact scorer.
 """
+# 本脚本在把抗 Aβ 参考 PDB 用作阳性对照之前审计其数据可靠性：
+# 逐文件提取接触图（默认 8 埃 cutoff），报告链长、自动推断的肽链、
+# 肽段是否为连续 Aβ 片段（比对 Aβ42 序列）、接触数，以及 v2 接触评分器
+# 在"天然 vs 打乱序列"基准下的分离度（默认 100 次打乱、种子 42）。
+# 按"类 Aβ 肽 + 接触数 ≥8 + 天然百分位 ≥0.80 + 表位位点 ≥4"给出
+# reliable/questionable/unusable 标签，并自动生成参考白名单 YAML。
+
 from __future__ import annotations
 
 import argparse
@@ -43,6 +50,7 @@ def parse_args():
 
 
 def reliability_label(row, min_contacts: int, min_native_percentile: float):
+    # 可靠性判定：任一条件不满足即降级为 questionable 并记录全部原因
     reasons = []
     if not row.get("is_abeta_like"):
         reasons.append("peptide_not_abeta_like")
@@ -58,6 +66,7 @@ def reliability_label(row, min_contacts: int, min_native_percentile: float):
 
 
 def serializable_contact_map(cmap):
+    # 把 contact dataclass 列表转为可 JSON 序列化的字典
     return {
         **{k: v for k, v in cmap.items() if k != "contacts"},
         "contacts": [asdict(c) for c in cmap["contacts"]],
@@ -65,6 +74,7 @@ def serializable_contact_map(cmap):
 
 
 def portable_path(path):
+    # 输出相对项目根的可移植路径；位于根外时回退为绝对路径
     try:
         return path.resolve().relative_to(PROJECT_ROOT).as_posix()
     except ValueError:
@@ -72,6 +82,9 @@ def portable_path(path):
 
 
 def main():
+    # 主流程：收集 PDB（--include 优先于目录 glob）→ 逐文件审计
+    # （单文件失败标记为 unusable 并继续）→ 写 CSV/JSON/Markdown 报告
+    # → 把 reliable 参考写入 configs/idp 白名单（文件头注明自动生成、需人工复核）
     args = parse_args()
     pdbs = [Path(p) for p in args.include] if args.include else [
         Path(p) for p in sorted(glob.glob(str(Path(args.pdb_dir) / "*.pdb")))

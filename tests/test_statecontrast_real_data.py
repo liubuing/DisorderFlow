@@ -1,3 +1,11 @@
+"""StateContrast 真实数据接入测试：验证 PDB 集成解析、几何就绪与实验数据 schema 校验。
+
+守护 statecontrast 真实数据管线：
+多模型 PDB 必须全模型解析并审计所选链的 SEQRES 覆盖、
+无抗体 pose 时接触打分必须阻断（geometry_ready 但不冒充可打接触分）、
+结合状态矩阵保留状态/重复/单位/删失信息、
+HDX 摄取数据拒绝伪造单位——防止臆造或残缺实验数据进入监督。
+"""
 import csv
 
 import pytest
@@ -14,6 +22,7 @@ from statecontrast_real_ensembles import (
 )
 
 
+# 辅助函数：生成一行固定格式的 PDB ATOM 记录（可加模型偏移构造多模型）。
 def _atom(serial, atom, residue, chain, residue_number, x, model_offset=0):
     return (
         f"ATOM  {serial:5d} {atom:^4s} {residue:>3s} {chain:1s}{residue_number:4d}    "
@@ -22,6 +31,7 @@ def _atom(serial, atom, residue, chain, residue_number, x, model_offset=0):
     )
 
 
+# 辅助函数：构造含两个 MODEL 的最小 PDB 集成文本（A 链 AG + H 链 TYR10）。
 def _multimodel_pdb():
     lines = ["SEQRES   1 A    2  ALA GLY\n", "MODEL        1\n"]
     lines.extend([
@@ -40,6 +50,8 @@ def _multimodel_pdb():
     return "".join(lines)
 
 
+# 全模型解析与序列审计：两个模型都被选中、链序列与期望一致、SEQRES 覆盖 100%——
+# 防止只取第一个模型或跳过序列核对。
 def test_pdb_adapter_parses_all_models_and_audits_selected_chain(tmp_path):
     path = tmp_path / "ensemble.pdb"
     path.write_text(_multimodel_pdb(), encoding="utf-8")
@@ -56,6 +68,7 @@ def test_pdb_adapter_parses_all_models_and_audits_selected_chain(tmp_path):
     assert audit["expected_sequence_exact"] is True
 
 
+# 模型选择与校验：可按编号选模型；无坐标文件必须显式报错——防止空结构静默通过。
 def test_pdb_adapter_selects_model_and_fails_for_invalid_structure(tmp_path):
     path = tmp_path / "ensemble.pdb"
     path.write_text(_multimodel_pdb(), encoding="utf-8")
@@ -67,6 +80,8 @@ def test_pdb_adapter_selects_model_and_fails_for_invalid_structure(tmp_path):
         parse_pdb_ensemble(invalid)
 
 
+# 几何就绪分级：结构集成可就绪但缺抗体 pose 时接触打分必须被显式阻断——
+# 防止在无对接姿态时伪造接触打分。
 def test_geometry_readiness_blocks_contacts_without_explicit_antibody_pose(tmp_path):
     path = tmp_path / "ensemble.pdb"
     path.write_text(_multimodel_pdb(), encoding="utf-8")
@@ -82,6 +97,7 @@ def test_geometry_readiness_blocks_contacts_without_explicit_antibody_pose(tmp_p
     assert status["entries"][0]["geometry"]["contacts"] is None
 
 
+# 辅助函数：按给定字段写 CSV fixture。
 def _write_csv(path, fieldnames, rows):
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -89,6 +105,8 @@ def _write_csv(path, fieldnames, rows):
         writer.writerows(rows)
 
 
+# 结合状态矩阵：状态、重复、单位与删失（right-censoring）必须逐列保留——
+# 防止删失测量被当作普通点估计。
 def test_binding_state_matrix_preserves_states_replicates_units_and_censoring(tmp_path):
     path = tmp_path / "binding.csv"
     fields = [
@@ -114,6 +132,8 @@ def test_binding_state_matrix_preserves_states_replicates_units_and_censoring(tm
     assert rows[1]["unit"] == "nM"
 
 
+# HDX 校验：肽段起止解析为整数；伪造的 uptake 单位必须拒绝——
+# 防止单位混乱的数据污染监督信号。
 def test_hdx_loader_validates_peptide_uptake_and_rejects_made_up_units(tmp_path):
     path = tmp_path / "hdx.csv"
     fields = [

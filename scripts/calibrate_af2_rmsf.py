@@ -31,6 +31,7 @@ from disorderflow.utils.conformation_calibration import (  # noqa: E402
 )
 
 UNIPROT_PATTERN = re.compile(
+    # UniProt 登录号格式（含可选 -N 链变体后缀）
     r"^(?:[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9](?:[A-Z][A-Z0-9]{2}[0-9]){1,2})(?:-\d+)?$"
 )
 RCSB_SEARCH = "https://search.rcsb.org/rcsbsearch/v2/query"
@@ -39,6 +40,7 @@ RCSB_PDB = "https://files.rcsb.org/download/{entry}.pdb"
 
 
 def read_lmdb(path):
+    # 读取 LMDB 全部条目并附加原始序号；优先用 __len__ 键，否则扫描全部键
     env = lmdb.open(path, readonly=True, lock=False, readahead=False, subdir=os.path.isdir(path))
     entries = []
     with env.begin() as txn:
@@ -58,6 +60,7 @@ def read_lmdb(path):
 
 
 def _request_json(request, retries=5):
+    # 带指数退避的 JSON 请求重试（最多 5 次）
     for attempt in range(retries):
         try:
             with urllib.request.urlopen(request, timeout=60) as response:
@@ -69,6 +72,7 @@ def _request_json(request, retries=5):
 
 
 def post_json(url, payload):
+    # POST JSON 请求（RCSB 搜索接口）
     request = urllib.request.Request(
         url,
         data=json.dumps(payload).encode(),
@@ -78,12 +82,14 @@ def post_json(url, payload):
 
 
 def get_json(url):
+    # GET JSON 请求（RCSB 元数据接口）
     request = urllib.request.Request(url, headers={"User-Agent": "DisorderFlow/0.1"})
     return _request_json(request)
 
 
 def discover_nmr_entities(accessions, batch_size=80):
     """Return accession -> RCSB polymer entity identifiers."""
+    # 分批在 RCSB 搜索 solution NMR 实体，并回填 accession -> entity 映射
     discovered = {accession: [] for accession in accessions}
     entity_ids = set()
     for start in range(0, len(accessions), batch_size):
@@ -151,6 +157,7 @@ def discover_nmr_entities(accessions, batch_size=80):
 
 
 def download_pdb(entry_id, cache_dir):
+    # 下载 PDB 到本地缓存（已存在则直接复用）
     cache_dir.mkdir(parents=True, exist_ok=True)
     destination = cache_dir / f"{entry_id}.pdb"
     if not destination.is_file():
@@ -163,10 +170,13 @@ def download_pdb(entry_id, cache_dir):
 
 
 def residue_letter(residue):
+    # 三字母残基名转单字母，未知残基记为 X
     return protein_letters_3to1.get(residue.get_resname().upper(), "X")
 
 
 def extract_best_nmr_trace(pdb_path, query_sequence, minimum_residues=20):
+    """从 NMR 结构的多模型系综中提取最优链的逐残基实验 RMSF。"""
+    # 至少需要 2 个模型才构成系综
     structure = PDBParser(QUIET=True).get_structure(pdb_path.stem, str(pdb_path))
     models = list(structure.get_models())
     if len(models) < 2:
@@ -217,6 +227,7 @@ def extract_best_nmr_trace(pdb_path, query_sequence, minimum_residues=20):
 
 
 def confidence_by_sequence(path):
+    # 以序列为键建立 pLDDT/无序度信息的查找表，用于后续控制混杂变量
     if not path or not Path(path).exists():
         return {}
     lookup = {}
@@ -234,6 +245,7 @@ def confidence_by_sequence(path):
 
 
 def make_report(entries, entity_map, cache_dir, confidence_lookup, minimum_residues):
+    """逐蛋白匹配 NMR 参考并计算校准指标；每个来源蛋白只保留匹配残基最多的结果。"""
     by_accession = {}
     for entry in entries:
         accession = str(entry.get("pdb_id", "")).split("-")[0]
@@ -296,6 +308,7 @@ def make_report(entries, entity_map, cache_dir, confidence_lookup, minimum_resid
 
 
 def write_markdown(report, path):
+    # 将校准摘要与逐蛋白表格写成 Markdown 报告
     summary = report["summary"]
     lines = [
         "# AF2-RMSF Experimental Ensemble Calibration",
@@ -324,6 +337,7 @@ def write_markdown(report, path):
 
 
 def main():
+    # 主流程：读取构象 LMDB -> 发现 NMR 实体 -> 匹配并计算校准指标 -> 按无序度分组出结论
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--lmdb", default="data/confidence_conformation_v5/confidence_train.lmdb")
     parser.add_argument("--confidence-lmdb", default="data/confidence_unified_v2")

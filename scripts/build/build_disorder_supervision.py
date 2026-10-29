@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Build split-scoped disorder supervision from provenance-rich JSONL evidence."""
 
+# 目的：从带来源溯源的 JSONL 证据（DisProt/MobiDB 实验标注等）构建按数据划分
+# （train/dev/external_test）打包的无序区监督标签：逐序列合并多来源证据为
+# 值/掩码/置信度三件套，按聚类（cluster_id）防止跨划分泄漏，并写入审计 JSON。
+# 教师来源不被当作真值（见 source_contract 中 teacher_sources_are_ground_truth=False）。
+
 from __future__ import annotations
 
 import argparse
@@ -36,6 +41,8 @@ def read_jsonl(path):
 
 
 def build_artifact(inputs, split, output, held_out_clusters=()):
+    # 主构建：先检查留出聚类不得出现在本划分（防泄漏），再按 sample_id 聚合证据
+    # （同一 id 序列冲突即报错），合并为逐残基 profiles + 溯源 + 统计，落盘 pickle 与审计 JSON。
     records = [record for path in inputs for record in read_jsonl(path)]
     held_out = {str(value) for value in held_out_clusters}
     leaking = sorted({str(r["cluster_id"]) for r in records} & held_out)

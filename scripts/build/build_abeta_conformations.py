@@ -21,7 +21,9 @@ import numpy as np
 SEED_PKL = 'data/abeta_conformations/abeta42_5seed.pkl'
 OUT_DIR = 'data/abeta_conformations/pdbs'
 
+# Aβ42 一级序列（42 个残基），种子文件中的序列应与其一致。
 AA3 = 'DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA'
+# 单字母到三字母残基名映射，用于写出标准 PDB。
 THREE = {'A':'ALA','R':'ARG','N':'ASN','D':'ASP','C':'CYS','E':'GLU','Q':'GLN',
          'G':'GLY','H':'HIS','I':'ILE','L':'LEU','K':'LYS','M':'MET','F':'PHE',
          'P':'PRO','S':'SER','T':'THR','W':'TRP','Y':'TYR','V':'VAL'}
@@ -46,6 +48,8 @@ def main():
     from Bio.PDB import Structure, Model, Chain, Residue, Atom
     from Bio.PDB import PDBIO
 
+    # 理想肽键几何（单位: 埃）：N-CA 键长 1.46 Å，CA-C 键长 1.52 Å，
+    # 为标准蛋白质几何值，保证写出的 PDB 可被常规解析器接受。
     IDEAL_N_CA = 1.46
     IDEAL_CA_C = 1.52
 
@@ -59,11 +63,15 @@ def main():
             res = Residue.Residue((' ', i + 1, ' '), THREE[seq[i]], ' ')
             res.add(Atom.Atom('CA', list(ca[i]), 0.0, 1.0, ' ', ' CA ', i + 1, 'C'))
             if i > 0:
+                # 链方向约定：用 CA_{i-1}->CA_i 向量近似残基链方向；
+                # 首个残基改用 CA_i->CA_{i+1}（即 N 在 CA 前方、C 在后方）。
                 dvec = ca[i] - ca[i - 1]
             else:
                 dvec = ca[i + 1] - ca[i] if len(ca) > 1 else np.array([1., 0, 0])
             nrm = np.linalg.norm(dvec)
             dvec = dvec / nrm if nrm > 1e-6 else np.array([1., 0, 0])
+            # N/C 沿链方向反向/正向放置，再沿 z 偏移使骨架不共线；
+            # O 沿链方向再延伸 0.6 Å，仅为满足解析器对 O 原子的存在性要求。
             n_pos = ca[i] - dvec * IDEAL_N_CA + np.array([0., 0, 0.5])
             res.add(Atom.Atom('N', list(n_pos), 0.0, 1.0, ' ', ' N  ', i + 1, 'N'))
             c_pos = ca[i] + dvec * IDEAL_CA_C + np.array([0., 0, -0.5])

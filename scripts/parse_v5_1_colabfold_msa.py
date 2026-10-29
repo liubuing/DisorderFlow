@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """Parse calibrated full-MSA ColabFold controls and candidate structures."""
 
+# 本脚本解析经校准的全 MSA ColabFold 对照与候选结构（Aβ42 面板）：
+# 先对 4HIX / 5CSZ 两个天然参考做结构指标（pLDDT/ipTM/界面 PAE 等）并校验
+# 校准门槛（抗体 pLDDT ≥80、ipTM ≥0.7、界面 PAE ≤20）；对每个候选构造，
+# 计算同一组指标及其相对亲本参考的增量，结合决策文件的修正排名分
+# 合成 panel_score（ipTM 增量 +0.30、界面 PAE 增量 -0.02、突变数 -0.005），
+# 结构门槛通过者优先排序。输出 calibrated_screen.json 与 CSV 排名表。
+
 import csv
 import json
 from pathlib import Path
@@ -12,6 +19,7 @@ BASE = ROOT / "results/v5_1_candidates"
 
 
 def load_score(directory, name):
+    # 读取 rank_001 分数 JSON；匹配到 0 个或多个都视为异常
     matches = list(directory.glob(f"{name}_scores_rank_001_*.json"))
     if len(matches) != 1:
         raise ValueError(f"Expected one score file for {name}, found {len(matches)}")
@@ -19,6 +27,8 @@ def load_score(directory, name):
 
 
 def metrics(score, lengths):
+    # 计算复合物指标：lengths 为各链长度（最后一条为肽段/抗原），
+    # 界面 PAE 取抗体×抗原两个方向块的平均值
     antibody_length = sum(lengths[:-1])
     plddt = np.asarray(score["plddt"], dtype=np.float64)
     pae = np.asarray(score["pae"], dtype=np.float64)

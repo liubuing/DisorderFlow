@@ -45,14 +45,17 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 
 # CDR approximate residue ranges for geometry-based labeling
+# CDR 近似残基区间（按 Kabat 编号量级），用于几何式 CDR 标注
 CDR_APPROX_RANGES = {
     'H': {'H1': (25, 35), 'H2': (50, 60), 'H3': (95, 110)},
     'L': {'L1': (23, 37), 'L2': (50, 58), 'L3': (88, 100)},
 }
 
+# 抗原-抗体界面的重原子距离阈值（埃），小于该值视为界面残基
 INTERFACE_CUTOFF = 8.0
 
 # Default val set: diverse antigens, different species, mixed resolution
+# 默认验证集 PDB：抗原多样、物种多样、分辨率混合，保证验证广度
 DEFAULT_VAL_PDBS = [
     '4FQI', '6APC', '6W41', '7CDI', '7DPM', '1BJ1', '3PP4', '6H6Y',
     '7BWJ', '7C01', '9EB7', '8F7K', '5CZX', '3U1S', '4KDT',
@@ -63,10 +66,10 @@ def label_cdr_by_geometry(positions_ca, chain_type='H'):
     """Geometry-based CDR labeling (same as Phase 3)."""
     n = len(positions_ca)
     cdr_flag = np.zeros(n, dtype=np.int32)
-    if n < 80:
+    if n < 80:  # 链过短（<80 残基）不标注 CDR，避免比例缩放失真
         return cdr_flag
 
-    scale = n / 120.0
+    scale = n / 120.0  # 以典型可变区约 120 残基为基准做线性缩放
     ranges = CDR_APPROX_RANGES.get(chain_type, CDR_APPROX_RANGES['H'])
     for cdr_name, (start, end) in ranges.items():
         cdr_type = {'H1': 1, 'H2': 2, 'H3': 3, 'L1': 4, 'L2': 5, 'L3': 6}[cdr_name]
@@ -78,6 +81,7 @@ def label_cdr_by_geometry(positions_ca, chain_type='H'):
 
 def label_interface_residues(ab_positions_ca, ag_positions_ca, cutoff=INTERFACE_CUTOFF):
     """Identify antibody residues at the antigen interface."""
+    # 抗体 CA 原子到任一抗原 CA 的最小距离小于 cutoff 即判为界面残基
     if len(ag_positions_ca) == 0:
         return np.zeros(len(ab_positions_ca), dtype=bool)
     dists = np.linalg.norm(ab_positions_ca[:, None, :] - ag_positions_ca[None, :, :], axis=-1)
@@ -101,6 +105,7 @@ def preprocess_one(pdbcode, pdb_path, h_chain, l_chain, ag_chains):
 
     Returns dict or None on failure.
     """
+    # 单个复合物的完整预处理：解析链 -> CDR 标注 -> 多抗原链合并 -> 界面残基标注 -> 导出序列
     parser = PDB.MMCIFParser(QUIET=True) if str(pdb_path).lower().endswith('.cif') else PDB.PDBParser(QUIET=True)
     try:
         model = parser.get_structure(pdbcode, pdb_path)[0]
@@ -126,7 +131,7 @@ def preprocess_one(pdbcode, pdb_path, h_chain, l_chain, ag_chains):
             ca_mask = data['mask_heavyatom'][:, BBHeavyAtom.CA]
             positions_ca = data['pos_heavyatom'][ca_mask, BBHeavyAtom.CA].numpy()
             cdr_flag = label_cdr_by_geometry(positions_ca, 'H')
-            if (cdr_flag > 0).sum() >= 5:
+            if (cdr_flag > 0).sum() >= 5:  # 重链 CDR 残基至少 5 个才保留
                 data['cdr_flag'] = torch.from_numpy(cdr_flag).long()
                 result['heavy'] = data
             else:
@@ -139,7 +144,7 @@ def preprocess_one(pdbcode, pdb_path, h_chain, l_chain, ag_chains):
             ca_mask = data['mask_heavyatom'][:, BBHeavyAtom.CA]
             positions_ca = data['pos_heavyatom'][ca_mask, BBHeavyAtom.CA].numpy()
             cdr_flag = label_cdr_by_geometry(positions_ca, 'L')
-            if (cdr_flag > 0).sum() >= 3:
+            if (cdr_flag > 0).sum() >= 3:  # 轻链 CDR 残基至少 3 个才保留
                 data['cdr_flag'] = torch.from_numpy(cdr_flag).long()
                 result['light'] = data
             else:
@@ -153,7 +158,7 @@ def preprocess_one(pdbcode, pdb_path, h_chain, l_chain, ag_chains):
     ag_data_list = []
     for ag_id in ag_chains:
         data, __ = parse_chain_data(model, ag_id)
-        if data is not None and data['aa'].size(0) >= 5:
+        if data is not None and data['aa'].size(0) >= 5:  # 抗原链至少 5 个残基才纳入
             data['cdr_flag'] = torch.zeros_like(data['aa'])
             ag_data_list.append(data)
 
@@ -204,6 +209,7 @@ def preprocess_one(pdbcode, pdb_path, h_chain, l_chain, ag_chains):
 
 def build_lmdb(data_list, lmdb_path, map_size=16 * 1024 * 1024 * 1024):
     """Build LMDB database."""
+    # map_size 预留 16 GiB 地址空间（LMDB 按需分配，不占实际磁盘）
     db_conn = lmdb.open(lmdb_path, map_size=map_size, create=True, subdir=False, readonly=False)
     ids = []
     n_written = 0
@@ -222,14 +228,15 @@ def build_lmdb(data_list, lmdb_path, map_size=16 * 1024 * 1024 * 1024):
 
 
 def main():
+    # 主流程：读取 SAbDab 汇总表 -> 质量过滤 -> 逐复合物预处理 -> 同源聚类分组划分 -> 写 LMDB 与元数据
     parser = argparse.ArgumentParser(description='Preprocess SAbDab complexes for Phase 3')
     parser.add_argument('--summary', default=os.path.join(PROJECT_DIR, 'data', 'sabdab_summary_all.tsv'))
     parser.add_argument('--pdb_dir', default=os.path.join(PROJECT_DIR, 'data', 'all_structures', 'chothia'))
     parser.add_argument('--output_dir', default=os.path.join(PROJECT_DIR, 'data', 'sabdab_phase3_processed'))
     parser.add_argument('--max', type=int, default=None, help='Max complexes to process')
-    parser.add_argument('--val_ratio', type=float, default=0.10, help='Validation ratio')
-    parser.add_argument('--seed', type=int, default=2022)
-    parser.add_argument('--resolution_cutoff', type=float, default=3.0)
+    parser.add_argument('--val_ratio', type=float, default=0.10, help='Validation ratio')  # 验证集比例 10%
+    parser.add_argument('--seed', type=int, default=2022)  # 划分随机种子，保证可复现
+    parser.add_argument('--resolution_cutoff', type=float, default=3.0)  # 分辨率 cutoff（埃），3A 内视为可用结构
     parser.add_argument('--mmseqs', default='mmseqs', help='MMseqs2 executable')
     args = parser.parse_args()
 

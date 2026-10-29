@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Classify exact-new antibody metadata for final IDP cohort eligibility."""
 
+# 本脚本对"精确新增"（exact-new）抗体元数据做最终 IDP 队列资格分类：
+# 纯元数据操作（标题 + polymer entity 描述），用正则把条目匹配到
+# 配置允许的 IDP 靶标（Aβ/tau/α-synuclein/PrP），并要求存在抗体实体证据。
+# 恰好命中一个靶标且有抗体证据才算合格；无靶标/多靶标/无抗体分别记录原因。
+# 合格条目数与靶标数达到配置下限才判定元数据池就绪并冻结坐标准入，
+# 否则等待下一节拍快照（协议不变）。输出拒绝覆盖已有发现结果。
+
 from __future__ import annotations
 
 import argparse
@@ -25,9 +32,11 @@ ANTIBODY_PATTERN = re.compile(
 
 
 def sha256(path):
+    # 计算文件 SHA-256，用于配置与元数据快照的来源校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 拼接条目的可检索文本：标题 + 各 polymer entity 描述，用 " | " 分隔
 def record_text(record):
     fields = [record.get("title") or ""]
     fields.extend(
@@ -37,6 +46,8 @@ def record_text(record):
     return " | ".join(fields)
 
 
+# 发现主流程：输出已存在则拒绝覆盖；逐条记录做靶标与抗体正则分类，
+# 合格条目仅标记为"待坐标准入的元数据候选"，不访问任何坐标。
 def discover(config_path, metadata_path, output):
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite IDP metadata discovery: {output}")
@@ -107,6 +118,7 @@ def discover(config_path, metadata_path, output):
 
 
 def main():
+    # 主入口：配置与元数据快照均有默认路径，按配置输出路径落盘并打印摘要
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

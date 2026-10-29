@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Instantiate every frozen fold and verify train/validation loader boundaries."""
 
+# 目的：StateContrast v2 交叉验证的折加载器审计——实例化合同（contract.json）中
+# 每个冻结折的训练/验证数据集，检查三条边界：训练与验证组分零重叠、验证组分
+# 在各折间只出现一次、原子组（group）大小不超过 batch 容量。
+# 只有全部检查通过才允许执行交叉验证。
+
 from __future__ import annotations
 
 import argparse

@@ -147,6 +147,7 @@ def extract_contact_map(pdb_path: str, cutoff: float = 8.0, peptide_chain: str =
         raise ValueError(f"Need at least two protein chains in {pdb_path}")
 
     chain_selection = select_abeta_like_chain(chains)
+    # 表位链可显式指定；未指定时自动挑选"最像 Aβ42 片段"的链
     peptide_chain = peptide_chain or chain_selection["chosen_chain"]
     if peptide_chain not in chains:
         raise ValueError(f"Peptide chain {peptide_chain!r} not found in {pdb_path}")
@@ -246,6 +247,8 @@ def score_sequence_on_contact_map(sequence: str, contact_map: Dict) -> Dict:
         subst = _substitution_score(aa, c.native_aa)
         # Native-like chemistry at known contact positions is rewarded, but a
         # conservative replacement can still score if it preserves pair chemistry.
+        # 逐接触打分 = 0.70*候选化学匹配 + 0.30*(保守替换度 x 天然化学分)：
+        # 换成同类残基仍可得分，但拿不到满分；权重 w 为距离衰减
         score = 0.70 * chem + 0.30 * subst * native_chem
         total += w * score
         native_total += w * native_chem
@@ -253,6 +256,7 @@ def score_sequence_on_contact_map(sequence: str, contact_map: Dict) -> Dict:
         per_position[c.paratope_index] += w * score
         per_position_w[c.paratope_index] += w
         if native_chem >= 0.45 or c.distance <= 5.0:
+            # 热点接触：天然化学分高（>=0.45）或距离近（<=5Å），单独累计
             hotspot_total += w * score
             hotspot_w += w
 
@@ -265,6 +269,8 @@ def score_sequence_on_contact_map(sequence: str, contact_map: Dict) -> Dict:
     ]
     identity = sum(1 for a, b in zip(seq, native) if a == b) / max(1, len(seq))
     conservative = sum(_substitution_score(a, b) for a, b in zip(seq, native)) / max(1, len(seq))
+    # 综合分 = 接触分(0.65) + 热点分(0.25) + 保守相似度(0.10)；
+    # 接触分主导，热点分惩罚"整体尚可但搞坏关键位置"的候选
     final = 0.65 * contact_score + 0.25 * hotspot_score + 0.10 * conservative
     return {
         "sequence": seq,
@@ -287,6 +293,7 @@ def scrambled_controls(seq: str, n: int = 100, seed: int = 42) -> List[str]:
     seen = {"".join(chars)}
     out = []
     attempts = 0
+    # attempts 上限 n*80：序列很短时全排列有限，提前停止防止死循环
     while len(out) < n and attempts < n * 80:
         attempts += 1
         c = chars[:]
@@ -475,8 +482,10 @@ def score_contact_guided_variants(contact_map: Dict, variants: Iterable[Dict]) -
         complexity = _sequence_complexity(v["sequence"])
         immuno = _immunogenicity_proxy(v["sequence"])
         native_score = score_sequence_on_contact_map(contact_map["paratope_sequence"], contact_map)
+        # 接触保持率 = 候选分 / 天然分：衡量变异后保留了多少界面化学
         retention = score["state_contact_score"] / max(native_score["state_contact_score"], 1e-9)
         composite = (
+            # 综合候选分：接触保持(0.55) + 热点(0.20) + 复杂度(0.15) + 低免疫原(0.10)
             0.55 * retention
             + 0.20 * score["hotspot_score"]
             + 0.15 * complexity
@@ -511,10 +520,13 @@ def _clean(seq: str) -> str:
 
 def _distance_weight(distance: float) -> float:
     # Strongly weight close contacts while keeping 5-8 A context informative.
+    # 3.5Å 满权重、每远 2Å 衰减约 1/e，下限 0.05 保留远接触的微弱信号
     return max(0.05, math.exp(-max(0.0, distance - 3.5) / 2.0))
 
 
 def _pair_score(pa: str, ea: str) -> float:
+    # 氨基酸对化学相容性打分（0-1）：盐桥最高(0.45)，其次疏水(0.35)、
+    # 芳香(0.25)、极性(0.20)、同残基(+0.08)；半胱氨酸罚 0.20
     score = 0.05
     if ea in HYDROPHOBIC and pa in HYDROPHOBIC:
         score += 0.35
@@ -553,6 +565,7 @@ def _weak_residue_for_position(native: str) -> str:
 
 
 def _hotspot_positions(contact_map: Dict) -> set:
+    # 与 score_sequence_on_contact_map 使用同一热点判据，保持两处一致
     out = set()
     for c in contact_map["contacts"]:
         if _pair_score(c.native_aa, c.epitope_aa) >= 0.45 or c.distance <= 5.0:
@@ -583,6 +596,7 @@ def _position_allowed_residues(contact_map: Dict, pos: int, hotspots: set) -> Li
     allowed.add(native)
     if pos in hotspots:
         # Keep hotspots conservative/contact-compatible and avoid Cys/Pro.
+        # 热点位置只允许保守/接触相容替换，且禁止 Cys（二硫键）与 Pro（环刚性破坏）
         allowed.discard("C")
         allowed.discard("P")
     else:

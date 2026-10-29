@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Run standard decoy benchmark on the A-beta reference whitelist."""
+"""Run standard decoy benchmark on the A-beta reference whitelist.
+
+对 A-beta 参考白名单逐条运行标准 decoy 基准：提取接触图
+（接触截断默认 8Å），把 native 与打乱/诱饵序列对比，报告 native 分数、
+decoy 均值/最大值、native 百分位与热点百分位。产出汇总 CSV、
+decoy 明细 CSV、详情 JSON 与 Markdown 报告。
+"""
 from __future__ import annotations
 
 import argparse
@@ -20,6 +26,7 @@ from state_contact_scorer import benchmark_native_vs_decoys, extract_contact_map
 
 
 def parse_args():
+    """参数：白名单 YAML、输出目录、打乱数（默认 100）、种子与接触截断（8Å）。"""
     parser = argparse.ArgumentParser(description="A-beta whitelist decoy benchmark")
     parser.add_argument("--whitelist", default=str(PROJECT_ROOT / "configs" / "idp" / "abeta_reference_whitelist.yml"))
     parser.add_argument("--out", required=True)
@@ -30,6 +37,7 @@ def parse_args():
 
 
 def main():
+    """主流程：读白名单 -> 逐参考提取接触图并跑 decoy 基准 -> 写四类产物。"""
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

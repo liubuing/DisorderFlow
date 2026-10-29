@@ -1,3 +1,5 @@
+"""发布对齐校验的契约测试：守护 Zenodo 上传构建在身份不一致时 fail-closed 且不动暂存区、
+旧产物归档不丢失，以及当前仓库发布对齐无错误——防止发布包内容与稿件身份错位。"""
 import json
 from pathlib import Path
 
@@ -7,6 +9,7 @@ from scripts import build_zenodo_upload as builder
 from scripts.validate_publication_alignment import validate
 
 
+# 辅助函数：搭建最小发布目录结构（发布线清单、稿件草稿、Zenodo 元数据）。
 def prepare(tmp_path):
     line = {'primary_line':'ecls','release_id':'disorderflow-ecls-v1',
             'manuscript':'publication/MANUSCRIPT_DRAFT.md','manuscript_title':'ECLS title'}
@@ -18,6 +21,8 @@ def prepare(tmp_path):
         'title':'ECLS title (ECLS v1 reproducibility package)'}))
 
 
+# 身份守卫：元数据标题与发布线身份不符时构建必须报错，且暂存区既有文件字节原样不动——
+# 防止错误身份的产物混入上传或覆盖历史文件。
 def test_mixed_identity_rejected_before_staging_changes(tmp_path,monkeypatch):
     prepare(tmp_path)
     monkeypatch.setattr(builder,'INCLUDE',['publication/MANUSCRIPT_DRAFT.md'])
@@ -30,6 +35,7 @@ def test_mixed_identity_rejected_before_staging_changes(tmp_path,monkeypatch):
     assert marker.read_bytes()==b'history'
 
 
+# 归档无损失：旧 PAE 文件移入 archive（逐字节相同）后上传区只剩稿件——防止构建静默丢弃历史产物。
 def test_old_pae_file_archived_without_loss(tmp_path,monkeypatch):
     prepare(tmp_path)
     monkeypatch.setattr(builder,'INCLUDE',['publication/MANUSCRIPT_DRAFT.md'])
@@ -43,5 +49,6 @@ def test_old_pae_file_archived_without_loss(tmp_path,monkeypatch):
     assert {p.name for p in marker.parent.iterdir()}=={'MANUSCRIPT_DRAFT.md'}
 
 
+# 仓库现状：对当前仓库执行完整对齐校验必须零错误，防止发布线声明与实际产物脱节。
 def test_current_publication_alignment():
     assert validate(Path(__file__).resolve().parents[1])['errors']==[]

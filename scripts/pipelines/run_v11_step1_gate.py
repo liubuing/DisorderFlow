@@ -22,7 +22,7 @@ A3 = {'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS', 'Q': 'GLN',
       'Y': 'TYR', 'V': 'VAL'}
 WSL_PYTHON = 'wsl bash -c "cd /mnt/d/biological/DisorderFlow && ./venv_wsl/bin/python'
 
-SCAFFOLD = 'data/anti_abeta_refs/4HIX.pdb'
+SCAFFOLD = 'data/anti_abeta_refs/4HIX.pdb'  # 已知抗 Aβ 参考结构（健全性基准）
 OUT_DIR = 'fold_dock_results'
 os.makedirs(OUT_DIR, exist_ok=True)
 os.makedirs(f'{OUT_DIR}/fasta', exist_ok=True)

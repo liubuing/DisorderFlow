@@ -21,6 +21,8 @@ import torch
 import numpy as np
 import pandas as pd
 import gradio as gr
+# 将仓库下的 modules/ 目录插入 sys.path 头部，
+# 使后续可以按"裸文件名"导入 target_design_helpers、cascade_filter 等平铺布局的研究模块
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'modules'))
 import target_design_helpers as tdh
 import cascade_filter as cf
@@ -30,11 +32,14 @@ import closed_loop_scorer as cls
 import closed_loop_orchestrator as clo
 from runtime_environment import build_colabfold_command, colabfold_environment
 
+# 星号导入 webapp.facade：把实现层的公开 API 再导出到 app 命名空间，
+# 保证历史代码中 `from app import X` 的用法在逻辑拆分到 webapp/ 后仍然可用
 from webapp.facade import *  # noqa: F401,F403
 from webapp.state import load_app_config, load_bfn
 from webapp.ui import create_ui
 
 if __name__ == '__main__':
+    # 读取 app_config.yaml，获取服务器 host/port、模型路径等运行配置
     cfg = load_app_config()
     sv = cfg['server']
 
@@ -56,6 +61,7 @@ if __name__ == '__main__':
     print(f"  管理命令: python manage.py --help")
     print()
 
+    # 构建并启动 Gradio 界面；BFN 预加载失败只打印提示、不阻塞 Web 服务
     app, css = create_ui()
     app.launch(
         server_name=sv['host'],

@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Build leakage-controlled explicit-state records from predeclared inputs."""
 
+# 本脚本从"训练前已冻结"的显式状态清单构建防泄漏的 statecontrast v2 训练清单：
+# 以 (谱系簇, 全局序列簇) 的稳定哈希为全局簇，split 与 CV 折均按全局簇的
+# 哈希确定性分配（同一簇内所有记录共享划分与折，杜绝跨折泄漏）；
+# 每条记录附带坐标文件并逐一校验 SHA-256，随后调用合同校验器检查
+# teacher 覆盖率等约束。默认 80/10/10 划分、5 折、种子 5201。
+
 from __future__ import annotations
 
 import argparse
@@ -17,11 +23,14 @@ from disorderflow.statecontrast_v2_contract import validate_statecontrast_v2_rec
 
 
 
+# 生成稳定短 ID：多字段以 "|" 连接、小写归一后取 SHA-256 前 20 个十六进制位
 def stable_id(*values):
     payload = "|".join(str(value).strip().casefold() for value in values)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:20]
 
 
+# 确定性划分：对 (种子, 全局簇) 取 SHA-256 前 16 位映射到 [0,1)，
+# 依次落入 train/val/test 区间；同一簇内所有记录划分一致
 def assign_split(global_cluster_id, split_seed, train_fraction, val_fraction):
     value = int(hashlib.sha256(
         f"{split_seed}|{global_cluster_id}".encode("ascii")).hexdigest()[:16], 16
@@ -33,12 +42,15 @@ def assign_split(global_cluster_id, split_seed, train_fraction, val_fraction):
     return "test"
 
 
+# 确定性折分配：SHA-256 前 16 位对折数取模；同样以全局簇为单位
 def assign_fold(global_cluster_id, split_seed, folds):
     digest = hashlib.sha256(
         f"fold|{split_seed}|{global_cluster_id}".encode("ascii")).hexdigest()
     return int(digest[:16], 16) % int(folds)
 
 
+# 清单构建主流程：输入状态必须已冻结 → 逐成分逐状态展开记录 →
+# 坐标文件存在性与哈希校验 → 合同校验（teacher 覆盖率等）→ 写出 JSON
 def build(input_path, output_path, split_seed=5201, train_fraction=0.8,
           val_fraction=0.1, minimum_teacher_coverage=0.8, folds=5):
     source = json.loads(input_path.read_text(encoding="utf-8"))
@@ -132,6 +144,7 @@ def build(input_path, output_path, split_seed=5201, train_fraction=0.8,
     return output
 
 
+# 主入口：输入/输出路径必填，划分种子、teacher 覆盖率与折数可覆盖默认值
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)

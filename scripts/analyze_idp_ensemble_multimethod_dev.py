@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Analyze the exposed six-component IDP ensemble development pilot."""
 
+# 目的：分析六组分 IDP 集成开发性试点。将 Aβ 与非 Aβ（tau/alpha-synuclein）留一折
+# 得分整理为 (component, fold, method, score) 长表，做配对比较（集成稳健法 vs
+# 单态法/native/组成匹配随机），并用 bootstrap 置信区间与精确符号翻转检验评估。
+# 输入：YAML 配置 + 冻结哈希校验的评估 CSV 与组分清单；输出：JSON 汇总与门控结论。
+
 from __future__ import annotations
 
 import argparse
@@ -22,6 +27,8 @@ def sha256(path: Path) -> str:
 
 
 def bootstrap_mean(values, trials, seed):
+    # Bootstrap 均值的 95% 置信区间：分位数取 2.5% 与 97.5%（即 CI95），
+    # trials/seed 来自配置的 statistics 段，保证可复现。
     if not values:
         return None
     array = np.asarray(values, dtype=np.float64)
@@ -31,6 +38,8 @@ def bootstrap_mean(values, trials, seed):
 
 
 def exact_sign_flip_p(values):
+    # 精确符号翻转置换检验：枚举全部 ±1 符号组合，统计 |翻转均值| >= 观测值的比例。
+    # 1e-12 为数值容差，避免浮点误差导致的严格比较失败；仅适用于小样本（指数级枚举）。
     if not values:
         return None
     array = np.asarray(values, dtype=np.float64)
@@ -91,6 +100,8 @@ def component_method_means(fold_rows):
 
 
 def paired_summary(component_scores, proposed, baseline, components, trials, seed):
+    # 配对汇总：逐组分计算 proposed-baseline 差值，汇总均值/中位数/正向组分占比，
+    # 并给出 bootstrap CI95 与精确符号翻转 p 值；缺失任一臂的组分记为无效。
     rows = []
     for component in components:
         proposed_score = component_scores.get((component, proposed))
@@ -120,6 +131,8 @@ def paired_summary(component_scores, proposed, baseline, components, trials, see
 
 
 def analyze(config, manifest, abeta_rows, nonabeta_rows):
+    # 主分析：整理长表→逐方法均值→主/次要配对比较→门控判定。
+    # 次要比较使用 seed+1/seed+2 与主分析区分随机流，避免相关性。
     components = [row["component_id"] for row in manifest["components"]]
     fold_rows = build_fold_rows(abeta_rows, nonabeta_rows)
     scores = component_method_means(fold_rows)
@@ -177,6 +190,7 @@ def analyze(config, manifest, abeta_rows, nonabeta_rows):
 
 
 def main():
+    # 入口：读取配置与清单（校验 component_id 唯一性及全部冻结 SHA-256），执行分析并写 JSON。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_multimethod_dev_v1.yml"

@@ -30,6 +30,7 @@ class EnsembleScorer:
 
     def __init__(self, conformation_db_path=None, scaffold_pdb=None,
                  epitope_pdb=None):
+        # 三个默认路径都指向仓库 data/ 下的冻结资源：构象 LMDB、抗体骨架、表位参考 PDB
         self.conformation_db_path = conformation_db_path or DEFAULT_CONFORMATION_DB
         self.scaffold_pdb = scaffold_pdb or DEFAULT_SCAFFOLD_PDB
         self.epitope_pdb = epitope_pdb or DEFAULT_EPITOPE_PDB
@@ -43,6 +44,8 @@ class EnsembleScorer:
 
     def find_conformations(self, epitope_sequence):
         """Find multi-conformation data. Returns dict or None."""
+        # 以序列前 30 个残基作为缓存键；先线性扫描 LMDB，找不到再回退
+        # 扫描 abeta_conformations/*.pkl 文件（数据集早期格式）
         key = epitope_sequence[:30]
         if key in self._cache:
             return self._cache[key]
@@ -87,6 +90,8 @@ class EnsembleScorer:
                 epi_atoms[rn].append((line, x, y, z, an == 'CA', an))
         sorted_rn = sorted(epi_atoms.keys())
         n_res = len(sorted_rn)
+        # 每个构象生成一个 PDB：骨架原子原样复制，表位原子按"新 CA - 旧 CA"偏移整体平移
+        # （只平移不旋转，构象间差异来自 CA 轨迹本身）
         tmpdir = tempfile.mkdtemp(prefix='ensemble_')
         paths = []
         for conf_idx, ca_pos in enumerate(ca_positions_list):
@@ -162,6 +167,8 @@ class EnsembleScorer:
             plddts = [s['plddt'] for s in bfn_scores]
             compatibilities = [s['state_compatibility'] for s in bfn_scores]
 
+            # 跨构象聚合：mean 反映平均适配度，worst 反映"最差构象也不能崩"的稳健性，
+            # std 反映对构象选择的敏感度（越低越状态无关）
             d_enriched = dict(d)
             d_enriched['ensemble_n_conf'] = n_conf
             d_enriched['bfn_iptm_mean'] = float(np.mean(iptms))
@@ -200,6 +207,7 @@ class EnsembleScorer:
 
         # Pre-compute per-conformation metrics (same for all designs since
         # CDR graft doesn't change backbone —this is a scaffold-level metric)
+        # 物理指标只依赖骨架，CDR 序列嫁接不改变主链，因此同一构象对所有设计打分相同
         conf_scores = []
         for pdb_path in conf_pdbs:
             ab_atoms, epi_atoms = [], []
@@ -221,6 +229,7 @@ class EnsembleScorer:
             n_close = int((dists < 5.0).sum())  # close contacts
             n_medium = int(((dists >= 5.0) & (dists < 8.0)).sum())
             min_dist = float(dists.min())
+            # 接触密度得分：<5Å 原子对权重 2，5-8Å 权重 1，按抗体原子数归一化
             score = (n_close * 2.0 + n_medium * 1.0) / max(len(ab_atoms), 1)
             conf_scores.append({
                 'contacts_close': n_close, 'contacts_medium': n_medium,
@@ -272,6 +281,7 @@ def ensemble_rank_dual(designs, w_bfn_mean=0.25, w_bfn_worst=0.20,
         return designs
 
     def norm(vals, invert=False):
+        # 批内 min-max 归一化；退化（全相同）时给中性 0.5；invert 供"越低越好"维度使用
         vmin, vmax = min(vals), max(vals)
         if vmax == vmin:
             return [0.5] * len(vals)
@@ -304,6 +314,7 @@ def ensemble_rank_dual(designs, w_bfn_mean=0.25, w_bfn_worst=0.20,
     active_w += w_ppl
 
     if active_w > 0:
+        # 按实际激活的权重和归一化：某条评分线缺失时其余维度权重自动放大
         scores = scores / active_w
 
     for i, d in enumerate(designs):

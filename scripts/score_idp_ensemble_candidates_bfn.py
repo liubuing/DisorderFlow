@@ -29,10 +29,13 @@ from scripts.score_idp_ensemble_matched_candidates import (  # noqa: E402
 
 
 def sha256(path):
+    # 计算文件 SHA-256；所有冻结输入与 checkpoint 先验哈再使用。
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def score_value(output, batch):
+    # 从 BFN 前向输出提取候选区指标: ipTM、生成区平均 pLDDT、
+    # 生成区平均 PAE（越低越好）与 state_compatibility。
     generated = batch["generate_flag"][0].bool()
     plddt = output["plddt"][0][generated]
     pae = output["pae"][0][generated][:, generated]
@@ -45,6 +48,11 @@ def score_value(output, batch):
 
 
 def score_component(config, component, pose_rows, method_pools, model, work_dir):
+    # 对单个组件在全部姿态上做固定序列打分:
+    #   - 每个姿态先规范化（canonicalize）为 H/L/P 链布局并记录哈希;
+    #   - native H3 与各方法候选序列逐一注入同一批（batch），在固定
+    #     fixed_t 下打分——序列是唯一变量，几何（姿态）保持不变;
+    # 返回逐姿态/逐候选的完整分数表（供下游 leave-one-out 分析）。
     canonical_poses = []
     batches = []
     start, end = component["h3_positions_1_indexed"]
@@ -106,6 +114,8 @@ def score_component(config, component, pose_rows, method_pools, model, work_dir)
 
 
 def component_cache_valid(payload, config_hash, generation_hash, component, pools):
+    # 缓存有效性: 配置哈希、生成工件哈希、组件与候选池序列完全一致
+    # 才复用缓存——任一变化都触发重算，防止陈旧分数混入。
     if payload.get("config_sha256") != config_hash:
         return False
     if payload.get("raw_generation_sha256") != generation_hash:
@@ -121,6 +131,10 @@ def component_cache_valid(payload, config_hash, generation_hash, component, pool
 
 
 def summarize(rows, methods, component_ids, statistics, gates):
+    # 按方法汇总"集合 - 单姿态"分数差: 逐组件取均值后做 bootstrap CI
+    # （种子 = 冻结种子 + 方法索引，保证方法间独立）与精确符号翻转
+    # 检验；门槛: 有效组件数、正效应组件比例、CI 下界 > 0 三者同时
+    # 满足才算 passed。
     output = {}
     for index, method in enumerate(methods):
         values = []

@@ -30,6 +30,8 @@ _predicted_pdb = None  # path to most recent AlphaFold prediction
 def run_alphafold_prediction(fasta_text, fasta_file,
                               num_models, num_recycle, use_dropout,
                               progress=gr.Progress()):
+    # AF2 结构预测 Web 入口：写 ASCII 净化后的 FASTA -> 调用 ColabFold
+    # （native Windows 或 WSL2，由 runtime_environment 决定）-> 解析 rank_001 结果
     global _predicted_pdb
     if fasta_file is not None:
         try:
@@ -57,6 +59,7 @@ def run_alphafold_prediction(fasta_text, fasta_file,
     fasta_path = out_dir / f'{pid}.fasta'
 
     # Sanitize to ASCII: colabfold uses system default encoding (GBK on Chinese Windows)
+    # 必须净化为 ASCII：中文 Windows 上 ColabFold 子进程用 GBK 解码，非 ASCII 会炸
     safe_text = fasta_text.encode('ascii', errors='replace').decode('ascii')
     with open(fasta_path, 'w', encoding='ascii') as f:
         f.write(safe_text)
@@ -134,6 +137,7 @@ def run_alphafold_prediction(fasta_text, fasta_file,
                 ptm = scores.get('ptm', float('nan'))
                 iptm = scores.get('iptm', float('nan'))
                 max_pae = scores.get('max_pae', float('nan'))
+                # iptm == iptm 是 NaN 检查惯用法：NaN 不等于自身
                 log_lines.append(f"\n{'='*50}")
                 log_lines.append(f"📊 AF2 置信度评估")
                 log_lines.append(f"  平均 pLDDT: {mean_plddt:.1f}/100")

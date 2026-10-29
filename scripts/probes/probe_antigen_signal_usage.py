@@ -24,6 +24,7 @@ from disorderflow.utils.transforms import get_transform
 from disorderflow.utils.data import PaddingCollate
 from disorderflow.utils.train import recursive_to
 from disorderflow.datasets.protein import preprocess_protein_structure
+# 20 种标准氨基酸单字母表(索引即模型 aa 编号, >=20 视为未知)
 AA = 'ACDEFGHIKLMNPQRSTVWY'
 
 
@@ -61,6 +62,7 @@ def write_pdb(entry, out_path, include_antigen=True):
 AA3 = {'A':'ALA','R':'ARG','N':'ASN','D':'ASP','C':'CYS','E':'GLU','Q':'GLN','G':'GLY',
        'H':'HIS','I':'ILE','L':'LEU','K':'LYS','M':'MET','F':'PHE','P':'PRO','S':'SER',
        'T':'THR','W':'TRP','Y':'TYR','V':'VAL'}
+# 单字母 -> 三字母映射, 供 PDB 重建使用
 
 
 def get_cdr_real(entry, scaffold_chain='H'):
@@ -92,6 +94,7 @@ def run_recovery(model, complex_pdb, region_spec, context_chains, n_samples, dev
 
 
 def main():
+    # 临时改写 app_config.yaml 指向 V15(seq_only) checkpoint; finally 块中还原原始配置
     APP='app_config.yaml'
     app=yaml.safe_load(open(APP,encoding='utf-8')); orig=app['models']['bfn']['checkpoint']
     ckpt=os.environ.get('V14_CKPT','logs/bfn_v15_binding_xpu_2026_06_26__15_52_10/checkpoints/best.pt')
@@ -121,6 +124,7 @@ def main():
             cdrs = get_cdr_real(e,'H')
             if not cdrs: continue
             # build both PDBs
+            # 成对构造同一支架的两种 PDB: complex 含抗原链 P, fixbb 完全不含抗原
             pdb_c = os.path.join(tmpdir,f'{sid}_c.pdb'); pdb_f=os.path.join(tmpdir,f'{sid}_f.pdb')
             try:
                 write_pdb(e, pdb_c, include_antigen=True)
@@ -137,6 +141,7 @@ def main():
             except Exception as ex:
                 print(f"  {sid}: parse complex failed {ex}"); continue
             # design both modes
+            # 两种模式使用相同种子(42), 保证除抗原可见性外一切随机因素完全一致
             seed_all(42)
             try:
                 des_c=run_recovery(model, pdb_c, region_spec, ['P'], N_SAMPLES, 'cuda')
@@ -148,6 +153,7 @@ def main():
             except Exception as ex:
                 print(f"  {sid}: fixbb design failed {ex}"); continue
             # per-CDR recovery
+            # 设计序列按 H1,H2,H3 顺序拼接; 按偏移切片后与真实 CDR 逐位比对一致率
             for ci,nm in enumerate(['H1','H2','H3']):
                 if nm not in cdrs: continue
                 s,e_,real=cdrs[nm]; l=e_-s; off=sum(lengths[:ci])
@@ -176,6 +182,7 @@ def main():
         else:
             print("  => fixbb > complex: antigen VISIBILITY HURTS (OOD, as seen before).")
     finally:
+        # 无论探针是否异常, 都还原 app_config.yaml 的原始 checkpoint 并关闭 LMDB
         env.close()
         app2=yaml.safe_load(open(APP,encoding='utf-8')); app2['models']['bfn']['checkpoint']=orig
         open(APP,'w',encoding='utf-8').write(yaml.dump(app2,default_flow_style=False))

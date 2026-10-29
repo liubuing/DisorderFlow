@@ -16,8 +16,12 @@ class ConformationRegressionDataset(ConfidenceRegressionDataset):
     """
 
     def __init__(self, cfg, transform=None, **kwargs):
+        # 复用 ConfidenceRegressionDataset 的数据加载/索引逻辑，仅追加构象数据集特有配置
         super().__init__(cfg, transform=transform, **kwargs)
         # Additional config options
+        # fix_backbone: 是否冻结主链坐标只建模序列；
+        # random_conformation: 从多条构象中随机采样而非固定取第一条；
+        # geometry_mode: 坐标几何来源，当前只支持 reference_backbone
         if isinstance(cfg, dict):
             self.fix_backbone = cfg.get('fix_backbone', False)
             self.random_conformation = cfg.get('random_conformation', True)
@@ -27,11 +31,14 @@ class ConformationRegressionDataset(ConfidenceRegressionDataset):
             self.random_conformation = getattr(cfg, 'random_conformation', True)
             self.geometry_mode = getattr(cfg, 'geometry_mode', 'reference_backbone')
         if self.geometry_mode != 'reference_backbone':
+            # 源数据只存 CA 轨迹，无法构造 BFN 残基坐标系（需要 N/CA/C 完整骨架）
             raise ValueError(
                 'Only geometry_mode=reference_backbone is supported: the source stores '
                 'CA-only conformers, which cannot define valid BFN residue frames')
 
     def __getitem__(self, index):
+        # index 是过滤后样本列表的下标，需经 _valid_indices 映射回真实记录号；
+        # LMDB 键与 pkl 文件名统一为 8 位零填充编号
         real_idx = self._valid_indices[index]
         if self._use_lmdb:
             with self._env.begin() as txn:
@@ -46,6 +53,7 @@ class ConformationRegressionDataset(ConfidenceRegressionDataset):
         batch = entry['batch']
         n_conformations = entry.get('n_conformations', 1)
 
+        # 记录集成规模与证据等级标签，供下游按来源分层评估/加权
         batch['ensemble_size'] = torch.tensor(n_conformations, dtype=torch.long)
         batch['flexibility_evidence_tier'] = 'af2_multiseed_nmr_rank_calibrated'
 
@@ -61,6 +69,8 @@ class ConformationRegressionDataset(ConfidenceRegressionDataset):
         batch['source'] = entry.get('source', '')
 
         # Use RMSF-based continuous disorder label
+        # 无序标签三级回退：RMSF 连续标签 -> structure 内置的 disorder_mask ->
+        # 按样本级 is_idp 布尔值铺成全 0/全 1 向量
         if 'disorder_label' in entry:
             disorder_t = torch.from_numpy(entry['disorder_label'])
             batch['disorder_label'] = disorder_t.float()
@@ -75,6 +85,7 @@ class ConformationRegressionDataset(ConfidenceRegressionDataset):
                                        else torch.zeros(seq_len))
 
         # Override generate_flag for confidence regression
+        # 该数据集只做置信度/柔性回归打分，不做生成，因此全体残基关闭 generate_flag
         batch['generate_flag'] = torch.zeros(batch['aa'].shape[0], dtype=torch.bool)
 
         return batch

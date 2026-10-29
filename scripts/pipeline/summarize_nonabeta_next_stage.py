@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Summarize pose-conditioned, flexible-refinement, family, off-state, and wet-lab evidence."""
+# 目的：汇总非 Aβ 靶标（tau/alpha-synuclein）的下一阶段审计：把姿态条件折叠、
+# 多种子柔性精修、家族面板、off-state 对比与湿实验交接五类证据聚合为
+# 每靶标的 native 相对 delta 与结论 JSON，作为计算完成度与后续阶段的依据。
 from __future__ import annotations
 
 import csv

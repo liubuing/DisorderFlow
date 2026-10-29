@@ -8,6 +8,12 @@ the native CDR3-beta region highlighted. Panel B: per-family recall at the
 Reads only frozen v30 artifacts; no model inference. Emits PNG (300 dpi),
 PDF, SVG and a plot-data JSON recording every plotted number.
 """
+# PAE 类比迁移手稿（v30 冻结产物）的图 1 绘制脚本：
+# A 面板：按标识符取第一个评估成分（1lp9_E_F_C，绝无按效应量挑选），
+# 画 TCR β/α 与肽的 CA 迹线并高亮天然 CDR3-β 区；B 面板：20% 预算下的
+# 逐家族召回率（Ridge 配方 vs ProteinMPNN NLL，附随机基线虚线）；
+# C 面板：成分等权均值对比。仅读取冻结产物、无任何模型推理，
+# 输出 PNG(300dpi)/PDF/SVG 及记录全部绘图数值的 plot-data JSON。
 
 import json
 import numpy as np
@@ -22,6 +28,7 @@ OUT = "publication/figures/pae_analog_figure1_v30"
 STRUCT_INSTANCE = "1lp9_E_F_C"
 
 INK = "#22252A"
+# 面板配色：α 链灰、β 链蓝、CDR3-β 区橙、肽金黄、随机/辅助灰
 ALPHA_C = "#B9BEC7"   # TCR alpha
 BETA_C = "#3E6DA8"    # TCR beta
 REGION_C = "#E87A2C"  # CDR3-beta region
@@ -67,6 +74,8 @@ def main():
     geometry = read_json(f"{ROOT}/geometry.json")
 
     # evaluation components in frozen order (values follow this order everywhere)
+    # 断言核对等权均值与冻结摘要一致：ridge=0.5、NLL=1/3、随机=3/14
+    # （3/14 来自并列为随机打破时的精确期望）
     instances = list(evaluation["per_component"].keys())
     assert len(instances) == 6, instances
 
@@ -89,6 +98,7 @@ def main():
     labels = [f"{inst.split('_')[0]}\n({fam})" for inst, fam in zip(instances, families)]
 
     # ---- structure panel data ------------------------------------------------
+    # 结构面板：定位 B 链中天然 CDR3-β 区的 0-based 下标区间，几何距离取冻结值
     chains = parse_ca(PDB)
     gen = read_json("results/pae_analog_generation_v28/generation.json")
     entry = next(c for c in gen["components"] if c["instance"] == STRUCT_INSTANCE)

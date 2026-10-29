@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Analyze frozen CAID3 results with cluster bootstrap and metapredict baseline."""
+"""Analyze frozen CAID3 results with cluster bootstrap and metapredict baseline.
+
+对冻结的 CAID3 无序区预测结果做外部对比分析：
+以 UniRef50 聚类为重采样单元做 cluster bootstrap，给出 BFN 模型与
+metapredict 外部基线的 macro AUC-ROC 置信区间及配对差值，
+同时检查判别（external_discrimination）与校准（Brier/ECE）两道门槛。
+输入为 BFN 消融 JSON、CAID3 参考目录与聚类清单；输出外部分析 JSON 报告。
+"""
 
 from __future__ import annotations
 
@@ -18,6 +25,10 @@ from scripts.benchmark_caid import evaluate, load_caid_reference  # noqa: E402
 
 
 def bootstrap_mean(values, trials=10000, seed=6301):
+    """对均值做非参数 bootstrap，返回 95% 置信区间 [2.5%, 97.5%] 分位数。
+
+    trials=10000 与 seed=6301 为固定协议值，保证结果可复现。
+    """
     rng = random.Random(seed)
     estimates = []
     for _ in range(trials):
@@ -26,6 +37,10 @@ def bootstrap_mean(values, trials=10000, seed=6301):
 
 
 def cluster_values(rows, field):
+    """按 cluster_id 分组求 field 字段的簇级均值，忽略缺失值。
+
+    以簇（而非序列）为单位聚合，可避免同源序列导致的样本非独立性。
+    """
     grouped = defaultdict(list)
     for row in rows:
         value = row.get(field)
@@ -35,6 +50,7 @@ def cluster_values(rows, field):
 
 
 def main():
+    """运行 CAID3 外部分析主流程：加载冻结 BFN 结果、计算 metapredict 基线、输出报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--bfn", default=str(ROOT / "results/ablation/caid3_disorder_nox_balanced_v4_s2032.json")
@@ -47,6 +63,7 @@ def main():
         "--out", default=str(ROOT / "results/ablation/caid3_external_analysis_v1.json")
     )
     args = parser.parse_args()
+    # metapredict 是冻结的外部基线，缺失则直接失败而非静默跳过
     try:
         import metapredict
     except ImportError as error:
@@ -84,6 +101,9 @@ def main():
     ]
     bfn_ci = bootstrap_mean(bfn_values)
     difference_ci = bootstrap_mean(differences) if differences else [None, None]
+    # 门槛1：判别力——混合标签簇数 >=30 且 macro AUC 置信下界 > 0.5
+    # 门槛2：校准——平均 Brier <= 0.25 且平均 ECE <= 0.1
+    # 0.5 为常数先验（按总体患病率恒定预测）的理论 AUC 参照
     output = {
         "schema_version": 1,
         "status": "external_discrimination_pass_calibration_fail",

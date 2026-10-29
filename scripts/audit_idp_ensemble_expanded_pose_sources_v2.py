@@ -1,5 +1,13 @@
 #!/usr/bin/env python
-"""Freeze the structural panel and audit experimental pose-source coverage."""
+"""Freeze the structural panel and audit experimental pose-source coverage.
+
+冻结扩展开发用结构面板并审计每个组件的实验构象来源覆盖度：
+- 先校验结构准入（admission）文件的 sha256 与冻结配置一致；
+- 从 mmCIF 坐标统计同一装配体重链/抗原链的拷贝数，加上同谱系捐赠 PDB 数，
+  估算实验构象来源数并与配置的最小门槛比较；
+- 来源不足的组件标记为需约束采样（restrained sampling）。
+输出结构面板 JSON 与构象来源审计 JSON（后者记录前者的哈希以绑定血缘）。
+"""
 
 from __future__ import annotations
 
@@ -18,10 +26,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    """计算文件 sha256，用于冻结产物的血缘/防篡改校验。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def chain_sequence(chain):
+    """提取链的标准氨基酸序列（要求 CA 原子存在，残基缺失按跳过处理）。"""
     return "".join(
         seq1(residue.resname)
         for residue in chain
@@ -30,10 +40,13 @@ def chain_sequence(chain):
 
 
 def audit(config_path, panel_output, audit_output):
+    """冻结结构面板并逐组件审计实验构象来源数，写panel/audit两份产物。"""
     for path in (panel_output, audit_output):
+        # 冻结产物不可覆盖
         if path.exists():
             raise FileExistsError(f"Refusing to overwrite pose-source artifact: {path}")
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
+    # 准入文件必须在构象来源冻结之后保持不变（哈希绑定）
     admission_path = ROOT / config["inputs"]["structural_admission"]
     if sha256(admission_path) != config["inputs"]["structural_admission_sha256"]:
         raise RuntimeError("Structural admission changed after pose-source freeze")
@@ -92,7 +105,9 @@ def audit(config_path, panel_output, audit_output):
         antigen_copies = sum(
             sequence in antigen_sequences for sequence in sequences.values()
         )
+        # 重链序列拷贝数与抗原序列拷贝数的较小值近似装配体内可辨析的复合物拷贝数
         assembly_complex_copies = min(heavy_copies, antigen_copies)
+        # 实验构象来源估计 = 同谱系捐赠 PDB 数 + 装配体内额外的复合物拷贝
         donor_pdbs = sorted(registry_groups[
             (component["target"], component["lineage_proxy"])
         ])
@@ -100,6 +115,7 @@ def audit(config_path, panel_output, audit_output):
             0, assembly_complex_copies - 1
         )
         minimum = config["requirements"]["minimum_experimental_pose_sources"]
+        # 来源达标则可用于无约束采样；不足则该组件需约束采样兜底
         source_rows.append({
             "component_id": component["component_id"],
             "target": component["target"],
@@ -146,6 +162,7 @@ def audit(config_path, panel_output, audit_output):
 
 
 def main():
+    """命令行入口：读取冻结配置，输出面板与来源审计并打印摘要。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

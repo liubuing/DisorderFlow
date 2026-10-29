@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Select fixed-budget pilot candidates and emit an opaque assay manifest."""
 
+# 本脚本为 IDP ensemble 前瞻性先导实验生成盲测（blinded）构造清单：
+# 按冻结配置从两个臂（ensemble PoE 与 single_state）中按替换数分桶、
+# 取每桶生成得分最高的候选，加上天然对照，用固定种子的随机打乱构造编码
+# （P001、P002……）实现盲化；明文映射写入单独的密封 key 文件
+# （不得交给实验分析人员）。配置哈希被硬编码锁定，输入/输出不允许覆盖。
+
 from __future__ import annotations
 
 import argparse
@@ -15,9 +21,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256 摘要，用于配置/候选/清单的哈希锁定与溯源
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 盲化选择主流程：
+# 1) 配置 SHA-256 必须与硬编码的冻结值一致（防止选样规则被改动）；
+# 2) 候选文件须声明由同一配置生成，否则拒绝；
+# 3) 每个成分的两个臂按替换数分桶各取最高分候选，再追加天然对照；
+# 4) 用配置中的随机化种子对全部构造做洗牌并顺序编号，实现盲化；
+# 5) 写出构造清单（不含臂信息）与密封 key（含臂与序列映射）。
 def blind(config_path, candidates_path, manifest_path, key_path):
     config_path = Path(config_path)
     candidates_path = Path(candidates_path)
@@ -87,6 +100,8 @@ def blind(config_path, candidates_path, manifest_path, key_path):
     }, indent=2) + "\n", encoding="ascii")
 
 
+# 主入口：解析输入/输出路径并驱动 blind()；默认路径均指向
+# reviewer_outputs 下的先导实验产物目录。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/benchmarks/idp_ensemble_prospective_pilot_v2.yml")

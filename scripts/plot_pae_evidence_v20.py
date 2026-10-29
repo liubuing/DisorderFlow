@@ -1,4 +1,8 @@
 """Static descriptive screening figure, fixed labels and no inferential error bars."""
+# 纯描述性筛查图: 左图 = 各基线在 10/20/30/50% 保留预算下对教师 top 20%
+# 的召回率（灰色虚线为随机期望对角线）；右图 = 冻结 Ridge 在 20% 预算下
+# 按六个结构分组的召回（灰线 20% = 随机水平）。无推断性误差棒——只是
+# 固定标签的描述统计，不构成显著性主张。
 import json
 from pathlib import Path
 import matplotlib

@@ -65,6 +65,7 @@ LIVER_DISEASE_QUERIES = [
 
 
 def fetch_uniprot_accessions(query, max_per_query=80):
+    # 查询 UniProt REST API，返回 (登录号, 蛋白名) 列表
     url = f'{UNIPROT_API}?query={requests.utils.quote(query)}&size={max_per_query}&format=tsv&fields=accession,length,protein_name'
     r = requests.get(url, timeout=20)
     lines = r.text.strip().split('\n')
@@ -77,6 +78,7 @@ def fetch_uniprot_accessions(query, max_per_query=80):
 
 
 def mmcif_to_temp_pdb(cif_text, accession):
+    # 将 AlphaFold mmCIF 转存为临时 PDB，供后续 BFN 预处理管线读取
     from Bio.PDB.MMCIFParser import MMCIFParser
     from Bio.PDB import PDBIO
     parser = MMCIFParser(QUIET=True)
@@ -90,6 +92,7 @@ def mmcif_to_temp_pdb(cif_text, accession):
 
 
 def extract_plddt_from_mmcif(cif_text):
+    # 提取逐残基 pLDDT（CA 原子 B 因子 / 100 归一到 0~1）与对应序列
     from Bio.PDB.MMCIFParser import MMCIFParser
     parser = MMCIFParser(QUIET=True)
     structure = parser.get_structure('tmp', io.StringIO(cif_text))
@@ -106,6 +109,7 @@ def extract_plddt_from_mmcif(cif_text):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    # PDB -> BFN 训练 batch：mask 全链 -> merge -> patch，返回 (batch, 序列, 残基数)
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -130,6 +134,7 @@ def preprocess_pdb_for_bfn(pdb_path):
 def process_one_entry(acc, name, category, af2_version):
     """Process a single protein entry. Returns (entry_dict, None) on success, (None, 'reason') on failure."""
     # Download mmCIF
+    # 下载 mmCIF 结构文件
     url = f'{AFDB_BASE}/AF-{acc}-F1-model_v{af2_version}.cif'
     r = resilient_get(url, timeout=60)
     if r.status_code != 200:
@@ -156,10 +161,11 @@ def process_one_entry(acc, name, category, af2_version):
         return None, 'SKIP (batch is None)'
 
     if len(plddt_list) < n_res:
-        plddt_list += [0.5] * (n_res - len(plddt_list))
+        plddt_list += [0.5] * (n_res - len(plddt_list))  # 缺失残基以中性 pLDDT=0.5 补齐
     plddt_tensor = torch.tensor(plddt_list[:n_res], dtype=torch.float32)
 
     # Download PAE
+    # 下载 PAE 矩阵；缺失时以全零矩阵占位并标记 pae_miss
     pae_matrix = None
     pae_url = f'{AFDB_BASE}/AF-{acc}-F1-predicted_aligned_error_v{af2_version}.json'
     try:
@@ -211,6 +217,7 @@ def process_one_entry(acc, name, category, af2_version):
 
 
 def main():
+    # 主流程：UniProt 分类检索 -> 并发下载 AFDB 结构/PAE -> 预处理 -> 周期性落盘 LMDB 与汇总
     import argparse
     from concurrent.futures import ThreadPoolExecutor, as_completed
     import threading
@@ -281,7 +288,7 @@ def main():
     n_completed = 0
     n_total = len(all_accessions)
     lock = threading.Lock()
-    save_interval = 50
+    save_interval = 50  # 每完成 50 条落盘一次，防止中断丢失进度
 
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {}

@@ -25,6 +25,7 @@ from webapp.baselines import AA_NAMES
 
 
 def detect_chains(pdb_path):
+    # 快速扫描 PDB 头部列位（第 22 列）列出所有出现过的链 ID（按出现顺序）
     chains = []
     with open(pdb_path) as f:
         for line in f:
@@ -34,6 +35,7 @@ def detect_chains(pdb_path):
                     chains.append(c)
     return chains
 def get_chain_info(pdb_path):
+    # 用 Biopython 取每条链的序列摘要：长度、首末残基编号、序列前 60 位（UI 展示用）
     from Bio.PDB import PDBParser
     parser = PDBParser(QUIET=True)
     pid = os.path.basename(pdb_path).replace('.pdb', '')
@@ -50,6 +52,7 @@ def get_chain_info(pdb_path):
         info[cid] = {'seq': seq, 'len': len(seq), 'first': ids[0] if ids else '?', 'last': ids[-1] if ids else '?'}
     return info
 def on_upload(pdb_file):
+    # Gradio 上传回调：解析 PDB 并生成"链列表 + 默认设计区域"供前端预填
     if pdb_file is None:
         return "请上传 PDB 文件", "", ""
     try:
@@ -84,6 +87,9 @@ def generate_pdb_from_sequence(seq, chain_id='A', start_res=1):
     so that CA-CA distances (~3.8 A) match real proteins. This ensures compatibility
     with ProteinMPNN and other structure-based design tools.
     """
+    # 序列 -> 理想 α 螺旋主链模板（仅 N/CA/C/O 四原子，无侧链）。
+    # 两阶段：先沿螺旋参数摆 CA，再用局部骨架几何（N-CA-C≈111°、CA-C-O≈120°、
+    # Engh & Huber 键长）推出 N/C/O；仅作设计上下文，不是真实折叠预测
     import math
     aa_list = [AA_NAMES.get(a, 'ALA') for a in seq if a in AA_NAMES]
     if not aa_list:
@@ -247,6 +253,7 @@ def fasta_to_pdb_file(fasta_text):
             f"   可用于 BFN / ProteinMPNN / ESM-IF 进行序列设计")
     return tmp.name, info
 def parse_fasta(text):
+    # 最小 FASTA 解析：> 行为头部，其余行为序列；返回 [(header, seq), ...]
     seqs = []
     cur_header, cur_seq = None, []
     for line in text.strip().split('\n'):
@@ -273,6 +280,7 @@ def _save_fasta(fasta_text):
     tmp.close()
     return tmp.name
 def on_fasta_input(fasta_text, fasta_file):
+    # FASTA 输入回调：上传文件优先于文本框内容；返回(规范化文本, 解析摘要)
     if fasta_file is not None:
         try:
             with open(fasta_file.name, encoding='utf-8') as f:

@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Run direct ensemble-conditioned design and held-out evaluation for non-A-beta IDPs."""
+# 本脚本对非 Aβ IDP 靶标（tau / α-synuclein）做"集合条件化"直接设计与
+# 留一构象评估：以通过审计的 pose 面板为训练集合，在束搜索中按
+# native_delta 的 p25/最小值（稳健下界）选择候选；tau 采用非劣性目标
+# （p25 阈值 -0.005），其他靶标要求改进。留一评估在留出构象上检验
+# 所选候选能否击败天然 paratope。产出声明仅限"同靶标计算留出构象证据"。
+
 from __future__ import annotations
 
 import argparse
@@ -33,6 +39,9 @@ def parse_args():
 
 
 def heldout_evaluation(target, candidates, pose_rows):
+    # 留一构象评估：每次留出一个 pose 作验证，其余作训练集合；
+    # 用训练集合的稳健指标（native_delta_p25/min）选出赢家，
+    # 再在留出构象上比较赢家与天然 paratope 的得分
     if not candidates:
         return []
     template = PROJECT_ROOT / target["trimmed_reference_pdb"]
@@ -77,6 +86,9 @@ def heldout_evaluation(target, candidates, pose_rows):
 
 
 def main():
+    # 主流程：校验 pose 面板已通过 → 逐靶标设计（tau 为非劣性目标，
+    # 其余为改进目标；全链风险上限 0.55、最小 native_delta -0.01）→
+    # 留一评估 → 写候选/突变计划/全长链 FASTA/留一明细与总结报告
     args = parse_args()
     with open(PROJECT_ROOT / args.manifest, encoding="utf-8") as handle:
         manifest = json.load(handle)

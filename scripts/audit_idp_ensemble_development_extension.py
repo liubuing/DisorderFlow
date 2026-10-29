@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Audit a frozen local antibody-IDP development-extension registry."""
 
+# 本脚本审计冻结的抗体-IDP 开发扩展（development-extension）注册表的结构就绪性：
+# 对每个成分解析参考 PDB 的重链/轻链/抗原（肽）链，用 Anarcii 做 Chothia 抗体编号
+# 并定位 H3 环，计算 H3-肽重原子接触指标，再按配置中的结构门槛逐项检查
+# （链长、肽长、肽序列一致性、链型、H3 长度、接触残基数）。
+# 全部成分均合格且无加载错误时判定 registry_structurally_ready，否则要求修订。
+# 输出：审计 JSON（含来源信息与 Anarcii 版本）+ 成分概览 CSV。
+
 from __future__ import annotations
 
 import argparse
@@ -18,14 +25,19 @@ from Bio.SeqUtils import seq1
 
 ROOT = Path(__file__).resolve().parents[1]
 AA = set("ACDEFGHIKLMNPQRSTVWY")
+# 常见修饰残基到标准氨基酸的映射（如硒代蛋氨酸 MSE→M、磷酸化 SEP/TPO/PTR→S/T/Y）
 MODIFIED_RESIDUES = {"MSE": "M", "PCA": "E", "SEP": "S", "TPO": "T", "PTR": "Y"}
+# Chothia 编号下 H3 环的位置范围（93-102）
 CHOTHIA_H3 = (93, 102)
 
 
 def sha256(path):
+    # 计算文件 SHA-256 摘要，用于参考 PDB 与配置的来源校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 提取一条链的标准氨基酸残基行：跳过缺 CA 原子的残基，
+# 修饰残基经 MODIFIED_RESIDUES 映射，非标准氨基酸直接丢弃
 def chain_residues(chain):
     rows = []
     for residue in chain:
@@ -42,6 +54,9 @@ def chain_residues(chain):
     return rows
 
 
+# 对全部成分的重链做 Chothia 抗体编号并抽取 H3 环：
+# 编号时跳过插入符"-"（gap），按 Chothia_H3 位置范围收集 H3 残基的
+# 序列下标（0-based）与序列本身；编号失败/无结果的成分记录错误。
 def number_heavy_domains(components, structures):
     model = Anarcii(
         seq_type="antibody", mode="accuracy", batch_size=16,
@@ -82,6 +97,9 @@ def number_heavy_domains(components, structures):
     return results
 
 
+# 计算 H3 环与抗原（肽）链之间的重原子接触指标：
+# 对每个 H3 残基与每个抗原残基做全重原子两两距离，统计
+# 最小距离、发生接触的 H3 残基数与接触残基对总数；cutoff 单位为埃。
 def contact_metrics(heavy, antigen, h3_indices, cutoff):
     contacting_positions = set()
     contact_pairs = 0
@@ -111,6 +129,9 @@ def contact_metrics(heavy, antigen, h3_indices, cutoff):
     }
 
 
+# 对单个成分执行结构门槛审计：链长/肽长/肽序列一致性/链型/H3 长度检查，
+# 外加 H3-肽接触检查（无 H3 编号时接触指标置空并判不合格）。
+# eligible 仅反映结构门槛，与 sensitivity_only 标记相互独立。
 def audit_component(component, structures, numbering, gates):
     component_id = component["component_id"]
     structure = structures[component_id]
@@ -169,6 +190,7 @@ def audit_component(component, structures, numbering, gates):
     }
 
 
+# 写成分概览 CSV：固定字段顺序，H3 序列与接触数取自审计明细
 def write_csv(path, rows):
     fields = [
         "component_id", "target", "antibody", "antibody_lineage_cluster",
@@ -187,6 +209,9 @@ def write_csv(path, rows):
             })
 
 
+# 主入口：加载注册表配置 → 解析各成分 PDB（失败仅记录，不中断）→
+# Anarcii 编号 → 逐成分审计 → 汇总重复谱系簇与表位簇分布 →
+# 按"全部加载且全部合格"判定状态 → 写 JSON 与 CSV。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

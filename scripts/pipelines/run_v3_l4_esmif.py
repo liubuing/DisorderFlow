@@ -1,4 +1,9 @@
 """L4: ESM-IF native vs scrambled — composition proxy (GPU-independent)."""
+# L4 层级门控：ESM-IF 逆折叠"天然 vs 打乱"检验的氨基酸组成代理版本
+# （不依赖 GPU，fair-esm 安装后可换全量推理）。对 3 个抗 Aβ 抗体的 CDR，
+# 比较"天然 CDR 组成得分"与 20 次残基打乱后的分布：组成分 = 0.4×芳香占比
+# （Y/W/F，对淀粉样结合重要，按 0.3 饱和）+ 0.3×带电占比（R/K/D/E，按 0.2
+# 饱和）+ 0.3×归一化香农熵；效应量 d>0.5 判 PASS。
 import sys,os,copy,random,tempfile; sys.path.insert(0,'.'); sys.path.insert(0,'modules')
 import numpy as np
 from Bio.PDB import PDBParser,PDBIO
@@ -32,6 +37,8 @@ def scramble_cdr(s,chain,cr):
 
 def composition_score(seq):
     """Score CDR composition quality: aromatic+charged ratio, entropy."""
+    # 组成质量分：芳香（0.4 权重）、带电（0.3）、熵（0.3），
+    # 芳香/带电按经验占比 0.3/0.2 封顶
     if len(seq)==0:return 0
     from collections import Counter
     counts=Counter(seq);total=len(seq)

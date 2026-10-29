@@ -39,6 +39,7 @@ profiles = pickle.load(open('data/idp_antigen_subset_v2/per_residue_profiles.pkl
 lookup = pickle.load(open('data/sabdab_disorder_lookup.pkl', 'rb'))
 
 # Get high-disorder antigens as "Aβ42-like" epitopes
+# 以无序度峰值 > 0.5 的抗原作为"Aβ42 类"表位代理；固定种子 42 抽 10 个。
 high_disorder = [(k, v) for k, v in lookup.items() if v.max() > 0.5]
 random.seed(42)
 candidates = random.sample(high_disorder, min(10, len(high_disorder)))
@@ -70,6 +71,8 @@ def build_batch(sid, disorder_arr):
     return batch, e
 
 def sample_cdr(model, batch, seed):
+    # 非确定性采样一次 CDR（每 seed 独立播种），取逐位 argmax 序列并计算
+    # 序列熵/unique_aa/6 连重复（has_6mer，退化信号，直接过滤）。
     torch.manual_seed(seed)
     with torch.no_grad():
         try:
@@ -106,6 +109,8 @@ for sid, disorder_arr in candidates:
         r['ag_disorder_mean'] = float(disorder_arr.mean())
         r['seed'] = seed
         # Score: unique_aa * (1 - entropy/max_entropy) → high diversity + high confidence
+        # 排序分 = unique_aa x 归一化置信度（熵除以 ln20 即均匀分布上界，
+        # 归一化后越低越自信），兼顾多样性与确定性。
         norm_entropy = 1.0 - r['entropy_mean'] / np.log(20)
         r['score'] = r['unique_aa'] * norm_entropy
         all_candidates.append(r)

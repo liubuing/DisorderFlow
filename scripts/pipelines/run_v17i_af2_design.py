@@ -11,6 +11,12 @@ Usage:
     python run_v17i_af2_design.py [--ckpt CHECKPOINT] [--samples N]
 Output: oc_validation_results/oc_v17i_phase1_complex.json
 """
+# V17i（pair routing 配对特征路由）设计的 OC 验证第一阶段：
+# V17i 模型走 pair_feat 编码路径，通用的 run_bfn_design 不适用，
+# 本脚本直接调用 AntibodyBFN.sample()：对 2 个骨架 × 3 个 Aβ42 构象抗原
+# 合并结构后做随机序列采样（num_recycles=3，种子按样本序号递增），
+# 生成 CDR 设计并按自预测 ipTM 排序；随后把设计的 CDR 序列嫁接回
+# 骨架 PDB（全部设计而非仅 top），供 AF2 带抗原上下文批量验证。
 import sys, os, json, time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import torch, yaml, numpy as np
@@ -140,6 +146,8 @@ import numpy as np
 
 def graft_cdrs_to_pdb(scaffold_pdb, scaffold_chain, cdr_seq, cdr_spec, out_path):
     """Graft designed CDR sequence into scaffold PDB, save as new PDB."""
+    # 嫁接仅替换 CDR 区残基名（不改坐标），坐标由 AF2 后续重折叠；
+    # 残基号越界/缺失时静默跳过该位
     parser = PDBParser(QUIET=True)
     s = parser.get_structure('s', scaffold_pdb)
 
@@ -180,7 +188,7 @@ def graft_cdrs_to_pdb(scaffold_pdb, scaffold_chain, cdr_seq, cdr_spec, out_path)
 
 af2_dir = 'oc_validation_results/_complexes_v17i'
 os.makedirs(af2_dir, exist_ok=True)
-for d in all_designs:  # ALL designs, not just top-10
+for d in all_designs:  # 全部设计都生成嫁接 PDB，不只 top-10
     scaffold = d['scaffold']
     antigen = d['antigen']
     scaff_name = os.path.basename(scaffold).replace('.pdb', '')

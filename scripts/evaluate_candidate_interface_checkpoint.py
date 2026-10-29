@@ -27,10 +27,12 @@ from disorderflow.utils.train import recursive_to
 
 
 def sha256(path):
+    # 计算文件整体 SHA256，用于绑定 checkpoint 与数据清单
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def rankdata(values):
+    # 平均秩：并列值取其秩的平均值（Spearman 相关所需）
     values = np.asarray(values, dtype=float)
     order = np.argsort(values, kind="mergesort")
     ranks = np.empty(len(values), dtype=float)
@@ -45,6 +47,7 @@ def rankdata(values):
 
 
 def correlation(left, right, ranked=False):
+    # Pearson 相关；ranked=True 时先转平均秩即 Spearman。样本过少或零方差返回 None
     left = np.asarray(left, dtype=float)
     right = np.asarray(right, dtype=float)
     if ranked:
@@ -55,6 +58,7 @@ def correlation(left, right, ranked=False):
 
 
 def regression_metrics(prediction, target):
+    # 整体回归指标：MAE / RMSE / 两种相关系数 / 预测与目标的标准差
     prediction = np.asarray(prediction, dtype=float)
     target = np.asarray(target, dtype=float)
     return {
@@ -68,6 +72,7 @@ def regression_metrics(prediction, target):
 
 
 def grouped_metrics(records, prediction_key, target_key, noise_key=None):
+    """按骨架分组评估组内排序能力：组内 Spearman 与成对方向准确率。"""
     groups = defaultdict(list)
     for record in records:
         groups[record["scaffold_id"]].append(record)
@@ -87,6 +92,7 @@ def grouped_metrics(records, prediction_key, target_key, noise_key=None):
         for left in range(len(group)):
             for right in range(left + 1, len(group)):
                 target_delta = target[left] - target[right]
+                # 噪声大于目标差异的对视为不可判别，跳过不计入准确率
                 noise = np.hypot(
                     float(group[left].get(noise_key, 0.0)),
                     float(group[right].get(noise_key, 0.0)),
@@ -109,6 +115,7 @@ def grouped_metrics(records, prediction_key, target_key, noise_key=None):
 
 
 def pose_stability(records, prediction_key, target_key, noise_key=None):
+    # 检验同一 construct 在不同实验条件下的预测稳定性（样本标准差 ddof=1）
     constructs = defaultdict(list)
     for record in records:
         constructs[record["construct_id"]].append(record)
@@ -129,6 +136,7 @@ def pose_stability(records, prediction_key, target_key, noise_key=None):
 
 
 def aggregate_conditions(records):
+    # 将同一 construct 的多条条件记录按各指标取均值，聚合成实体级记录
     constructs = defaultdict(list)
     for record in records:
         constructs[record["construct_id"]].append(record)
@@ -151,6 +159,7 @@ def aggregate_conditions(records):
 
 
 def evaluate_checkpoint(path, loader, device, expected_manifest_sha256=None):
+    """加载单个 checkpoint 并在整个候选接口评估集上推理，产出逐记录预测与多层指标。"""
     checkpoint = torch.load(path, map_location="cpu", weights_only=False)
     configured_manifest_sha256 = checkpoint.get("config", {}).get(
         "lineage", {}).get("dataset_manifest_sha256")
@@ -172,7 +181,7 @@ def evaluate_checkpoint(path, loader, device, expected_manifest_sha256=None):
                 remove_sequence=model.cfg.get('train_sequence', True),
             )
             batch["pair_feat"] = pair_feat
-            scores = model.bfn.score_fixed(batch, fixed_t=0.5)
+            scores = model.bfn.score_fixed(batch, fixed_t=0.5)  # 固定扩散中间时刻 t=0.5 评分
             candidate = batch["generate_flag"].bool() & batch["mask"].bool()
             antigen = batch["mask_antigen"].bool() & batch["mask"].bool()
             pae_antigen = batch.get(
@@ -184,7 +193,7 @@ def evaluate_checkpoint(path, loader, device, expected_manifest_sha256=None):
                 normalized = bool(batch["af2_pae_normalized"][index].item())
                 target_pae = batch["af2_pae_matrix"][index]
                 if not normalized:
-                    target_pae = target_pae / 31.0
+                    target_pae = target_pae / 31.0  # 未归一化的 PAE 矩阵按 AF2 上限 31 归一化
                 records.append({
                     "prediction_id": batch["pdb_id"][index],
                     "construct_id": batch["construct_id"][index],
@@ -253,6 +262,7 @@ def evaluate_checkpoint(path, loader, device, expected_manifest_sha256=None):
 
 
 def main():
+    # 主流程：定位 checkpoint -> 校验数据清单血缘 -> 整组评估 -> 写 JSON 并打印摘要
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("checkpoint_dir")
     parser.add_argument(
@@ -288,6 +298,7 @@ def main():
     expected_lmdb_sha256 = manifest.get("summary", {}).get(
         split_name, {}).get("lmdb_records_sha256")
     checkpoint_heads = {
+        # 探测各 checkpoint 的置信头类型，v2/v3 头需额外校验 LMDB 与清单一致
         torch.load(path, map_location="cpu", weights_only=False)
         .get("config", {}).get("model", {}).get("confidence_head_kind")
         for path in checkpoints

@@ -1,6 +1,9 @@
 import os
 #!/usr/bin/env python3
 """V10 P1: HDOCK design candidate docking (quick: 5+5 designs + baselines)."""
+# 角色：V10 计划 P1 快速验证——用 V19 检查点在 4HIX 上采样 5+5 条重/轻 CDR 设计，
+# 连同 native 与基线一起交给 HDOCK 对接打分，快速检验设计候选的对接可行性。
+# 临时改写 app_config.yaml 的检查点路径并在加载后立即还原（脚本级快照恢复）。
 import sys, os, pickle, time, json, subprocess, shutil, random
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import numpy as np
@@ -38,6 +41,8 @@ app['models']['bfn']['checkpoint'] = orig_ckpt
 yaml.dump(app, open('app_config.yaml', 'w', encoding='utf-8'))
 
 # Parse 4HIX
+# max_resseq 113/106：仅取 4HIX 重/轻链的可变区残基（VH 至 ~113、VL 至 ~106），
+# 丢弃恒定区以聚焦 CDR 设计区域。
 parser = PDBParser(QUIET=True)
 s = parser.get_structure('4HIX', AB)[0]
 hd, hm = parsers.parse_biopython_structure(s['H'], max_resseq=113)

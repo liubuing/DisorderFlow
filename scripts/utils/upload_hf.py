@@ -8,14 +8,18 @@ Usage:
 import sys, os, json, time
 from pathlib import Path
 
+# Windows 控制台默认非 UTF-8，强制包装 stdout 以便打印中文与 emoji。
 if sys.platform == 'win32':
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
+# HF 访问令牌从环境变量读取；默认仓库存放 BFN 置信度数据集。
 PROJECT_DIR = Path(__file__).parent.parent
 TOKEN = os.environ.get("HF_TOKEN", "")
 DEFAULT_REPO = "liubuing/bfn-confidence-general-proteins"
 
+# 三个版本的 README 模板（YAML frontmatter + 数据说明），
+# {n_train}/{n_val} 占位符在运行时用 dataset_summary.json 填充。
 README_V1 = """---
 license: mit
 language: en
@@ -110,6 +114,7 @@ Each LMDB entry: `pdb_id`, `sequence`, `batch`, `af2_plddt`, `af2_iptm`, `af2_pa
 
 
 def upload_files(api, src_dir, files_to_upload, repo_id, repo_type="dataset"):
+    # 逐文件上传；缺失文件跳过、失败只打印不中断（便于手动重传补齐）。
     for rel_path in files_to_upload:
         local_path = os.path.join(src_dir, rel_path)
         if not os.path.exists(local_path):
@@ -156,11 +161,13 @@ def upload_dataset(dataset_dir, repo_id, readme_template=None, private=False):
     print(f"Target: {repo_id}")
 
     # Login
+    # 登录并确认账号身份。
     huggingface_hub.login(token=TOKEN)
     user = huggingface_hub.whoami()
     print(f"Logged in as: {user['name']}")
 
     # Create repo
+    # 仓库不存在则创建（默认私有，--public 可改公开）。
     try:
         url = huggingface_hub.create_repo(
             repo_id, repo_type="dataset", private=private, exist_ok=True, token=TOKEN)
@@ -169,6 +176,7 @@ def upload_dataset(dataset_dir, repo_id, readme_template=None, private=False):
         print(f"create_repo error: {e}")
 
     # Upload files
+    # 固定上传清单：summary 元数据 + 训练/验证两个 LMDB 的 data/lock 文件。
     api = huggingface_hub.HfApi(token=TOKEN)
     files_to_upload = [
         "dataset_summary.json",
@@ -180,6 +188,7 @@ def upload_dataset(dataset_dir, repo_id, readme_template=None, private=False):
     upload_files(api, str(src), files_to_upload, repo_id)
 
     # Upload README
+    # 用对应版本模板渲染 README 后上传（默认 V1 模板）。
     print("  Uploading README.md...", end=" ", flush=True)
     template = readme_template or README_V1
     readme_content = template.format(n_train=summary['n_train'], n_val=summary['n_val'])
@@ -197,6 +206,7 @@ def upload_dataset(dataset_dir, repo_id, readme_template=None, private=False):
 
 def main():
     import argparse
+    # 两种用法：--version 走预配置路径；或显式给 --dataset_dir + --repo_id。
     p = argparse.ArgumentParser(description='Upload confidence dataset to HuggingFace')
     p.add_argument('--dataset_dir', help='Path to dataset directory')
     p.add_argument('--repo_id', help='HuggingFace repo ID')

@@ -64,6 +64,8 @@ def compute_off_target_scores(
         return {}
 
     scores: Dict[str, float] = {}
+    # 打分失败的设计给 0.0（视为不结合脱靶）：宁可通过也不误杀，
+    # 采用硬阈值拒绝策略的调用方会把 0.0 当作"通过"
     for i, d in enumerate(designs):
         ab_seq = d.get("full_ab_seq") or d.get("sequence", "")
         if not ab_seq:
@@ -135,6 +137,7 @@ def batch_off_target_filter(
 
     Returns only designs whose off_target_iptm <= off_target_iptm_max.
     """
+    # 负设计（negative design）：脱靶 ipTM 高于阈值（默认 0.3）的设计被硬性剔除
     scores = compute_off_target_scores(designs, **kwargs)
     kept = []
     for d in designs:

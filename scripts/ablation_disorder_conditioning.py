@@ -30,6 +30,8 @@ from pathlib import Path
 
 from disorderflow.utils.protein.constants import ressymb_to_resindex
 
+# 20 种标准氨基酸的单字母表：按 disorderflow 常量表中残基索引（0-19）排序生成，
+# 用于把 argmax 得到的残基索引还原为可读序列字符串；index >= 20 的非常规残基被排除。
 AA_LETTERS = ''.join(
     residue for residue, index in sorted(ressymb_to_resindex.items(), key=lambda item: item[1])
     if index < 20)
@@ -47,6 +49,9 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def check_disorder_proj_nonzero(model):
     """Verify that disorder_proj has learned non-zero weights."""
+    # 阈值 1e-8：权重与偏置的 L2 范数低于该量级即视为"仍是零初始化"，
+    # 意味着 disorder 条件化从未被训练，ON/OFF 两臂在构造上必然完全等价，
+    # 这是本消融实验成立的关键前提。
     if not hasattr(model.bfn.receiver, 'disorder_proj'):
         return False, "disorder_proj not found in receiver"
     proj = model.bfn.receiver.disorder_proj
@@ -82,6 +87,8 @@ def compute_cdr_metrics(seq_logits, mask_gen):
     top_aa_pct = probs.max(dim=-1)[0].mean().item()
 
     # Has 6-mer repeat (degeneracy check)
+    # 退化（degeneracy）检查：若 argmax 序列中存在相邻且完全相同的两个 6-mer
+    # （seq[i:i+6] == seq[i+6:i+12]），通常意味着生成坍缩为重复片段，是低质量输出标志。
     seq_str = ''.join(AA_LETTERS[i] for i in argmax_seq.cpu().tolist())
     has_6mer = any(seq_str[i:i+6] == seq_str[i+6:i+12]
                    for i in range(max(0, len(seq_str) - 12)))
@@ -101,6 +108,11 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
 
     Returns: list of generated sequences (one per seed), metrics dict.
     """
+    # 参数说明：
+    #   disorder_profile: (L,) 抗原表位的柔度/disorder 轮廓，作为接收器条件输入；
+    #   conditioning_on:  轴 1 —— 是否注入 epitope_disorder_profile 条件；
+    #   guided_on:        轴 2 —— 是否用柔度图缩放采样噪声（disorder_guided）；
+    #   guided_strength:  引导强度，默认 0.5（中等档位，与训练/主实验保持一致）。
     from disorderflow.modules.common.geometry import construct_3d_basis
 
     bfn = model.bfn
@@ -125,6 +137,8 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
     }
     if guided_on and conditioning_on and disorder_profile is not None:
         # Use external pliability map: only for antigen residues
+        # 约定：merge_chains 之后抗原链的编号最大（ag_nb = chain_nb 最大值），
+        # 柔度值按抗原残基顺序截断拷贝（长度不足时取前 n_copy 个）。
         pliability = torch.zeros(1, L, device=DEVICE)
         ag_nb = int(cn.max().item()) if cn.numel() > 0 else max(set(cn.flatten().tolist()))
         ag_mask_bool = (cn[0] == ag_nb)
@@ -143,6 +157,8 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
         print(f"    [DEBUG] batch aa shape: {batch['aa'].shape}", flush=True)
         run_paired_generation._debug_printed = True
 
+    # 对每个样本使用同一组固定种子（0..seeds-1），保证 ON/OFF 各臂在相同随机
+    # 噪声下配对生成，从而使 Hamming 差异可归因于条件化开关而非采样随机性。
     for seed in seeds:
         torch.manual_seed(seed)
         np.random.seed(seed)
@@ -201,6 +217,8 @@ def run_paired_generation(model, batch, disorder_profile, seeds,
 
 def hamming_fraction(seq_a, seq_b):
     """Fraction of positions that differ between two sequences."""
+    # 任一序列为 None（该 seed 下生成失败）时返回 None，不参与统计；
+    # 长度不一致时按较短序列截断比较（同一 batch 理论上长度相同，此为鲁棒性处理）。
     if seq_a is None or seq_b is None:
         return None
     min_len = min(len(seq_a), len(seq_b))
@@ -221,6 +239,8 @@ def run_ablation(args):
     print(f"  Samples: {args.n_samples}, Seeds per sample: {args.seeds}")
     print()
 
+    # 加载模型：通过临时改写 app_config.yaml 中的 checkpoint 字段指向消融检查点，
+    # 载入后立即恢复原 checkpoint 路径并回写配置，避免污染全局配置文件。
     # Load model
     import bfn_loader
     import yaml
@@ -261,6 +281,8 @@ def run_ablation(args):
     all_ids = pickle.load(open(ids_path, 'rb'))
 
     # Categorize by disorder
+    # 按 antigen 平均 disorder 值把样本分为高柔度（mean > 0.3）与低柔度（mean < 0.2）
+    # 两组，阈值用于拉开两组的条件信号强度，保证 Spearman 相关有足够的动态范围。
     high_flex = []  # max > 0.4
     low_flex = []   # max < 0.15
     for sid in all_ids:
@@ -275,6 +297,7 @@ def run_ablation(args):
     print(f"\n  Available: {len(high_flex)} high-flex, {len(low_flex)} low-flex antigens")
 
     # Sample balanced set
+    # 平衡采样：高/低柔度各取一半；固定种子 42 使每次运行挑选出同一批样本，结果可复现。
     n_each = min(args.n_samples // 2, len(high_flex), len(low_flex))
     np.random.seed(42)
     selected_high = [high_flex[i] for i in np.random.choice(len(high_flex), n_each, replace=False)]
@@ -283,6 +306,8 @@ def run_ablation(args):
                [(sid, arr, 'low') for sid, arr in selected_low]
     print(f"  Selected: {n_each} high + {n_each} low = {len(selected)} total")
 
+    # 2x2 析因消融设计：分别开关接收器条件化（cond，轴 1）与噪声引导
+    # （guided，轴 2）；cond_OFF_guided_OFF 作为基线，其他臂与其做配对 Hamming 比较。
     # Run 4-arm ablation
     arms = [
         ('cond_OFF_guided_OFF', False, False),
@@ -302,6 +327,9 @@ def run_ablation(args):
         print(f"\n  [{sample_idx+1}/{len(selected)}] {sid} ({flex_level}-flex, "
               f"max={disorder_arr.max():.3f})")
 
+        # 构建采样 batch：走常规 transform 管线（mask_multiple_cdrs → merge_chains →
+        # patch_around_anchor），再把 antigen 的 disorder 值填入与抗原残基对应的位置；
+        # 抗原链约定为 merge_chains 后编号最大的链。
         # Load batch
         with env.begin() as txn:
             raw = txn.get(sid.encode())
@@ -415,6 +443,8 @@ def run_ablation(args):
         else:
             print(f"    {arm_name:25s}: insufficient data")
 
+    # 判定阈值（经验约定）：Hamming < 0.01 且熵差绝对值 < 0.01 → 条件化无效果
+    # （大概率 disorder_proj 未训练）；Hamming > 0.05 且熵差 > 0.02 → 条件化确实生效。
     # Verdict
     print(f"\n  {'─' * 50}")
     on_entropy = results['cond_ON_guided_ON']['entropy']
@@ -449,6 +479,8 @@ def run_ablation(args):
 
 
 def main():
+    # 命令行入口：默认使用 disorder 头重训后的检查点 logs/disorder_head_retrain.pt，
+    # 每个样本 5 个种子、guided 强度 0.5；结果 JSON 写入 calibration_artifacts/。
     parser = argparse.ArgumentParser(description='Disorder conditioning ablation')
     parser.add_argument('--checkpoint', type=str,
                         default='logs/disorder_head_retrain.pt')

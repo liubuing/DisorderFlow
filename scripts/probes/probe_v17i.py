@@ -2,6 +2,11 @@ import os
 #!/usr/bin/env python3
 """Probe for V17i Pair Routing checkpoints. Loads model from YAML config
 (not checkpoint config) so pair_routing=True is properly applied."""
+# V17i（pair routing）检查点探针：直接从 YAML 配置（而非检查点内嵌配置）
+# 构建模型，确保 pair_routing=True 正确生效。对少量 SAbDab phase3 复合物，
+# 分别在 complex（抗原链可见）与 fixbb（抗原不可见）两种模式下用同种子
+# 生成 CDR，统计对真实 CDR 的序列恢复率差（Δ 百分点）。
+# 判读阈值：Δ>5pp 视为 BREAKTHROUGH，>1pp 为边际改进，>0 为轻微，≤0 为负。
 import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import torch, yaml, numpy as np, random, lmdb, pickle, warnings
 warnings.filterwarnings('ignore')
@@ -11,7 +16,7 @@ from disorderflow.modules.bfn.core import AntibodyBFN_Core
 
 CKPT = sys.argv[1] if len(sys.argv) > 1 else 'logs/v17c_zeroinit/bfn_v17c_zeroinit_xpu_2026_06_26__23_22_18/checkpoints/2200.pt'
 CFG = 'configs/train/bfn_v17i_pairrouting_xpu.yml'
-N_COMPLEX, N_SAMPLES = 3, 3
+N_COMPLEX, N_SAMPLES = 3, 3  # 诊断规模：最多 3 个复合物 × 每模式 3 条采样
 
 cfg = EasyDict(yaml.safe_load(open(CFG, encoding='utf-8')))
 m = cfg.model
@@ -53,6 +58,7 @@ for sid in ids:
     region_spec = 'H:' + ','.join(parts)
     lengths = [e_ - s for s, e_, _ in cdrs.values()]
     seed_all(42)
+    # 同种子成对运行：complex 与 fixbb 唯一差异是抗原上下文链
     des_c = run_bfn_design(pdb_c, region_spec, N_SAMPLES, stochastic=True, context_chains=['P'], device='cpu', sort_by=None)
     seed_all(42)
     des_f = run_bfn_design(pdb_f, region_spec, N_SAMPLES, stochastic=True, context_chains=[], device='cpu', sort_by=None)

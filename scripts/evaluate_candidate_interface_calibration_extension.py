@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Evaluate calibration-extension target pair evidence (no model required)."""
 
+# 本脚本评估"候选界面多支架校准扩展"的靶标配对证据（不运行任何模型）：
+# 从校准 LMDB 读取 AF2 教师指标（pLDDT/ipTM/界面 PAE），按构建体聚合重复，
+# 在同一支架家族内做实体两两比较；仅当 |靶标差| 严格大于两实体 SEM 的
+# 联合噪声（欧氏合成）时记为一个"可靠对"。门槛：可靠对 ≥30、贡献支架 ≥3、
+# 单一支架占比 ≤0.50（防止证据被单一支架垄断）。输入哈希须与清单一致。
+
 from __future__ import annotations
 
 import argparse
@@ -22,15 +28,19 @@ from disorderflow.utils.data import CompleteGroupBatchSampler, PaddingCollate
 from disorderflow.utils.data import lmdb_records_sha256
 
 OUTPUTS = ("plddt", "iptm", "pae")
+# 可靠对证据门槛：最少对数、最少贡献支架数、单支架最大占比
 MIN_RELIABLE_PAIRS = 30
 MIN_PAIR_SCAFFOLDS = 3
 MAX_SCAFFOLD_PAIR_FRACTION = 0.50
 
 
 def sha256(path: Path) -> str:
+    # 计算文件 SHA-256，用于清单溯源
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 逐批次抽取靶标教师指标：候选区/抗原 PAE 区由掩码确定；
+# 未归一化的 PAE 以 31.0 埃尺度归一（AFDB PAE 的常见上限）
 def extract_targets(loader) -> list[dict]:
     records = []
     for batch in loader:
@@ -58,6 +68,7 @@ def extract_targets(loader) -> list[dict]:
     return records
 
 
+# 同一构建体的重复测量取均值，得到实体级靶标值与噪声（SEM）
 def aggregate_conditions(records: list[dict]) -> list[dict]:
     groups = defaultdict(list)
     for row in records:
@@ -79,6 +90,8 @@ def aggregate_conditions(records: list[dict]) -> list[dict]:
     return output
 
 
+# 两两配对判据：|靶标差| 严格大于两侧噪声的欧氏合成才算"可分辨对"，
+# 差异落在噪声内的对不计入（避免把噪声当信号）
 def pair_outcomes(rows: list[dict], name: str) -> list[float]:
     outcomes = []
     for left in range(len(rows)):
@@ -92,6 +105,7 @@ def pair_outcomes(rows: list[dict], name: str) -> list[float]:
     return outcomes
 
 
+# 按支架家族分组统计可靠对：总对数、贡献支架数、单支架最大占比
 def pair_statistics(records: list[dict], name: str) -> dict:
     groups = defaultdict(list)
     for row in records:
@@ -118,6 +132,8 @@ def pair_statistics(records: list[dict], name: str) -> dict:
 
 
 def main():
+    # 主流程：校验 LMDB 记录哈希与清单一致 → 加载数据并抽取靶标 →
+    # 聚合 → 对三个指标分别统计配对证据并逐项判门槛 → 写 JSON 报告
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--dataset",

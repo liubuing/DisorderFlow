@@ -1,3 +1,10 @@
+"""集成固定候选打分测试：验证每个精确候选必须在每个构象上独立打分。
+
+守护 EnsembleScorer.score_designs_bfn 的构象集成语义：
+候选 x 构象必须完整笛卡尔积式调用打分器（不可跳过或复用单一构象）、
+state_compatibility 取跨构象均值——
+防止集成评分退化为单构象打分而丢失状态兼容性信息。
+"""
 import sys
 from pathlib import Path
 
@@ -7,6 +14,8 @@ import torch
 from modules.ensemble_scorer import EnsembleScorer
 
 
+# 集成打分契约：两个候选 × 两个构象必须产生 4 次独立打分调用，
+# 聚合值为跨构象均值——防止实现偷懒只测第一个构象或丢弃后续候选。
 def test_ensemble_scorer_scores_each_exact_candidate_on_every_conformer(
         monkeypatch, tmp_path):
     conformers = [np.zeros((2, 3)), np.ones((2, 3))]

@@ -2,6 +2,11 @@
 
 This writes a proposed assay panel; it does NOT execute wet-lab measurements.
 """
+# 本脚本基于序列信息（绝不使用亲和力测试值）设计"AAYL 修复"测量面板提案：
+# 对每个家族当前的三重突变（triple）构造，枚举其缺失的低阶对照——
+# 亲本锚点、精确单突变与双突变锚点——并按"影响的 triple 数"排序优先级。
+# 若候选序列在已排除历史数据中存在，则标记为需先审计旧来源读数；
+# 输出仅为建议的湿实验构造清单，状态固定为"未执行测量"。
 import json
 import sys
 from collections import defaultdict
@@ -14,6 +19,12 @@ from scripts.diagnose_aayl_failure_v3 import OUT,base,freeze
 
 
 def build(d,rows,changes):
+    # 面板构建主流程：对每个家族，
+    # 1) parent=当前重链序列，train=已有 ≤2 突变的观测，triples=3 突变观测；
+    # 2) 对每个 triple 枚举空集/单/双突变子集，生成缺失的对照序列（needs）；
+    # 3) 逐构造记录角色（parent/single/pair anchor）、H3 序列、突变明细、
+    #    受影响 triple 列表、历史来源读数与建议动作；
+    # 4) 家族内按 (突变数, 受影响数降序, 序列) 排序并给出优先级排名。
     panel=[]; summary=[]
     for family,s in d['structures'].items():
         parent=s['sequences'][s['heavy_chain']]

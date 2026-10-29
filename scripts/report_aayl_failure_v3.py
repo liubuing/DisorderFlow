@@ -18,6 +18,8 @@ def main():
     splits=json.loads((OUT/'splits.json').read_text())['splits']
     panel=json.loads((OUT/'measurement_repair_panel.json').read_text())
     d,rows,changes=base.load()
+    # 校验阶段: 逐条预测断言其索引落在对应 split 的 test 内(不得泄漏进 train),
+    # real 对照的 target 必须与原始端点一致; 预测按 (族,任务,表示,策略,对照,修正数) 分组
     grouped=defaultdict(list); folded=defaultdict(list)
     for p in predictions:
         key=tuple(p[k] for k in ['family','task','representation','policy','control'])+(len(changes[p['index']]),)
@@ -26,12 +28,15 @@ def main():
         assert p['index'] in s['test'] and p['index'] not in s['train']
         if p['control']=='real': assert p['target']==rows[p['index']]['endpoint']
     for r in report['metrics']:
+        # 指标复算校验: 对每个指标单元用保存的预测重算, 与报告值逐项对账
         key=tuple(r[k] for k in ['family','task','representation','policy','control','degree'])
         ps=grouped[key]
         assert len(ps)==len({p['index'] for p in ps})
         m=base.metrics([p['target'] for p in ps],[p['prediction'] for p in ps])
         for k,v in m.items(): assert r[k] is None if v is None else np.isclose(r[k],v)
     foldmetrics=[]
+    # 逐折诊断(仅同分布任务): OOF 拼接受各折校准差异影响, 这里补折内/折均值口径,
+    # 属事后敏感性分析, 不触发任何重训练或选模
     for key,ps in folded.items():
         if key[1]=='ood': continue
         foldmetrics.append(dict(zip(['family','task','representation','policy','control','degree','fold'],key)) |
@@ -48,6 +53,8 @@ def main():
         'reason':'OOF models can have different intercepts/calibration; inspect within-fold, within-degree ranks too; do not select the nicer aggregation',
         'folds':foldmetrics,'summary':foldmeans})
     previous=json.loads((ROOT/'results/aayl_low_order_v2/report.json').read_text())['primary']
+    # 决策判定: 对两种表示, 与上一轮 position_ridge 基线逐族比较修正增量;
+    # 通过门槛 = 全部族的 rho_gain>0 且 recall_gain>=0(两种表示独立判定)
     decisions=[]
     for representation in ['position','esm']:
         cells=[]
@@ -62,6 +69,7 @@ def main():
         'next_action':'source lookup and paired single/double measurement coverage; obtain independent new systems before method claims'})
     freeze(OUT/'verification.json',{'candidate_predictions_verified':len(predictions),'metric_cells_recomputed':len(report['metrics']),
         'model_searches':len(fits),'artifacts':{f:base.digest(OUT/f) for f in ['protocol.json','splits.json','audit.json','fits.json','predictions.json','report.json','foldwise_diagnostics.json','measurement_repair_panel.json','decision.json']}})
+    # 报告正文: 中文叙述逐行拼接 markdown, 固定章节含证据分级表、消融全表与补测清单
     lines=['# AAYL 排序失效：漏洞审计、修正与验证','','日期：2026-09-16。顺序开发诊断，数据已暴露；不能当作独立验证。','',
       '## 结论','','没有发现原始序列/端点对应、H3 编码或抽查的 ESM 行排列错误。确认的可修正问题是正则化搜索过窄；扩大搜索后两个谱系的 ESM 均方误差均下降。排序目标与选模目标、随机验证与跨阶任务不一致也是设计风险，但对照实测表明：改用排序选模、模拟跨阶验证不能保证恢复排序。','',
       '现有数据对三突变的具体突变对几乎无训练覆盖；同分布留出也仅见弱且不一致的信号。不能把失败归结为一个已经证实的生物学原因，更不能保证换模型便可修复。已执行计算修正与对照，实验补测尚未执行。','',

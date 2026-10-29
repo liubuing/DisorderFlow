@@ -14,13 +14,16 @@ sys.path.insert(0,"/mnt/d/biological/DisorderFlow/modules")
 import numpy as np
 from af2_jax_runner import run_multimer_prediction
 from Bio.PDB import PDBParser
+# 三字母 -> 单字母氨基酸映射, 供支架序列回读使用
 AA3={"ALA":"A","ARG":"R","ASN":"N","ASP":"D","CYS":"C","GLU":"E","GLN":"Q","GLY":"G","HIS":"H","ILE":"I","LEU":"L","LYS":"K","MET":"M","PHE":"F","PRO":"P","SER":"S","THR":"T","TRP":"W","TYR":"Y","VAL":"V"}
 
 # Load A variants
+# 读取 Pillar A 变体库(内部已按评分排序), 验证流程只取少量代表条目
 with open("idp_design_results/pillar_a_variants_20260701_005208.json") as f:
     variants=json.load(f)
 
 # Top 5 variants + 2 native seeds
+# 用列表切片各取 3 条: 前 3 条来自 4HIX 支架, 37:40 来自 5CSZ 支架(靠后的高分段)
 designs=[]
 for v in variants[:3]:  # top 3 from 4HIX
     designs.append({"sequence":v["sequence"],"label":f"A_4HIX_var","epitope":"variant"})
@@ -28,11 +31,13 @@ for v in variants[37:40]:  # top 3 from 5CSZ
     designs.append({"sequence":v["sequence"],"label":f"A_5CSZ_var","epitope":"variant"})
 
 # Native seeds
+# 阳性对照: 4HIX / 5CSZ 的天然 CDR-H 序列及其原始支架
 NATIVES=[
     {"sequence":"GFTFSNYRSGGGYCVRYDHY","label":"4HIX_native","epitope":"4HIX_native","scaffold":"4HIX","cdr_spec":"A:26-33,A:51-58,A:97-113","scaffold_chain":"A","scaffold_path":"data/anti_abeta_refs/4HIX.pdb"},
     {"sequence":"GFTFSSYAISGSGGSTYYADSVKG","label":"5CSZ_native","epitope":"5CSZ_native","scaffold":"5CSZ","cdr_spec":"A:26-33,A:51-58,A:97-113","scaffold_chain":"A","scaffold_path":"data/anti_abeta_refs/5CSZ.pdb"},
 ]
 # Add scrambled versions as negative controls
+# 阴性对照: 氨基酸组成不变、顺序打乱的序列, 用于标定 ESM-IF 分数的下界
 for nat in NATIVES[:]:
     s=list(nat["sequence"]);random.shuffle(s)
     NATIVES.append({**nat,"sequence":"".join(s),"label":nat["label"]+"_scram","epitope":nat["epitope"]+"_scram"})
@@ -42,6 +47,7 @@ print(f"B2 validate Pillar A: {len(all_d)} designs (2 native + 2 scram + 6 varia
 print("="*60)
 
 # Step 1: AF2 fold each
+# 先折叠后评分: 将(嫁接后的)全序列交给 AF2 单链折叠, 再取折叠出的 CDR 坐标做 ESM-IF 评分
 print("Step 1: AF2 single-chain folding...")
 for i,d in enumerate(all_d):
     sp=d.get("scaffold_path","") or "data/misfolding_targets/3STB.pdb"
@@ -49,8 +55,10 @@ for i,d in enumerate(all_d):
         s=PDBParser(QUIET=True).get_structure("s",sp)
         ch=d.get("scaffold_chain","A")
         cs=d.get("cdr_spec","A:26-33,A:51-58,A:97-113")
+        # 区段编号为 1-based 且含端点, 换算为 0-based 后按 [st-1, en) 逐位替换
         cr=[(int(p.split(":")[1].split("-")[0]),int(p.split(":")[1].split("-")[1]))for p in cs.split(",")]
         scaff_seq=[AA3.get(res.resname.strip(),"X")for res in s[0][ch]if"CA"in res]
+        # 嫁接: 在支架全序列上用设计的 CDR 序列按区段顺序覆写(仅序列层面, 坐标由 AF2 重新预测)
         full=list(scaff_seq);cdr=d["sequence"];pos=0
         for st,en in cr:
             for j in range(st-1,en):
@@ -66,6 +74,7 @@ for i,d in enumerate(all_d):
     if"final_atom_positions"not in res:print("no coords");continue
     pos=np.array(res["final_atom_positions"])
     # Extract CDR coords
+    # final_atom_positions 形状为 (残基数, 37, 3); 每残基取原子 0=N, 1=CA, 2=C 作为骨架表示
     cs2=d.get("cdr_spec","A:26-33,A:51-58,A:97-113")
     cr2=[(int(p.split(":")[1].split("-")[0]),int(p.split(":")[1].split("-")[1]))for p in cs2.split(",")]
     crd=[];cdr_seq=[]
@@ -78,6 +87,7 @@ for i,d in enumerate(all_d):
     print(f"plddt={d['v4_plddt']:.3f} n={len(crd)} ({time.time()-t1:.0f}s)")
 
 # Step 2: ESM-IF scoring
+# 对 AF2 折叠出的 CDR 真实坐标做逆折叠评分; 坐标少于 3 个残基的设计(折叠失败/过短)跳过
 print("\nStep 2: ESM-IF scoring on folded CDR coordinates...")
 import esm,esm.inverse_folding.util as util
 model,alphabet=esm.pretrained.esm_if1_gvp4_t16_142M_UR50();model.eval()
@@ -93,6 +103,7 @@ for d in all_d:
     print(f"  {d['label']:25s} LL={ll_coord:.4f} plddt={d.get('v4_plddt',0):.3f}")
 
 # Report
+# 关键判定: native 分数是否同时高于 scram(方法有效)与 variant(结合信号 preserved 的间接证据)
 nat=[d["b2_ll"] for d in results if "native" in d.get("epitope","") and "scram" not in d.get("epitope","")]
 scr=[d["b2_ll"] for d in results if "scram" in d.get("epitope","")]
 var=[d["b2_ll"] for d in results if "variant" in d.get("epitope","")]

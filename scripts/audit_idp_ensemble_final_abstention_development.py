@@ -13,6 +13,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def audit(config_path, source_path, loo_path, output):
+    # 对已曝光的开发数据应用最终弃权（abstention）规则。
+    # 参数:
+    #   config_path: 冻结确认配置（YAML），此处仅用于登记来源，不再搜索阈值。
+    #   source_path: 来源面板敏感性分析结果（matched_bucket_contrasts）。
+    #   loo_path: leave-one-pose-out 稳定性结果（逐组件的 matched_bucket_stability）。
+    #   output: 输出 JSON 路径；已存在则拒绝写入（fail-closed）。
+    # 返回: payload 字典——逐对 (component_id, substitution_bucket) 的方向一致性
+    #   与最终是否被接纳。
+    # 规则：只有当来源面板方向一致 且 leave-one-pose-out 在所有省略下方向
+    # 都稳定时才接纳；否则弃权并记录原因。该脚本是对已曝光开发数据的
+    # 规则审计，不得外推为 IDP、结合或确认性结论（见 claim_boundary）。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite abstention audit: {output}")
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
@@ -69,6 +80,7 @@ def audit(config_path, source_path, loo_path, output):
 
 
 def main():
+    # 命令行入口：默认路径全部指向冻结的 v3 稳健性产物，结果落盘并打印摘要。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

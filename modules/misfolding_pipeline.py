@@ -86,6 +86,7 @@ class MisfoldingDesignPipeline:
         formatted = tdh.format_epitope_table(epitope_data, top_n)
 
         # Build suggested region from top-N surface residues
+        # 只取相对溶剂可及面 > 0.15 的残基：埋在内部的残基不可能成为表位
         surface = [d for d in epitope_data if d.get('rel_sasa', 0) > 0.15]
         top_resseqs = [d['resseq'] for d in surface[:top_n]]
         suggested_region = tdh.residues_to_region_spec(chain_id, top_resseqs)
@@ -239,6 +240,7 @@ class MisfoldingDesignPipeline:
             f.write(fasta_content)
 
         # Build colabfold command
+        # 用 shell 字符串拼命令并加引号，兼容含空格的可执行文件路径
         cmd = (
             f'"{colabfold_exe}" '
             f'--num-models 1 '
@@ -391,6 +393,8 @@ class MisfoldingDesignPipeline:
         _progress(3, 6, 'Computing design constraints...')
         # For misfolding targets, we design the scaffold CDRs
         # If scaffold has CDR definitions, use those
+        # 设计区域固定为纳米抗体的 CDR（单链 A），来自知识库的 Chothia 区间定义；
+        # 无定义时回退到通用 VHH CDR 区间
         design_region = None
         if scaffold_key:
             scf = mkb.get_scaffold(scaffold_key)
@@ -410,6 +414,7 @@ class MisfoldingDesignPipeline:
             ab_pdb = target.get('pdb_path')  # target structure — for template
             # Actually for fixed-backbone design we need antibody structure
             # Use scaffold PDB if available
+            # 固定骨架设计需要的是抗体结构而非靶标结构，优先用骨架 PDB
             if scaffold_key:
                 scaffold_info = self.generate_antibody_template(scaffold_key)
                 ab_pdb = scaffold_info.get('pdb_path')
@@ -468,6 +473,7 @@ class MisfoldingDesignPipeline:
             pipeline_result['af2_results'] = af2_results
 
             # AF2 cascade re-ranking
+            # 第二轮级联：以 AF2 实测置信度（而非 BFN 自评估）重新过滤与排名
             af2_casc_input = []
             for r in af2_results:
                 if r['success']:

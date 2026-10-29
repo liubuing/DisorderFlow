@@ -50,6 +50,7 @@ TARGETS = {
 
 
 class EpitopeSelect(Select):
+    # Bio.PDB 选择器: 只保留指定链上的表位残基（用于导出表位构象子集）。
     def __init__(self, chain_id, residue_ids):
         self.chain_id = chain_id
         self.residue_ids = set(residue_ids)
@@ -62,6 +63,8 @@ class EpitopeSelect(Select):
 
 
 class ComplexCoreSelect(Select):
+    # Bio.PDB 选择器: 保留完整抗体链 + 肽链上表位核心残基，
+    # 用于裁剪参考复合物（去除多余拷贝/水/辅因子）。
     def __init__(self, antibody_chains, peptide_chain, peptide_residue_ids):
         self.antibody_chains = set(antibody_chains)
         self.peptide_chain = peptide_chain
@@ -91,6 +94,7 @@ def sequence_residues(chain):
 
 
 def kabsch_rmsd(left, right):
+    # Kabsch 叠合后的 CA RMSD（埃）；行列式为负时翻转奇异向量排除反射。
     left = np.asarray(left, dtype=float)
     right = np.asarray(right, dtype=float)
     left_centered = left - left.mean(axis=0)
@@ -105,6 +109,9 @@ def kabsch_rmsd(left, right):
 
 
 def farthest_models(coordinates, count):
+    # 最远点采样（FPS）选构象: 以 medoid（到其他模型平均 RMSD 最小者）
+    # 为起点，每轮加入与已选集最小 RMSD 最大的模型——保证所选表位构象
+    # 之间尽量彼此远离（最大化 NMR 系综的构象覆盖）。
     n = len(coordinates)
     distances = np.zeros((n, n), dtype=float)
     for left in range(n):
@@ -128,6 +135,11 @@ def sha256(path):
 
 
 def prepare_target(name, config, output_root, count):
+    # 为单个靶点准备表位构象系综:
+    #   - 每个源模型中精确查找表位序列（找不到即失败，不做模糊对齐）;
+    #   - FPS 选出 count（默认 5）个构象并导出纯表位 PDB（带哈希与
+    #     最小两两 RMSD 记录）;
+    #   - 参考复合物裁出"抗体 + 表位核心"最小复合物作为设计模板。
     parser = PDBParser(QUIET=True)
     structure = parser.get_structure(name, config["source_pdb"])
     model_rows = []
@@ -202,6 +214,9 @@ def prepare_target(name, config, output_root, count):
 
 
 def main():
+    # 入口: 处理 tau 与 alpha-synuclein 两个靶点并写 manifest。
+    # manifest 显式声明 off-state 语义: 这些结构只是几何/溯源控制，
+    # binding_label 为 not_available，不得当作实验阴性标签。
     args = parse_args()
     output_root = Path(args.out)
     output_root.mkdir(parents=True, exist_ok=True)

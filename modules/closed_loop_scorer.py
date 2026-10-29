@@ -25,6 +25,7 @@ def disorder_to_af2_reliability(disorder: float) -> float:
 
     Sigmoid midpoint at disorder=0.35 (observed RMSF > 1.0Å transition).
     """
+    # 斜率 12 控制过渡陡峭度：sigmoid 中心 0.35，无序度每偏离 0.1 可靠性约变化 3 倍
     return 1.0 / (1.0 + math.exp(12 * (disorder - 0.35)))
 
 
@@ -72,10 +73,12 @@ def calibrate_results_with_disorder(results: List[Dict]) -> List[Dict]:
         bfn_plddt = r.get('plddt', 0) or 0
 
         # Blend AF2 with BFN based on reliability
+        # 凸组合：无序度低（AF2 可靠）时偏信 AF2，无序度高时偏信 BFN 自身置信度
         cal_iptm = (af2_iptm or 0) * reliability + bfn_iptm * (1 - reliability)
         cal_plddt = (af2_plddt or 0) * reliability + bfn_plddt * (1 - reliability)
 
         # Store calibration for reporting
+        # 可靠性分档（HIGH/MEDIUM/LOW）只用于报告展示，不参与计算
         if reliability >= 0.80:
             label = 'HIGH'
         elif reliability >= 0.40:
@@ -200,6 +203,7 @@ class MultiObjectiveRanker:
                     vals.append(v)
 
             if not vals or len(vals) < 2:
+                # 样本不足以构成范围时：有值给满分（该维无判别力），缺失给 0
                 for r in results:
                     r[f'{dim}_norm'] = 1.0 if r.get(dim) is not None else 0.0
                 continue
@@ -322,6 +326,7 @@ class MultiObjectiveRanker:
                     total_w += weight
                 elif key.endswith('_inv'):
                     # Inverse metrics: e.g., ppl_inv → 1/max(ppl, 0.1) normalized
+                    # 倒数类指标（ppl_inv/entropy_inv）直接由原始值取倒数并截断到 [0,1]
                     base = key[:-4]  # remove '_inv'
                     if base in OBJECTIVE_DIMS:
                         raw = r.get(base)
@@ -393,6 +398,8 @@ class MultiObjectiveRanker:
 
         # Dominance counts: S[p] = set of designs dominated by p
         # n[p] = number of designs that dominate p
+        # O(n^2) 两两支配判定（NSGA-II 风格）；epsilon>0 时为 epsilon-支配，
+        # 差异小于 epsilon 视为相等，用于抑制噪声目标上的伪支配
         domination_counts = [0] * n
         dominated_sets: List[Set[int]] = [set() for _ in range(n)]
 
@@ -458,6 +465,8 @@ class MultiObjectiveRanker:
                 results[mi]['crowding_distance'] = 0.0
 
             for d in range(m):
+                # 拥挤距离（NSGA-II）：同前沿内按各维排序，
+                # 边界成员距离为无穷（永远保留），内部成员累加相邻间距
                 sorted_members = sorted(front_members,
                                         key=lambda i: obj_matrix[i][d])
                 obj_range = (obj_matrix[sorted_members[-1]][d] -
@@ -577,6 +586,8 @@ class MultiObjectiveRanker:
         import random
         n_samples = 10000
         # Find bounding box
+        # 高维超体积没有高效精确算法，用在包围盒内均匀采样、统计被前沿覆盖比例来估计；
+        # 固定种子 42 保证同一批结果的可重复性
         max_vals = [max(p[i] for p in points) for i in range(len(dims))]
         hits = 0
         rng = random.Random(42)  # Fixed seed for reproducibility

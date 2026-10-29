@@ -15,6 +15,7 @@ from pathlib import Path
 import lmdb
 
 
+# 同源性排除轴: 轴名 -> (序列字段, MMseqs 最小序列一致性阈值); 覆盖率统一 0.8, cov-mode 0
 AXES = {
     "antigen": ("antigen_sequence", 0.3),
     "vh": ("vh_sequence", 0.5),
@@ -24,19 +25,23 @@ AXES = {
 
 
 def clean_sequence(value):
+    # 只保留大写后的标准 20 种氨基酸字符, 其余(如 X/B/U)一律剔除
     return "".join(char for char in str(value).upper() if char in "ACDEFGHIKLMNPQRSTVWY")
 
 
 def antigen_sequence(row):
+    # 多链抗原在源表中以 "/" 分隔, 拼接为单一抗原序列
     return "".join(clean_sequence(part) for part in row.get("agresolvedseqs", "").split("/"))
 
 
 def pdb_code(value):
+    # 规范 PDB 标识: "pdb_0004hix" 形式截取末 4 位, 其余原样小写
     value = str(value).casefold().strip()
     return value[-4:] if value.startswith("pdb_") else value
 
 
 def load_training_records(lmdb_path):
+    # 按 <lmdb>-ids 索引文件顺序读取全部训练记录
     ids_path = Path(f"{lmdb_path}-ids")
     with ids_path.open("rb") as handle:
         ids = pickle.load(handle)
@@ -64,6 +69,8 @@ def write_fasta(path, records, field, key_field):
 
 
 def mmseqs_hits(mmseqs, query, target, output, threshold, work_dir, threads):
+    # 调用 mmseqs easy-search: 一致性下限 threshold, 序列覆盖率 0.8(cov-mode 0),
+    # 失败时抛出带 stderr 尾部的异常; 输出按查询 ID 分组
     command = [
         mmseqs, "easy-search", str(query), str(target), str(output), str(work_dir),
         "--min-seq-id", str(threshold), "-c", "0.8", "--cov-mode", "0",
@@ -113,6 +120,7 @@ def main():
         rows = list(csv.DictReader(line.decode("utf-8") for line in split_file))
 
     candidates = []
+    # 候选筛选: 指定 split + holo 结构 + 抗原类型含 PROTEIN/PEPTIDE, 且抗原/VH/CDR-H3 序列齐全
     for row in rows:
         agtypes = row.get("agtypes", "").upper()
         if row.get("ab_ag_split") != args.source_split or row.get("holo") != "True":
@@ -139,11 +147,13 @@ def main():
         deduplicated.setdefault(key, record)
     training = list(deduplicated.values())
     training_pdbs = {
+        # 训练库的 PDB 标识集合, 用于 PDB 号级别的精确重叠检查
         pdb_code(record.get("pdb_id", record.get("id", ""))) for record in training
     }
     exact_overlap = {item["instance"] for item in candidates if item["pdb_code"] in training_pdbs}
 
     all_hits = {}
+    # 对四条轴分别做 MMseqs 检索(临时目录内完成, 结果不落盘)
     with tempfile.TemporaryDirectory(prefix="sabdab2_audit_") as tmp:
         tmp_dir = Path(tmp)
         for axis, (field, threshold) in AXES.items():
@@ -159,6 +169,8 @@ def main():
     strict_independent = []
     interface_eligible = []
     audit_rows = []
+    # 两级判定: 四轴+pdb 号全无重叠 => strict_independent(完全独立);
+    # 仅 pdb_id/antigen/cdr_h3 无重叠(vh/vl 允许重叠) => interface_eligible(接口级外部测试)
     for item in candidates:
         instance = item["instance"]
         failed_axes = [axis for axis, hits in all_hits.items() if instance in hits]
@@ -185,6 +197,7 @@ def main():
     wanted = {
         f"splits_final/{item['instance']}.cif": item for item in interface_eligible
     }
+    # 流式遍历 tar 归档, 只抽取接口合格实例对应的 CIF 结构文件
     with tarfile.open(archive, "r|gz") as tar:
         for member in tar:
             item = wanted.get(member.name)
@@ -208,6 +221,7 @@ def main():
         writer.writerows(interface_eligible)
 
     failed_counts = Counter(axis for row in audit_rows for axis in row["failed_axes"])
+    # 审计报告: 阈值口径、各级数量、排除原因计数与逐实例审计记录
     report = {
         "source": str(archive),
         "source_split": f"splits_final/abag_split.csv:ab_ag_split={args.source_split}",

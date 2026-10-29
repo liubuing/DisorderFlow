@@ -8,6 +8,11 @@ Run after the release manifests are (re)generated:
     python scripts/build/build_release_artifact_bundle.py  # initial bundle only
     python scripts/build_zenodo_upload.py
 """
+# 本脚本组装 ecls_v1 发布的 Zenodo 上传包：把发布物（审稿人包 zip、
+# 源清单、可复现性/许可/声明文档、稿件与补充材料、最终决策 JSON 等）
+# 复制到 release/zenodo_v1/upload/ 暂存目录，并写出带 SHA-256 的
+# UPLOAD_MANIFEST.json。上传目录中出现意外文件时先归档再清空；
+# 各处路径均做"不逃逸发布目录"检查，状态固定为"本地准备、未发布"。
 
 from __future__ import annotations
 
@@ -46,11 +51,19 @@ INCLUDE = [
 
 
 def digest(path: Path) -> str:
+    # 流式计算文件 SHA-256（避免大文件一次性读入内存）
     with path.open("rb") as handle:
         return hashlib.file_digest(handle, "sha256").hexdigest()
 
 
 def build(root=ROOT):
+    # 组装主流程：
+    # 1) 校验发表主线、稿件路径与 Zenodo 元数据三者的 ECLS 标识一致，
+    #    且稿件首行标题与 publication_line.json 声明一致；
+    # 2) 校验上传文件名无冲突、源文件齐全；
+    # 3) 暂存目录中的意外文件（目录/符号链接/非清单文件）归档到
+    #    archive/mixed-upload-<UTC 时间戳>/，两端路径先解析再约束；
+    # 4) 逐一复制清单文件并记录大小与 SHA-256，写出上传清单。
     root = Path(root).resolve()
     base = root / "release/zenodo_v1"
     out = base / "upload"

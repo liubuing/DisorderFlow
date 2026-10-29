@@ -12,14 +12,18 @@ import numpy as np
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+# ProteinMPNN 21 字母表（含 X 占位）；抽样与评分均在该表内进行。
 ALPHABET = "ACDEFGHIKLMNPQRSTVWYX"
 
 
 def sha256(path):
+    # 计算文件 SHA-256；NPZ/配置/评分工件全部先验哈再使用（不匹配即抛错）。
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def load_npz(record):
+    # 加载单构象的条件对数概率 NPZ 并校验哈希、有限性；
+    # 返回 (log_p, H3 设计位点索引)。
     path = ROOT / record["npz"]
     if sha256(path) != record["npz_sha256"]:
         raise ValueError(f"Conditional NPZ hash mismatch: {path}")
@@ -34,6 +38,11 @@ def load_npz(record):
 
 
 def conditional_distribution(component, arm):
+    # 构建两臂的逐位点条件分布（对比实验的核心）:
+    #   - single_state: 只用第一个构象（pose 0）的 complex 态 log_p;
+    #   - ensemble_product_of_experts: 对全部构象的 log_p 取逐点平均
+    #     （对数域平均即概率乘积——"专家乘积"集成）。
+    # 末尾做 max 减法后 softmax 归一化，保证数值稳定且每行和为 1。
     rows = component["conformers"]
     states = [row["complex"] for row in rows]
     log_probs = []
@@ -58,6 +67,9 @@ def conditional_distribution(component, arm):
 
 
 def sample_h3(native, probabilities, rng, substitutions):
+    # 以原生 H3 为骨架，随机选 substitutions 个位置做条件采样替换;
+    # 原生氨基酸在该位点的概率被置 0，强制保证产生真实突变
+    # （否则候选与原生相同，会污染"突变 vs 原生"的对照设计）。
     if substitutions < 1 or substitutions > len(native):
         raise ValueError("Invalid substitution count")
     sequence = list(native)
@@ -71,6 +83,8 @@ def sample_h3(native, probabilities, rng, substitutions):
 
 
 def candidate_score(sequence, native, probabilities):
+    # 生成器侧评分: 候选序列在该臂条件分布下的联合对数概率
+    # （log sum over positions）。仅用于生成端记账，不是性能端点。
     return float(sum(
         np.log(probabilities[index, ALPHABET.index(aa)])
         for index, aa in enumerate(sequence)
@@ -78,6 +92,12 @@ def candidate_score(sequence, native, probabilities):
 
 
 def generate_component(component, seeds, substitution_schedule):
+    # 对单个组件在两臂上按冻结预算生成候选:
+    #   - 每个 seed 用 default_rng(seed) 独立播种（固定种子保证可复现）;
+    #   - substitution_schedule 给出每个样本的目标突变数;
+    #   - 重复候选直接重采（最多 10000 次尝试，超出即失败——预算网格
+    #     预期可被满足，失败说明分布过窄，fail-closed 而非静默重复）;
+    #   - 每臂附原生对照（substitutions=0）作为零突变参照。
     output = {}
     for arm in ("ensemble_product_of_experts", "single_state"):
         probabilities, indices = conditional_distribution(component, arm)
@@ -122,6 +142,9 @@ def generate_component(component, seeds, substitution_schedule):
 
 
 def generate(config_path, score_path=None, out_path=None):
+    # 主生成流程: 拒绝从 superseded 契约生成 → 校验条件评分工件哈希 →
+    # 只保留注册表中非 sensitivity_only 的"干净"组件并核对数量与
+    # matched_budget 一致 → 生成候选并落盘（输出已存在则拒绝覆盖）。
     config_path = Path(config_path)
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
     if str(config.get("status", "")).startswith("superseded"):
@@ -172,6 +195,7 @@ def generate(config_path, score_path=None, out_path=None):
 
 
 def main():
+    # 命令行入口：默认使用冻结的前瞻性 pilot v2 配置。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/benchmarks/idp_ensemble_prospective_pilot_v2.yml")
     parser.add_argument("--out", default=None)

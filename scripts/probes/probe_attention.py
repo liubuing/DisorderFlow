@@ -22,11 +22,14 @@ import torch
 import numpy as np
 
 CDR_SPEC = 'B:26-33,51-58,97-113'
+# 被探测的 checkpoint（v11 seqconf 版本）；探测时临时写入 app_config.yaml。
 V11_CKPT = 'logs/bfn_v11_seqconf_xpu_2026_06_19__23_01_18/checkpoints/best.pt'
 
 
 def parse_cdr_indices(region_spec):
     """Parse region spec into flat list of 0-based residue indices."""
+    # 解析 "B:26-33,51-58,97-113" 形式的区域描述为有序去重的残基编号
+    # 列表（注意: 这里保留 PDB 的 1-based 编号，由调用方决定如何映射）。
     indices = []
     for cid, spec in re.findall(r'([A-Za-z0-9]+):([0-9,\-\s]+)', region_spec):
         for seg in spec.split(','):
@@ -40,6 +43,9 @@ def parse_cdr_indices(region_spec):
 
 
 def run_attention_probe():
+    # 机制探针: 挂钩 GAEncoder 各块的自注意力权重，统计支架 CDR 位点
+    # 分配给表位残基的注意力比例——回答"编码器是否在看表位"。
+    # 复合结构按 distance=6.0 埃放置表位（接触距离上界）；全局种子 42。
     from disorderflow.datasets.protein import preprocess_protein_structure
     from disorderflow.utils.train import recursive_to
     from disorderflow.utils.data import PaddingCollate

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Run one real grouped-contrastive BFN forward/backward on CIF coordinates."""
 
+# 目的：v5.2 结构对比训练的冒烟测试——在真实 CIF 坐标数据（statecontrast_factory_v2_1）
+# 上执行一次完整的分组对比（grouped-contrastive）BFN 前向/反向：掩蔽 6 条 CDR、
+# 合并链、锚点补丁，验证组采样器、损失与梯度通路；支持 bf16/fp16 混合精度
+# 与 CUDA 峰值显存统计。种子 20260721 对应冒烟日期，保证可复现。
+
 import argparse
 import json
 import sys

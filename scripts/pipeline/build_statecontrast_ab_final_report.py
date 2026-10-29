@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Build a concise final StateContrast-Ab method report from benchmark outputs."""
+# 本脚本从多个基准输出汇总生成 StateContrast-Ab 的最终方法报告（Markdown + JSON）：
+# 汇入 MVP 状态对比摘要、类别级/突变身份/仅位置三种归因对照的结果，
+# 按证据强度给出"支持/不支持声明"与下一步验证清单。核心结论是
+# 仅位置（position-only）的效应规则在两个 Aβ 参考上都稳定优于
+# 仅亲本/随机/打乱对照，而类别与突变身份归因仍然较弱。
+
 from __future__ import annotations
 
 import argparse
@@ -53,10 +59,12 @@ def load_json(path):
 
 
 def metric_rows(rows, metric):
+    # 过滤指定指标名的行（各方法层的 top10_mean_gap_delta 等）
     return [r for r in rows if r.get("metric") == metric]
 
 
 def summarize_rules(rows):
+    # 按参考 PDB 汇总反复出现的效应位置（paratope 序号去重排序）
     by_ref = {}
     for row in rows:
         by_ref.setdefault(row["reference_pdb"], set()).add(str(row["paratope_index"]))
@@ -64,6 +72,8 @@ def summarize_rules(rows):
 
 
 def write_report(path, mvp, class_rows, mutation_rows, position_rows, position_rules):
+    # 报告骨架：执行结论 → 核心打分结果表 → 归因对照阶梯 → 三个方法层的
+    # 指标表 → 位置规则 → 支持/不支持声明 → 下一步验证
     with open(path, "w", encoding="utf-8") as f:
         f.write("# StateContrast-Ab Final Method Report\n\n")
         f.write("## Executive Conclusion\n\n")
@@ -121,6 +131,7 @@ def write_report(path, mvp, class_rows, mutation_rows, position_rows, position_r
 
 
 def write_metric_table(f, title, rows, prefix):
+    # 输出一个方法层的 top10 指标表：均值、相对各对照的差值、胜率与判定
     top10 = metric_rows(rows, "top10_mean_gap_delta")
     f.write(f"## {title}\n\n")
     f.write("| Reference | Mean | Vs V2 | Vs Parent | Vs Random | Vs Shuffled | Win Rate | Verdict |\n")

@@ -31,22 +31,27 @@ DEFAULT_MODEL_CONFIG = PROJECT_DIR / 'configs' / 'demo_design.yml'
 AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 def _detect_device():
     """Auto-detect available device: CUDA > XPU > CPU."""
+    # 设备优先级：NVIDIA CUDA > Intel XPU > CPU；结果缓存在模块级 DEVICE
     if torch.cuda.is_available():
         return 'cuda'
     elif hasattr(torch, 'xpu') and torch.xpu.is_available():
         return 'xpu'
     return 'cpu'
 DEVICE = _detect_device()
+# 模块级单例缓存：模型/配置只加载一次，跨所有 Gradio 请求复用
 _bfn_model = None
 _bfn_config = None
 _esmif_model = None
 _app_config = None
 def load_app_config():
+    # 读取并缓存 app_config.yaml；返回值同时写入 _app_config 供其它模块查询
     global _app_config
     with open(CONFIG_FILE, encoding='utf-8') as f:
         _app_config = yaml.safe_load(f)
     return _app_config
 def get_bfn_ckpt():
+    # 检查点解析顺序：环境变量 DISORDERFLOW_CHECKPOINT 覆盖 > 配置文件；
+    # 相对路径按项目根目录解析
     override = os.environ.get('DISORDERFLOW_CHECKPOINT')
     if override:
         return str(Path(override).expanduser().resolve())
@@ -54,6 +59,7 @@ def get_bfn_ckpt():
     path = Path(cfg['models']['bfn']['checkpoint']).expanduser()
     return str(path if path.is_absolute() else PROJECT_DIR / path)
 def load_bfn():
+    # 加载 BFN 模型（带进程内缓存）：超参与损失权重以检查点内保存的训练配置为准
     global _bfn_model, _bfn_config
     if _bfn_model is not None:
         return _bfn_model, _bfn_config
@@ -86,6 +92,8 @@ def load_bfn():
     _bfn_config = config
     return model, config
 def load_esmif():
+    # ESM-IF 按需加载；先安装 torch_scatter/biotite 兼容层，
+    # 否则 fair-esm 在缺轮子的 Windows 环境上会导入失败
     global _esmif_model
     if _esmif_model is not None:
         return _esmif_model
@@ -97,6 +105,7 @@ def load_esmif():
     model = model.to(DEVICE).eval()
     _esmif_model = model
     return model
+# 置信度分档阈值（用于把 pLDDT/ipTM/PAE 数值翻译成 高/中/低 标签）
 CONFIDENCE_DEFAULTS = {
     'plddt_high': 0.80, 'plddt_medium': 0.60,
     'iptm_high': 0.70, 'iptm_medium': 0.40,
@@ -109,6 +118,8 @@ def get_config_display():
     except Exception as e:
         return f"配置读取错误: {e}"
 def save_config_from_text(config_text):
+    # 保存配置后把 _app_config 置 None 强制下次重新加载，
+    # 已加载的模型不受影响（检查点路径在加载时一次性解析）
     try:
         new_cfg = yaml.safe_load(config_text)
         with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
@@ -120,6 +131,7 @@ def save_config_from_text(config_text):
     except Exception as e:
         return f"❌ 配置格式错误: {e}"
 def get_system_status():
+    # 汇总服务/模型/依赖的就绪状态，输出为状态面板文本（供 UI 的"系统状态"页）
     import socket, threading
     cfg = load_app_config()
     host = cfg['server']['host']

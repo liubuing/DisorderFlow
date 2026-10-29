@@ -85,6 +85,7 @@ def _run_gromacs(pdb_path, ns, gromacs_exe, work_dir, verbose):
     # A full production run is ns-dependent; here we write the standard files and
     # invoke gmx. Long runs should be submitted to a cluster, not this function.
     mdp_em = _write_mdp(wd, "em.mdp", integrator="steep", nsteps=500)
+    # nsteps = ns * 500000：dt=0.002ps（2fs）下每 ns 恰好 500000 步
     mdp_npt = _write_mdp(wd, "npt.mdp", integrator="md", nsteps=int(ns * 500000))
     _ = (mdp_em, mdp_npt)  # templates written; full gmx invocation below is illustrative
 
@@ -184,6 +185,7 @@ def _run_af2_ensemble(pdb_path, n_seeds, device, verbose):
 
     cas = []
     for s in range(n_seeds):
+        # 每个种子独立跑一次 AF2；ca_coords 为单链模式下的 CA 坐标
         res = run_multimer_prediction(seq, "", data_dir=None, num_recycle=3, seed=s)
         if res.get("success") and res.get("ca_coords") is not None:
             cas.append(res["ca_coords"])
@@ -212,6 +214,7 @@ def _mean_pairwise_rmsd(coords_list):
     L = min(c.shape[0] for c in coords_list)
     arr = np.stack([c[:L] for c in coords_list])  # (n, L, 3)
     rmsds = []
+    # Kabsch 配准后计算每对坐标的 RMSD；d 为行列式符号修正，防止解出反射
     for i in range(n):
         a = arr[i] - arr[i].mean(axis=0, keepdims=True)
         for j in range(i + 1, n):

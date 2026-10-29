@@ -37,6 +37,10 @@ CDR_TYPES = ['H_CDR1', 'H_CDR2', 'H_CDR3', 'L_CDR1', 'L_CDR2', 'L_CDR3']
 
 def evaluate_single_cdr(model, batch, device):
     """Evaluate a single CDR and return metrics."""
+    # 对单个被掩码的 CDR 做确定性采样并计算两个指标:
+    #   - AAR: 预测序列与原生序列的逐位置一致率（越高越好）;
+    #   - PPL: exp(平均 NLL)，基于模型输出的前 20 类 logits（越低越好，
+    #     衡量模型对原生序列的置信度）。无 pred_logits 时 PPL 记 NaN。
     model.eval()
     
     with torch.no_grad():
@@ -87,6 +91,12 @@ def evaluate_single_cdr(model, batch, device):
 
 def evaluate_structure_all_cdrs(pdb_id, pdb_path, heavy_chain, light_chain, model, device, antigen_id=None, gt_pdb_path=None):
     """Evaluate all CDRs for a single structure, following design_seq.py pattern."""
+    # 对一个结构依次评估全部 6 条 CDR: 抗体重编号（Chothia 编号，
+    # 保证 CDR 掩码位置正确）→ 预处理 → 逐 CDR 做 MaskSingleCDR +
+    # 邻近 patch → 调用 evaluate_single_cdr。GT 结构存在时同步变换，
+    # 用 GT 序列填充 native_aa（输入可能是清洗/掩码过的结构，AAR 需要真值）。
+    # 任何 CDR 或结构级失败仅告警跳过，不中断整体评估；临时文件在
+    # finally 中清理。
     results = []
     
     temp_files = []
@@ -195,6 +205,11 @@ def evaluate_structure_all_cdrs(pdb_id, pdb_path, heavy_chain, light_chain, mode
 
 
 def main():
+    # 测试集评估主流程: 优先 _fv 后缀（Chothia 编号的 Fv 构造）加载 PDB，
+    # 退回普通文件名；--detect_antigen 用"非 H/L 链即抗原"的启发式确定
+    # 抗原链；采样种子取配置（缺省 42），保证确定性采样可复现。
+    # 输出: 逐 CDR 汇总表（数量/平均长度/AAR%/PPL）+ 原始记录，
+    # 同时落盘 CSV 与 JSON（JSON 带 UTC 时间戳与配置溯源）。
     parser = argparse.ArgumentParser(description='Evaluate antibody design model on test set')
     parser.add_argument('--config', type=str, required=True, help='Config YAML file')
     parser.add_argument('--test_set', type=str, default='sabdab',

@@ -18,10 +18,15 @@ sys.path.insert(0, str(ROOT))
 from scripts.score_idp_ensemble_matched_candidates import bootstrap_mean, exact_sign_flip_p  # noqa: E402,I001
 
 def sha256(path):
+    # 计算文件 SHA-256，用于核对冻结输入与配置中预登记的哈希是否一致，
+    # 防止在不知情中改用了被篡改或更新过的分析结果。
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def component_effects(analysis, method):
+    # 从某方法的分析结果中抽取各 component 的效应量：
+    # mean_ensemble_minus_single_state，即 ensemble 相对 single-state 的均值差，
+    # 数值越大表示多构象集成相对单态越优。
     rows = analysis["method_summary"][method]["components"]
     return {
         row["component_id"]: float(row["mean_ensemble_minus_single_state"])
@@ -30,6 +35,11 @@ def component_effects(analysis, method):
 
 
 def summarize(effects, config, seed_offset=0):
+    # 汇总一组组分效应并按预登记门限（predeclared_gates）逐项判定是否通过。
+    # bootstrap 采用配置中的 trials/seed；seed_offset 按方法序号偏移随机种子，
+    # 使不同方法/敏感性分析的重采样彼此独立又不失可复现性。
+    # seed_offset=100 起始段保留给敏感性分析（剔除合成组分后重算）。
+    # 注意阈值本身不做任何事后再调（endpoint retuning 禁止），全部来自冻结配置。
     values = list(effects.values())
     statistics = config["statistics"]
     gates = config["predeclared_gates"]
@@ -67,6 +77,11 @@ def summarize(effects, config, seed_offset=0):
 
 
 def main():
+    # 入口：读取冻结配置（含 development 与 expansion 两份分析的路径+SHA-256），
+    # 先校验输入哈希，再按配置中的方法列表逐个汇总 development/expansion 合并效应。
+    # 两个面板的组分不得重叠（防止同一 component 被重复计入而放大显著性）。
+    # 敏感性分析剔除配置指定的合成组分，并将门限同步收紧为 11/8（与 12 组分
+    # 主门的等比例约定），种子偏移 100+方法序号以独立复现。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_ecls_combined_12_v1.yml"

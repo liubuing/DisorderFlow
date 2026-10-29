@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Prepare and sequence-audit the frozen nonviral exploratory v3 subset."""
 
+# 本脚本构建并审计 IDP ensemble v3 的"非病毒"探索性冻结子集：
+# 从候选文件中按配置筛选目标成分（排除病毒等超范围成分并记录排除原因），
+# 核对成分/靶标/候选数量与冻结期望值，随后对每条候选序列做 QC
+# （氨基酸合法性、最长疏水连续段、电荷代理、糖基化/脱酰胺/异构化/氧化 motif）。
+# 湿实验测量被刻意跳过（仅计算分支），原 v3 修正门槛保持阻断状态。
+# 输出：子集冻结 JSON、序列 QC 分析 JSON、实验状态 JSON；已存在则拒绝覆盖。
+
 from __future__ import annotations
 
 import argparse
@@ -12,15 +19,18 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+# 残基分类常量：疏水、阳性电荷、阴性电荷（用于电荷代理与疏水段统计）
 HYDROPHOBIC = set("AILMFWVY")
 POSITIVE = set("KRH")
 NEGATIVE = set("DE")
 
 
 def sha256(path):
+    # 计算文件 SHA-256 摘要，用于冻结输入的来源校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 计算序列中最长连续疏水残基段长度（用于聚集倾向的粗略代理）
 def longest_hydrophobic_run(sequence):
     longest = current = 0
     for amino_acid in sequence:
@@ -29,6 +39,11 @@ def longest_hydrophobic_run(sequence):
     return longest
 
 
+# 计算单条候选序列的 QC 指标：
+# - 电荷代理 = 阳性(K/R/H)残基数 - 阴性(D/E)残基数；
+# - N-连接糖基化 motif 用正则 N[^P][ST] 匹配（Asn 后接 Pro 不计）；
+# - 脱酰胺/异构化/氧化易感性按合同配置的 motif/残基清单标记；
+# - qc_pass 要求全部硬性检查通过且不含糖基化 motif。
 def sequence_metrics(sequence, contract):
     allowed = set(contract["allowed_amino_acids"])
     charge = sum(aa in POSITIVE for aa in sequence) - sum(
@@ -64,6 +79,12 @@ def sequence_metrics(sequence, contract):
     }
 
 
+# 构建冻结子集与序列 QC 分析：
+# 1) 先检查三个输出文件均不存在，避免覆盖既有冻结产物；
+# 2) 按 included_targets 过滤候选成分，其余成分连同原因写入排除清单；
+# 3) 核对成分/靶标/候选总数与配置中的冻结期望值，不一致即抛错；
+# 4) 对子集中全部候选逐臂生成 QC 记录；
+# 5) 实验状态固定为"刻意跳过测量"，并说明对原 v3 修正门槛的影响。
 def analyze(config_path, candidates_path, subset_path, analysis_path, status_path):
     for path in (subset_path, analysis_path, status_path):
         if path.exists():
@@ -147,6 +168,7 @@ def analyze(config_path, candidates_path, subset_path, analysis_path, status_pat
     return subset, analysis, experiment
 
 
+# 主入口：读取配置，按配置中的输入/输出路径驱动 analyze()，打印摘要。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

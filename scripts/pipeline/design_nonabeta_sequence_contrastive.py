@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Generate candidates with explicit positive-versus-sequence-off-state optimization."""
+"""Generate candidates with explicit positive-versus-sequence-off-state optimization.
+
+非 A-beta（tau/alpha-synuclein）序列对比式设计：以模板接触图为准绳，
+束搜索（beam=1000，最多 4 个突变）在可变 CDR 位点上枚举替换，显式优化
+"正态接触分提升 + 特异性间隙（目标态 - 最强 off 态）扩大 + off 态不劣化"。
+预注册门槛：target_delta>=0、gap_delta>=0、max_offstate_delta<=0、
+序列风险<=0.55 且不引入新风险标记；每目标最多选 20 条通过候选。
+"""
 from __future__ import annotations
 
 import argparse
@@ -38,6 +45,10 @@ def parse_args():
 
 
 def contrast_metrics(sequence, positive_maps, off_maps, native_positive, native_off):
+    """计算对比式指标：目标态/各 off 态分数、特异性间隙及预注册目标函数。
+
+    objective = native_delta_p25 + 0.75*gap_delta - 1.5*max(0, off 态最大劣化)
+    """
     positive = np.asarray([
         score_sequence_on_contact_map(sequence, contact_map)["state_contact_score"]
         for contact_map in positive_maps
@@ -125,6 +136,7 @@ def main():
             for index in mutable
         }
         cache = {native: contrast_metrics(native, positive_maps, off_maps, native_positive, native_off)}
+        # 束搜索：逐深度扩展一位点单突变，按 objective 排序截断到 beam_width
         beam = [native]
         all_sequences = {native}
         for _depth in range(1, args.max_mutations + 1):
@@ -160,6 +172,7 @@ def main():
             introduced = candidate_flags - parent_flags
             risk = max(score_sequence(heavy)["sequence_risk"], score_sequence(light)["sequence_risk"])
             n_mutations = sum(a != b for a, b in zip(native, sequence))
+            # tau 允许 p25 下界放宽到 -0.005（弱负容忍），alpha-synuclein 不放宽
             target_floor = -0.005 if target_name == "tau" else 0.0
             passes = (
                 metrics["target_delta_mean"] >= 0.0

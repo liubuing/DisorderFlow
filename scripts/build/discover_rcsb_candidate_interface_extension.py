@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Discover calibration-extension candidates from a frozen RCSB metadata snapshot."""
 
+# 本脚本从冻结的 RCSB 元数据快照中发现"候选界面扩展"（校准扩展）条目：
+# 纯元数据操作，不访问坐标、不做同源性或模型推断。对每个 PDB entry 检查
+# 实验方法（X 射线/电镜）、分辨率上限、重轻链配对、肽抗原长度等入选条件，
+# 按关键词将 polymer entity 分类为 heavy/light/非蛋白/未分类；
+# 含病毒抗原描述的条目默认延后（deferred），仅在显式开启时升级为候选。
+# 输出：一次性写入（write-once）的发现结果 JSON，附完整资格标准与计数。
+
 from __future__ import annotations
 
 import argparse
@@ -22,14 +29,17 @@ VIRAL_PATTERNS = (
 )
 MIN_PEPTIDE_LENGTH = 5
 MAX_PEPTIDE_LENGTH = 50
+# 分辨率上限（埃）：超过 4.0 埃的结构不入选
 MAX_RESOLUTION = 4.0
 EXPERIMENTAL_METHODS = ("X-RAY DIFFRACTION", "ELECTRON MICROSCOPY")
 
 
 def sha256_file(path: Path) -> str:
+    # 计算文件 SHA-256，用于快照文件完整性校验
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# 输出统一的 UTC ISO-8601 时间戳（必须带时区，后缀记作 Z）
 def iso_utc(value: datetime) -> str:
     if value.tzinfo is None:
         raise ValueError("Discovery timestamp must be timezone-aware")
@@ -56,6 +66,9 @@ def is_viral_description(text: str) -> bool:
     return any(pattern in lowered for pattern in VIRAL_PATTERNS)
 
 
+# 将 polymer entity 分类为 heavy/light/nonprotein/unclassified：
+# 优先依据描述关键词；描述缺失时回退标题；描述无链信息时按
+# 经验长度区间兜底（100-140 判重链，95-135 判轻链）
 def classify_entity(entity: dict[str, object], title: str) -> str:
     description = description_of(entity).casefold()
     title_lower = title.casefold()
@@ -87,6 +100,9 @@ def entry_resolution(entry: dict[str, object]) -> float | None:
     return float(values[0])
 
 
+# 发现主流程：先校验快照分类与逐文件哈希，再逐 entry 依规则筛选：
+# 方法/分辨率不合规、无重链、重轻不配对、单链且无 nanobody 证据、
+# 肽抗原缺失或多个（候选要求恰好一个 5-50 残基肽抗原）均计入排除原因。
 def discover(snapshot_dir: Path, output: Path,
              now=lambda: datetime.now(timezone.utc),
              include_viral: bool = False) -> dict[str, object]:
@@ -223,6 +239,7 @@ def discover(snapshot_dir: Path, output: Path,
     return artifact
 
 
+# 主入口：--include-viral 将延后的病毒抗原条目提升为候选（默认关闭）
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--snapshot-dir", type=Path, required=True)

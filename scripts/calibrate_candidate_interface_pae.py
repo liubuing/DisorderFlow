@@ -1,5 +1,14 @@
 #!/usr/bin/env python
-"""Fit and evaluate a monotonic affine PAE scale correction on calibration scaffolds."""
+"""Fit and evaluate a monotonic affine PAE scale correction on calibration scaffolds.
+
+在候选接口多 scaffold 校准集上拟合单调仿射 PAE 尺度校正
+（target = slope*pred + intercept，保序、不改变排名）并评估：
+- 两种拟合方式：最小二乘（fit_affine）与标准差匹配（fit_std_matching）；
+- 逐 checkpoint 报告 raw/corrected MAE、方差比、整体与 scaffold 级 Spearman；
+- LOSO（留一 scaffold）斜率范围检验校正系数的跨 scaffold 稳定性；
+- 门槛：校正后 MAE<=0.10、scaffold 中位 Spearman>=0.5、方差比在 [0.5, 2.0]。
+仅开发用途；不做最终测试集评估。
+"""
 
 from __future__ import annotations
 
@@ -24,18 +33,21 @@ from disorderflow.utils.data import CompleteGroupBatchSampler, PaddingCollate  #
 from disorderflow.utils.data import lmdb_records_sha256  # noqa: E402
 
 CKPTS = [
+    # 三个不同种子的候选接口回归 checkpoint（2041/2053/2069）
     "logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_13_52_dual_sem_v2_s2041/checkpoints/best.pt",
     "logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__12_29_06_dual_sem_v2_s2053/checkpoints/best.pt",
     "logs/bfn_candidate_interface_multiscaffold_dual_sem_v2_2026_09_01__21_10_10_dual_sem_v2_s2069_retry/checkpoints/100.pt",
 ]
-PAE_MAE_GATE = 0.10
+PAE_MAE_GATE = 0.10  # 校正后平均绝对误差门槛（Å 量级的 PAE 尺度）
 
 
 def sha256(path: Path) -> str:
+    """文件 sha256，用于 checkpoint/数据集血缘。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def rankdata(values):
+    """平均秩（并列取均值），Spearman 计算的辅助函数。"""
     values = np.asarray(values, dtype=float)
     order = np.argsort(values, kind="mergesort")
     ranks = np.empty(len(values), dtype=float)
@@ -57,12 +69,14 @@ def spearman(left, right):
 
 
 def fit_affine(pred, target):
+    """最小二乘拟合 target = slope*pred + intercept（单调仿射，排名不变）。"""
     design = np.vstack([np.ones_like(pred), pred]).T
     intercept, slope = np.linalg.lstsq(design, target, rcond=None)[0]
     return float(slope), float(intercept)
 
 
 def fit_std_matching(pred, target):
+    """标准差匹配式校正：斜率取 std(target)/std(pred)，截距对齐均值。"""
     slope = float(np.std(target) / np.std(pred)) if np.std(pred) > 0 else 1.0
     intercept = float(np.mean(target) - slope * np.mean(pred))
     return slope, intercept
@@ -103,6 +117,7 @@ def std_matching_metrics(pred, target):
 
 
 def scaffold_spearman(pred, target, scaffolds):
+    """按 scaffold 家族分组计算 Spearman（组内 >=2 个实体才参与）。"""
     values = {}
     for p, t, s in zip(pred, target, scaffolds, strict=True):
         values.setdefault(s, ([], []))
@@ -116,6 +131,7 @@ def scaffold_spearman(pred, target, scaffolds):
 
 
 def main():
+    """主流程：清单哈希校验 -> 逐 checkpoint 评估与双路拟合 -> 门槛判定 -> 写报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoints", nargs="+", default=CKPTS)
     parser.add_argument(
@@ -161,6 +177,7 @@ def main():
         raw_variance_ratio = (float(np.std(pred)) / float(np.std(target))) ** 2
 
         loso_slopes = []
+        # 留一 scaffold（LOSO）：每次剔除一个家族拟合斜率，检验系数稳健性
         for held in sorted(set(scaffolds)):
             keep = [s != held for s in scaffolds]
             slope, intercept = fit_affine(pred[keep], target[keep])

@@ -18,6 +18,9 @@ Usage:
     python scripts/download_sabdab.py --dry-run              # just count, don't download
 """
 
+# 角色：RCSB/SAbDab 数据采集——下载 Chothia 编号的抗体-抗原复合物 PDB 作为
+# 训练/评测结构来源。筛选条件：有重链+抗原链、蛋白抗原、分辨率 <=3.5Å、非 scFv。
+# 支持 8 并发、指数退避重试、断点续传与失败清单落盘。
 import os
 import sys
 import time
@@ -109,6 +112,7 @@ def filter_entries(df):
     scfv_col = df.get('scfv', pd.Series([False] * len(df)))
     not_scfv = ~scfv_col.astype(bool)
     # Resolution filter
+    # 3.5Å：结构训练数据的常用分辨率上限，过低的分辨率会引入不可靠的界面几何。
     resolution = pd.to_numeric(df['resolution'], errors='coerce')
     res_ok = resolution <= 3.5
 

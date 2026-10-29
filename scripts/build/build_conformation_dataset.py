@@ -84,6 +84,8 @@ def compute_rmsf(positions_list, ca_idx=CA_IDX):
 
 def rmsf_to_disorder(rmsf, scale=2.0):
     """Convert RMSF (Å) to disorder score [0, 1] via tanh."""
+    # scale=2.0 Å：RMSF 归一化的软化尺度——RMSF≈2Å 时得分约 0.76，
+    # 使柔性差异在 [0,1] 区间内拉开梯度，作为连续无序标签（教师信号）。
     return np.tanh(rmsf / scale)
 
 
@@ -94,6 +96,8 @@ def generate_conformations(sequence, n_seeds=5, num_recycle=1, verbose=False):
         positions: list of (N_res, 37, 3) arrays, or None if failed
         rmsf: (N_res,) array, or None if failed
     """
+    # 固定奇数种子列表（1,3,5,7,9）：不同种子触发 AF2 随机扰动，产生构象系综；
+    # 任一种子失败即放弃整条序列，避免残缺系综混入标签。
     seeds = [1, 3, 5, 7, 9][:n_seeds]
     positions = []
     for seed in seeds:
@@ -178,6 +182,8 @@ def build_lmdb(src_lmdb_path, dst_lmdb_path, n_seeds, num_recycle, max_idp=None,
     print(f'Estimated AF2 runs: {n_idp * n_seeds} (~{n_idp * n_seeds * 17 / 60:.0f} min)')
 
     os.makedirs(os.path.dirname(dst_lmdb_path), exist_ok=True)
+    # map_size 32 GiB：LMDB 预分配上限（稀疏分配，不占实际磁盘），
+    # 需容纳全部 IDP 的多构象 Cα 坐标。
     dst_env = lmdb.open(dst_lmdb_path, map_size=32 * 1024 * 1024 * 1024, subdir=True)
 
     n_success = 0

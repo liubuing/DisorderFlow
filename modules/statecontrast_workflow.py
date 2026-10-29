@@ -8,6 +8,8 @@ from typing import Dict, Iterable, List
 
 @dataclass
 class StateContrastWorkflowConfig:
+    # StateContrast-Ab 在 DisorderFlow 工作流中的集成契约（声明式配置）：
+    # 定位为"排名器+位置发现层"，所有字段只描述策略，不承载计算逻辑
     domain: str = "idp_antibody"
     positive_state_source: str = "contact_map"
     negative_state_source: str = "synthetic_perturbation"
@@ -109,6 +111,8 @@ def validate_reference_count(
 
 
 def integration_claim_level(n_references: int, has_real_negative_ensembles: bool, has_wetlab: bool) -> str:
+    # 声明强度分级：按证据（真实负例集合/湿实验/参考复合物数量）限制
+    # 工作流可声称的结论等级，防止过度声明
     if has_wetlab and has_real_negative_ensembles and n_references >= 8:
         return "validated_domain_workflow"
     if has_real_negative_ensembles and n_references >= 4:

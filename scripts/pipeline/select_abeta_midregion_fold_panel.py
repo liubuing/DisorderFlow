@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Select a diverse, all-conformer-positive middle-region Fv fold panel."""
+# 目的：从 Aβ 中段集成设计候选中挑选折叠面板：仅保留"所有构象均为正增益"
+# （native_delta_min>0）的候选，p25 增益不低于最优值 90%（relative_floor），
+# 再按最大突变距离（多样性）+ 得分贪心选取每参考 2 条进入 AF2 折叠验证。
 from __future__ import annotations
 
 import argparse
@@ -32,6 +35,8 @@ def mutation_distance(left, right):
 
 
 def select_group(rows, count, relative_floor):
+    # 组内选择：先按全构象正增益资格过滤，再以"不劣于最优 p25 的 90%"收窄候选池，
+    # 首选 p25 最高者，其后每一步选取与已选集合突变距离最大（多样性优先）的候选。
     eligible = [row for row in rows if float(row["native_delta_min"]) > 0]
     if not eligible:
         return []

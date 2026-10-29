@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Freeze the PAE single-axis deployment contract with per-seed calibration maps."""
 
+# 目的：冻结候选界面 PAE 单轴部署合同——在校准扩展集上评估重选出的各种子
+# 检查点，按"标准差匹配"拟合每个种子的单调仿射 PAE 校准（slope/intercept），
+# 并要求通过门控：PAE MAE<=0.10、>=30 配对、>=3 个骨架、任一骨架占比 <=50%。
+# 合同一经写出即冻结，供最终留出评估一次性使用。
+
 from __future__ import annotations
 
 import argparse
@@ -26,10 +31,10 @@ from disorderflow.utils.data import CompleteGroupBatchSampler, PaddingCollate  #
 from disorderflow.utils.data import lmdb_records_sha256  # noqa: E402
 
 RESELECTION = "results/candidate_interface_multiscaffold_calibration_ext/checkpoint_reselection.json"
-PAE_MAE_GATE = 0.10
-MIN_PAIRS = 30
-MIN_SCAFFOLDS = 3
-MAX_FRACTION = 0.50
+PAE_MAE_GATE = 0.10   # 校准后 PAE 的平均绝对误差上限（Å 量纲的相对容差门控）
+MIN_PAIRS = 30        # 冻结合同所需的最少配对样本数
+MIN_SCAFFOLDS = 3     # 至少覆盖 3 个骨架，避免单一支架过拟合
+MAX_FRACTION = 0.50   # 单一骨架的最大占比，防失衡
 
 
 def sha256(path: Path) -> str:
@@ -58,6 +63,8 @@ def spearman(left, right):
 
 
 def fit_std_matching(pred, target):
+    # 标准差匹配校准：slope = std(target)/std(pred)，截距对齐均值——
+    # 单调仿射变换保持排序，只修正预测 PAE 的量纲偏差。
     slope = float(np.std(target) / np.std(pred)) if np.std(pred) > 0 else 1.0
     intercept = float(np.mean(target) - slope * np.mean(pred))
     return slope, intercept

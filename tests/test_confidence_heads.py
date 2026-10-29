@@ -17,6 +17,7 @@ N, L, D, P = 2, 16, 64, 32  # batch, length, res_feat_dim, pair_feat_dim
 NUM_CLASSES = 20
 
 
+# 辅助函数：构造小规模 receiver（CPU、无 checkpoint），按参数切换置信头版本/类型。
 def _make_receiver(
         confidence_version="v12", seq_only=True,
         confidence_head_kind="legacy_v12"):
@@ -29,6 +30,7 @@ def _make_receiver(
     )
 
 
+# 辅助函数：生成固定的合成输入张量（序列/位置/朝向/角度 theta、时间步、pair 特征、残基掩码）。
 def _inputs():
     torch.manual_seed(0)
     theta_seq = torch.randn(N, L, NUM_CLASSES)
@@ -64,6 +66,8 @@ def test_v12_confidence_outputs_in_unit_interval():
     assert torch.all(pred_pae >= 0) and torch.all(pred_pae <= 1)
 
 
+# 权重等价：默认置信头与显式 legacy_v12 头在相同权重下输出逐位相等，
+# 防止默认路径与历史实现悄然分叉导致旧 checkpoint 推理结果漂移。
 def test_default_confidence_head_is_legacy_equivalent():
     default = _make_receiver()
     explicit = _make_receiver(confidence_head_kind="legacy_v12")
@@ -114,6 +118,7 @@ def test_recycle_feedback_forward_runs():
     assert pred_plddt.shape == (N, L)
 
 
+# 辅助函数：构造候选链与抗原链的界面掩码（各占连续 4 个残基）。
 def _interface_masks():
     candidate = torch.zeros(N, L, dtype=torch.bool)
     antigen = torch.zeros(N, L, dtype=torch.bool)
@@ -122,6 +127,8 @@ def _interface_masks():
     return candidate, antigen
 
 
+# 序列敏感性：改动候选区序列 logits 必须改变 plddt/iptm/pae 输出——
+# 防止界面头对序列输入"视而不见"而退化为常数头。
 def test_candidate_interface_head_is_sequence_sensitive():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
     recv.eval()
@@ -137,6 +144,8 @@ def test_candidate_interface_head_is_sequence_sensitive():
     assert not torch.allclose(baseline[6], variant[6])
 
 
+# v2 修复守护：one-hot 输入到达 seq_embed 前不得再被 softmax（避免双重软化概率），
+# 通过 forward pre-hook 观察实际入参验证。
 def test_candidate_interface_v2_does_not_soften_probabilities_twice():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v2")
     recv.eval()
@@ -155,6 +164,7 @@ def test_candidate_interface_v2_does_not_soften_probabilities_twice():
     assert torch.equal(observed[0], inputs[0])
 
 
+# 历史行为锚定：v1 保留第二次 softmax（历史口径），防止"顺手统一"到 v2 行为后旧评估不可比。
 def test_candidate_interface_v1_retains_historical_second_softmax():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
     recv.eval()
@@ -173,6 +183,8 @@ def test_candidate_interface_v1_retains_historical_second_softmax():
     assert torch.allclose(observed[0], torch.softmax(inputs[0], dim=-1))
 
 
+# 可训练性：v2 暴露的实体汇总（plddt/iptm/pae）必须可微——损失能回传到序列输入与汇总层权重，
+# 防止汇总头被 detach 成不可训练的旁观者。
 def test_candidate_interface_v2_exposes_trainable_entity_summaries():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v2")
     candidate, antigen = _interface_masks()
@@ -188,6 +200,7 @@ def test_candidate_interface_v2_exposes_trainable_entity_summaries():
     assert recv.candidate_interface_pae_summary[-1].weight.grad is not None
 
 
+# 几何不变性：整体平移坐标系不得改变候选-抗原几何特征，防止界面头依赖绝对坐标而非相对几何。
 def test_candidate_interface_geometry_is_frame_invariant():
     inputs = _inputs()
     candidate, antigen = _interface_masks()
@@ -197,6 +210,8 @@ def test_candidate_interface_geometry_is_frame_invariant():
     assert torch.allclose(baseline, shifted, atol=1e-6)
 
 
+# 显式几何使用：v3 汇总必须真的依赖 pair 坐标（移动抗原残基后三项汇总都改变），
+# 防止几何分支被旁路、退化为纯序列头。
 def test_candidate_interface_v3_summaries_use_explicit_geometry():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v3")
     recv.eval()
@@ -215,6 +230,7 @@ def test_candidate_interface_v3_summaries_use_explicit_geometry():
     assert all(not torch.allclose(baseline[key], changed[key]) for key in baseline)
 
 
+# 界面敏感性：改动界面区 pair 特征必须改变三项置信输出，防止 pair 通路断裂后头退化为序列-only。
 def test_candidate_interface_head_is_interface_sensitive():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
     recv.eval()
@@ -229,6 +245,7 @@ def test_candidate_interface_head_is_interface_sensitive():
     assert not torch.allclose(baseline[6], variant[6])
 
 
+# 输入校验：缺掩码或抗原掩码为空必须显式报错，防止静默对空界面给出无意义的置信值。
 def test_candidate_interface_head_requires_both_masks():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
     inputs = _inputs()
@@ -239,6 +256,7 @@ def test_candidate_interface_head_requires_both_masks():
         recv(*inputs, mask_gen=candidate, mask_antigen=torch.zeros_like(antigen))
 
 
+# 梯度通路：界面头输出必须能回传到序列 logits 与界面 pair 特征，保证训练信号覆盖两条输入通路。
 def test_candidate_interface_outputs_backpropagate_to_sequence_and_pairs():
     recv = _make_receiver(confidence_head_kind="candidate_interface_v1")
     candidate, antigen = _interface_masks()

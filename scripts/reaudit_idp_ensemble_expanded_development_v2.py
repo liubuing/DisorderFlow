@@ -18,10 +18,12 @@ from scripts.materialize_idp_ensemble_expanded_development_v2 import (  # noqa: 
     residue_count,
 )
 
+# 只承认蛋白质类抗原链(PEPTIDE/PROTEIN), 其余(核酸/糖类等)一律从抗原集合剔除
 ALLOWED_ANTIGEN_TYPES = {"PEPTIDE", "PROTEIN"}
 
 
 def typed_antigen_chains(component):
+    # 按元数据中 链-类型 严格配对过滤抗原链(要求两列表等长)
     pairs = zip(
         component["antigen_chains"], component["antigen_type"], strict=False
     )
@@ -29,6 +31,8 @@ def typed_antigen_chains(component):
 
 
 def resolve_antigen_chains(component, available):
+    # 抗原链解析两级策略: 优先按元数据类型配对; 列表不等长时退化为
+    # "坐标中实际可观测、且非重轻链、有氨基酸残基"的启发式回溯
     chains = component["antigen_chains"]
     types = component["antigen_type"]
     if len(chains) == len(types):
@@ -44,6 +48,8 @@ def resolve_antigen_chains(component, available):
 
 
 def audit(panel_path, coordinate_dir, output):
+    # 逐组件检查: 链齐全 / 重链>=90 残基 / 轻链>=80 或缺省 / 类型过滤后抗原仍有观测残基,
+    # 全部通过才标记 coordinate_ready; 结果写入 v3 审计(取代 v2 的配对缺陷)
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite coordinate audit v2: {output}")
     panel = json.loads(panel_path.read_text(encoding="ascii"))

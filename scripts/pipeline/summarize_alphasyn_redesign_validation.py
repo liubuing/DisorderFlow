@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """Apply frozen native-relative gates to the complete alpha-synuclein redesign panel."""
+# 目的：对 alpha-synuclein 重设计面板应用冻结的 native 相对门控：五个预注册
+# 检查（delta PAE<=0、delta 接触保持>=0、delta 抗原姿态 RMSD<=0、
+# delta refined 接触保持>=0、15/15 refined 模型无严重冲突）全部通过才判
+# computational_hit，否则 no_hit；另列出最接近门控但未晋级的候选供审查。
 from __future__ import annotations
 
 import csv

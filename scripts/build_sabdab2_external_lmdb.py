@@ -28,6 +28,8 @@ def main():
     for index, row in enumerate(rows):
         instance = row["instance"]
         cif_path = input_dir / "cif" / f"{instance}.cif"
+        # 复用 Phase3 的 preprocess_one：H/L 链可选（纳米抗体无 L），抗原链
+        # 支持多链（'A/B' 形式，'+' 为占位符）。无抗原链的记录计入失败而非静默丢弃
         result = preprocess_one(
             instance,
             cif_path,
@@ -58,6 +60,7 @@ def main():
     (input_dir / "preprocess_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps({key: value for key, value in report.items() if key != "failures"}, indent=2))
     if not processed:
+        # 全部失败时硬失败：空的"外部测试集"比没有更危险（会静默产出空评估）
         raise RuntimeError("No SAbDab2 external complexes could be preprocessed")
 
 

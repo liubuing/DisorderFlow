@@ -33,10 +33,13 @@ def main():
     completed = 0
     for index, row in enumerate(rows, 1):
         prefix = f"{row['construct_id']}_target_{row['target']}_family_{row['antibody_family']}_VH_VL_IDP"
+        # 复用上一阶段（complex fold panel）缓存的单序列 MSA——每个前缀必须
+        # 恰好命中一个 A3M，多义或缺失都视为面板不一致而失败
         matches = list(MSA_DIR.glob(f"{prefix}.a3m"))
         if len(matches) != 1:
             raise ValueError(f"Expected one cached MSA for {prefix}, found {len(matches)}")
         job_dir = output_root / row["construct_id"] / f"conformer{row['conformer']}"
+        # 断点续跑：按已存在的 seed scores 文件计数，够了就跳过该构造体
         completed_seeds = {
             int(path.stem.rsplit("_seed_", 1)[1])
             for path in job_dir.glob("*_scores_rank_001_*_seed_*.json")
@@ -44,6 +47,8 @@ def main():
         if len(completed_seeds) >= args.num_seeds:
             completed += 1
             continue
+        # initial-guess 用面板预录的初始猜测定界面；multimer_v3、单模型、
+        # 3 recycle、MSA 上限 64:128——与 alpha-syn 面板同参数，便于横向比较
         command = [
             "colabfold_batch", str(matches[0]), str(job_dir),
             "--initial-guess", str(PROJECT_ROOT / row["initial_guess_pdb"]),

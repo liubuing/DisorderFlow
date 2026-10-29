@@ -2,6 +2,10 @@
 """
 Integration test comparing BFN, ProteinMPNN, and ESM-IF on the same design target.
 """
+
+# 角色：集成测试——在同一个设计目标上比较三种序列生成器（BFN 项目模型、
+# ProteinMPNN vanilla 权重、ESM-IF1），分别以子进程/进程内方式运行并收集
+# 设计序列（每法默认 3 条、温度 0.1、seed 42），用于端到端环境与基线可用性检查。
 import sys, os, json, subprocess, tempfile
 import torch
 import numpy as np

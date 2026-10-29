@@ -19,6 +19,8 @@ GRID = 128; SPACING = 1.2; N_ANGLES = 12
 
 
 def _pdb_to_grid(pdb_path, chain):
+    # 单链原子(CB 优先、无 CB 用 CA)栅格化：以质心为原点居中、1.2Å/格，
+    # 高斯模糊(sigma≈1.25 格)平滑密度以获得非零重叠的互相关峰
     from Bio.PDB import PDBParser
     parser = PDBParser(QUIET=True); s = parser.get_structure('s', pdb_path)
     atoms = []
@@ -41,6 +43,8 @@ def _pdb_to_grid(pdb_path, chain):
 
 
 def _rotations():
+    # 旋转采样：Fibonacci 球面取均匀轴向；当前角度固定为 0，
+    # 即旋转矩阵实际为单位阵（占位实现，仅平移搜索有效）
     mats = []; phi = np.pi*(3-np.sqrt(5))
     for i in range(N_ANGLES):
         y = 1.0-(i/(N_ANGLES-1))*2.0; r = np.sqrt(1-y*y); th = phi*i
@@ -56,6 +60,8 @@ def generate_pose(receptor_pdb, ligand_pdb, rec_chain, lig_chain):
     """Generate a docked pose via FFT grid search.
     Returns path to a new PDB with ligand transformed to best pose.
     """
+    # 逐旋转做 FFT 互相关，取相关峰值最高的旋转；
+    # 互相关峰值位置即最优平移（此处只比较峰值大小，未显式回读平移）
     rec_grid = _pdb_to_grid(receptor_pdb, rec_chain)
     lig_grid = _pdb_to_grid(ligand_pdb, lig_chain)
     f1 = fft.rfftn(rec_grid)
@@ -75,6 +81,7 @@ def generate_pose(receptor_pdb, ligand_pdb, rec_chain, lig_chain):
     lig_s = parser.get_structure('lig', ligand_pdb)
 
     out_s = Structure.Structure('docked'); out_m = Model.Model(0)
+    # 输出结构 = 受体全部链(原坐标) + 配体链(应用最优旋转)
     for c in rec_s[0]: out_m.add(c.copy())
     for c in lig_s[0]:
         cc = c.copy()

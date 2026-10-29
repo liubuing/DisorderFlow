@@ -1,9 +1,12 @@
+"""IBEC tau 体系的健全性检查：守护 tau 复合物结构中重链 H3 与表位链的序列完整无突变，
+以及姿态面板恰好选中前 5 个构象——防止数据替换或选择逻辑漂移破坏基准输入。"""
 import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# 辅助函数：按路径动态加载 tau 健全性脚本模块。
 def load_script():
     path = ROOT / "scripts" / "run_ibec_tau_sanity.py"
     spec = importlib.util.spec_from_file_location("run_ibec_tau_sanity", path)
@@ -12,6 +15,8 @@ def load_script():
     return module
 
 
+# 序列锚点：H3 前后残基（C / W）与 H3 区间逐残基核对，表位链与姿态文件中的肽链序列一致——
+# 防止结构文件被静默替换或重编号错位。
 def test_tau_structure_has_frozen_full_h3_and_epitope():
     mod = load_script()
     path = ROOT / "data/non_abeta_idp/ensembles_v1/tau/5MP3_tau_core_complex.pdb"
@@ -24,6 +29,7 @@ def test_tau_structure_has_frozen_full_h3_and_epitope():
     assert mod.chain_sequence(pose, "P") == "KHVPGGGSV"
 
 
+# 姿态选择：恰好 5 个构象且为 0..4 顺序，防止多选/漏选或乱序破坏配对比较。
 def test_selected_tau_poses_are_exactly_five():
     mod = load_script()
     import json

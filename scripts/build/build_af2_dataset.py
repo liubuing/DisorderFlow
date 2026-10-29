@@ -6,6 +6,11 @@ Downloads AF2-predicted mmCIF structures + PAE JSON for small single-chain
 proteins. Converts each mmCIF to a temp PDB, uses preprocess_protein_structure()
 to build the BFN batch, and stores pLDDT/pTM/PAE as teacher targets.
 """
+# 本脚本在 DisorderFlow 管线中负责"AF2 教师标签"数据采集（策略一）：
+# 从 EBI AlphaFold 数据库下载小分子量单链蛋白的 AF2 预测 mmCIF 与 PAE JSON，
+# 将 mmCIF 转为临时 PDB 后用 preprocess_protein_structure 构建 BFN 训练批次，
+# 并把 pLDDT（逐残基置信度）、pTM（由 PAE 推算）与 PAE 矩阵存为教师监督目标。
+# 输出：confidence_train.lmdb / confidence_val.lmdb（8:2 随机划分）+ 汇总 JSON。
 import sys, os, json, pickle, time, io, tempfile, shutil, re
 from pathlib import Path
 import requests
@@ -33,6 +38,8 @@ def compute_ptm_from_pae(pae_matrix):
     pTM = max_i (1/L * sum_j 1/(1 + (PAE_ij / d0)^2))
     where d0 = max(1.24 * (L - 15)^(1/3) - 1.8, 0.5)
     """
+    # AlphaFold 惯例：逐行计算 1/(1+(PAE/d0)^2) 的均值，取所有行的最大值；
+    # d0 为长度相关归一化尺度（下限 0.5 防止极短序列退化）
     pae = np.array(pae_matrix, dtype=np.float64)
     L = pae.shape[0]
     d0 = max(1.24 * (L - 15) ** (1/3) - 1.8, 0.5)
@@ -53,6 +60,8 @@ AA_TO_IDX = {c: i for i, c in enumerate(AA_LETTERS)}
 
 def fetch_uniprot_accessions(max_results=300, min_len=50, max_len=250):
     """Fetch reviewed Swiss-Prot entries via UniProt REST API."""
+    # 只取已人工审阅（reviewed）且非片段的条目；size 取 min(500, 2*max_results)
+    # 以留出余量，之后在客户端截断到 max_results 条
     print(f'Fetching UniProt accessions (length {min_len}-{max_len}, max {max_results})...')
     query = f'(length:[{min_len} TO {max_len}] AND reviewed:true AND fragment:false)'
     url = f'{UNIPROT_API}?query={query}&size={min(500, max_results * 2)}&format=tsv&fields=accession,length,protein_name'
@@ -155,6 +164,8 @@ def main():
     p.add_argument('--af2_version', type=int, default=6, help='AFDB version (default 6)')
     p.add_argument('--seed', type=int, default=2026, help='Random seed for train/val split')
     args = p.parse_args()
+    # 默认参数含义：长度 50-250 的小蛋白、最多 200 条、AFDB v6、
+    # 划分种子 2026（固定以保证可复现）
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -226,6 +237,7 @@ def main():
             continue
 
         # 4. Align pLDDT to BFN sequence length
+        # pLDDT 与 BFN 序列长度对齐：不足处填 0.5（中性置信度），超出截断
         if len(plddt_list) < n_res:
             plddt_list += [0.5] * (n_res - len(plddt_list))
         plddt_tensor = torch.tensor(plddt_list[:n_res], dtype=torch.float32)
@@ -294,6 +306,8 @@ def main():
         sys.exit(1)
 
     # Split and save
+    # 8:2 随机划分训练/验证（seed 已固定），随后逐条 pickle 写入 LMDB；
+    # LMDB map_size 按单条序列化大小的 2 倍估计并加 1MB 余量（下限 10MB）
     np.random.seed(args.seed)
     indices = np.random.permutation(len(entries))
     split_idx = int(len(entries) * 0.8)

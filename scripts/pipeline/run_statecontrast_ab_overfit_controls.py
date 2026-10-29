@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Run StateContrast-Ab attribution-guided redesign with overfit controls."""
+# 本脚本运行带过拟合对照的 StateContrast-Ab 归因引导重设计：
+# 发现与最终评分使用不同的合成负态种子（heldout 偏移 +10000）以强制隔离；
+# 在发现集上归纳化学类别富集规则（|Δfraction| ≥0.20 才保留）后，
+# 与两个对照臂比较——位置配对的随机规则臂与位置打乱规则臂——
+# 只有 guided_v3 在留出集上的 top10/top5%/中位 gap delta 同时超过
+# 仅亲本、随机规则与打乱规则三臂，才认定方法信号成立。
 from __future__ import annotations
 
 import argparse
@@ -44,6 +50,9 @@ def parse_args():
 
 
 def main():
+    # 主流程：逐参考构建正态与两套负态（发现/留出）→ 生成 v2 变体池并排名 →
+    # 归纳真实规则并构造随机/打乱对照规则 → 五个臂各自生成变体并在
+    # 留出负态上评分 → 汇总各臂指标与判定 → 写 CSV/JSON/Markdown 报告
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -136,6 +145,8 @@ def select_top_parents(rows, top_fraction=0.20):
 
 
 def enrichment_deltas(reference_pdb, enrichment_rows, min_abs_delta=0.20):
+    # 计算高/低 gap 组在每个 (位置, 链, 残基号, 体积类, 化学类) 上的
+    # 富集比例差，过滤 |Δ| < min_abs_delta 的弱信号后按 |Δ| 降序返回
     grouped = {}
     for r in enrichment_rows:
         key = (r["paratope_index"], r["chain"], r["resid"], r["volume_class"], r["chemistry_class"])
@@ -165,6 +176,7 @@ def enrichment_deltas(reference_pdb, enrichment_rows, min_abs_delta=0.20):
 
 
 def matched_random_rules(real_rules, sequence_len, rng):
+    # 对照规则臂一：每个真实规则配一个未占用的随机位置 + 随机化学类别
     rules = {}
     used = set()
     for _, rule in real_rules.items():
@@ -175,6 +187,8 @@ def matched_random_rules(real_rules, sequence_len, rng):
 
 
 def shuffled_position_rules(real_rules, sequence_len, rng):
+    # 对照规则臂二：保留规则内容、随机置换位置（保证非恒等排列；
+    # 单规则时强制挪到其他位置）
     positions = list(real_rules.keys())
     if len(positions) == 1 and sequence_len > 1:
         old_pos = positions[0]
@@ -236,6 +250,7 @@ def rule_rows(reference_pdb, arm, rules):
 
 
 def summarize_reference(reference_pdb, rows, n_rules, n_signals):
+    # 按臂汇总：最优/Top10/Top5%/中位 gap delta（Top 比例取 5% 且至少 1 条）
     arms = sorted({r["arm"] for r in rows})
     out = []
     for arm in arms:
@@ -260,6 +275,9 @@ def summarize_reference(reference_pdb, rows, n_rules, n_signals):
 
 
 def add_verdicts(rows):
+    # 过拟合对照判定：guided 需同时超过 parent/random/shuffled 三臂；
+    # top10 与 top5% 均过记 passes_top_metrics，中位数也过则升级；
+    # 任一臂缺失记 not_evaluable
     by_arm = {r["arm"]: r for r in rows}
     guided = by_arm.get("guided_v3_heldout_eval")
     parent = by_arm.get("top_parent_only_heldout_eval")

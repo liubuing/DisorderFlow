@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def ca_coordinates(topology, positions):
+    # 从 topology 提取全部 CA 原子坐标(埃), 供约束前后 RMSD 对比
     coordinates = []
     for atom in topology.atoms():
         if atom.name == "CA":
@@ -24,6 +25,7 @@ def ca_coordinates(topology, positions):
 
 def relax(record, output_dir, max_iterations, platform_name):
     input_path = ROOT / record["structure_pdb"]
+    # 补全缺失原子但显式跳过缺失残基建模(missingResidues 清空), 保持序列/链组成不变
     fixer = PDBFixer(filename=str(input_path))
     fixer.findMissingResidues()
     fixer.missingResidues = {}
@@ -35,7 +37,9 @@ def relax(record, output_dir, max_iterations, platform_name):
     system = forcefield.createSystem(
         modeller.topology, nonbondedMethod=NoCutoff, constraints=HBonds)
 
+    # 力场: amber14 全原子 + GBn2 隐式溶剂(NoCutoff); 仅加氢至 pH 7.4
     restraint = CustomExternalForce(
+        # 谐波位置约束: 只约束主链 N/CA/C/O 到初始坐标, 允许侧链自由弛豫
         "0.5*k*((x-x0)^2+(y-y0)^2+(z-z0)^2)")
     restraint.addGlobalParameter("k", 1000.0 * unit.kilojoule_per_mole / unit.nanometer**2)
     for parameter in ("x0", "y0", "z0"):
@@ -48,6 +52,7 @@ def relax(record, output_dir, max_iterations, platform_name):
     system.addForce(restraint)
 
     integrator = LangevinMiddleIntegrator(
+        # 300 K、1/ps 碰撞频率、2 fs 步长的标准 Langevin 设置(仅用于能量极小化前的上下文)
         300.0 * unit.kelvin, 1.0 / unit.picosecond, 0.002 * unit.picoseconds)
     if platform_name:
         platform = Platform.getPlatformByName(platform_name)
@@ -71,6 +76,7 @@ def relax(record, output_dir, max_iterations, platform_name):
     final = simulation.context.getState(getEnergy=True, getPositions=True)
     final_energy = final.getPotentialEnergy().value_in_unit(unit.kilojoule_per_mole)
     final_ca = ca_coordinates(modeller.topology, final.getPositions())
+    # 弛豫程度指标: 约束下极小化前后的 CA RMSD(A); 越小表示结构改动越保守
     ca_rmsd = float(np.sqrt(np.mean(np.sum((final_ca - initial_ca) ** 2, axis=1))))
 
     output_path = output_dir / f"{record['construct_id']}_relaxed.pdb"
@@ -86,6 +92,7 @@ def relax(record, output_dir, max_iterations, platform_name):
         "final_energy_kj_mol": final_energy,
         "energy_delta_kj_mol": final_energy - initial_energy,
         "ca_rmsd_angstrom": ca_rmsd,
+        # 通过判据: 最终势能为负(物理合理) 且 CA RMSD <= 1.5 A(未偏离设计构象)
         "relax_pass": final_energy < 0.0 and ca_rmsd <= 1.5,
     }
 
@@ -121,6 +128,7 @@ def main():
             failures.append({"construct_id": record["construct_id"], "error": str(error)})
             print(f"{record['construct_id']}: FAILED {error}", flush=True)
     report_path = output_dir / "relaxation_report.json"
+    # 指定 --construct-id 单构象重跑时, 与既有报告合并(剔除同 ID 旧记录)而非整体覆盖
     if args.construct_id and report_path.exists():
         existing = json.loads(report_path.read_text(encoding="utf-8"))
         records = [

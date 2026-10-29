@@ -10,6 +10,8 @@ from scripts import pae_sequence_order_v5 as v
 
 
 def main():
+    # 校验阶段: 读取冻结的 report/predictions/fits 与 transfer 拆分行,
+    # 先断言实体顺序一致, 再逐指标单元用预测重算对账
     report=v.read(v.OUT/'report.json'); predictions=v.read(v.OUT/'predictions.json'); fits=v.read(v.OUT/'fits.json')
     rows=[r for r in v.read(v.OLD/'data_manifest.json')['rows'] if r['split']=='transfer']
     assert predictions['entities']==[r['id'] for r in rows]
@@ -24,6 +26,8 @@ def main():
                     assert expected[metric] is None if value is None else np.isclose(expected[metric],value)
                 checked+=1
     # Representation sensitivity is necessary, but does not prove better ranking.
+    # 顺序敏感性对照: 同一骨架的 native 与 composition_shuffle 组成相同、顺序不同,
+    # 检验位置/二肽特征能否区分二者(L2 距离>0 即可区分输入, 不等于预测更准)
     controls=[]
     for scaffold in sorted({r['scaffold'] for r in rows}):
         a=next(r for r in rows if r['scaffold']==scaffold and r['arm']=='native')
@@ -35,6 +39,7 @@ def main():
         'generated_only_entities':sum(r['entity_type']=='candidate' for r in rows),
         'order_sensitivity':controls,'artifacts':{name:v.digest(v.OUT/name) for name in ['protocol.json','fits.json','predictions.json','report.json']}})
     def f(value): return '未定义' if value is None else f'{value:.3f}'
+    # 报告正文(中文)逐行拼接; f() 把缺失指标渲染为"未定义"
     lines=['# PAE 路线首轮：生成来源与序列顺序诊断','','日期：2026-09-17。已完成；旧外部开发数据，未产生新的独立确认性评估。','',
       '## 结论','','PAE 代理排序确有开发信号，但部分信号来自生成方法之间的差异。保留序列位置的主要新基线没有通过预设改进门槛。二肽特征的前列召回出现值得后续验证的迹象，但它是次要探索结果，不能替代失败的主要模型结论。现阶段保留 Ridge 作为筛选参照，不启用复杂模型优越性或亲和力主张。','',
       '## 设计与隔离','','沿用 v4 的 15 个训练组件/240 个实体、2 个校准组件/32 个实体和6个已暴露外部组件/84个实体。新模型只用原始设计骨架特征和序列；训练只看训练集，选参只看校准集，历史 GP2 不读取或重用。','',

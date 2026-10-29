@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 """Merge accepted experimental and sampled v3 pose manifests for checking."""
 
+# 目的：把 v3 的实验姿态清单与（可选的）受约束采样姿态清单按面板计划合并为
+# 组合姿态面板（write-once），供测量/就绪检查使用。合并时只保留 accepted=True
+# 的姿态，统计跨来源的重复坐标哈希（多样性警示），缺失任何面板组分即报错。
+
 from __future__ import annotations
 
 import argparse
@@ -16,6 +20,8 @@ def sha256(path):
 
 
 def merge(panel_plan, experimental_manifest, sampled_manifest, output):
+    # 合并流程：拒绝覆盖→按 component_id 收集两清单的 accepted 姿态→
+    # 校验面板组分齐全→统计重复坐标哈希→写出带三方 SHA-256 溯源的 JSON。
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite merged pose manifest: {output}")
     panel = json.loads(panel_plan.read_text(encoding="ascii"))

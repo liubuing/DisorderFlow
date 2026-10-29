@@ -12,13 +12,14 @@ import numpy as np
 import torch, yaml
 
 # Config
+# 配置：V19 checkpoint、4HIX 参考结构与 HDOCK 路径；候选数/种子数控制采样规模
 V19_CKPT = 'logs/bfn_v19_diversity_xpu_2026_07_02__14_23_57_v19_final/checkpoints/best.pt'
 ABETA_REF = 'data/anti_abeta_refs/4HIX.pdb'
 HDOCK_DIR = 'HDOCKlite-v1.1'
 HDOCK_LD = 'LD_LIBRARY_PATH=.'
-N_CANDIDATES = 10   # CDR designs per condition
-N_SEEDS = 3          # sampling seeds per design
-AA = 'ARNDCQEGHILKMFPSTWYV'
+N_CANDIDATES = 10   # CDR designs per condition  # 每个条件采样的 CDR 设计数
+N_SEEDS = 3          # sampling seeds per design  # 每条设计的采样种子数
+AA = 'ARNDCQEGHILKMFPSTWYV'  # 索引到单字母氨基酸的查找表
 
 os.makedirs('hdock_design_results', exist_ok=True)
 
@@ -27,6 +28,7 @@ print("V10 P1: WAY4 Candidate HDOCK Docking Verification")
 print("=" * 60)
 
 # Load model
+# 加载模型：临时把 app_config.yaml 的 checkpoint 换成 V19，加载完成后立即恢复原配置
 import bfn_loader
 from disorderflow.utils.data import PaddingCollate
 from disorderflow.utils.train import recursive_to
@@ -55,6 +57,7 @@ ld, lm = _label_light_chain_cdr(ld, lm)
 
 def get_cdr_info(data, cdr_types):
     """Get CDR positions and native sequences."""
+    # 提取指定 CDR 类型（1-6）的残基索引、天然序列与长度
     info = {}
     for ct in cdr_types:
         mask = (data['cdr_flag'] == ct)
@@ -82,6 +85,7 @@ structure_dict = {'heavy': hd, 'light': ld, 'antigen': ag_data}
 
 def sample_cdr_sequences(model, structure_dict, epitope_disorder_val, n_samples, n_seeds):
     """Sample CDR sequences from the model at a given disorder level."""
+    # 在给定表位无序度水平下用 BFN 采样 CDR 序列，并按生成位置拆分重/轻链 CDR
     sequences = []
     for i in range(n_samples):
         batch_data = transform(structure_dict)
@@ -89,6 +93,7 @@ def sample_cdr_sequences(model, structure_dict, epitope_disorder_val, n_samples,
         L = batch['aa'].shape[1]
 
         # Set epitope disorder profile
+        # 将整条序列的表位无序度统一设为指定常数
         d = np.ones(L) * epitope_disorder_val
         batch['epitope_disorder_profile'] = torch.tensor(d, dtype=torch.float32).unsqueeze(0)
         batch['mask_antigen'] = torch.zeros(1, L).bool()
@@ -96,7 +101,7 @@ def sample_cdr_sequences(model, structure_dict, epitope_disorder_val, n_samples,
         batch['mask'] = torch.ones(1, L).bool()
 
         for seed in range(n_seeds):
-            torch.manual_seed(i * 100 + seed)
+            torch.manual_seed(i * 100 + seed)  # 由样本序号与种子派生确定性随机源
             with torch.no_grad():
                 try:
                     traj = model.sample(batch, sample_opt={
@@ -136,6 +141,7 @@ def graft_cdrs_to_pdb(pdb_path, out_path, h_cdr_seq, l_cdr_seq, h_cdr_info, l_cd
     """Graft CDR sequences into a PDB by renaming CDR residues.
     Keeps backbone coordinates, only changes residue names.
     """
+    # 只改 CDR 残基名（不动骨架坐标），用于把设计序列移植进 4HIX 受体
     parser2 = PDBParser(QUIET=True)
     s = parser2.get_structure('ref', pdb_path)[0]
 
@@ -191,6 +197,7 @@ def graft_cdrs_to_pdb(pdb_path, out_path, h_cdr_seq, l_cdr_seq, h_cdr_info, l_cd
 
 def AA_to_3(aa):
     """One-letter AA code to three-letter."""
+    # 单字母 -> 三字母氨基酸映射；未知字符回退为 ALA
     mapping = {'A':'ALA','R':'ARG','N':'ASN','D':'ASP','C':'CYS','Q':'GLN','E':'GLU',
                'G':'GLY','H':'HIS','I':'ILE','L':'LEU','K':'LYS','M':'MET','F':'PHE',
                'P':'PRO','S':'SER','T':'THR','W':'TRP','Y':'TYR','V':'VAL'}
@@ -199,11 +206,12 @@ def AA_to_3(aa):
 
 def run_hdock(receptor_pdb, ligand_pdb, out_name):
     """Run HDOCK and return top-1 score."""
+    # 在 WSL 中调用 HDOCKlite 对接，解析输出文件的打分列（HDOCK 分数越小越好）
     cmd = (f'cd {HDOCK_DIR} && {HDOCK_LD} ./hdock {receptor_pdb} {ligand_pdb} '
            f'-out {out_name} 2>&1')
     try:
         result = subprocess.run(['wsl', 'bash', '-c', cmd],
-                               capture_output=True, text=True, timeout=180)
+                               capture_output=True, text=True, timeout=180)  # 单次对接 3 分钟超时
     except subprocess.TimeoutExpired:
         return None
 
@@ -229,6 +237,7 @@ def run_hdock(receptor_pdb, ligand_pdb, out_name):
 print("\n--- Generating CDR candidates ---")
 
 # High disorder (0.7) and low disorder (0.05) conditions
+# 两种条件：高表位无序度（0.7）与低表位无序度（0.05），对比生成质量
 conditions = [
     ('high_disorder', 0.7, N_CANDIDATES),
     ('low_disorder', 0.05, N_CANDIDATES),
@@ -261,6 +270,7 @@ for cond, cands in by_cond.items():
             seen.add(c['full_seq'])
             unique.append(c)
     # Pick top 5 by CDR length (more complete) and diversity
+    # 去重后按序列字符多样性挑前 5 条进入对接验证
     unique.sort(key=lambda x: len(set(x['full_seq'])), reverse=True)
     selected.extend(unique[:5])
 

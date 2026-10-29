@@ -11,10 +11,12 @@ import yaml
 
 
 def check(protocol_path, panel_path, pose_manifest, output):
+    # write-once：姿态就绪结论一次落盘，绝不覆写（审计需要原始判定记录）
     if output.exists():
         raise FileExistsError(f"Refusing to overwrite pose status: {output}")
     protocol = yaml.safe_load(protocol_path.read_text(encoding="ascii"))
     panel = json.loads(panel_path.read_text(encoding="ascii"))
+    # 清单缺失时按"空组件集"处理——结论自然是 blocked，而不是报错中断
     manifest = (
         json.loads(pose_manifest.read_text(encoding="ascii"))
         if pose_manifest.is_file() else {"components": []}
@@ -24,6 +26,8 @@ def check(protocol_path, panel_path, pose_manifest, output):
     observed = {}
     for row in manifest.get("components", []):
         accepted = [pose for pose in row.get("poses", []) if pose.get("accepted") is True]
+        # 用坐标哈希去重：两个"accepted"姿态若坐标完全相同只算一个——
+        # 防止重复姿态虚报满足每组件最少姿态数
         hashes = {pose.get("coordinate_sha256") for pose in accepted if pose.get("coordinate_sha256")}
         observed[row.get("component_id")] = {
             "accepted_poses": len(accepted),
@@ -31,6 +35,7 @@ def check(protocol_path, panel_path, pose_manifest, output):
             "ready": len(accepted) >= minimum and len(hashes) >= minimum,
         }
     ready_ids = {component_id for component_id, row in observed.items() if row["ready"]}
+    # 就绪 = 面板要求的每个组件都达标（多出或缺失都不算过）
     ready = ready_ids == expected
     payload = {
         "schema_version": 1,

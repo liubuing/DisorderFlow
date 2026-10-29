@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Prepare and audit six outcome-unexposed IDP antibody ensemble components."""
 
+# 目的：准备并审计六个"结果未暴露"（outcome-unexposed）的 IDP 抗体集成组分：
+# 裁剪参考结构到抗体链+表位肽 → 从参考姿态迁移 paratope 接触图到各组分 →
+# 几何审计/去冲突/局部精修 → PDBFixer+OpenMM 松弛。所有组分在评估前均未
+# 接触任何结果数据，保证作为独立验证面板的资格。
+
 from __future__ import annotations
 
 import argparse
@@ -41,6 +46,8 @@ def sha256(path):
 
 
 class ReferenceSelect(Select):
+    # Biopython 选择器：仅保留抗体链与抗原链上"观察到的表位残基"，
+    # 把参考复合物裁剪为姿态迁移所需的最小上下文。
     def __init__(self, antibody_chains, antigen_chain, antigen_residue_ids):
         self.antibody_chains = set(antibody_chains)
         self.antigen_chain = antigen_chain

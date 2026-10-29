@@ -56,6 +56,7 @@ def pdb_to_grid(pdb_path: str, chain: str = None) -> np.ndarray:
         return np.zeros((GRID_SIZE, GRID_SIZE, GRID_SIZE))
 
     atoms = np.array(atoms)
+    # 以原子质心为原点居中：FFT 互相关按原点对齐，居中保证搜索覆盖整个盒子
     center = atoms.mean(axis=0)
     atoms_centered = atoms - center
 
@@ -91,6 +92,8 @@ def _rotation_matrices(n_angles: int = 12) -> list:
     """
     matrices = []
     # Fibonacci sphere for uniform sampling
+    # 黄金角 phi 生成近似均匀分布的单位球方向作为旋转轴，
+    # 每个轴再配 n_angles 个绕轴角度，共 n_angles^2 个旋转
     phi = np.pi * (3.0 - np.sqrt(5.0))
     for i in range(n_angles):
         y = 1.0 - (i / float(n_angles - 1)) * 2.0  # y goes from 1 to -1
@@ -180,6 +183,7 @@ def dock(receptor_pdb: str, ligand_pdb: str,
 
     # Normalize: higher FFT score = better complementarity
     # Return as negative (convention: more negative = better)
+    # 按两网格总密度归一化并放大 1e4 倍，取负号以符合"越负越好"的对接打分约定
     norm_score = -best_score / (rec_grid.sum() * lig_grid.sum() + 1e-8) * 10000
 
     return {
@@ -213,6 +217,8 @@ if __name__ == '__main__':
         print(f"\nNative docking score: {result['score']:.2f}")
 
         # Scrambled control: shuffle ligand atom positions
+        # 阴性对照：随机打乱配体原子坐标后重新打分，
+        # 原生结构与乱序结构的分差可衡量打分器的判别力
         from Bio.PDB import PDBParser, PDBIO
         import tempfile, random
         parser = PDBParser(QUIET=True)

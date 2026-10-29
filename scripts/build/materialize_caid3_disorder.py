@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Materialize frozen CAID3 three-line disorder FASTA without changing labels."""
 
+# 本脚本将冻结的 CAID3 无序参考（三行式 FASTA：header/序列/逐残基标签）
+# 物化为可评估目录：拆出 sequences.fasta 与逐目标的 .label 文件。
+# 标签仅做 "-" → "nan" 的表示转换，0/1 值不变；源文件哈希必须与
+# 冻结清单一致，记录格式/标签字符/重复 ID 均做强校验。
+# 输出：物化目录 + materialization.json 汇总（目标数、残基数、已定义与正标签数）。
+
 from __future__ import annotations
 
 import argparse
@@ -12,9 +18,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def sha256(path):
+    # 计算文件 SHA-256，用于冻结源文件完整性校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 解析三行式 FASTA：每 3 行一个记录，校验 header 前缀、序列与标签等长、
+# 标签只允许 0/1/"-"，并要求目标 ID 全局唯一
 def load_records(path):
     lines = [line.strip() for line in Path(path).read_text().splitlines() if line.strip()]
     if len(lines) % 3:
@@ -32,6 +41,8 @@ def load_records(path):
     return records
 
 
+# 主入口：先核对冻结哈希，再写 sequences.fasta 与逐目标标签文件
+# （"-" 标签写作 nan 以便下游数值解析），最后落盘汇总 JSON。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--raw", default=str(ROOT / "data/caid3/frozen_raw/disorder_nox.fasta"))

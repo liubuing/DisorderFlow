@@ -16,10 +16,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256；用于校验冻结工件与配置中登记的哈希一致（不匹配即抛错）。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def bootstrap_mean(values, trials, seed):
+    # 对组间 delta 做自助法（bootstrap）均值的 95% 置信区间估计。
+    # 参数:
+    #   values: 各组件的 delta（oracle 基线得分 - 提出方法得分），可为空。
+    #   trials: 重采样次数，取自冻结配置的 statistics.bootstrap_trials。
+    #   seed: 随机种子，取自冻结配置；固定种子保证结果可复现。
+    # 返回: [2.5% 分位, 97.5% 分位] 组成的置信区间；输入为空时返回 None。
     if not values:
         return None
     array = np.asarray(values, dtype=np.float64)
@@ -27,10 +34,15 @@ def bootstrap_mean(values, trials, seed):
     estimates = np.empty(trials, dtype=np.float64)
     for index in range(trials):
         estimates[index] = generator.choice(array, size=len(array), replace=True).mean()
+    # 0.025 / 0.975 分位对应双侧 95% 置信区间。
     return [float(np.quantile(estimates, 0.025)), float(np.quantile(estimates, 0.975))]
 
 
 def main():
+    # 主分析流程：校验冻结哈希 → 逐组件/逐臂评分 → 主门槛与次要 AF2 汇总。
+    # 得分方向约定：delta_G（kcal/mol）越低（越负）结合越强；正 delta 表示
+    # 提出方法优于 oracle 基线。有效性判定要求每臂每组件的候选槽位数与
+    # 成功种子数均达到冻结配置要求，任一不满足则该组件记为无效（不填补）。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/multiscaffold_confirmatory_v2_analysis.yml")

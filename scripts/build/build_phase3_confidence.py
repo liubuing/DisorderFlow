@@ -18,6 +18,10 @@ Usage:
   python scripts/build/build_phase3_confidence.py
 """
 
+# 角色：为 Phase3 扩充数据集生成 AF2 代理置信度标签（pLDDT/ipTM/PAE 矩阵），
+# 用于共设计与置信度头联合训练时保持置信度头校准。标签由晶体结构几何量推导，
+# 并非真实 AF2 预测（代理标签）。
+
 import os
 import sys
 import lmdb
@@ -119,6 +123,7 @@ def compute_iptm(entry, cutoff=CONTACT_CUTOFF):
     # ipTM = contact_density * scale
     contact_density = n_contacts / norm.clamp(min=1)
     # Map to [0.2, 0.95] range — typical AF2 ipTM range
+    # 接触密度 0.3 作为饱和点：达到即映射到上限 0.95；0.2 下限对应无接触的基线置信。
     iptm = 0.2 + 0.75 * (contact_density / 0.3).clamp(0, 1)
 
     return iptm
@@ -187,7 +192,7 @@ def copy_lmdb_with_labels(src_path, dst_path):
 
     # Write destination
     os.makedirs(os.path.dirname(dst_path), exist_ok=True)
-    dst_env = lmdb.open(dst_path, map_size=8 * 1024 * 1024 * 1024, subdir=False)
+    dst_env = lmdb.open(dst_path, map_size=8 * 1024 * 1024 * 1024, subdir=False)  # 预分配 8 GiB
     with dst_env.begin(write=True) as txn:
         for key, entry in tqdm(entries.items(), desc='  Writing'):
             txn.put(key.encode(), pickle.dumps(entry))

@@ -9,12 +9,14 @@ import sys, os, json, pickle
 sys.path.insert(0, '.')
 import numpy as np
 import matplotlib
+# 无显示环境下使用 Agg 后端渲染 PDF。
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from collections import defaultdict
 
 # ── Load data ──
+# 两个机制实验的原始结果：V7（含 frozen head_seq 各模式）与 V12（含 V18/V20）。
 V7_DATA = 'idp_design_results/way4_v7_p2_mechanism_20260702_112646.json'
 V12_DATA = 'idp_design_results/way4_v12_p2_quick_20260704_025310.json'
 
@@ -22,6 +24,7 @@ v7 = json.load(open(V7_DATA))
 v12 = json.load(open(V12_DATA))
 
 # Parse results by (model, disorder_mode)
+# 按 "模型_条件模式" 键聚合有效记录；旧数据缺 disorder_mode 时从 mode 推断。
 def parse_results(data):
     by_key = defaultdict(list)
     for r in data['results']:
@@ -38,6 +41,7 @@ v7_by = parse_results(v7)
 v12_by = parse_results(v12)
 
 # Combine: V7_per_residue, V18_scalar (from V7), V20_per_residue (from V12)
+# 组装梯度对比的四个组：V7/V18（冻结 head_seq）-> V20（解冻）-> 无条件对照。
 all_data = {}
 all_data['V7_per_residue\n(frozen head_seq)'] = v7_by.get('V7_per_residue_per_residue', [])
 all_data['V18_scalar\n(frozen head_seq)'] = v12_by.get('V18_scalar_scalar', [])
@@ -45,6 +49,7 @@ all_data['V20_per_residue\n(unfrozen head_seq)'] = v12_by.get('V20_per_residue_p
 all_data['V20_none\n(unconditional)'] = v12_by.get('V20_per_residue_none', [])
 
 # ── Compute metrics ──
+# 多样性/置信度指标：唯一氨基酸数、平均熵、最高频氨基酸占比、6-mer 重复计数。
 def compute_metrics(results):
     if not results: return {}
     return {
@@ -60,6 +65,7 @@ def compute_metrics(results):
 metrics = {k: compute_metrics(v) for k, v in all_data.items()}
 
 # ── Spearman (recompute for V20 vs V18) ──
+# 重新计算"抗原紊乱度 -> 多样性/熵"的 Spearman 相关，用于检验信号方向。
 from scipy.stats import spearmanr
 
 def spearman_for(results):
@@ -74,14 +80,17 @@ def spearman_for(results):
 sp = {k: spearman_for(v) for k, v in all_data.items() if v}
 
 # ── Create figure ──
+# 输出目录为论文图存放处；2x3 面板覆盖多样性、熵、反退化、相关、偏置与散点。
 os.makedirs('docs/paper_figures', exist_ok=True)
 fig, axes = plt.subplots(2, 3, figsize=(16, 10))
 fig.suptitle('WAY4 V12: Mechanism Gradient — Frozen vs Unfrozen head_seq', fontsize=14, fontweight='bold')
 
 models = list(all_data.keys())
+# 四组配色：红/橙/绿/蓝分别对应 V7/V18/V20/V20-none。
 colors = ['#e74c3c', '#e67e22', '#27ae60', '#2980b9']
 
 # Panel A: Unique AA bar chart
+# 唯一氨基酸数（20 种中的平均数）：5.3 的虚线为 V18 基线参照。
 ax = axes[0, 0]
 x = np.arange(len(models))
 vals = [metrics[m]['unique_aa'] for m in models]
@@ -97,6 +106,7 @@ for bar, v in zip(bars, vals):
             ha='center', va='bottom', fontweight='bold')
 
 # Panel B: Entropy
+# 平均熵：log(20) 为均匀随机分布的最大熵上界参照。
 ax = axes[0, 1]
 vals = [metrics[m]['entropy'] for m in models]
 errs = [metrics[m]['entropy_std'] for m in models]
@@ -123,6 +133,7 @@ for bar, v in zip(bars, vals):
             ha='center', va='bottom', fontweight='bold')
 
 # Panel D: Spearman r (unique_aa vs disorder)
+# 核心"机制"面板：标注显著性星号(* p<0.05, ** p<0.01, *** p<0.001, ns 不显著)。
 ax = axes[1, 0]
 x2 = np.arange(len(sp))
 r_vals = [sp[m][0] for m in models if m in sp]
@@ -155,6 +166,7 @@ for bar, v in zip(bars, vals):
             ha='center', va='bottom', fontweight='bold')
 
 # Panel F: Scatter (V20 per_residue: unique_aa vs disorder)
+# V20 逐残基模式的散点 + 一阶拟合线；按 high/low 柔性标签区分标记。
 ax = axes[1, 2]
 v20_data = all_data.get('V20_per_residue\n(unfrozen head_seq)', [])
 if v20_data:
@@ -183,6 +195,8 @@ fig.savefig(out_path, dpi=150, bbox_inches='tight')
 print(f'Figure saved: {out_path}')
 
 # ── Text summary ──
+# 控制台打印核心结论：解冻 head_seq 使多样性提升、熵下降，
+# 且 disorder->diversity 相关系数符号翻转（机制性发现而非阴性结果）。
 print("\n" + "=" * 60)
 print("V12 KEY FINDING: head_seq unfreezing inverts thesis signal")
 print("=" * 60)

@@ -13,12 +13,14 @@ import json, os, sys, time
 from collections import OrderedDict
 
 # ── Config ──
+# 合成构建格式: 信号肽(仅参考) + VH-(G4S)3 linker-VL-6xHis; 产物 FASTA 不含信号肽
 OUTDIR = 'idp_design_results/s5_wetlab_synthesis_20260705'
 LINKER = 'GGGGSGGGGSGGGGS'       # (G4S)3
 HIS_TAG = 'HHHHHH'
 SIGNAL_PEPTIDE = 'MGWSCIILFLVATATGVHS'  # murine Ig kappa leader (secreted expression)
 
 # Standard codons for E.coli K12 (for simplicity, use E.coli as default synthesis host)
+# 每氨基酸一个代表密码子的简化版大肠杆菌密码子表; 未知字符(含 X)编码为 NNN
 ECOLI_CODONS = {
     'A': 'GCG', 'R': 'CGT', 'N': 'AAC', 'D': 'GAT', 'C': 'TGC',
     'Q': 'CAG', 'E': 'GAA', 'G': 'GGT', 'H': 'CAT', 'I': 'ATT',
@@ -63,6 +65,7 @@ def get_framework_from_pdb(pdb_id, vh_chain, vl_chain):
 
 # ── Code for handling ANARCI-less antibody domain identification ──
 # In VH, look for characteristic patterns to identify domain boundaries
+# 无 ANARCI 时的启发式结构域定位: FR1 起始的物种特异性短语(VH/VL 两套模式串)
 VH_PATTERNS = ['VQLVES', 'VQLVQS', 'VQLQES', 'VKLVES', 'VKLEES', 'EVQLV', 'QVQLV', 'EVKLV',
                 'QVQLQ', 'EVQLQ', 'QVQLK', 'QVQLE', 'EVQLL', 'VQLQQ', 'VQLQE',
                 'VQLLES', 'VELVES', 'VQLVET', 'VKLVET', 'VQLQET',
@@ -129,6 +132,7 @@ def estimate_pi(aa_seq):
 
 def estimate_ext_coeff(aa_seq):
     """Estimate extinction coefficient (M-1 cm-1) at 280 nm."""
+    # 280 nm 摩尔消光系数经验贡献: Trp 5500、Tyr 1490、Cys(二硫键半胱氨酸) 125
     n_w = aa_seq.count('W')
     n_y = aa_seq.count('Y')
     n_c = aa_seq.count('C')
@@ -252,6 +256,7 @@ def main():
     #   Ponezumab (anti-Aβ C-term) → 4HIX
 
     LITERATURE_FRAMEWORKS = {
+        # 文献抗体 -> 近缘框架 PDB 映射(人源化程度/表位朝向相近的支架), 见上方英文注释表
         'Solanezumab':           ('4HIX', fw_4HIX_vh, fw_4HIX_vl),
         'Donanemab':             ('4HIX', fw_4HIX_vh, fw_4HIX_vl),
         'Crenezumab':            ('5CSZ', fw_5CSZ_vh, fw_5CSZ_vl),
@@ -306,6 +311,7 @@ def main():
         strategy = 'unknown'
 
         # ── Case 1: Template-seeded (full VH already designed) ──
+        # 模板种子类: 候选序列本身即 MPNN 重设计的完整 VH, 只需配 VL, 无需嫁接
         if stype == 'template_seeded':
             fw_info = TEMPLATE_FRAMEWORKS.get(src)
             if fw_info:
@@ -321,6 +327,7 @@ def main():
                 continue
 
         # ── Case 2: Literature antibody (CDR-H3 only, need framework) ──
+        # 文献抗体类: 只有 CDR-H3, 需嫁接到映射框架的 VH 上; 找不到映射则回退 4HIX
         elif stype == 'literature':
             fw_info = LITERATURE_FRAMEWORKS.get(src)
             if fw_info:
@@ -357,6 +364,7 @@ def main():
             continue
 
         # ── Check framework validity ──
+        # 框架完整性检查: 任一链缺失(PDB 解析失败/文件缺失)则记 UNPAIRED 跳过
         if fw_vh is None or fw_vl is None:
             rec['status'] = 'UNPAIRED'
             rec['reason'] = f'Framework VH or VL is None (source={fw_source})'
@@ -421,6 +429,7 @@ def main():
 
         # Extract VL domain
         # vl_scfv_pdb may have been set above (for cross-IDP candidates)
+        # VL 域提取: 按 framework 来源选择截断长度或启发式定位(不同 PDB 链长差异较大)
         if vl_scfv_pdb is not None:
             vl_scfv = vl_scfv_pdb
         elif fw_source in ('4HIX', '5CSZ', '6CBV'):
@@ -465,6 +474,7 @@ def main():
         print(f"  {i+1:2d}. {src:<25s} → {fw_tag:<8s} | scFv={len(scfv)}aa, {mw/1000:.1f}kDa, pI={pi} | {strategy[:50]}...")
 
     # ── Step 3: Write outputs ──
+    # 产物: 氨基酸/DNA/Fab 三套 FASTA(每行 60 字符)、注释 TSV、未配对清单与汇总 JSON
     print(f"\n── Writing outputs ({len(results)} completed, {len(unpaired)} unpaired) ──")
 
     ts = time.strftime('%Y%m%d_%H%M%S')

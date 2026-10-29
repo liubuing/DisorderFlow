@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Create expression and A-beta state-specificity assay planning artifacts."""
+"""Create expression and A-beta state-specificity assay planning artifacts.
+
+为 v5.1 候选 Fab 生成湿实验计划三件套：24 孔表达板布板 CSV、
+A-beta 状态特异性结合矩阵 CSV（monomer/oligomer/fibril + 阳性/阴性分析物）、
+以及预注册的实验验收标准 JSON（表达 QC、效度对照、候选晋级规则）。
+对照体系：5CSZ 完整亲本（阳性）、商用同型 Fab（阴性）、mock 转染（空白）。
+"""
 
 import csv
 import json
@@ -11,6 +17,7 @@ ISOTYPE_CONTROL = "human_IgG1_kappa_Fab_isotype_control"
 
 
 def write_csv(path, fields, rows):
+    """按给定字段顺序写 DictWriter CSV。"""
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
@@ -18,6 +25,7 @@ def write_csv(path, fields, rows):
 
 
 def main():
+    """生成布板与结合矩阵：候选×3 生物学重复，A-D 行 1-6 列共 24 孔。"""
     package = json.loads((BASE / "expression_package.json").read_text(encoding="utf-8"))
     candidates = [record["construct_id"] for record in package["constructs"]]
 
@@ -50,6 +58,8 @@ def main():
     )
 
     analytes = [
+        # 三种 A-beta 聚集态为目标；1-11 片段为表位阳性对照，
+        # 打乱肽与 BSA 分别为序列阴性/基质阴性对照
         ("A_beta_1_42_monomer", "target_state"),
         ("A_beta_1_42_oligomer", "target_state"),
         ("A_beta_1_42_fibril", "target_state"),

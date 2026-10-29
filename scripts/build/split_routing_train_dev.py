@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Create an internal routing train/dev split without touching legacy validation."""
+"""Create an internal routing train/dev split without touching legacy validation.
+
+为路由模型（routing）创建内部 train/dev 划分，且绝不触碰 legacy 验证集：
+按 (pdb_cluster_id, cdr_h3_exact_id, antigen_sequence_cluster_id) 三字段
+做成组划分（同组不跨 split），可选把上一阶段 lookup 出现过的组固定留 train。
+写 train/dev LMDB 与 split_audit.json（含隔离检查与 ID 指纹）。
+"""
 
 from __future__ import annotations
 
@@ -21,6 +27,7 @@ from scripts.preprocess_sabdab_phase3 import build_lmdb  # noqa: E402
 
 
 def read_records(path: Path):
+    """按 -ids 文件顺序读出 LMDB 全部记录；缺键即失败。"""
     ids = pickle.loads(Path(f"{path}-ids").read_bytes())
     env = lmdb.open(str(path), subdir=False, readonly=True, lock=False, readahead=False)
     records = []
@@ -35,10 +42,12 @@ def read_records(path: Path):
 
 
 def digest(values):
+    """对 ID 列表按序拼接取 sha256，作为划分内容指纹。"""
     return hashlib.sha256('\n'.join(map(str, values)).encode('utf-8')).hexdigest()
 
 
 def main():
+    """主流程：读取 -> 组成组划分 -> 隔离校验 -> 写 LMDB 与审计报告。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path,
                         default=Path('data/phase3_v5_1_pair_clustered/train.lmdb'))
@@ -69,6 +78,7 @@ def main():
     train, dev = grouped_train_val_split(
         records, args.dev_ratio, args.seed, cluster_fields=required,
         fixed_train_ids=prior_ids)
+    # dev 下限：有 base_lookup 时取 50 条，否则取 5%，保证路由选择有统计意义
     minimum_dev = 50 if args.base_lookup else round(0.05 * len(records))
     if len(dev) < minimum_dev:
         raise RuntimeError(

@@ -40,6 +40,7 @@ UNIPROT_API = 'https://rest.uniprot.org/uniprotkb/search'
 
 # ── Expanded disease queries ──
 # Phase A: Existing 10 categories with wider length range + larger page size
+# Phase A：原有 10 个疾病类别，长度范围放宽到 50-400 aa
 DISEASE_QUERIES_EXPANDED = [
     ('liver_disease', '(hepatitis OR cirrhosis OR hepatocellular OR NAFLD OR "Wilson disease" OR "alpha-1 antitrypsin" OR "cholestasis" OR "hemochromatosis") AND (organism_id:9606) AND (length:[50 TO 400]) AND (reviewed:true) AND (fragment:false)'),
     ('kidney_disease', '(nephritis OR nephrotic OR "polycystic kidney" OR "renal failure" OR nephropathy OR "Alport syndrome" OR "Bartter syndrome" OR "Gitelman syndrome") AND (organism_id:9606) AND (length:[50 TO 400]) AND (reviewed:true) AND (fragment:false)'),
@@ -54,6 +55,7 @@ DISEASE_QUERIES_EXPANDED = [
 ]
 
 # Phase B: 6 new disease categories
+# Phase B：新增 6 个疾病类别（自身免疫/皮肤/内分泌/消化/线粒体/神经发育）
 NEW_DISEASE_QUERIES = [
     ('autoimmune_disease', '("rheumatoid arthritis" OR "lupus" OR "multiple sclerosis" OR "type 1 diabetes" OR "inflammatory bowel" OR "Crohn" OR "ulcerative colitis" OR "psoriasis" OR "ankylosing spondylitis") AND (organism_id:9606) AND (length:[50 TO 400]) AND (reviewed:true) AND (fragment:false)'),
     ('skin_disease', '("epidermolysis bullosa" OR "ichthyosis" OR "albinism" OR "xeroderma pigmentosum" OR "vitiligo" OR "dermatitis" OR "pemphigus") AND (organism_id:9606) AND (length:[50 TO 400]) AND (reviewed:true) AND (fragment:false)'),
@@ -64,6 +66,7 @@ NEW_DISEASE_QUERIES = [
 ]
 
 # Phase C: Keyword-based queries for high-value disease proteins
+# Phase C：基于 UniProt 关键字（Disease mutation/Oncogene/Tumor suppressor）的高价值检索
 KEYWORD_QUERIES = [
     ('disease_mutation', '(keyword:"Disease mutation" OR annotation:(type:"natural variant" disease)) AND (organism_id:9606) AND (length:[50 TO 400]) AND (reviewed:true) AND (fragment:false)'),
     ('oncogene', '(keyword:Oncogene OR keyword:"Tumor suppressor") AND (organism_id:9606) AND (length:[50 TO 400]) AND (reviewed:true) AND (fragment:false)'),
@@ -76,14 +79,17 @@ ALL_QUERIES = DISEASE_QUERIES_EXPANDED + NEW_DISEASE_QUERIES + KEYWORD_QUERIES
 
 def fetch_uniprot_accessions(query, max_per_query=200):
     """Fetch UniProt accessions with pagination support."""
+    # 游标分页拉取 UniProt 条目，最多 4 页 x 500 条
     all_accessions = []
     url_base = f'{UNIPROT_API}?query={requests.utils.quote(query)}&size=500&format=tsv&fields=accession,length,protein_name'
     seen = set()
 
     # UniProt pagination: use cursor-based pagination via next link header
+    # UniProt pagination: use cursor-based pagination via next link header
+    # 游标分页：解析响应头中的 rel="next" 链接
     next_url = url_base
     page = 0
-    max_pages = 4  # Max 4 pages × 500 = 2000 per query
+    max_pages = 4  # Max 4 pages × 500 = 2000 per query  # 单查询上限 2000 条
 
     while next_url and page < max_pages and len(all_accessions) < max_per_query:
         r = requests.get(next_url, timeout=30)
@@ -113,6 +119,7 @@ def fetch_uniprot_accessions(query, max_per_query=200):
 
 
 def mmcif_to_temp_pdb(cif_text, accession):
+    # 将 AlphaFold mmCIF 转存为临时 PDB，供 BFN 预处理管线读取
     from Bio.PDB.MMCIFParser import MMCIFParser
     from Bio.PDB import PDBIO
     parser = MMCIFParser(QUIET=True)
@@ -126,6 +133,7 @@ def mmcif_to_temp_pdb(cif_text, accession):
 
 
 def extract_plddt_from_mmcif(cif_text):
+    # 提取逐残基 pLDDT（CA 原子 B 因子 / 100）与对应序列
     from Bio.PDB.MMCIFParser import MMCIFParser
     parser = MMCIFParser(QUIET=True)
     structure = parser.get_structure('tmp', io.StringIO(cif_text))
@@ -143,6 +151,7 @@ def extract_plddt_from_mmcif(cif_text):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    # PDB -> BFN 训练 batch：mask 全链 -> merge -> patch，返回 (batch, 序列, 残基数)
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -165,6 +174,7 @@ def preprocess_pdb_for_bfn(pdb_path):
 
 
 def main():
+    # 主流程：多类 UniProt 检索（跨查询去重、跳过 v1 已处理）-> 下载 AFDB -> 预处理入 LMDB
     import argparse, shutil
     p = argparse.ArgumentParser(description='Build expanded disease protein dataset v2')
     p.add_argument('--output_dir', default=str(PROJECT_DIR / 'data' / 'confidence_dataset_disease_v2'),
@@ -257,6 +267,7 @@ def main():
             continue
 
         # Length check
+        # 长度过滤：仅保留 30~500 残基的条目
         if len(plddt_list) < 30 or len(plddt_list) > 500:
             print(f'SKIP (length {len(plddt_list)} out of range)')
             n_skipped_length += 1
@@ -340,6 +351,7 @@ def main():
         print(f'OK (L={n_res}, pLDDT={plddt_tensor.mean():.3f}, pTM={iptm:.3f})')
 
         # Incremental save every 50 proteins
+        # 每 50 条整体重写一次 LMDB，保证断点续跑安全
         if len(entries) % 50 == 0:
             import shutil as _shutil
             import lmdb as _lmdb
@@ -347,6 +359,7 @@ def main():
             if os.path.exists(db_path_tmp):
                 _shutil.rmtree(db_path_tmp)
             sample = pickle.dumps(entries[0])
+            # 按首条样本估计 3 倍余量的 map_size，下限 500 MB，并对齐到 4 KiB
             map_size = max(len(sample) * len(entries) * 3 + 10 * 1024 * 1024, 500 * 1024 * 1024)
             map_size = ((map_size + 4095) // 4096) * 4096
             env_tmp = _lmdb.open(db_path_tmp, map_size=map_size)

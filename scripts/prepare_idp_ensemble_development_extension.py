@@ -36,22 +36,28 @@ from modules.ensemble_pose_transfer import (  # noqa: E402
 )
 from modules.state_contact_scorer import extract_contact_map  # noqa: E402
 
+# 修饰残基到标准氨基酸的映射（硒代蛋氨酸 MSE->M、焦谷氨酸 PCA->E、磷酸化 S/T/Y）
 MODIFIED_RESIDUES = {"MSE": "M", "PCA": "E", "SEP": "S", "TPO": "T", "PTR": "Y"}
+# 修饰残基重命名为标准三字母残基名
 PTM_RENAME = {"SEP": "SER", "TPO": "THR", "PTR": "TYR", "MSE": "MET"}
+# 重命名后各标准残基允许保留的原子集合（不在集合内的原子行被剔除）
 STANDARD_ATOMS = {
     "SER": {"N", "CA", "C", "O", "CB", "OG"},
     "THR": {"N", "CA", "C", "O", "CB", "OG1", "CG2"},
     "TYR": {"N", "CA", "C", "O", "CB", "CG", "CD1", "CD2", "CE1", "CE2", "CZ", "OH"},
     "MET": {"N", "CA", "C", "O", "CB", "CG", "SD", "CE"},
 }
+# MSE 的硒原子重命名为甲硫氨酸的硫原子
 MSE_ATOM_RENAME = {"SE": "SD"}
 
 
 def sha256(path):
+    # 文件 SHA256，用于冻结清单与产物血缘校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def sequence_residues(chain):
+    # 提取链上含 CA 的标准残基，返回 (序列, 残基列表)；修饰残基先归一化
     residues = []
     sequence = []
     for residue in chain:
@@ -67,6 +73,8 @@ def sequence_residues(chain):
 
 
 class ReferenceSelect(Select):
+    """Bio.PDB 选择器：仅保留抗体链与抗原链上的表位残基。"""
+
     def __init__(self, antibody_chains, antigen_chain, antigen_residue_ids):
         self.antibody_chains = set(antibody_chains)
         self.antigen_chain = antigen_chain
@@ -83,6 +91,8 @@ class ReferenceSelect(Select):
 
 
 class EpitopeSelect(Select):
+    """Bio.PDB 选择器：仅保留指定链上的表位残基（用于写表位模型）。"""
+
     def __init__(self, chain_id, residue_ids):
         self.chain_id = chain_id
         self.residue_ids = set(residue_ids)
@@ -95,6 +105,7 @@ class EpitopeSelect(Select):
 
 
 def rename_ptm_residues(path, chain_id, residue_ids, mapping):
+    # 就地重命名表位残基（如磷酸化 S/T/Y -> SER/THR/TYR），并剔除非标准原子行
     lines = Path(path).read_text(encoding="ascii").splitlines(keepends=True)
     kept = []
     for line in lines:
@@ -114,6 +125,7 @@ def rename_ptm_residues(path, chain_id, residue_ids, mapping):
 
 
 def normalize_mse_residues(path):
+    # 将 MSE/PCA 残基名统一改写为 MET/GLU
     lines = Path(path).read_text(encoding="ascii").splitlines(keepends=True)
     for index, line in enumerate(lines):
         if line.startswith(("ATOM  ", "HETATM")):
@@ -126,6 +138,7 @@ def normalize_mse_residues(path):
 
 
 def parse_ptm_mapping(spec):
+    # 将配置中的 PTM 归一化描述（dict/字符串/二元组列表）统一解析为映射
     if not spec:
         return {}
     if isinstance(spec, dict):
@@ -145,6 +158,7 @@ def parse_ptm_mapping(spec):
 
 
 def trim_reference(component, output_path):
+    """裁剪参考结构：仅保留抗体链 + 抗原链表位残基，并做修饰残基归一化。"""
     source = ROOT / component["reference_pdb"]
     parser = PDBParser(QUIET=True)
     model = next(iter(parser.get_structure(component["component_id"], str(source))))
@@ -186,6 +200,7 @@ def trim_reference(component, output_path):
 
 
 def prepare_component(component, config, output_root):
+    """单组件预处理：裁剪参考 -> 生成/转移 pose -> 逐 pose 审计 -> 按上限挑选合格 pose。"""
     component_dir = output_root / component["component_id"]
     trimmed = trim_reference(component, component_dir / "trimmed_reference.pdb")
     template = ROOT / trimmed["path"]
@@ -197,7 +212,7 @@ def prepare_component(component, config, output_root):
     if component["ensemble"]["type"] == "synthetic_local_openmm":
         import random
 
-        random.seed(20260811)
+        random.seed(20260811)  # 固定采样种子，保证合成系综可复现
         from generate_h3_peptide_ensemble import peptide_geometry
         from openmm.app import PDBFile
 
@@ -286,6 +301,7 @@ def prepare_component(component, config, output_root):
 
     cap = int(config["requirements"]["selected_pose_conformers_per_component"])
     passing = [row for row in poses if row["status"] == "pass"]
+    # sensitivity-only 组件允许通过数即所需数；正式组件要求达到完整上限
     if bool(component.get("sensitivity_only", False)):
         required = max(1, min(cap, len(passing)))
     else:
@@ -309,6 +325,7 @@ def prepare_component(component, config, output_root):
 
 
 def main():
+    # 主流程：校验冻结清单血缘 -> 逐组件准备 pose -> 增量写准备报告 -> 通过后冻结 pose manifest
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",

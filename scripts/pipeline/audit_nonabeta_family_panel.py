@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Audit independent Tau and alpha-synuclein antibody families for LOFO readiness."""
+"""Audit independent Tau and alpha-synuclein antibody families for LOFO readiness.
+
+审计非 A-beta（Tau / alpha-synuclein）独立抗体家族面板的 LOFO（留一族出）
+就绪度：核对每个家族 PDB 是否在本地、抗原链是否存在、表位序列是否与
+坐标抗原序列互相兼容；可用家族数 >=3 才认为该目标 LOFO 数据就绪。
+同时记录已排除的注释错误条目（如 6CBV 实为抗 BRIL Fab）。
+"""
 from __future__ import annotations
 
 import csv
@@ -17,6 +23,7 @@ AA3 = {
     "TYR": "Y", "VAL": "V",
 }
 FAMILIES = [
+    # (target, family, PDB, 重链, 轻链, 抗原链, 表位序列, 引用状态, DOI)
     ("tau", "MN423", "2V17", "H", "L", "A", "TDHGAE", "published", "10.1016/j.febslet.2007.11.067"),
     ("tau", "Tau5", "4TQE", "H", "L", "A", "LPTPPTREPKKVAVVR", "pdb_only", ""),
     ("tau", "DC8E8", "5MP3", "A", "B", "C", "GSKDNIKHVPGGGSVQIVYKPVDLSKVTSK", "pdb_only", ""),
@@ -37,6 +44,7 @@ def pdb_path(pdb_id):
 
 
 def chain_sequence(path, chain_id):
+    """读取指定链的标准氨基酸序列（非标准残基记空串）。"""
     model = next(iter(PDBParser(QUIET=True).get_structure(path.stem, str(path))))
     if chain_id not in model:
         return ""
@@ -71,6 +79,7 @@ def main():
             "independent_families": len(target_rows),
             "usable_structural_families": len(usable),
             "family_ids": [row["family"] for row in usable],
+            # LOFO 数据就绪门槛：可用结构家族 >=3
             "lofo_data_ready": len(usable) >= 3,
             "lofo_design_complete": False,
         }

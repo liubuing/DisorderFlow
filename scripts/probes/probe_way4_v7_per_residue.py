@@ -12,6 +12,10 @@ Compares three modes:
   B. Scalar disorder (V6): epitope_disorder = (1, 1) global mean
   C. No disorder (V17i baseline): epitope_disorder = None
 """
+# 角色：WAY4-V7 P0-fix-B 探针——验证逐残基无序剖面机制：(1) 接收端可接受 (N,L)
+# 剖面且无 NaN；(2) 逐残基剖面产生非恒定的 CDR 级无序梯度；(3) 高无序表位
+# 残基导致更高的输出熵。对比三种条件注入：逐残基剖面(V7)/标量均值(V6)/
+# 无注入(V17i 基线)，使用预计算的 per_residue_profiles.pkl 与 V18 检查点。
 import sys, os, pickle, time, json
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..')); sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 import numpy as np

@@ -26,6 +26,7 @@ from webapp.state import PROJECT_DIR, load_esmif
 
 
 def run_mpnn(pdb_path, chains, num_samples, temperature, seed, omit_aas):
+    # ProteinMPNN 基线设计：以子进程调用官方脚本，解析其 FASTA 输出并计算诊断
     out_dir = tempfile.mkdtemp(prefix='mpnn_')
     # protein_mpnn_run.py derives its output file names with rfind("/"); a
     # Windows backslash path defeats that and the name becomes the whole path.
@@ -77,6 +78,7 @@ def run_mpnn(pdb_path, chains, num_samples, temperature, seed, omit_aas):
         lines.append(diag)
     return '\n'.join(lines), fasta_str, results_list
 def run_esmif(pdb_path, chain, temperature, num_samples):
+    # ESM-IF 逆折叠基线：按温度采样并统计与天然序列的恢复率
     # The compat shim must land before fair-esm's import-time biotite lookup;
     # load_esmif() also patches, but it is called after this import.
     from esmif_compat import install_biotite_compat, install_torch_scatter_fallback
@@ -102,6 +104,7 @@ def run_esmif(pdb_path, chain, temperature, num_samples):
         results_list.append({'sequence': s, 'recovery': rec})
     fasta_str = '\n'.join(fasta_lines)
     return '\n'.join(lines), fasta_str, results_list
+# 单字母 -> 三字母氨基酸码（生成 PDB 时写残基名用）
 AA_NAMES = {
     'A': 'ALA','C': 'CYS','D': 'ASP','E': 'GLU','F': 'PHE','G': 'GLY',
     'H': 'HIS','I': 'ILE','K': 'LYS','L': 'LEU','M': 'MET','N': 'ASN',

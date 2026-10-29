@@ -18,6 +18,7 @@ AQP4_EPITOPE = (
 )
 
 def load_designs(fasta_path):
+    # 解析多序列 FASTA 为 (header, sequence) 列表；容忍换行拆分的多行序列。
     designs = []
     with open(fasta_path) as f:
         header, seq = None, ''
@@ -35,6 +36,12 @@ def load_designs(fasta_path):
     return designs
 
 def main():
+    # CPU 快速验证循环: 每个设计拼成 "表位:CDR" 双链 Multimer FASTA，
+    # 用 ColabFold batch（1 模型 / 1 次 recycle / 限小的 MSA）跑约 5 分钟量级
+    # 的粗筛。质量分级方向约定: ipTM 与 CDR 链 pLDDT 越高越好，
+    # EXCELLENT 要求 ipTM>0.5 且 CDR pLDDT>60（0-100 原始值），
+    # 逐级放宽到 MODERATE（ipTM>0.15），其余为 POOR。
+    # 子进程超时 1200 秒；逐设计捕获失败/超时，不中断批次。
     import argparse
     p = argparse.ArgumentParser()
     p.add_argument('--designs', required=True)

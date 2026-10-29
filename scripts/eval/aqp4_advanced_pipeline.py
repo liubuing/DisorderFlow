@@ -12,6 +12,13 @@ Usage:
   python aqp4_advanced_pipeline.py --results_dir ./results --output_dir ./out
   python aqp4_advanced_pipeline.py --pdb complex.pdb --skip-docking
 """
+# AQP4（水通道蛋白 4）抗体设计的高级评估管线，四个方向分析：
+# 1) 刚体对接精修（FFT 形状互补 + 静电互补评分，含碰撞惩罚）；
+# 2) 界面化学（疏水性、净电荷、氢键能力）；
+# 3) DFIRE 风格统计势的结合自由能估计（启发式势函数，非严格 DFIRE）；
+# 4) 界面性质引导的 CDR 序列优化（逐位点贪心打分突变）。
+# 输入为 AF2-Multimer 预测复合物 PDB 与纳米抗体设计 FASTA，输出 JSON 结果。
+
 import sys, os, io, json, math, argparse
 from pathlib import Path
 from collections import defaultdict
@@ -28,6 +35,7 @@ DEFAULT_RESULTS_DIR = PROJECT_DIR / 'results' / 'aqp4'
 
 TARGET_SEQ = "RRFKEAFSKAAQQTKGSYMEVEDNRSQVETDDLILKPGVVHVIDVDRGEEKKGKDQSGEVLSSV"
 
+# Kyte-Doolittle 疏水性标度（正值疏水、负值亲水）
 HYDROPATHY = {
     'A':1.8,'C':2.5,'D':-3.5,'E':-3.5,'F':2.8,'G':-0.4,'H':-3.2,'I':4.5,
     'K':-3.9,'L':3.8,'M':1.9,'N':-3.5,'P':-1.6,'Q':-3.5,'R':-4.5,'S':-0.8,
@@ -47,6 +55,7 @@ RES_3TO1 = {
     'ARG':'R','SER':'S','THR':'T','VAL':'V','TRP':'W','TYR':'Y',
 }
 
+# DFIRE 截断半径 15 埃、每bin 0.5 埃，共 30 个距离bin
 DFIRE_RC = 15.0
 DFIRE_BIN = 0.5
 DFIRE_NBINS = int(DFIRE_RC / DFIRE_BIN)
@@ -119,6 +128,7 @@ def get_residue_centroids(atoms, chain=None):
 
 
 def get_surface_atoms(atoms, probe_radius=1.4):
+    # 表面原子启发式：5 埃半径内邻居少于 25 个的原子视为表面
     coords = np.array([[a['x'], a['y'], a['z']] for a in atoms])
     if len(coords) == 0:
         return []
@@ -155,6 +165,7 @@ def load_fasta_sequences(fasta_path):
 # Direction 1: Docking refinement
 # ============================================================
 def generate_rotation_samples(n_angles=24):
+    # 旋转采样：斐波那契球面均匀取轴方向，每轴再取 6 个绕轴角度
     rotations = []
     phi = math.pi * (3 - math.sqrt(5))
     for i in range(n_angles):
@@ -169,6 +180,8 @@ def generate_rotation_samples(n_angles=24):
 
 
 def shape_complementarity_score(coords_A, coords_B, grid_spacing=1.0, padding=10):
+    # FFT 形状互补：把两组坐标栅格化并高斯平滑后做互相关，
+    # 以 |fA|*|fB| 的互相关近似重叠惩罚（权重 0.3），取复合图最大值
     all_coords = np.vstack([coords_A, coords_B])
     min_c = all_coords.min(axis=0) - padding
     max_c = all_coords.max(axis=0) + padding
@@ -201,6 +214,8 @@ def docking_score(atoms_rec, atoms_lig, rotation, translation, grid_spacing=1.2)
     shape_score, _ = shape_complementarity_score(rec_coords, rotated, grid_spacing)
 
     rec_tree = KDTree(rec_coords)
+    # 碰撞/接触判定：最近原子距离 <2 埃记为碰撞（重罚 -10/个），
+    # 2-5 埃记为接触（奖励 +0.5/个）
     clashes, contacts = 0, 0
     for rc in rotated:
         dist, _ = rec_tree.query(rc)
@@ -352,6 +367,9 @@ def build_dfire_potential():
     aa_to_idx = {aa: i for i, aa in enumerate(aa_list)}
 
     potential = np.zeros((n_aa, n_aa, DFIRE_NBINS))
+    # 启发式势函数（非严格 DFIRE 统计势）：疏水吸引（高斯包络，中心 5 埃）、
+    # 异号电荷吸引（6 埃 screened 衰减）、Lennard-Jones 型项（sigma=3.5）、
+    # 氢键项（2.5-3.5 埃窗口内 -2.0）；最后对每个距离bin做均值中心化
     for i, aa1 in enumerate(aa_list):
         for j, aa2 in enumerate(aa_list):
             h1, h2 = HYDROPATHY[aa1], HYDROPATHY[aa2]
@@ -425,6 +443,7 @@ def compute_binding_energy(atoms_rec, atoms_lig):
                 components['hbond'] += e
 
     avg_energy = total_energy / max(n_pairs, 1)
+    # dG 估计为总分的 0.15 倍经验缩放；<-5 视为有利、<0 为弱结合
     dG_estimate = total_energy * 0.15
 
     print(f"  Residue pairs evaluated: {n_pairs}")
@@ -449,6 +468,9 @@ def compute_binding_energy(atoms_rec, atoms_lig):
 # Direction 4: CDR optimization via interface constraints
 # ============================================================
 def optimize_cdr_for_interface(interface, nanobody_seq):
+    # 界面引导的 CDR 逐位点贪心优化：对每个位置在 20 种氨基酸中打分——
+    # 疏水性贴近受体界面均值（/4.5 归一）、电荷与受体净电荷互补（*0.5）、
+    # 保守性奖励（同原残基 +2.0）、化学多样性小奖励（+0.3），取最高分
     rec_props = interface['receptor']
     target_hydro = rec_props['hydro_mean']
     target_charge = rec_props['net_charge']

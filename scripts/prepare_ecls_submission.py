@@ -10,6 +10,7 @@ import shutil
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+# 准备目录: 规范化后的公开证据副本; 归档: 最终交付的评审 zip 包
 PREPARED = "release/ecls_v1/prepared"
 ARCHIVE = "dist/disorderflow-ecls-v1-reviewer-package.zip"
 
@@ -30,6 +31,9 @@ def portable_copy(node, changes, location="$"):
     if isinstance(node, list):
         return [portable_copy(v, changes, f"{location}[{i}]") for i, v in enumerate(node)]
     if isinstance(node, str):
+        # 仅规范化执行路径字符串: 统一斜杠后识别 Windows 盘符/WSL/home 路径;
+        # 仓库内路径替换为固定标记之后的相对部分, Python 可执行文件记为 "python",
+        # 其余外部路径只保留文件名; 每处替换记录字段位置与原串哈希, 数值内容不动
         normalized = re.sub(r"/+", "/", node.replace("\\", "/"))
         if re.match(r"^(?:[A-Za-z]:/|/mnt/[a-z]/|/home/|/Users/)", normalized):
             marker = "/biological/DisorderFlow/"
@@ -47,12 +51,15 @@ def portable_copy(node, changes, location="$"):
 
 
 def build(root=ROOT):
+    # 构建评审包: 校验冻结决策哈希 -> 证据文件路径规范化拷贝 -> 聚类分配交叉核对 ->
+    # 组装打包映射 -> 固定时间戳压缩 -> 输出清单与摘要
     root = Path(root).resolve()
     prepared = root / PREPARED
     prepared.mkdir(parents=True, exist_ok=True)
     line = json.loads((root / "release/ecls_v1/publication_line.json").read_text(encoding="utf-8"))
     decision_path = root / line["primary_decision"]
     decision = json.loads(decision_path.read_text())
+    # 完整性校验: 主结果文件的 sha256 必须与冻结决策中的记录一致, 否则拒绝打包
     if digest(root / line["primary_results"]) != decision["source_result_sha256"]:
         raise ValueError("Original final result no longer matches frozen decision")
     ledger = {"schema_version": 1, "scope": "derived portable copies; numerical values unchanged",
@@ -73,6 +80,7 @@ def build(root=ROOT):
             "public_path": "evidence/" + name, "public_sha256": digest(prepared / name),
             "path_changes": changes, "scientific_values_unchanged": True}
     audit_path = root / "data/peptide_h3_publication_split_v4/audit.json"
+    # 交叉核对: adaptation 结果中的 ID 必须与冻结拆分审计的推断单元分配一致(共 46 个独立单元)
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
     ids = {r["id"] for r in json.loads((prepared / "adaptation_results_portable.json").read_text())["results"]}
     assignments = {}
@@ -88,6 +96,7 @@ def build(root=ROOT):
         "public_sha256": digest(prepared / "adaptation_cluster_assignments.json"),
         "transformation": "selected adaptation record IDs and their frozen inference-unit assignments"}
     write_json(prepared / "SOURCE_PROVENANCE.json", ledger)
+    # 打包映射: 仓库内源路径 -> 包内相对路径(证据/协议/手稿/许可证/校验脚本)
     mapping = {
         "release/ecls_v1/PUBLIC_ARCHIVE_README.md": "README.md",
         "LICENSE.md": "LICENSE.md",
@@ -133,6 +142,7 @@ def build(root=ROOT):
     # Never package old reviewer ZIPs, checkpoints or broad working directories.
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for source, name in sorted(mapping.items(), key=lambda row: row[1]):
+            # zip 条目使用固定时间戳, 保证相同输入产出字节级一致的压缩包
             info = zipfile.ZipInfo(name, (2026, 9, 28, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             z.writestr(info, (root / source).read_bytes())

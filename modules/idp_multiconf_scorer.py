@@ -25,6 +25,8 @@ ABETA_PKL = 'data/abeta_conformations/abeta42_5seed.pkl'
 ABETA_SEQUENCE = 'DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA'
 
 # Epitope segments from P1 library
+# Aβ42 的功能表位区段（1 起编号）：16-24 聚集核心 KLVFFAED 及其最小核心、
+# N 端（斑块清除抗体如 aducanumab 靶向区）、C 端（原纤维帽）
 DEFAULT_EPITOPES = {
     'mid_16_24':  (16, 24),   # KLVFFAED — aggregation core
     'core_16_21': (16, 21),   # KLVFFA — minimal core
@@ -88,6 +90,8 @@ def score_robust(antibody_pdb: str,
 
     # Superpose reference: use seed 0 as anchor
     # Align each conformation's epitope CA to seed 0's epitope CA
+    # 抗体保持不动，把每条构象的表位段 Kabsch 对齐到种子 0 的表位段，
+    # 这样接触数差异完全反映构象柔性而非摆放差异
     ref_ca = ca_positions[0]  # (42, 3)
     ref_epi = ref_ca[epi_start-1:epi_end]
 
@@ -120,6 +124,7 @@ def score_robust(antibody_pdb: str,
         per_conf.append(contacts)
 
     per_conf = np.array(per_conf)
+    # robust 取 25 分位数：即使 25% 构象完全失配，该值仍由其余 75% 保证
     robust = float(np.percentile(per_conf, 25))  # 25th percentile = at least 75% of confs
     n_below = int((per_conf < 2).sum())  # confs with <2 contacts
 
@@ -139,6 +144,7 @@ def score_robust(antibody_pdb: str,
 
 def score_designs(design_pdbs: list, **kwargs) -> list:
     """Batch-score multiple design PDBs. Returns sorted by robust descending."""
+    # 逐个打分；robust（25 分位接触数）降序排名，文件缺失的跳过
     results = []
     for pdb in design_pdbs:
         if os.path.exists(pdb):

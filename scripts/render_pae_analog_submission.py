@@ -19,6 +19,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Keep
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# (源 markdown, 输出 PDF, 页眉标签) 三组渲染对: 手稿与 PLOS 投稿信
 PAIRS = [
     ("publication/pae_analog_manuscript_draft_v1.md",
      "publication/PAE_ANALOG_MANUSCRIPT.pdf",
@@ -30,6 +31,7 @@ PAIRS = [
 
 
 class NumberedParagraph(Paragraph):
+    # 带正文行号标注的段落: 在左页边逐行绘制灰色行号, 供审稿批注定位
     def draw(self):
         super().draw()
         canvas = self.canv
@@ -44,6 +46,8 @@ class NumberedParagraph(Paragraph):
 
 
 def inline(text):
+    # 行内 markdown -> reportlab 标记: HTML 转义后处理 `代码`、**加粗**,
+    # 并把 CJK 字符段切换到注册的 CJK 字体
     text = escape(text)
     text = re.sub(r"`([^`]+)`", r'<font name="Courier" size="10">\1</font>', text)
     text = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", text)
@@ -52,6 +56,7 @@ def inline(text):
 
 
 def render(source, output, label, stamp=True):
+    # 首次调用时注册中文字体(宋体), 仅用于封面信/草稿中的少量中文
     if "CJK" not in pdfmetrics.getRegisteredFontNames():
         pdfmetrics.registerFont(TTFont("CJK", r"C:\Windows\Fonts\simsun.ttc", subfontIndex=0))
     styles = {
@@ -73,6 +78,7 @@ def render(source, output, label, stamp=True):
     lines = source_text.splitlines()
     story = []
     i = 0
+    # 从正文中提取审阅版本日期(页眉标注用); 找不到则记 Undated
     revision = re.search(r"(?:Author-review version, |Revision: )([^\.]+)\.", source_text)
     review_date = revision.group(1) if revision else "Undated"
     while i < len(lines):
@@ -81,6 +87,8 @@ def render(source, output, label, stamp=True):
             i += 1
             continue
         if line.startswith("!["):
+            # 图片块: 按源图宽高等比缩放到版心宽度(466pt), 紧随其后的 "Figure ..." 行作图注,
+            # 图与图注用 KeepTogether 防跨页拆散
             match = re.match(r"!\[(.*?)\]\((.*?)\)", line)
             path = source.parent / match.group(2)
             from PIL import Image as PILImage
@@ -119,6 +127,7 @@ def render(source, output, label, stamp=True):
         story.append(NumberedParagraph(inline(" ".join(para)), styles["body"]))
 
     def page(canvas, doc):
+        # 页眉(标签+审阅日期)与页脚页码; stamp=False 时不打页眉
         canvas.saveState()
         canvas.setFont("Times-Roman", 9)
         canvas.setFillColor(colors.HexColor("#58636a"))
@@ -131,6 +140,7 @@ def render(source, output, label, stamp=True):
                             topMargin=57, bottomMargin=52,
                             title=lines[0].lstrip("# "), author="", pageCompression=1)
     doc.build(story, onFirstPage=page, onLaterPages=page)
+    # 返回源文档词数(含参考文献), 供清单汇总
     return len(re.findall(r"\b\S+\b", source_text))
 
 

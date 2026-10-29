@@ -20,6 +20,7 @@ import torch.nn as nn
 
 @dataclass
 class FineTuneResult:
+    # 一次奖励加权微调的结果摘要，供闭环编排器记录与展示
     checkpoint_path: str
     n_samples: int
     n_epochs: int
@@ -44,6 +45,7 @@ class ScoreWeightedLoss:
         self.scale = scale
 
     def __call__(self, loss_dict: dict, batch: dict) -> dict:
+        # 取每样本权重并搬到损失所在设备
         weights = batch.get('sample_weight', torch.ones(1))
         if weights.device != next(iter(loss_dict.values())).device:
             weights = weights.to(next(iter(loss_dict.values())).device)
@@ -56,6 +58,8 @@ class ScoreWeightedLoss:
         weights = weights * self.scale
 
         weighted = {}
+        # 逐损失项应用样本权重：形状与 batch 对齐的逐样本张量加权后取均值，
+        # 标量项保持原样，最后重算 overall
         for k, v in loss_dict.items():
             if k == 'overall':
                 continue
@@ -108,6 +112,7 @@ def build_finetune_dataset(
     for i, design in enumerate(top_designs):
         seq = design.get('sequence', '')
         pdb_path = design.get('pdb_path', '')
+        # 缺省 0.5：未评分设计按中性权重参与训练
         score = design.get('mo_composite_score', 0.5)
         name = f'{prefix}_{i+1:03d}'
 
@@ -216,6 +221,7 @@ def fine_tune_on_designs(
     # Load weights (handle head mismatches)
     ckpt_state = ckpt['model']
     # Strip incompatible heads (same logic as train.py --finetune)
+    # head_iptm 结构跨版本可能变化：检测到形状不匹配时丢弃旧的 iptm 头权重（重新随机初始化）
     if any('head_iptm' in k for k in ckpt_state):
         new_iptm_keys = [k for k in model.state_dict() if 'head_iptm' in k]
         old_iptm_keys = [k for k in ckpt_state if 'head_iptm' in k]
@@ -232,6 +238,7 @@ def fine_tune_on_designs(
     model.train()
 
     # Freeze backbone
+    # 冻结主干只训置信度头：设计样本量小（数十条），全量微调容易过拟合且更慢
     if freeze_backbone:
         head_params = {'head_plddt', 'head_iptm', 'head_pae',
                        'conf_embed', 'iptm_embed', 'pae_embed', 'pair_proj'}
@@ -258,6 +265,7 @@ def fine_tune_on_designs(
 
     # This is a simplified fine-tuning loop. Production use would require
     # full LMDB dataset construction via the preprocessing pipeline.
+    # 简化实现说明：逐设计独立前向+反向（batch=1），不走完整 LMDB 数据管线
     _log("Running score-weighted fine-tuning (simplified mode)...")
 
     for epoch in range(1, n_epochs + 1):
@@ -301,6 +309,7 @@ def fine_tune_on_designs(
                     loss = loss['overall'] if 'overall' in loss else sum(loss.values())
 
                 # Backward
+                # 梯度裁剪到范数 1.0：小样本微调时防止单条高损失设计造成参数剧跳
                 optimizer.zero_grad()
                 if isinstance(loss, torch.Tensor):
                     loss.backward()
@@ -323,6 +332,7 @@ def fine_tune_on_designs(
             best_loss = avg_loss
 
     # Save checkpoint
+    # 检查点名带时间戳避免覆盖；同时把微调超参写进 finetune_info 便于追溯
     os.makedirs(output_dir, exist_ok=True)
     ckpt_name = f'bfn_finetuned_cl_{int(time.time())}.pt'
     ckpt_path = os.path.join(output_dir, ckpt_name)

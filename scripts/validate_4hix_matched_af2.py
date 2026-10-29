@@ -14,11 +14,14 @@ from Bio.PDB import PDBParser
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+# 固定的参考结构（4HIX：抗淀粉样 beta 抗体）与 AF2 前匹配筛选产物路径。
 PDB_PATH = ROOT / "data/anti_abeta_refs/4HIX.pdb"
 BFN_RESULTS = ROOT / "results/ablation/4hix_bfn_matched_v1.json"
 MPNN_RESULTS = ROOT / "results/ablation/4hix_mpnn_matched_v1.json"
+# 天然 H3 序列与 AF2 的多 seed 设定（seed 间隔取 10 避免相邻随机流相关）。
 NATIVE_H3 = "VRYDHYSGSSDY"
 AF2_SEEDS = [5101, 5111, 5121]
+# 三字母 -> 单字母氨基酸映射（PDB resname 解析用）。
 AA3_TO_1 = {
     "ALA": "A",
     "ARG": "R",
@@ -44,6 +47,7 @@ AA3_TO_1 = {
 
 
 def chain_sequences():
+    # 解析 4HIX 的 A(抗原)/H(重链)/L(轻链) 三条链的一字母序列。
     model = PDBParser(QUIET=True).get_structure("4hix", str(PDB_PATH))[0]
     return {
         chain.id: "".join(
@@ -55,6 +59,10 @@ def chain_sequences():
 
 
 def selected_candidates(top_n):
+    # 汇集 AF2 前已冻结的候选集（选择规则在 AF2 之前确定，避免事后挑选）：
+    # - BFN 各实验臂按 ppl 升序取 top_n；
+    # - ProteinMPNN 按 score 升序取 top_n；
+    # - 两个阴性对照：天然 H3、以及固定 seed 洗牌的组分打乱对照。
     bfn = json.loads(BFN_RESULTS.read_text())
     mpnn = json.loads(MPNN_RESULTS.read_text())
     selected = []
@@ -95,6 +103,7 @@ def selected_candidates(top_n):
             "selection_value": None,
         }
     )
+    # 组分对照：保留氨基酸组成但打乱排列（seed 固定保证可复现）。
     shuffled = list(NATIVE_H3)
     random.Random(5303).shuffle(shuffled)
     selected.append(
@@ -111,6 +120,8 @@ def selected_candidates(top_n):
 
 
 def full_heavy(native_heavy, h3):
+    # 把候选 H3 嫁接回天然重链骨架：H3 位于 95..107（0-based 半开区间），
+    # 长度必须与天然 H3 一致才能原位替换。
     if len(h3) != len(NATIVE_H3):
         raise ValueError(f"Invalid H3 length: {h3}")
     return native_heavy[:95] + h3 + native_heavy[107:]
@@ -124,9 +135,12 @@ def main():
     parser.add_argument("--out-dir", default=str(ROOT / "results/ablation/4hix_matched_af2_v1"))
     args = parser.parse_args()
 
+    # 延迟导入 AF2 runner（导入开销大）。
     from modules.af2_jax_runner import run_multimer_prediction
 
     sequences = chain_sequences()
+    # 完整性哨兵：4HIX 的 H3 区与抗原肽序列必须与预期一致，
+    # 否则说明参考结构被改动，继续运行没有意义。
     if sequences["H"][95:107] != NATIVE_H3 or sequences["A"] != "DAEFRH":
         raise ValueError("4HIX sequence or H3 mapping changed")
     candidates = selected_candidates(args.top_n)
@@ -137,6 +151,7 @@ def main():
     pdb_dir.mkdir(parents=True, exist_ok=True)
     rows = []
     for candidate in candidates:
+        # 重链(带候选 H3)+轻链为一条多聚体输入，抗原肽为第二条。
         heavy = full_heavy(sequences["H"], candidate["h3"])
         for seed in args.seeds:
             result = run_multimer_prediction(
@@ -159,6 +174,7 @@ def main():
                 "error": result.get("error"),
             }
             if result.get("success") and result.get("pdb"):
+                # 成功的预测结构落盘并记录 sha256 溯源。
                 pdb_path = pdb_dir / f"{candidate['id']}_seed{seed}.pdb"
                 pdb_path.write_text(result["pdb"], encoding="ascii")
                 row["pdb"] = str(pdb_path.relative_to(ROOT))
@@ -166,6 +182,7 @@ def main():
             rows.append(row)
             print(candidate["id"], seed, row["success"], row["iptm"], flush=True)
 
+    # 输出明确声明：这是"单脚手架多 seed 诊断"，不构成结合验证。
     output = {
         "schema_version": 1,
         "status": "single_scaffold_multi_seed_diagnostic_not_binding_validation",

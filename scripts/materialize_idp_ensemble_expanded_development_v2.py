@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Materialize and audit the balanced expanded-IDP development coordinates."""
 
+# 本脚本为平衡的扩展 IDP 开发面板下载并审计坐标（mmCIF）：
+# 从 RCSB 拉取面板中全部 PDB 条目（记录 SHA-256 与字节大小），
+# 逐一解析并检查链配置：重链 ≥90 个标准残基、轻链（若有）≥80 个、
+# 抗原链至少有可观测残基。任一环节失败会清空输出目录重新抛错；
+# future_confirmation_eligible_count 固定为 0，强调仅开发用途。
+
 from __future__ import annotations
 
 import argparse
@@ -16,13 +22,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256，用于面板来源校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+# 统计链中带 CA 原子的标准氨基酸残基数
 def residue_count(chain):
     return sum("CA" in residue and is_aa(residue, standard=True) for residue in chain)
 
 
+# 物化主流程：输出目录/审计文件已存在即拒绝 → 校验面板的"隔离标记"
+# （future_confirmation_eligible_count 必须为 0）→ 逐 PDB 下载（超时 120 秒）
+# → 写坐标清单 → 解析并做逐成分链完整性审计 → 失败时整体回滚目录
 def materialize(panel_path, output_dir, audit_path, opener=urllib.request.urlopen):
     if output_dir.exists() or audit_path.exists():
         raise FileExistsError("Refusing to overwrite expanded development coordinates")
@@ -140,6 +151,7 @@ def materialize(panel_path, output_dir, audit_path, opener=urllib.request.urlope
 
 
 def main():
+    # 主入口：面板/坐标目录/审计路径均有默认值，完成后打印就绪与阻断计数
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--panel", type=Path,

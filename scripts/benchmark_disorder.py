@@ -11,6 +11,9 @@ import argparse
 
 
 def main():
+    # 弃用占位入口：无条件触发 parser.error 并给出替代脚本指引。
+    # 旧流程使用代理标签并伪造 AF2 pLDDT 对比，不属于 CAID 基准；
+    # 发表级评估必须改用 benchmark_caid.py（带同源性隔离元数据与真实标签）。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args()
     parser.error(

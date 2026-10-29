@@ -9,6 +9,11 @@ were near-identical, the issue is OOD coverage instead.
 
 Usage:  python probe_conf_collapse.py
 """
+# 置信度坍缩探针（V14）：把验证集 LMDB 以 eval 模式过一遍模型，通过
+# forward hook 抓取最后一次 recycle 的 pred_iptm/pred_plddt（receiver 输出
+# 的第 5/4 项），报告其在整个验证集上的分布。判读：
+# 预测方差在全验证集坍缩到 ~0 → 置信头为常量（坍缩），完全解释 9.8 倍 OC；
+# 验证集分布正常而 5 个 OC 探针彼此几乎相同 → 问题在 OOD 覆盖而非坍缩。
 import os, sys, json
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
@@ -29,7 +34,7 @@ CFG  = 'configs/train/bfn_v14_grouped_conf_xpu.yml'
 def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     config, _ = load_config(CFG)
-    # Force eval-time recycling params consistent with training
+    # 强制 eval 期 recycling 参数与训练一致
     model = get_model(config.model).to(device)
 
     ckpt = torch.load(CKPT, map_location=device, weights_only=False)
@@ -42,6 +47,8 @@ def main():
     print(f'[val] {len(val_dataset)} samples')
 
     # Hook the receiver to capture the LAST recycle's pred_iptm (item index 5).
+    # hook 捕获 receiver 输出元组中的 pred_plddt(4) 与 pred_iptm(5)，
+    # 多次 recycle 时保留最后一次的值
     captured = {}
     def hook(_module, _inputs, output):
         # output: (pred_seq, pred_pos, pred_ori_6d, pred_ang_sc, pred_plddt, pred_iptm, pred_pae, pred_disorder)

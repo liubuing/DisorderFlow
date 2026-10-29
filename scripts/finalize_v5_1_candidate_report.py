@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Finalize the corrected v5.1 candidate decision and hypothesis queue."""
+"""Finalize the corrected v5.1 candidate decision and hypothesis queue.
+
+汇总 v5.1 A-beta42 候选的全部证据链并产出最终决策报告：
+- 从局部重排 + AF2 对照（4HIX/5CSZ 亲本对照）计算 ipTM/接口 PAE 差值，
+  排名产出"假设队列"（非合成就绪）；
+- 若存在校准 ColabFold 筛选则升级为 structure_screen_pass；
+- 叠加弛豫与可开发性结果可得 synthesis_panel_pass；再经生物构建
+  （完整 SEQRES）筛选可升级为表达包就绪。
+输出 candidate_decision.json 与假设队列 CSV/FASTA。
+"""
 
 import csv
 import json
@@ -12,10 +21,12 @@ ABETA42 = "DAEFRHDSGYEVHHQKLVFFAEDVGSNKGAIIGLMVGGVVIA"
 
 
 def load(path):
+    """读取 JSON 文件。"""
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def main():
+    """逐级升级决策：原始队列 -> 校准结构筛选 -> 弛豫+可开发性 -> 生物构建表达包。"""
     generation = load(BASE / "abeta42/generation_report.json")
     de_novo_af2 = load(BASE / "abeta42/af2_screen.json")
     local_rerank = load(BASE / "abeta42_local/local_rerank_report.json")
@@ -44,12 +55,14 @@ def main():
             "decision_status": "hypothesis_only_not_synthesis_ready",
         }
         record["decision_score"] = (
+            # 决策分 = 校正排名分 + 0.30*ipTM 增益 - 0.01*接口 PAE 变化（权重经验设定）
             float(record["corrected_rank_score"])
             + 0.30 * iptm_delta
             - 0.01 * interface_pae_delta
         )
         candidates.append(record)
     candidates.sort(
+        # 先按"相对改善"分组（improved 优先），再按决策分降序
         key=lambda record: (
             record["relative_side_evidence"] == "improved", record["decision_score"]),
         reverse=True)
@@ -58,6 +71,8 @@ def main():
         record["hypothesis_rank"] = rank
 
     final_status = "no_synthesis_ready_candidate"
+    # 实验解析的 4HIX/5CSZ 阳性对照也过不了同一套 pLDDT/接口 PAE 门槛，
+    # 因此未经校准的 AF2 绝对门槛对决策无效
     local_status = "retained_as_hypothesis_queue"
     structure_decision = {
         "status": "invalid_for_decision",
@@ -124,6 +139,7 @@ def main():
             record["developability_status"] = developability_record.get("developability_status")
             record["developability_risk"] = developability_record.get("combined_developability_risk")
             record["synthesis_panel_pass"] = (
+                # 合成面板四条件：结构筛选通过 + 全长序列精确 + 弛豫通过 + 可开发性通过
                 record.get("structure_pass", False)
                 and record.get("full_construct_sequence_exact", False)
                 and record["relax_pass"]

@@ -12,6 +12,8 @@ from typing import List, Dict, Optional, Tuple
 
 
 # ── Default thresholds ──
+# BFN 头在非抗体目标上输出趋近 0，因此 plddt/iptm 阈值取 -0.01 近似关闭，
+# 实际过滤主要靠 ppl 与 entropy
 DEFAULT_THRESHOLDS = {
     'plddt_min': -0.01,     # Effectively disabled (model heads output ~0 for non-Ab targets)
     'iptm_min': -0.01,      # Effectively disabled (model heads output ~0 for non-Ab targets)
@@ -94,6 +96,7 @@ def _cdr_complexity(sequence: str) -> float:
         score -= (max_freq - 0.40) * 2.0  # 0.40→0 penalty, 1.0→-1.2 penalty
 
     # 3. Shannon entropy of AA distribution (< 2.5 = low diversity)
+    # 香农熵先除以 log(20) 归一化到 [0,1]，阈值 0.83 对应约 2.5 bits（20 种氨基酸均匀分布为上限）
     total = sum(counts.values())
     shannon = -sum((c/total) * math.log(c/total) for c in counts.values()) / math.log(20)
     if shannon < 0.83:  # 0.83 ≈ 2.5 in raw bits (2.5 / log(20))
@@ -191,6 +194,7 @@ def apply_cascade(
         return [], '\n'.join(report_lines)
 
     # ── Stage 2: Deduplication ──
+    # 完全相同的序列只保留一条：按各自的质量指标（PPL/pTM）取更优者
     seen = {}
     for r in stage1_pass:
         seq = r['sequence']
@@ -212,6 +216,7 @@ def apply_cascade(
 
     # ── Stage 3: Composite scoring ──
     # Normalize PPL → inverse and clip for scoring
+    # 以当前批内最大 PPL 做截断，避免离群值主导倒数归一化
     ppls = [r.get('ppl') for r in stage2 if r.get('ppl') is not None]
     max_ppl = max(ppls) if ppls else 1.0
     entropies = [r.get('entropy') for r in stage2 if r.get('entropy') is not None]
@@ -418,6 +423,7 @@ def apply_cascade_af2(
         return [], '\n'.join(report_lines)
 
     # ── Stage 2: Deduplication ──
+    # 完全相同的序列只保留一条：按各自的质量指标（PPL/pTM）取更优者
     seen = {}
     for r in stage1_pass:
         seq = r['sequence']
@@ -446,6 +452,8 @@ def apply_cascade_af2(
         ppl_inv = 1.0 / max(ppl, 0.1) if ppl else 0.0
 
         active_weights = {
+            # ipTM 仅在 multimer 复合物预测时存在；缺失时对应权重置 0 并按剩余权重归一化，
+            # 使单链与复合物结果的 composite 保持同一量纲
             'iptm': w['iptm'] if iptm is not None else 0.0,
             'ptm': w['ptm'],
             'plddt': w['plddt'],
@@ -485,6 +493,8 @@ def apply_cascade_af2(
 
 
 # ── Misfolding disease cascade (IDP-aware) ──
+# 针对 IDP（天然无序蛋白）靶点的放松版阈值/权重：
+# BFN 的 pLDDT 在无序蛋白上不可靠故关闭，interface 类指标权重提高
 
 MISFOLDING_CASCADE_THRESHOLDS = {
     'plddt_min': -0.01,     # Disabled: BFN pLDDT unreliable on IDPs
@@ -640,6 +650,7 @@ def apply_cascade_multi_objective(results, thresholds=None, weights=None):
     n_s1_rejected = n_input - n_s1
 
     # ── Stage 2: Deduplication ──
+    # 完全相同的序列只保留一条：按各自的质量指标（PPL/pTM）取更优者
     seen = {}
     stage2_pass = []
     for r in stage1_pass:
@@ -662,6 +673,8 @@ def apply_cascade_multi_objective(results, thresholds=None, weights=None):
     stage3_results = stage2_pass
 
     # Normalize helper
+    # 逐维 min-max 归一化：maximize=True 时值越大分越高；
+    # 能量类维度（dG/ddG/relax_e/max_pae/ppl/entropy）越小越好，取反向
     def _norm(values, maximize=True):
         vals = [v for v in values if v is not None]
         if not vals:
@@ -669,6 +682,7 @@ def apply_cascade_multi_objective(results, thresholds=None, weights=None):
         vmin, vmax = min(vals), max(vals)
         rng = vmax - vmin
         if rng < 1e-9:
+            # 所有值相同：视为该维度无判别力，全部给满分避免随机惩罚
             return [1.0] * len(values)
         result = []
         for v in values:

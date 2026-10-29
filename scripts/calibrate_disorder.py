@@ -1,5 +1,11 @@
 """Fit dev-only disorder probability calibration and an operating threshold."""
 
+# 目的：无序概率校准（仅 dev 划分）——用 EMA 最优检查点在 dev 集上收集确定性
+# 采样（deterministic、num_recycles=1）的逐残基 logits 与有序代理标签，
+# 拟合加权 Platt 缩放并按 MCC 选择操作阈值；另做按蛋白质分组的 5 折交叉验证
+# 的 out-of-fold 校准指标。负例证据来自 AFDB pLDDT>=0.90 的"有序"代理，
+# 绝对概率校准因此依赖代理标签（报告含 warning 声明）。
+
 from __future__ import annotations
 
 import argparse
@@ -78,6 +84,7 @@ def collect_logits(checkpoint_path, device):
     with torch.no_grad():
         for index, batch in enumerate(tqdm(loader, desc="Collect dev logits")):
             batch = recursive_to(batch, device)
+            # 每个批次前重置种子为 42：保证确定性采样的随机流一致、可复现。
             torch.manual_seed(42)
             if device == "cuda":
                 torch.cuda.manual_seed_all(42)
@@ -100,6 +107,8 @@ def collect_logits(checkpoint_path, device):
 
 
 def grouped_cross_validation(logits, labels, weights, groups, folds=5):
+    # 按蛋白质（组）哈希到 5 折，逐折在训练折上拟合 Platt 参数与 MCC 阈值，
+    # 在测试折上产生 out-of-fold 预测，避免同一蛋白的残基跨折泄漏。
     fold_ids = [int(hashlib.sha256(group.encode()).hexdigest(), 16) % folds for group in groups]
     oof_probabilities = [None] * len(logits)
     oof_predictions = [None] * len(logits)

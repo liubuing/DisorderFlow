@@ -19,10 +19,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256；用于核对冻结输入工件与配置登记哈希的一致性（不匹配即抛错）。
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def gain_robust(values, aggregation):
+    # 表位条件化增益（apo NLL - complex NLL，越大越好）的稳健聚合：
+    # p25 分位与最小值的加权组合奖励"最差情况下仍有增益"，再减去标准差惩罚，
+    # 抑制仅在个别构象上偶发的候选；权重全部来自冻结配置。
     values = np.asarray(values, dtype=np.float64)
     return float(
         float(aggregation["p25_weight"]) * np.percentile(values, 25)
@@ -33,6 +37,8 @@ def gain_robust(values, aggregation):
 
 
 def complex_robust_cost(values, aggregation):
+    # 复合物态 NLL 的稳健代价（越低越好）：p75 分位与最大值的加权组合
+    # 聚焦"较差情况下的结合态似然"，加上标准差惩罚以拒绝跨构象不稳的候选。
     values = np.asarray(values, dtype=np.float64)
     return float(
         float(aggregation["p75_weight"]) * np.percentile(values, 75)
@@ -43,6 +49,8 @@ def complex_robust_cost(values, aggregation):
 
 
 def sequence_nll(log_probs, sequence, indices, alphabet):
+    # 在 H3 设计位点上计算序列的平均逐残基负对数似然（NLL）。
+    # log_probs: ProteinMPNN 在该构象态下的逐位点条件对数概率；NLL 越低越优。
     return -sum(
         float(log_probs[index, alphabet.index(aa)])
         for index, aa in zip(indices, sequence, strict=True)
@@ -50,6 +58,11 @@ def sequence_nll(log_probs, sequence, indices, alphabet):
 
 
 def load_conformer_states(conformer, native_h3, alphabet):
+    # 加载并校验单个构象的 apo/complex 两个条件态 NPZ。
+    # 校验（全部通过才可用，fail-closed）: NPZ 哈希与登记一致；两个态的
+    # H3 设计掩码一致且长度等于原生 H3；解码出的原生 H3 序列吻合；
+    # 位点条件概率有限且按氨基酸轴归一化（容差 1e-5）。
+    # 返回: ({'apo': log_p, 'complex': log_p}, H3 位点索引)。
     states = {}
     indices = None
     for state_name in ("apo", "complex"):
@@ -80,6 +93,12 @@ def load_conformer_states(conformer, native_h3, alphabet):
 
 
 def build_state_matrices(component, method_row, config):
+    # 重建"序列 x 构象"的 apo NLL / complex NLL / 增益三个矩阵。
+    # 序列池 = 生成候选 + 原生 H3（作为参照行）。关键校验:
+    #   - 重算的增益必须与早期冻结存储的 gain 矩阵逐位一致（残差 <= 1e-12），
+    #     防止重新解释历史工件；
+    #   - 所有候选长度必须与原生 H3 相同。
+    # 返回: 含矩阵、原生行索引与重建残差的字典。
     native = component["native_h3"]
     generated = list(method_row["sequences"])
     sequences = list(generated)
@@ -133,6 +152,12 @@ def build_state_matrices(component, method_row, config):
 
 
 def select_ensemble(matrices, training, config):
+    # 在训练构象子集上做集合级选择：先按 complex 稳健代价施加可行性约束，
+    # 再在可行集中取增益稳健聚合最大者（平手时按序列字典序，保证确定性）。
+    # 约束模式二选一（由冻结配置指定）:
+    #   - 候选稳健 complex NLL 不得超过原生 H3 的对应值（以原生为阈值）；
+    #   - 或按代价取前 complex_top_fraction，但不少于 minimum_feasible_candidates。
+    # tolerance 为配置中的约束容差，避免浮点边界把候选误判为不可行。
     sequences = matrices["sequences"]
     native_index = matrices["native_index"]
     tolerance = float(config["selection"]["constraint_tolerance"])
@@ -172,6 +197,8 @@ def select_ensemble(matrices, training, config):
 
 
 def select_single(matrices, conformer, config):
+    # 单构象版选择：与 select_ensemble 同一约束/决胜规则，但只用一个构象列，
+    # 作为"集合选择是否优于单构象选择"的对照。
     sequences = matrices["sequences"]
     native_index = matrices["native_index"]
     tolerance = float(config["selection"]["constraint_tolerance"])
@@ -199,6 +226,8 @@ def select_single(matrices, conformer, config):
 
 
 def median_provenance(records, metric):
+    # 找出构成中位数的观测（奇数取中间 1 条，偶数取中间 2 条），
+    # 作为"中位数来自哪些候选"的溯源记录。
     ordered = sorted(
         records,
         key=lambda row: (row[metric], row["training_conformer"], row["candidate"]),
@@ -213,6 +242,11 @@ def median_provenance(records, metric):
 
 
 def analyze_component_method(component, method_row, config):
+    # 逐组件逐方法的 leave-one-conformer-out 评估:
+    # 每轮留出 1 个构象做验证，其余构象分别做集合级与单构象选择，
+    # 比较两者在留出构象上的增益/complex NLL/apo NLL（优势为正即集合更优；
+    # complex NLL 越低越好，故其优势定义为中位数减去集合值）。
+    # 返回: 该组件该方法的折级记录与汇总（native 选中率、joint favorable 折数等）。
     matrices = build_state_matrices(component, method_row, config)
     folds = []
     for holdout in range(matrices["gain"].shape[1]):
@@ -302,6 +336,7 @@ def analyze_component_method(component, method_row, config):
 
 
 def bootstrap_mean(values, trials, seed):
+    # 组件级均值的 bootstrap 95% 置信区间（向量化重采样）；种子来自冻结配置。
     array = np.asarray(values, dtype=np.float64)
     generator = np.random.default_rng(seed)
     estimates = generator.choice(array, size=(trials, len(array)), replace=True).mean(axis=1)
@@ -309,6 +344,8 @@ def bootstrap_mean(values, trials, seed):
 
 
 def exact_sign_flip_p(values):
+    # 精确符号翻转置换检验 p 值: 枚举全部 +/-1 符号组合，统计 |翻转后均值|
+    # 不小于观测值的比例（含 -1e-12 容差）。样本数少时精确、无分布假设。
     array = np.asarray(values, dtype=np.float64)
     observed = abs(float(array.mean()))
     estimates = [
@@ -319,6 +356,8 @@ def exact_sign_flip_p(values):
 
 
 def target_from_component(component_id):
+    # 从组件 ID 前缀推断靶点名（ABETA_/TAU_/ASYN_/PRION_），其余归为 other；
+    # 仅当组件注册表缺失该元数据时作为回退。
     if component_id.startswith("ABETA_"):
         return "amyloid_beta"
     if component_id.startswith("TAU_"):
@@ -347,6 +386,10 @@ def grouped_summary(rows, field):
 
 
 def subset_summary(rows, config, seed_offset=0):
+    # 子集（如剔除 sensitivity_only 后的干净子集）汇总: 增益轴按数学效应
+    # epsilon 判正/负（|效应| <= epsilon 视为零），complex 轴按非劣性边际
+    # margin 判定；seed_offset（200/400/...）让不同汇总使用互不重叠的
+    # bootstrap 种子，避免不同子集的 CI 共享同一随机流。
     epsilon = float(config["statistics"]["mathematical_effect_epsilon"])
     gain = [row["mean_gain_advantage"] for row in rows]
     complex_values = [row["mean_complex_nll_advantage"] for row in rows]
@@ -379,6 +422,8 @@ def subset_summary(rows, config, seed_offset=0):
 
 
 def cluster_summary(rows, config, seed_offset=0):
+    # 以表位重叠簇为推断单元的敏感性汇总（对簇均值再做 bootstrap/符号翻转检验），
+    # 缓解同簇组件间相关性导致的伪独立。
     by_cluster = grouped_summary(rows, "epitope_cluster")
     cluster_rows = list(by_cluster.values())
     gain = [row["mean_gain_advantage"] for row in cluster_rows]
@@ -401,6 +446,11 @@ def cluster_summary(rows, config, seed_offset=0):
 
 
 def summarize_method(rows, config, method_index):
+    # 单方法的总汇总与"未来冻结"门槛判定:
+    #   - 增益轴: 正效应组件数、bootstrap CI 下界 > 0、负效应组件数上限；
+    #   - complex 轴: 非劣组件数（advantage >= -margin）与 CI 下界 >= -margin；
+    #   - 覆盖性: 每个组件的折数必须等于构象数（全覆盖）。
+    # method_index 用于在冻结种子基础上加偏移，保证各方法 CI 独立。
     epsilon = float(config["statistics"]["mathematical_effect_epsilon"])
     gain_values = [row["mean_gain_advantage"] for row in rows]
     complex_values = [row["mean_complex_nll_advantage"] for row in rows]
@@ -535,6 +585,11 @@ def write_report(path, output):
 
 
 def main():
+    # 主流程: 校验全部冻结输入哈希 → 逐组件逐方法分析 → 汇总/干净子集/簇级
+    # 敏感性（各自独立的种子偏移）→ 落盘 JSON + CSV + Markdown 报告。
+    # 附加: 排除合成组件 TAU_6PXR 的敏感性子集（seed_offset=800），
+    # 用于确认主结论不依赖该合成对照。全部通过则状态标记为
+    # "candidate_for_untouched_freeze"，否则为开发门槛失败。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_endpoint_v3_development_v1.yml"

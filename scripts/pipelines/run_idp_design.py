@@ -24,6 +24,10 @@ Usage:
   python run_idp_design.py --scaffold_chain B --deterministic --samples 5
 """
 
+# 角色：IDP 感知抗体设计的 CLI 编排器（完整管线入口）：
+# 无序分析 → 有序片段识别 → 表位结构构建 → BFN CDR 设计 → 置信度排名。
+# 支持 Complex（默认，含抗原上下文）/ FixBB（固定骨架）/ analyze-only 三种模式；
+# --threshold 0.3 即"无序分 <0.3 视为有序"的默认判据（有序片段作为设计表位）。
 import os
 import sys
 import argparse

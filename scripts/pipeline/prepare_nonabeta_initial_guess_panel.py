@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Prepare sequence-consistent VH:VL:IDP initial guesses from strict experimental poses."""
+# 本脚本从严格审计过的实验姿态构造"序列一致"的 VH:VL:IDP 初始猜测：
+# 保留源 pose 的骨架原子（N/CA/C/O）坐标与链间相对位置，把残基名改写为
+# 目标构造的三字母序列（逐残基一一对应），链重命名为 A/B/C 后写出 PDB，
+# 作为 ColabFold 复合物折叠的初始坐标输入。优先面板为 6 个 5MP3/8B9V
+# 构造 × 每构造 5 个构象 = 30 个作业，不足 30 报 partial。
+
 from __future__ import annotations
 
 import csv
@@ -23,6 +29,7 @@ def load_csv(path):
 
 
 def residue_lines(path, chain_id):
+    # 按固定列位收集指定链的 ATOM/HETATM 行，以 (残基号, 插入码) 分组
     residues = []
     lookup = {}
     for line in path.read_text(encoding="ascii").splitlines():
@@ -37,6 +44,9 @@ def residue_lines(path, chain_id):
 
 
 def build_guess(source, output, row, heavy_chain, light_chain):
+    # 构建单个初始猜测：三条链（VH/VL/IDP）逐残基取源 pose 骨架行，
+    # 重写残基名与链 ID/编号（输出 A/B/C，编号从 1 起），只保留主链原子；
+    # 源链残基数不足目标序列长度即报错
     sequences = [row["vh_sequence"], row["vl_sequence"], row["antigen_sequence"]]
     source_chains = [heavy_chain, light_chain, "P"]
     output_chains = ["A", "B", "C"]
@@ -67,6 +77,8 @@ def build_guess(source, output, row, heavy_chain, light_chain):
 
 
 def main():
+    # 主流程：读折叠面板与 pose 审计 → 只处理优先集合中的构造 →
+    # 对每个入选构象生成初始猜测 PDB 并登记作业行 → 写面板 CSV 与摘要
     panel = load_csv(
         PROJECT_ROOT / "outputs/non_abeta_idp_complex_fold_panel_v1/complex_fold_panel.csv"
     )

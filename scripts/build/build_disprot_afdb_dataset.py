@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """Build a BFN-ready AFDB structure store for CAID-excluded DisProt records."""
 
+# 本脚本为"被 CAID 基准排除在外的 DisProt 记录"构建 BFN 可用的
+# AFDB 结构库（置信度训练数据的一部分）：读取 JSONL 候选清单（按长度过滤、
+# 按 accession+序列去重），多线程下载 AF2 预测 PDB，经 BFN 预处理转批次；
+# 序列或 pLDDT 数目与预期不符的记录按失败类别计数并丢弃。
+# 注意：此处 pTM/PAE 不可得，以占位值 0.5 / 全零矩阵填充。
+# 输出：LMDB 结构库 + 构建审计 JSON。
+
 from __future__ import annotations
 
 import argparse
@@ -18,6 +25,8 @@ sys.path.insert(0, str(ROOT))
 from scripts.build.build_idp_dataset_v3 import download_af2_pdb, preprocess_af2_pdb
 
 
+# 读取多份 JSONL 候选清单：仅保留有 accession 且长度在 [min, max] 内的记录，
+# 以 (accession, sequence) 为键去重
 def load_candidates(paths, min_length, max_length):
     candidates = {}
     for path in paths:
@@ -33,6 +42,8 @@ def load_candidates(paths, min_length, max_length):
     return list(candidates.values())
 
 
+# 从 PDB 固定列位解析 CA 原子 B-factor 得到逐残基 pLDDT（除以 100 归一化），
+# 以 (链, 残基号, 插入码) 去重
 def pdb_plddt(path):
     values = []
     seen = set()
@@ -49,6 +60,7 @@ def pdb_plddt(path):
 
 
 def save_lmdb(entries, output):
+    # LMDB map_size 按序列化总字节的 2 倍估计，下限 64MB
     import lmdb
 
     output.mkdir(parents=True, exist_ok=True)
@@ -61,6 +73,8 @@ def save_lmdb(entries, output):
     env.close()
 
 
+# 构建主流程：下载 → 预处理 → 逐条校验（结构存在/预处理成功/序列一致/
+# pLDDT 数目一致）→ 写 LMDB 与审计报告；下载线程数上限压到 8 以免触发限流
 def build(inputs, output, cache, report_path, min_length=20, max_length=350, threads=8,
           afdb_version=6):
     candidates = load_candidates(inputs, min_length, max_length)
@@ -126,6 +140,7 @@ def build(inputs, output, cache, report_path, min_length=20, max_length=350, thr
     return report
 
 
+# 主入口：--input 可多次出现以合并多份清单，其余参数均有默认值
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", action="append", required=True, type=Path)

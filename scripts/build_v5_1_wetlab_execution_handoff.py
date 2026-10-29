@@ -11,6 +11,17 @@ PACKAGE = ROOT / 'results/v5_1_candidates/abeta42_biological_constructs/expressi
 
 
 def main():
+    # 为 5CSZ 湿实验包补齐运行级溯源与执行/QC 模板。
+    # 输出三件套（写入 expression_package 目录）:
+    #   - wetlab_execution_handoff.json: 构造体规范名（run_id + legacy id + 背景
+    #     突变 bg-N52H，即重链 A:52 N>H 的 N52H 补救）、重复实验契约
+    #     （2 个独立表达纯化批 x 每结合条件 3 次技术重复、随机板布局、盲法）、
+    #     状态 QC 门（单体/寡聚/纤维各自的 SEC/DLS/ThT/TEM 证据要求，
+    #     对应 A-beta 制剂未过 QC 时不得做状态特异性声称）与采购必填字段;
+    #   - sample_tracking_template.csv: 每个构造体 x 2 批的样本追踪表头;
+    #   - procurement_bom_template.csv: 靶点/对照/耗材的采购清单模板。
+    # 注意 computational_scope: de novo 不做；ipTM 只作绝对拒绝门、不得按
+    # 小差值排序；disorder 头视为不可信预测、不参与候选决策。
     package = json.loads((PACKAGE / 'expression_package.json').read_text(encoding='utf-8'))
     run_id = '5CSZ_v5_1_local_panel_v1'
     records = []

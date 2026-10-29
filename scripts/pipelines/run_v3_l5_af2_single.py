@@ -12,6 +12,9 @@ with open('idp_design_results/p3_scale_top100_20260629_030111.json') as f:
     designs=json.load(f)[:5]
 
 # Graft CDRs, get full antibody sequence (no peptide)
+# 对每个设计的骨架结构做 CDR 移植：直接改写 PDBParser 解析后的残基名
+# （AA3 三字母转单字母查表，未知残基回退 GLY），再按 auth 编号去重地
+# 抽出重链完整序列
 seqs=[]
 for d in designs:
     sp=d.get('scaffold_path','')or f'data/misfolding_targets/{d["scaffold"]}.pdb'
@@ -32,6 +35,8 @@ for d in designs:
     seqs.append(''.join(seq))
 
 # AF2 single-chain: antibody only, NO epitope
+# 动机：multimer 模式下短肽会把界面置信度（ipTM/pA）拉偏（"multimer peptide
+# trap"），单链 CDR pLDDT 提供不依赖表位的折叠质量证据（E3 层）
 print(f'Running AF2 single-chain on {len(seqs)} antibodies...')
 # Use empty epitope to force single-chain mode
 results=_batch_af2_wsl(seqs,'',num_recycle=1)

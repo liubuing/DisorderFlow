@@ -11,6 +11,9 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 def parse_training_output(output_path):
     """Parse training output file for key metrics."""
+    # 从训练 stdout 文本解析迭代级指标: [train]/[val] 行按 "|" 切分提取
+    # 总损失与 pLDDT/ipTM/PAE 分项（缺失项记 None）；"New best model saved"
+    # 行记录最优验证损失里程碑。
     with open(output_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
@@ -57,6 +60,9 @@ def format_markdown(train_iters, val_iters, best_losses,
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Find key milestones
+    # 里程碑迭代 [100, 500, 1000, 5000, 10000, 15000, 20000] 为日志展示
+    # 用的固定取样点（20000 与 total_iters 默认值一致），另加最后一个
+    # 验证点作为终态。
     milestones = {}
     for v in val_iters:
         if v['it'] in [100, 500, 1000, 5000, 10000, 15000, 20000] or v == val_iters[-1]:

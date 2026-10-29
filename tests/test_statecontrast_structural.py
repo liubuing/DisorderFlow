@@ -1,3 +1,6 @@
+"""状态对比结构管线的契约测试：守护官方 IMGT CDR 的精确映射（含恒定区上下文）、
+严格比对不映射错配残基、完整组批采样不拆组且容量不足拒绝、抗原掩码按 fragment_type 判定
+（不依赖同伴抗体链），以及 receiver 聚合对多样本 batch 的广播。"""
 import torch
 from pathlib import Path
 
@@ -9,10 +12,13 @@ from disorderflow.utils.data import CompleteGroupBatchSampler
 from disorderflow.utils.protein.constants import CDR, ressymb_to_resindex
 
 
+# 辅助函数：把氨基酸序列编码为残基索引张量。
 def encoded(sequence):
     return torch.tensor([ressymb_to_resindex[aa] for aa in sequence], dtype=torch.long)
 
 
+# CDR 映射精确性：官方序列在含恒定区更长链中的偏移必须精确对齐（H3 还原一致、三组 CDR flag 计数正确），
+# 防止 CDR 注释在带恒定区链上错位。
 def test_official_imgt_cdrs_map_exactly_through_constant_domain_context():
     official = "QVQLGFTFSSYTWVRQISSGGAYTKGRFCARDRGFDYWGQGT"
     parsed = official + "ASTKGPSVFPLAP"
@@ -35,6 +41,7 @@ def test_official_imgt_cdrs_map_exactly_through_constant_domain_context():
     assert (chain["cdr_flag"] == int(CDR.H3)).sum().item() == len(cdrs["H3"])
 
 
+# 严格比对：单残基错配（D→N）处不得建立映射，其余位置保持一致——防止含错位的比对进入结构对齐。
 def test_alignment_map_does_not_map_mismatched_residues():
     mapping = exact_alignment_map("ACDE", "ACNE")
     assert mapping[0] == 0
@@ -43,10 +50,12 @@ def test_alignment_map_does_not_map_mismatched_residues():
     assert mapping[3] == 3
 
 
+# 测试替身：定义三个组的分组数据集。
 class GroupedDataset:
     group_indices = ((0, 1, 2), (3, 4), (5, 6, 7))
 
 
+# 组完整性：同组样本必须全部落在同一 batch（组不可拆），防止组内样本跨 batch 破坏配对比较。
 def test_complete_group_sampler_never_splits_groups():
     sampler = CompleteGroupBatchSampler(
         GroupedDataset(), max_batch_records=5, shuffle=False)
@@ -59,6 +68,7 @@ def test_complete_group_sampler_never_splits_groups():
         assert set(group).issubset(containing[0])
 
 
+# 容量守护：最大组大小超过 batch 容量必须报错，防止静默拆组掩盖配置错误。
 def test_complete_group_sampler_rejects_too_small_capacity():
     try:
         CompleteGroupBatchSampler(GroupedDataset(), max_batch_records=2)
@@ -68,6 +78,8 @@ def test_complete_group_sampler_rejects_too_small_capacity():
         raise AssertionError("Expected an undersized batch capacity failure")
 
 
+# 抗原掩码：必须按 fragment_type 识别抗原（而非推断"非抗体链"），生成位只开放生成区——
+# 防止把抗体自身残基误开放为生成目标。
 def test_core_antigen_mask_uses_fragment_type_not_partner_antibody_chain():
     from disorderflow.modules.bfn.core import AntibodyBFN_Core
 
@@ -84,6 +96,8 @@ def test_core_antigen_mask_uses_fragment_type_not_partner_antibody_chain():
     ]
 
 
+# 聚合广播源码契约：抗原计数 clamp(min=1) 与 sum/count 的广播除法必须存在——
+# 防止多样本 batch 聚合时的除零或形状错误回归。
 def test_receiver_pair_aggregation_broadcasts_for_multi_sample_batches():
     source = Path("disorderflow/modules/bfn/receiver.py").read_text(encoding="utf-8")
     assert "clamp(min=1).unsqueeze(-1)" in source

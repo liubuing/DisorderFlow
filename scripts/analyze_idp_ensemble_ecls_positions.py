@@ -17,10 +17,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 文件 SHA256，用于冻结输入哈希校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def robust_value(values, aggregation):
+    # 稳健聚合打分：p25/最小值/均值加权和减标准差惩罚
     values = np.asarray(values, dtype=np.float64)
     return float(
         float(aggregation["p25_weight"]) * np.percentile(values, 25)
@@ -31,6 +33,7 @@ def robust_value(values, aggregation):
 
 
 def residue_profile(log_probs, sequence, indices, alphabet):
+    # 按长度归一的逐残基 NLL 剖面（apo 或 complex 状态）
     length = len(sequence)
     apo_or_complex = [
         -float(log_probs[index, alphabet.index(aa)]) / length
@@ -40,12 +43,14 @@ def residue_profile(log_probs, sequence, indices, alphabet):
 
 
 def candidate_state_profiles(apo_logp, complex_logp, sequence, indices, alphabet):
+    # 组合 apo/complex 剖面，gain = apo NLL - complex NLL（表位条件化增益）
     apo = residue_profile(apo_logp, sequence, indices, alphabet)
     complex_state = residue_profile(complex_logp, sequence, indices, alphabet)
     return {"apo": apo, "complex": complex_state, "gain": apo - complex_state}
 
 
 def contribution_mechanism(apo_difference, complex_difference, contribution):
+    # 将每位置负贡献归因到机制：apo 基线主导 / complex 支撑不足 / 混合 / 相互抵消
     if contribution >= 0:
         return "positive_or_neutral"
     apo_term = apo_difference
@@ -63,6 +68,7 @@ def contribution_mechanism(apo_difference, complex_difference, contribution):
 
 
 def middle_comparator_records(records):
+    # 取单构象冠军分数居中的两条观测作比较基准；并列分数会引入归因不唯一性，需记录备选
     ordered = sorted(records, key=lambda row: (row["heldout_score"], row["training_conformer"]))
     selected = ordered[1:3]
     selected_ids = {(row["training_conformer"], row["candidate_index"]) for row in selected}
@@ -77,6 +83,7 @@ def middle_comparator_records(records):
 
 
 def load_state_npz(path, expected_hash, indices, native_h3, alphabet, tolerances):
+    # 加载并校验条件概率 NPZ：哈希、数组齐全、有限性、归一化、H3 mask 与天然序列解码
     if sha256(path) != expected_hash:
         raise ValueError(f"Conditional NPZ hash mismatch: {path}")
     payload = np.load(path)
@@ -101,6 +108,7 @@ def load_state_npz(path, expected_hash, indices, native_h3, alphabet, tolerances
 
 
 def select_ensemble(matrix, sequences, training, aggregation):
+    # 在训练构象子集上按稳健分选出系综候选
     return max(
         range(len(sequences)),
         key=lambda index: (robust_value(matrix[index, training], aggregation), sequences[index]),
@@ -108,6 +116,7 @@ def select_ensemble(matrix, sequences, training, aggregation):
 
 
 def analyze_component(spec, config, analysis):
+    """单组件 H3 逐位置分解：重建增益矩阵 -> LOO 折复现 -> 负折逐位置归因。"""
     cache_path = ROOT / spec["score_cache"]
     if sha256(cache_path) != spec["score_cache_sha256"]:
         raise ValueError(f"Score cache hash mismatch: {cache_path}")
@@ -148,6 +157,7 @@ def analyze_component(spec, config, analysis):
 
     rebuilt = np.zeros_like(stored_matrix)
     all_profiles = []
+    # 从 NPZ 原始条件概率重建整张候选 x 构象增益矩阵，残差超阈值即判定不一致
     for candidate_index, sequence in enumerate(sequences):
         candidate_profiles = []
         for conformer_index, state in enumerate(state_profiles):
@@ -307,6 +317,7 @@ def analyze_component(spec, config, analysis):
 
 
 def write_csv(path, rows):
+    # 逐位置贡献明细写成 CSV
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="ascii") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
@@ -315,6 +326,7 @@ def write_csv(path, rows):
 
 
 def write_report(path, output):
+    # 生成 Markdown 报告：逐组件逐位置均值表与 v3 优先事项
     lines = [
         "# ECLS H3 Position Decomposition", "",
         "Per-position values are ProteinMPNN likelihood contributions, not binding energies.", "",
@@ -344,6 +356,7 @@ def write_report(path, output):
 
 
 def main():
+    # 主流程：校验分析输入哈希 -> 逐组件逐位置分解 -> 汇总写 JSON/CSV/报告
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",

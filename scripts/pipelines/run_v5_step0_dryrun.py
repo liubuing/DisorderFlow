@@ -2,6 +2,10 @@
 
 Tests run_inference with minimal sequences, confirms constraint API,
 checks GPU memory on RTX 5060 8GB."""
+# 角色：V5 第 0 步——Chai-1（AF3 类结构预测替代教师）干跑验证：用极小双链输入
+# 冒烟测试 run_inference API、探测 constraints 模块可用性，并以真实规模
+#（约 120aa VH + 8aa 表位肽）探测 8GB 显存是否够用。全部 diffn 参数取最小值
+#（recycle=0、timesteps=10、samples=1）只为速度，不代表正式预测配置。
 import os, sys, tempfile, time, json
 os.chdir("/mnt/d/biological/DisorderFlow")
 

@@ -1,4 +1,7 @@
 """Extract Fv-only from 4HIX and run T1 ensemble MD on CPU."""
+# 角色：v5 构建活动的一次性脚本——从 4HIX 中切出仅含 Fv（VH/VL）与肽 A 的结构，
+# 再写出 T1 集系综 MD（OpenMM/PDBFixer，CPU 平台）的缩减配置 JSON，
+# 交由 generate_h3_peptide_ensemble.py 实际执行（本脚本只准备，不运行 MD）。
 import sys, os, json, time
 from pathlib import Path
 from Bio.PDB import PDBParser, PDBIO, Select
@@ -44,14 +47,16 @@ config = {
         "minimization_tolerance_kj_mol_nm": 10.0,
         "minimization_iterations": 200,
         "snapshot_minimization_iterations": 100,
-        "antibody_heavy_atom_restraint": 5000.0,
-        "peptide_backbone_restraint": 25.0,
-        "contact_cutoff_angstrom": 4.5,
-        "seeds": [2701, 2711, 2721],
+        "antibody_heavy_atom_restraint": 5000.0,   # 抗体 heavy-atom 位置约束（kJ/mol/nm^2），强约束保持骨架
+        "peptide_backbone_restraint": 25.0,        # 肽骨架弱约束，允许肽在界面处弛豫
+        "contact_cutoff_angstrom": 4.5,            # 接触判定的重原子距离阈值
+        "seeds": [2701, 2711, 2721],               # 三个等距种子做 T1 集系综
         "temperature_kelvin": 300.0,
         "equilibration_steps": 50,
         "production_steps": 100,
         "quality_control": {
+            # QC：抗体 RMSD 需 <=0.5Å（约束下应基本不动）；肽 RMSD 需在
+            # [0.05, 3.0]Å 之间（过小说明未弛豫，过大说明脱离）；接触保持率 >=0.5。
             "max_antibody_rmsd": 0.5,
             "min_peptide_rmsd": 0.05,
             "max_peptide_rmsd": 3.0,

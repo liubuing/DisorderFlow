@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Audit CAID2 Disorder-NOX against training data and cache exact AFDB models."""
 
+# 目的：CAID2 外部评测准备——先审计 Disorder-NOX 靶标是否与训练数据重叠/可用，
+# 再经 DisProt API 解析 UniProt 登录号（校验序列一致）、经 AFDB API 精确映射
+# AlphaFold 模型（序列必须逐字符一致），最后并发缓存 PDB 文件供离线评测。
+# 任一环节失败都会记录 status（mismatch/missing）而非静默跳过。
+
 import argparse
 import json
 import sys
@@ -20,6 +25,7 @@ from prepare_sabdab2_external import mmseqs_hits, write_fasta  # noqa: E402
 
 
 def fetch_json(url, retries=3):
+    # 带 3 次重试与 2**attempt 秒指数退避的 JSON GET。
     for attempt in range(retries):
         try:
             with urllib.request.urlopen(url, timeout=30) as response:

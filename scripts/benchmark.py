@@ -38,6 +38,7 @@ AA = 'ACDEFGHIKLMNPQRSTVWY'
 
 
 def _spearman(a, b):
+    """手写 Spearman 秩相关（平均秩以序数近似）；样本 <3 时返回 NaN。"""
     if len(a) < 3: return float('nan')
     ra = np.argsort(np.argsort(a)).astype(float)
     rb = np.argsort(np.argsort(b)).astype(float)
@@ -82,6 +83,8 @@ def run_benchmark(generator='v14', bfn_ckpt=None, samples=20, output=None):
         from disorderflow.utils.misc import seed_all
 
         # Load model
+        # 临时把 app_config.yaml 的 BFN checkpoint 换成基准所测权重，加载后立刻还原；
+        # 同时清空 bfn_loader 的单例缓存以强制重新加载
         app = yaml.safe_load(open('app_config.yaml', encoding='utf-8'))
         orig_ckpt = app['models']['bfn']['checkpoint']
         app['models']['bfn']['checkpoint'] = bfn_ckpt
@@ -93,6 +96,7 @@ def run_benchmark(generator='v14', bfn_ckpt=None, samples=20, output=None):
         yaml.dump(app, open('app_config.yaml', 'w', encoding='utf-8'))
 
         # Build complex structure
+        # 解析 "链:起-止" 形式的 CDR 区段定义为 0-based 残基索引集合
         def parse_regions(spec):
             r = {}
             for p in spec.split(','):
@@ -109,6 +113,8 @@ def run_benchmark(generator='v14', bfn_ckpt=None, samples=20, output=None):
                   'num_chains': ss['num_chains'] + ags['num_chains'],
                   'all_chain_ids': ss['all_chain_ids'] + ags['all_chain_ids']}
 
+        # 采样：对 merge 后的复合物与单独 scaffold(fixbb) 各采一次，
+        # 种子 42+si 保证配对样本一一对应可复现
         def sample_structure(structure, seed):
             seed_all(seed)
             batch = recursive_to(PaddingCollate()([tx(structure)]), 'cpu')
@@ -118,6 +124,7 @@ def run_benchmark(generator='v14', bfn_ckpt=None, samples=20, output=None):
             with torch.no_grad():
                 traj = model.sample(batch, {'deterministic': False, 'num_recycles': 3})
             pred_aa = traj[0][2][0][gm]
+            # 仅取前 20 通道 logits 计算 ppl/熵（排除掩码位）
             logits = traj['pred_logits'][0][gm][..., :20]
             log_probs = torch.log_softmax(logits, dim=-1)
             probs = log_probs.exp()
@@ -175,7 +182,7 @@ def run_benchmark(generator='v14', bfn_ckpt=None, samples=20, output=None):
     seqs = []
 
     for i, d in enumerate(designs[:10]):
-        # Graft CDR into scaffold
+        # 只取前 10 个设计做 AF2 验证（控制 AF2 调用成本）；将预测 CDR 嫁接回 scaffold
         parser = PDBParser(QUIET=True); s = parser.get_structure('s', SCAFFOLD)
         regions = []
         for part in CDR_SPEC.split(','):
@@ -217,12 +224,13 @@ def run_benchmark(generator='v14', bfn_ckpt=None, samples=20, output=None):
     bfn_iptms = [d['bfn_iptm'] for d in designs[:10] if d.get('af2_iptm', 0) > 0]
     valid_af2 = [d['af2_iptm'] for d in designs[:10] if d.get('af2_iptm', 0) > 0]
 
+    # OC 分母保护：AF2 ipTM <= 0.001 的设计不参与比值，避免除零与噪声放大
     if bfn_iptms and valid_af2:
         oc = np.mean([b / a for b, a in zip(bfn_iptms, valid_af2) if a > 0.001])
         rho = _spearman(np.array(bfn_iptms), np.array(valid_af2))
         ceiling = max(valid_af2)
     else:
-        oc, rho, ceiling = 999, float('nan'), 0
+        oc, rho, ceiling = 999, float('nan'), 0  # 999 为"不可计算"哨兵值
 
     results['oc_ratio'] = round(oc, 2)
     results['spearman_rho'] = round(rho, 4) if not np.isnan(rho) else None

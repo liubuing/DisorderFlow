@@ -9,9 +9,12 @@ both ASCII and UTF-16LE variants.
 from pathlib import Path
 
 scripts = Path(__file__).resolve().parents[2] / 'venv' / 'Scripts'
+# activate 家族的全部脚本名（大小写不敏感匹配）。
 targets = ('activate', 'activate.fish', 'activate.bat', 'activate.ps1',
            'deactivate', 'deactivate.fish', 'deactivate.bat', 'deactivate.ps1')
 
+# 字节级替换：同时覆盖 ASCII 与 UTF-16LE（.bat/.ps1 可能是 UTF-16 编码，
+# 字符间夹 \x00）两种形式；UTF-16 分支按交错的 C\x00:\x00... 模式逐个匹配。
 for p in sorted(scripts.iterdir()):
     if p.name.lower() not in targets:
         continue

@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Audit LMDB train/validation splits for identity and homology leakage."""
+"""Audit LMDB train/validation splits for identity and homology leakage.
+
+审计 LMDB 训练/验证划分是否存在同一性泄漏与同源泄漏：
+- 精确重叠：逐字段（pdb_id、序列字段）统计训练/验证集合间完全相同的取值；
+- 同源重叠：用 mmseqs2 以字段特定同一性阈值聚类，统计跨划分的簇。
+另报告加载错误数、含无序标签的条目数与 pLDDT 分布。结果写出 JSON 审计报告。
+"""
 
 import argparse
 import json
@@ -23,6 +29,7 @@ SEQUENCE_FIELDS = ('sequence', 'vh_sequence', 'vl_sequence',
 
 
 def _tensor_sequence(values):
+    """把张量形式的氨基酸索引还原为序列字符串（越界/未知记为 X）。"""
     if values is None:
         return ''
     return ''.join(ALPHABET[int(value)] if 0 <= int(value) < 20 else 'X'
@@ -30,6 +37,7 @@ def _tensor_sequence(values):
 
 
 def _normalize_entry(entry):
+    """把 LMDB 条目归一化为审计用的扁平字典（统一大小写、从链/张量回填缺失序列）。"""
     normalized = {
         'pdb_id': str(entry.get('pdb_id', entry.get('id', ''))).casefold(),
         'sequence': str(entry.get('sequence', '')).upper(),
@@ -58,6 +66,7 @@ def _normalize_entry(entry):
 
 
 def load_lmdb(path):
+    """只读方式加载整个 LMDB 并逐条归一化；单条损坏不中断审计（记为 load_error）。"""
     path = Path(path)
     subdir = path.is_dir()
     env = lmdb.open(str(path), subdir=subdir, readonly=True, lock=False,
@@ -88,6 +97,7 @@ def _overlap(train, val, field):
 
 
 def _homology_overlap(train, val, field, min_identity, executable):
+    """跨划分同源泄漏审计：合并两侧序列聚类后统计同时出现在训练/验证的簇。"""
     combined = ([{'sequence': entry.get(field, '')} for entry in train] +
                 [{'sequence': entry.get(field, '')} for entry in val])
     mapping = mmseqs_cluster(combined, 'sequence', min_identity=min_identity,
@@ -107,11 +117,13 @@ def _homology_overlap(train, val, field, min_identity, executable):
 
 
 def audit_dataset(name, train_path, val_path, executable='mmseqs'):
+    """对单个数据集执行完整泄漏审计，返回可序列化的报告字典。"""
     started = time.time()
     train = load_lmdb(train_path)
     val = load_lmdb(val_path)
     exact = {'pdb_id': _overlap(train, val, 'pdb_id')}
     homology = {}
+    # 各字段同源性阈值：序列整体 30% 同一性，抗体链/CDR-H3 用更严格的 50%
     thresholds = {
         'sequence': 0.3,
         'vh_sequence': 0.5,
@@ -150,6 +162,7 @@ def audit_dataset(name, train_path, val_path, executable='mmseqs'):
 
 
 def main():
+    """命令行入口：--dataset NAME TRAIN_LMDB VAL_LMDB 可重复传入多个数据集。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dataset', action='append', nargs=3,
                         metavar=('NAME', 'TRAIN_LMDB', 'VAL_LMDB'), required=True)

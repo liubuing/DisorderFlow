@@ -16,6 +16,12 @@ OUT = ROOT / "data/abbibench_sequence_mapping_v1"
 
 
 def project(spec):
+    # 把固定版本公共 CSV 投影为仅序列 JSONL:
+    #   - 边下载边对原始字节做 SHA-256（raw_transmitted_csv_sha256 留证），
+    #     但标签字符串不解析为数值、不落盘、不参与任何选择;
+    #   - 表头必须与冻结版本完全一致（防静默 schema 变更）;
+    #   - 先写 .partial 再原子替换；receipts 记录双向哈希，重跑时校验
+    #     缓存投影未被改动。
     name = Path(spec["file"]).stem
     path = OUT / "sequences" / (name + ".jsonl")
     record = OUT / "receipts" / (name + ".json")
@@ -54,6 +60,8 @@ def project(spec):
 def main():
     headers = json.loads((OUT / "headers.json").read_text())
     # Require an endpoint assessment snapshot before opening any full table.
+    # 必须先冻结端点状态字典（endpoint_dictionary.json），防止在未评估
+    # 标签可用性之前就接触全表数据。
     endpoint = OUT / "endpoint_dictionary.json"
     if not endpoint.exists():
         raise RuntimeError("Freeze endpoint status dictionary first")

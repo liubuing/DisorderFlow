@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Audit the frozen all-single-pose median baseline on development artifacts."""
+"""Audit the frozen all-single-pose median baseline on development artifacts.
+
+审计"全单构象中位数"公平基线在开发集上的表现：从源敏感性、
+leave-one-pose-out 与弃权（abstention）审计 JSON 中恢复被省略构象的得分，
+比较固定候选 ensemble 与所有单构象中位数的差值，判断模型是否偏好 ensemble。
+输出公平基线开发审计报告；结论冻结为"不再进一步搜索基线"。
+"""
 
 from __future__ import annotations
 
@@ -12,13 +18,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def recover_omitted_pose_score(full_mean, retained_mean, pose_count):
+    """由"全集均值"与"留一后均值"反解被省略构象的单独得分。
+
+    恒等式：full_mean = (retained_mean*(n-1) + score)/n，故 score = n*full - (n-1)*retained。
+    """
     if pose_count < 2:
         raise ValueError("At least two poses are required")
     return pose_count * full_mean - (pose_count - 1) * retained_mean
 
 
 def analyze(source_path, loo_path, abstention_path, output):
+    """汇总三份审计输入，逐 (component, bucket) 生成 ensemble vs 单构象中位数的配对记录。"""
     if output.exists():
+        # 冻结审计产物不可覆盖，防止重复运行污染结果
         raise FileExistsError(f"Refusing to overwrite fair baseline audit: {output}")
     source = json.loads(source_path.read_text(encoding="ascii"))
     loo = json.loads(loo_path.read_text(encoding="ascii"))
@@ -52,6 +64,7 @@ def analyze(source_path, loo_path, abstention_path, output):
                     ),
                 })
         for bucket in (2, 4, 6, 8):
+            # bucket 为替换桶大小（每个桶对应一个 ensemble/single_state 固定候选）
             ensemble_id = f"ensemble_{bucket}"
             single_id = f"single_state_{bucket}"
             ensemble_mixed = full[(component_id, ensemble_id)]
@@ -103,6 +116,7 @@ def analyze(source_path, loo_path, abstention_path, output):
 
 
 def main():
+    """命令行入口：解析三份审计输入与输出路径并调用 analyze。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--source", type=Path,

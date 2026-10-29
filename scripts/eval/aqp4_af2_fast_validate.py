@@ -22,14 +22,16 @@ from target_design_helpers import extract_seq_from_pdb
 
 # AQP4 C-terminal epitope (residues 231-323, ~93aa)
 # This is the extracellular C-terminal domain that faces the antibody
+# AQP4 C 端表位（约 93 aa），含与抗体接触的界面残基；截短可显著加速 AF2 复合体预测
 AQP4_EPITOPE = (
     "VELKRRLKEAFSKAAQQTKGSYMEVEDNRSQVETDDLILKPGVVHVIDVDRGEEKKGKDQSGEVLSSV"
 )
 
 # 3GD8 scaffold full sequence (PDB chain A, standard AAs)
-GD8_SCAFFOLD_SEQ = None  # Loaded from PDB at runtime
+GD8_SCAFFOLD_SEQ = None  # Loaded from PDB at runtime  # 运行时从 PDB 加载
 
 # CDR definitions for 3GD8
+# 3GD8 的三个 CDR 区间（1-based 闭区间）：CDR1/CDR2/CDR3
 GD8_CDR_RANGES = [(26, 33), (51, 58), (97, 110)]
 
 
@@ -65,6 +67,7 @@ def load_designs_from_json(json_path_or_dir):
 
 
 def _parse_fasta(fasta_path):
+    # 解析 FASTA，把 header 中 k=v 形式的元数据读进每条 design 记录
     designs = []
     with open(fasta_path) as f:
         header, seq = None, ''
@@ -100,6 +103,7 @@ def _parse_fasta(fasta_path):
 def graft_cdr_into_scaffold(design_seq, scaffold_seq, design_region_spec):
     """Graft designed CDR sequence into the 3GD8 scaffold at specified positions."""
     # Parse design region into positions
+    # 解析设计区定义（如 A:26-33,51-58,97-110）为 1-based 位置列表
     positions = []
     for cid, spec in re.findall(r'([A-Za-z0-9]+):([0-9,\-\s]+)', design_region_spec):
         for seg in spec.split(','):
@@ -112,6 +116,7 @@ def graft_cdr_into_scaffold(design_seq, scaffold_seq, design_region_spec):
                 positions.append(int(seg))
     positions = sorted(set(positions))
 
+    # 将设计序列按顺序逐位替换进骨架的指定位置（越界则追加）
     grafted = list(scaffold_seq)
     for i, pos in enumerate(positions):
         if i < len(design_seq):
@@ -127,6 +132,7 @@ def graft_cdr_into_scaffold(design_seq, scaffold_seq, design_region_spec):
 def run_af2_validation(ab_seqs, epitope_seq, output_dir, num_recycle=1,
                        colabfold_exe=None, max_designs=5):
     """Run AF2 multimer (colabfold_batch) on antibody-epitope pairs."""
+    # 逐条设计：嫁接 CDR -> 写二聚体 FASTA -> 调 colabfold_batch -> 解析打分
     os.makedirs(output_dir, exist_ok=True)
 
     if colabfold_exe is None:
@@ -172,11 +178,11 @@ def run_af2_validation(ab_seqs, epitope_seq, output_dir, num_recycle=1,
 
         cmd = [
             colabfold_exe,
-            '--num-models', '1',
+            '--num-models', '1',  # 每条设计只跑 1 个模型以加速
             '--num-recycle', str(num_recycle),
             '--model-type', 'alphafold2_multimer_v3',
-            '--rank', 'iptm',
-            '--stop-at-score', '80',
+            '--rank', 'iptm',  # 按 ipTM 排序输出
+            '--stop-at-score', '80',  # 分数达到阈值即提前停止，节省时间
             fasta_path, design_dir,
         ]
 
@@ -188,7 +194,7 @@ def run_af2_validation(ab_seqs, epitope_seq, output_dir, num_recycle=1,
 
             result = subprocess.run(
                 cmd, capture_output=True, text=True,
-                timeout=900, cwd=str(SCRIPT_DIR), env=env)
+                timeout=900, cwd=str(SCRIPT_DIR), env=env)  # 单条设计 15 分钟超时
             elapsed = time.time() - t0
 
             if result.returncode != 0:
@@ -208,6 +214,7 @@ def run_af2_validation(ab_seqs, epitope_seq, output_dir, num_recycle=1,
             ptm = scores['ptm'] or 0
             plddt = scores['plddt'] or 0
 
+            # 分级：ipTM >= 0.80 通过，>= 0.60 尚可，否则偏低
             status = '✓ PASS' if iptm >= 0.80 else ('◐ OK' if iptm >= 0.60 else '✗ LOW')
             print(f"    {status} | ipTM={iptm:.4f} pTM={ptm:.4f} "
                   f"pLDDT={plddt:.3f} maxPAE={scores['max_pae']:.1f} "
@@ -237,6 +244,7 @@ def run_af2_validation(ab_seqs, epitope_seq, output_dir, num_recycle=1,
 
 def _parse_af2_output(result_dir, ab_len, epi_len):
     """Parse colabfold_batch output scores."""
+    # 读取 rank-1 的 scores JSON，计算平均 pLDDT、ipTM/pTM、maxPAE 与界面 PAE
     out = Path(result_dir)
     scores_files = sorted(out.glob('*scores_rank_001*.json'))
     if not scores_files:
@@ -260,6 +268,7 @@ def _parse_af2_output(result_dir, ab_len, epi_len):
     max_pae = scores.get('max_pae', 999.0)
 
     # Interface PAE
+    # 界面 PAE：抗体行 x 表位列子矩阵的均值（FASTA 中抗体在前）
     pae = scores.get('pae', None)
     if pae is not None:
         pae_arr = np.array(pae)
@@ -283,6 +292,7 @@ def _parse_af2_output(result_dir, ab_len, epi_len):
 
 
 def main():
+    # 主流程：加载设计 -> 嫁接 CDR -> 批量 AF2 验证 -> 打印摘要并保存 JSON/FASTA
     parser = argparse.ArgumentParser(description='Fast AF2 validation of AQP4 nanobody designs')
     parser.add_argument('--designs', required=True,
                        help='JSON or FASTA file with BFN designs')

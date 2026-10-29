@@ -53,6 +53,10 @@ def parse_args():
 
 
 def main():
+    # 留种子法（leave-seed-out）稳定归因基准：对每个 held-out 种子，
+    # "稳定规则"只从其余种子的复现信号中编译——评估它对该种子新采样的
+    # 变体是否仍优于 4 个基线臂（v2 发现池、仅亲本、随机规则、位置打乱规则）。
+    # 只有同时打赢全部对照，才承认归因规则携带真实结构信号。
     args = parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -129,6 +133,11 @@ def load_refs(path):
 
 
 def build_discovery_contexts(refs, seeds, args):
+    """每个 (种子, 参考结构) 组合构建发现期上下文。
+
+    发现负态与留出负态用不同种子偏移（heldout_seed_offset=10000）独立生成，
+    保证归因规则的编译与评估看到不同的诱饵态，避免选择泄漏。
+    """
     contexts = {}
     for seed in seeds:
         for ref_idx, ref in enumerate(refs):
@@ -159,6 +168,11 @@ def discovery_signal_items(discovery):
 
 
 def stable_signal_rows(signal_rows, reference_pdb, min_recurrence=2):
+    """把逐种子信号按 (位置, 链, 残基, 体积类, 化学类, 方向) 分组，
+
+    只保留至少在 min_recurrence 个不同种子中复现的信号——复现性是
+    稳定归因的核心门槛，单种子信号可能是采样噪声。
+    """
     grouped = defaultdict(list)
     for row in signal_rows:
         direction = "high_gap_enriched" if float(row["fraction_delta"]) > 0 else "low_gap_enriched"
@@ -266,6 +280,8 @@ def summarize_stable_metric(reference_pdb, rows, metric):
 
 
 def stable_verdict(wins, n, parent_deltas, random_deltas, shuffled_deltas):
+    """跨种子裁决阈值：≥80% 种子同时打赢三个对照 → 稳定信号；
+    ≥60% 且打赢亲本 → 部分信号；否则视为混合或过拟合风险。"""
     if n == 0:
         return "not_evaluable"
     win_rate = wins / n

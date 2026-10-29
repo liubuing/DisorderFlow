@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Build a sequence-finalization package for the complete 5CSZ Fab panel."""
 
+# 目的：v5.1 表达包构建——把通过结构与松弛（relax）质检的 5CSZ 抗 Aβ Fab 候选
+# 定稿为可下单的基因合成/表达序列包：DNA Chisel 做人源密码子优化（约束翻译
+# 一致性、GC 含量、禁用酶切/基序位点），附 Kozak 序列与终止密码子，
+# 输出 FASTA、订单 CSV 与 expression_package.json（含完整表达合同与采购检查）。
+
 import csv
 import hashlib
 import json
@@ -25,6 +30,8 @@ BASE = ROOT / "results/v5_1_candidates/abeta42_biological_constructs"
 HEAVY_SIGNAL = "MDWTWRILFLVAAATGAHS"
 LIGHT_SIGNAL = "MDMRVPAQLLGLLLLWFPGARC"
 FORBIDDEN = ["GGTCTC", "GAGACC", "CGTCTC", "GAGACG", "GCTCTTC", "GAAGAGC", "AATAAA"]
+# 禁用位点：Golden Gate/BsaI(BsmBI/BsaBI 等) 识别序列与多聚腺苷酸化信号 AATAAA，
+# 避免克隆组装与 mRNA 加工层面的意外切割或提前终止。
 VECTOR = "pcDNA3.4-TOPO TA"
 VECTOR_CATALOG = "Thermo Fisher A14697"
 CLONING_METHOD = "TOPO TA cloning of Taq-amplified insert"
@@ -32,6 +39,8 @@ NEGATIVE_CONTROL = "commercial non-binding human IgG1/kappa Fab isotype control"
 
 
 def optimize_cds(protein):
+    # 密码子优化：反向翻译后施加约束（翻译一致、GC 40-68%（60bp 窗）、避开禁用位点、
+    # 无 7 连同碱基），再按人源密码子使用频率优化；优化后复检翻译与禁用位点。
     initial = reverse_translate(protein)
     constraints = [
         EnforceTranslation(translation=protein),
@@ -73,6 +82,7 @@ def add_chain(output, chain_id, role, mature, signal):
         "cds": cds,
         "cds_with_stop": cds + "TGA",
         "expression_insert": "GCCACC" + cds + "TGA",
+        # 表达插入片段 = Kozak 共识前导(GCCACC) + CDS + 终止密码子 TGA。
         "cds_length": len(cds),
         "gc_percent": gc,
         "translation_verified": True,

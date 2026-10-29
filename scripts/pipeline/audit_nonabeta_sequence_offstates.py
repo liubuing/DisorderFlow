@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 """Pre-registered topology/sequence off-state screen for non-A-beta IDP candidates."""
+# 本脚本对非 Aβ 的 IDP 候选（tau / α-synuclein）执行预注册的
+# "拓扑/序列 off-state"筛查：保持正态态（target）的接触拓扑不变，把表位肽
+# 序列替换为相邻重复、同源蛋白、组成打乱等计算态序列，用接触评分器对比
+# 候选与天然 paratope 的 target 得分、特异性间隙（target - 最强 off-state）
+# 及各 off-state 相对天然的增量。门槛（Δtarget ≥0、Δgap ≥0、off 增量 ≤0、
+# 计算态 ≥2 个）只是预注册的分诊结果，不构成结构或实验层面的特异性声明。
+
 from __future__ import annotations
 
 import csv
@@ -14,6 +21,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "modules"))
+# UniProt 序列窗口的统一取回日期（溯源字段）
 RETRIEVAL_DATE = "2026-07-28"
 
 from ensemble_pose_transfer import fixed_paratope_contact_map  # noqa: E402
@@ -54,10 +62,13 @@ STATES = {
 
 
 def load_csv(path):
+    # 读取 CSV 为字典列表（保持 utf-8 与换行规范）
     with open(path, newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
 
 
+# 在同一接触拓扑上替换肽序列：长度必须与模板肽一致，
+# 接触表位残基名随新序列同步更新
 def state_map(contact_map, sequence):
     if len(sequence) != len(contact_map["peptide_sequence"]):
         raise ValueError(f"State length {len(sequence)} != template peptide {len(contact_map['peptide_sequence'])}")
@@ -69,6 +80,9 @@ def state_map(contact_map, sequence):
 
 
 def main():
+    # 主流程：加载集合清单、pose 面板审计与两代候选 CSV → 对每个靶标
+    # 提取模板接触图与入选 pose → 登记状态面板（附取回日期/对齐方式/声明边界）
+    # → 逐候选计算 target/off-state 得分与门槛判定 → 写两份 CSV 与汇总 JSON
     manifest = json.load(open(ROOT / "outputs/non_abeta_idp_ensemble_prep_v1/ensemble_manifest.json", encoding="utf-8"))
     audit = json.load(open(ROOT / "outputs/non_abeta_idp_pose_panels_v1/pose_panel_audit.json", encoding="utf-8"))
     candidate_files = [

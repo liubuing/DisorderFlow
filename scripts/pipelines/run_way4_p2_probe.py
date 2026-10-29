@@ -4,6 +4,10 @@ Tests V18 vs V17i on high-disorder (Aβ42) vs low-disorder (folded) epitopes.
 Measures: AA entropy, unique sequences, aromatic fraction, anti-degen checks.
 Key question: does V18 produce more pliable CDRs for high-disorder epitopes?
 """
+# 角色：WAY4-V6 P2 机制验证探针——比较 V18（无序条件化）与 V17i 基线在
+# 高/中/低无序表位上的 CDR 生成行为：序列熵、唯一序列数、芳香族(Y/W/F)比例、
+# 连续重复（>=6 视为退化）等指标；梯度检查要求高无序表位的芳香比例显著
+# 更高（>1.2 倍判 SIGNIFICANT）以证明无序条件通路生效。
 import sys,os,json,time,tempfile,random,math
 from collections import Counter
 sys.path.insert(0,'.');sys.path.insert(0,'modules')
@@ -61,7 +65,7 @@ def generate_cdr(model,epitope_seq,epi_disorder,n_samples=N_SAMPLES):
     ctr=np.array(cdr_ca).mean(axis=0)if cdr_ca else np.array([0,0,0])
     for i,aa in enumerate(epitope_seq):
         r=Residue.Residue((' ',i+1,' '),{'A':'ALA','R':'ARG','N':'ASN','D':'ASP','C':'CYS','E':'GLU','Q':'GLN','G':'GLY','H':'HIS','I':'ILE','L':'LEU','LYS':'LYS','MET':'MET','F':'PHE','P':'PRO','S':'SER','T':'THR','W':'TRP','Y':'TYR','V':'VAL'}.get(aa,'GLY'),' ')
-        ca=ctr+np.array([12+i*3.8,3,-2])
+        ca=ctr+np.array([12+i*3.8,3,-2])  # 肽链以 3.8Å 间隔线性展开在距 CDR 质心约 12Å 处（几何占位）
         r.add(Atom.Atom('CA',ca.tolist(),0,1,' ',' CA ',i+1,'C'))
         r.add(Atom.Atom('N',(ca+[-1.46,0,0]).tolist(),0,1,' ',' N  ',i+1,'N'))
         r.add(Atom.Atom('C',(ca+[1.52,0,0]).tolist(),0,1,' ',' C  ',i+1,'C'))

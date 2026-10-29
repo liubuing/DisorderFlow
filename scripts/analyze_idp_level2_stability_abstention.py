@@ -6,6 +6,12 @@ as a zero effect. This diagnostic cannot change the main level-2 decision
 because the rule was examined after candidate results existed.
 """
 
+# 目的：IDP level-2 稳定性弃权诊断——在不重排序（no reranking）的前提下，沿
+# "来源敏感性（source panel）"与"留一构象（leave-one-pose-out）"两个轴检验
+# 集成-单态效应方向的稳定性。弃权对仅从条件汇总中剔除，绝不记为零效应；
+# 本诊断在候选结果产生之后才设计，因此不得改变 level-2 主结论（decision 字段固定）。
+# 输入：YAML 配置 + 两个冻结哈希校验的 JSON 产物；输出：单个 JSON 汇总。
+
 from __future__ import annotations
 
 import argparse
@@ -23,6 +29,8 @@ def sha256(path):
 
 
 def analyze(config_path, output_path=None):
+    # 主流程：校验冻结哈希→按科学单元 (component_id, substitution_bucket) 配对两轴产物
+    # →仅当两轴都方向稳定时判定 eligible→汇总覆盖率与方向分布并写 JSON。
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
     payloads = {}
     provenance = {}

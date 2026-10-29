@@ -11,6 +11,9 @@ from idp_antibody_design import _extract_sequence_from_pdb  # noqa: E402
 
 
 def main():
+    # 从原生参考结构（4HIX / 5CSZ）提取配对重轻链序列，与 Aβ16 位
+    # DAEFRH(DSGY) 肽拼成三链 Multimer FASTA 作为"天然阳性对照"，
+    # 用于校准 ColabFold 打分在本管线中的基线行为。缺链即失败（fail-closed）。
     controls = [
         ("4HIX_native_DAEFRH", "data/anti_abeta_refs/4HIX.pdb", "H", "L", "DAEFRH"),
         ("5CSZ_native_DAEFRHDSGY", "data/anti_abeta_refs/5CSZ.pdb", "A", "B", "DAEFRHDSGY"),

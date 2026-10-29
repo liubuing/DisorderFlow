@@ -18,6 +18,10 @@ disorder-head prediction averaged over: framework (VHH non-CDR) / CDR / Aβ42
 Also loads the Aβ42 5-seed RMSF to confirm the epitope is intrinsically
 disordered (validating that an ordered-ish seq-recovery prior is mismatched).
 """
+# 角色：机制探针（无 AF2、零成本）——检验 V15 无序头是否在"设计序列"上感知到
+# 框架/CDR 的有序-无序冲突：对 5IMK+Aβ42 复合物做 N 次带 return_disorder 的
+# 采样，按区域（VHH 框架 / CDR / Aβ42 表位）聚合无序预测；并用 5 种子 Aβ42
+# RMSF 证实表位本征无序，说明"偏有序的序列恢复先验"与之不匹配。
 import sys, os, copy, json
 if sys.platform == 'win32':
     import io; sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')

@@ -28,6 +28,10 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "modules"))
 
+# 本脚本为 BFN 与 ProteinMPNN 的对照基准（教师/基线对比），属于科研管线中的
+# 生成方法消融环节：两个方法在相同 scaffold+epitope 上设计同样的 CDR 区域，
+# 以序列恢复率、多样性（唯一比例/归一化 Levenshtein 距离）与可选 AF2 通过率打分。
+
 
 # ── metrics (self-contained) ──
 
@@ -42,6 +46,7 @@ def sequence_recovery(designed, native):
 
 
 def levenshtein(a, b):
+    # 经典动态规划编辑距离，用于序列多样性度量（仅小规模两两比较，O(len(a)*len(b))）。
     if len(a) < len(b):
         return levenshtein(b, a)
     if len(b) == 0:
@@ -112,10 +117,10 @@ def design_mpnn(pdb_path, region_spec, num_samples, mpnn_exe, mpnn_outdir):
         "--fixed_positions_jsonl", fixed_path,
         "--out_folder", mpnn_outdir,
         "--num_seq_per_target", str(num_samples),
-        "--sampling_temp", "0.1",
+        "--sampling_temp", "0.1",  # 低温度采样（0.1）偏向高似然序列，保证基线可复现
     ]
     try:
-        subprocess.run(cmd, check=True, capture_output=True, timeout=600)
+        subprocess.run(cmd, check=True, capture_output=True, timeout=600)  # 600s：单次 MPNN 运行上限
     except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired) as e:
         print(f"  [MPNN] run failed: {e}")
         return []

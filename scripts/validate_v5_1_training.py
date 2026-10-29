@@ -21,6 +21,8 @@ from disorderflow.utils.misc import load_config  # noqa: E402
 
 
 def lmdb_count(path):
+    # 统计 LMDB 记录数: 优先读 '-ids' 旁路文件，其次 __len__ 记录，
+    # 最后回退为扫描非 __ 开头的键。文件不存在直接抛错（fail-closed）。
     if not os.path.exists(path):
         raise FileNotFoundError(path)
     ids_path = path + '-ids'
@@ -39,6 +41,9 @@ def lmdb_count(path):
 
 
 def raw_manifest_report(path, manifest_path):
+    # 对原始 LMDB 做"规范指纹"审计: 按 (pdb_id, sequence) 规范串接后取
+    # SHA-256，与冻结 manifest 登记的计数/唯一性/指纹逐一比对。
+    # 指纹把内容与顺序一起固化，任何静默增删改都会导致不匹配。
     with open(manifest_path, encoding='utf-8') as handle:
         manifest = json.load(handle)
     env = lmdb.open(
@@ -70,6 +75,8 @@ def raw_manifest_report(path, manifest_path):
 
 
 def audit_is_clean(path):
+    # 检查数据集审计报告: 加载错误、精确重叠、跨划分同源聚类都必须为零
+    # 才算干净；返回失败原因列表（空即通过）。
     with open(path, encoding='utf-8') as handle:
         report = json.load(handle)
     datasets = report.get('datasets', [report])
@@ -88,6 +95,9 @@ def audit_is_clean(path):
 
 
 def phase3_audit_is_clean(path, metadata_path):
+    # Phase3 划分审计: 元数据必须使用 antigen_centered_v1 划分策略、
+    # 硬隔离字段完备（pdb_id / cdr_h3_sequence / 抗原聚类 ID）且断言
+    # 通过；报告本体再查加载错误与逐字段重叠。
     with open(metadata_path, encoding='utf-8') as handle:
         metadata = json.load(handle)
     required_hard = {'pdb_id', 'cdr_h3_sequence', 'antigen_sequence_cluster_id'}

@@ -29,6 +29,11 @@ import numpy as np
 
 def test_calibration_curve():
     """Display the disorder → reliability mapping curve."""
+    # 展示无序度到 AF2 可靠性的标定曲线。RMSF 估计按反 tanh 推回
+    # （disorder = tanh(RMSF/2.0)，尺度 2.0 埃与 rmsf_to_disorder 一致）。
+    # 关键阈值解读: 0.20 为 AF2 完全可信、0.30 为标准 IDP 阈值、
+    # 0.35 为 sigmoid 中点、0.50 以上 AF2 基本被忽略——具体映射在
+    # idp_antibody_design.disorder_to_af2_reliability 中定义。
     print("=" * 70)
     print("  Test 1: Disorder → AF2 Reliability Calibration Curve")
     print("=" * 70)
@@ -76,6 +81,9 @@ def test_calibration_curve():
 
 def test_design_scenarios():
     """Test composite scoring across different epitope disorder levels."""
+    # 固定同一"好设计"的 AF2 输出（ipTM=0.68 / pLDDT=0.72），只改变
+    # 表位无序度，对比标定与未标定复合分数的差异——演示高无序表位
+    # 会按可靠性降权 AF2 项、转向 BFN 自身置信度（PPL/熵）。
     print("=" * 70)
     print("  Test 2: Composite Score — Calibrated vs Uncalibrated")
     print("=" * 70)

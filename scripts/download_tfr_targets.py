@@ -13,6 +13,10 @@ Usage:
   python scripts/download_tfr_targets.py [--out data/tfr_targets]
   python scripts/download_tfr_targets.py --smoke   # fetch 1 small file to verify connectivity
 """
+# 本脚本为 TfR（转铁蛋白受体）设计管线下载参考结构：6GZV（TfR1-转铁蛋白-Fab
+# 复合物，on-target 表位参考）与 1A8E（apo 转铁蛋白，脱靶/负设计参考），
+# 可选 AlphaFold DB 的 TfR1 全长结构用于无序区检查。网络失败不致命：
+# 写出状态 README 说明缺失项，管线据此后退为仅 on-target 设计。
 from __future__ import annotations
 
 import argparse
@@ -34,6 +38,7 @@ def download_pdb(pdb_id: str, out_path: str, timeout: int = 60) -> bool:
     """Download a single PDB file from RCSB. Returns True on success."""
     url = PDB_DOWNLOAD_URL.format(pdb_id=pdb_id)
     try:
+        # 响应过小（<1000 字节）或前 200 字节含 HTML 声明均视为无效下载
         req = urllib.request.Request(url, headers={"User-Agent": "DisorderFlow/0.1"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = resp.read()

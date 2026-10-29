@@ -21,6 +21,8 @@ AA3 = {'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C','GLU':'E','GLN':'Q',
        'GLY':'G','HIS':'H','ILE':'I','LEU':'L','LYS':'K','MET':'M','PHE':'F',
        'PRO':'P','SER':'S','THR':'T','TRP':'W','TYR':'Y','VAL':'V'}
 
+# 热点判定: CDR 残基 Cβ（甘氨酸退回 CA）与肽 Cβ 距离 < 6 埃——
+# 6 埃是侧链-侧链直接接触的常规上界。CDR 区间用 Chothia 编号。
 CONTACT_CUT = 6.0  # Hotspot: Cβ-peptide < 6A
 CDR_CHOTHIA = {'H1': (26,32), 'H2': (52,56), 'H3': (95,102)}
 
@@ -36,6 +38,8 @@ ANTIBODIES = {
 
 def find_hotspots(pdb_path, ab_chain, epi_chain, cutoff=CONTACT_CUT):
     """Find CDR residues in contact with peptide (Cβ-Cβ < cutoff)."""
+    # 用 KD 树查 CDR Cβ 到肽 Cβ 的最近距离；无 Cβ 的甘氨酸退回 CA。
+    # 返回 (热点残基编号集合, CDR 序列)。
     from Bio.PDB import PDBParser
     from scipy.spatial import cKDTree
     parser = PDBParser(QUIET=True); s = parser.get_structure('s', pdb_path)
@@ -70,6 +74,8 @@ def find_hotspots(pdb_path, ab_chain, epi_chain, cutoff=CONTACT_CUT):
 
 def graft_cdr_to_scaffold(cdr_seq_dict, scaffold_pdb, scaffold_chain, cdr_spec):
     """Graft CDR residues into scaffold and return full sequence."""
+    # 把晶体 CDR 序列按 CDR 内偏移映射嫁接到支架 CDR 区间上，
+    # 生成完整支架序列（供 MPNN 设计/下游打分使用）。
     from Bio.PDB import PDBParser
     parser = PDBParser(QUIET=True); s = parser.get_structure('s', scaffold_pdb)
     # Get scaffold sequence

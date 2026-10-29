@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Exclude holdout-antigen homologs from a disorder-supervision lookup."""
+"""Exclude holdout-antigen homologs from a disorder-supervision lookup.
+
+多骨架确认前的隔离清洗：用 MMseqs2 把 multiscaffold holdout 清单中的
+代表性抗原序列对无序度监督查找表（disorder lookup）做同源搜索
+（identity>=0.3、query 覆盖率>=0.8，cov-mode=2 按 query 覆盖），
+命中即从 lookup 中剔除，防止 holdout 抗原同源物泄漏进无序度教师监督。
+输出过滤后的 lookup pickle 与含命中明细/命令/哈希的审计 JSON。
+"""
 
 from __future__ import annotations
 
@@ -17,16 +24,19 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def clean_sequence(value):
+    """只保留 20 种标准氨基酸大写字母。"""
     return "".join(aa for aa in str(value).upper() if aa in "ACDEFGHIKLMNPQRSTVWY")
 
 
 def write_fasta(path, rows):
+    """把 (id, sequence) 列表写成 FASTA。"""
     with path.open("w", encoding="ascii") as handle:
         for row_id, sequence in rows:
             handle.write(f">{row_id}\n{clean_sequence(sequence)}\n")
 
 
 def main():
+    """主流程：加载 holdout 与 lookup -> mmseqs 搜索 -> 剔除命中 -> 写过滤产物与审计。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--holdout", default="data/multiscaffold_confirmatory_v2/holdout_manifest.json")
@@ -93,6 +103,7 @@ def main():
                     "target_coverage": float(tcov),
                     "evalue": float(evalue),
                 })
+        # 路径中含临时目录，记录命令时以 <TEMP> 占位以便审计留档
         command = [value.replace(str(temporary), "<TEMP>") for value in command]
     excluded = {row["training_record"] for row in hits}
     profiles = {

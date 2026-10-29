@@ -107,6 +107,8 @@ def _validate_common(row: dict, row_number: int) -> dict:
 
 def validate_binding_rows(rows: Iterable[dict]) -> list[dict]:
     """Validate tidy SPR/BLI state-matrix rows without converting units."""
+    # 只做 schema 合法性校验，不做单位换算/插补——原始值保持原样，
+    # 保证入库数据可追溯到实验原始记录；行号从 2 起计（第 1 行是表头）
     validated = []
     for row_number, source_row in enumerate(rows, 2):
         row = dict(source_row)
@@ -121,6 +123,7 @@ def validate_binding_rows(rows: Iterable[dict]) -> list[dict]:
                 f"row {row_number}: unsupported metric/unit pair {metric!r}/{unit!r}"
             )
         value = _number(row, "value", row_number, allow_blank=common["censoring"] == "not_quantified")
+        # 仅"未定量"删失允许空值；其余删失类型仍需给出有限数值
         if common["censoring"] != "not_quantified" and value is not None and value < 0:
             raise ExperimentalDataValidationError(f"row {row_number}: value cannot be negative")
         for field in ("experiment_id", "binder_id", "state_id"):
@@ -162,6 +165,7 @@ def validate_hdx_rows(rows: Iterable[dict]) -> list[dict]:
             allow_blank=common["censoring"] == "not_quantified",
         )
         if uptake is not None and (uptake < 0 or uptake_unit == "%" and uptake > 100):
+            # 百分比单位的摄取值必须落在 [0,100]；Da 单位只检查非负
             raise ExperimentalDataValidationError(f"row {row_number}: uptake_value is out of range")
         row.update(common)
         row.update({
@@ -177,6 +181,7 @@ def _read_csv(path: str | Path, required: Iterable[str]) -> list[dict]:
     if not source.is_file():
         raise ExperimentalDataValidationError(f"CSV does not exist: {source}")
     try:
+        # utf-8-sig 兼容 Excel 导出的带 BOM CSV
         with source.open("r", encoding="utf-8-sig", newline="") as handle:
             reader = csv.DictReader(handle)
             rows = list(reader)

@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Fail-closed readiness check for final untouched IDP confirmation."""
+"""Fail-closed readiness check for final untouched IDP confirmation.
+
+最终"未接触 IDP 队列"确认的放行前检查（fail-closed：任一不满足即阻断）：
+- 管线契约已冻结、generator checkpoint 存在且 sha256 匹配；
+- 元数据层面新 IDP 结构数达标、未接触队列（独立谱系数/目标数）达标；
+- 盲测测量完成（该检查项恒为 False，需实验结果回填后才能放行）。
+输出 readiness JSON，决策字段指示执行确认或继续补数据。
+"""
 
 from __future__ import annotations
 
@@ -14,11 +21,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    """文件 sha256，用于 checkpoint/配置冻结校验。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def check(config_path, output):
+    """逐项核对冻结契约、checkpoint、IDP 队列与盲测状态，写 readiness JSON。"""
     if output.exists():
+        # 就绪产物不可覆盖
         raise FileExistsError(f"Refusing to overwrite final readiness: {output}")
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
     checkpoint = ROOT / config["generator"]["checkpoint"]
@@ -51,7 +61,7 @@ def check(config_path, output):
             >= config["scope"]["minimum_independent_antibody_lineages"]
             and cohort.get("target_count", 0) >= config["scope"]["minimum_targets"]
         ),
-        "blinded_measurements_complete": False,
+        "blinded_measurements_complete": False,  # 需实验盲测结果回填，脚本侧无法自证
     }
     payload = {
         "schema_version": 1,
@@ -80,6 +90,7 @@ def check(config_path, output):
 
 
 def main():
+    """命令行入口：读取冻结配置，输出 readiness 结果。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", type=Path,

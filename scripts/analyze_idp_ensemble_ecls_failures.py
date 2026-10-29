@@ -18,10 +18,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 文件 SHA256，用于校验冻结输入的血缘
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def robust_value(values, aggregation):
+    # 稳健聚合打分：p25 分位、最小值、均值的加权和，再减去标准差惩罚
     values = np.asarray(values, dtype=np.float64)
     return float(
         float(aggregation["p25_weight"]) * np.percentile(values, 25)
@@ -32,12 +34,14 @@ def robust_value(values, aggregation):
 
 
 def hamming(left, right):
+    # 等长序列的汉明距离
     if len(left) != len(right):
         raise ValueError("Hamming distance requires equal-length sequences")
     return sum(a != b for a, b in zip(left, right, strict=True))
 
 
 def diversity_metrics(sequences, raw_sequences):
+    # 候选池多样性：重复率、两两汉明距离统计；判定塌缩（仅 1 条）与近克隆（最小距离为 1）
     if not raw_sequences:
         raise ValueError("Raw candidate provenance is required")
     if set(raw_sequences) != set(sequences):
@@ -69,6 +73,7 @@ def diversity_metrics(sequences, raw_sequences):
 
 
 def winner_index(matrix, indices, sequences, aggregation):
+    # 在给定构象列集合上按稳健分选出最优候选（并列时按序列字典序）
     return max(
         range(len(sequences)),
         key=lambda index: (robust_value(matrix[index, indices], aggregation), sequences[index]),
@@ -76,6 +81,7 @@ def winner_index(matrix, indices, sequences, aggregation):
 
 
 def classify_effect(mean_effect, strict_identity_folds, fold_count, thresholds):
+    # 将平均效应分类：负迁移 / 选择器恒等 / 分数等价 / 数值近平局 / 正效应
     epsilon = float(thresholds["mathematical_effect_epsilon"])
     practical = float(thresholds["practical_neutral_absolute_effect"])
     if mean_effect < -epsilon:
@@ -90,6 +96,7 @@ def classify_effect(mean_effect, strict_identity_folds, fold_count, thresholds):
 def analyze_component_method(
     component, method_row, raw_sequences, stored_rows, aggregation, thresholds
 ):
+    """对单个 (组件,方法) 做 LOO 逐构象留一分解，复现门控失败并归因到选择器/信号/杠杆机制。"""
     sequences = method_row["sequences"]
     matrix = np.asarray(method_row["epitope_conditioning_gain"], dtype=np.float64)
     if matrix.shape != (len(sequences), 5):
@@ -151,6 +158,7 @@ def analyze_component_method(
     winner_variance = float(candidate_variances[full_winner])
     mean_effect = float(np.mean(effects))
     outcome = classify_effect(mean_effect, strict_identity, len(folds), thresholds)
+    # 杠杆分类：单个异常高杠杆构象 / 弥散不稳定 / 近平局杠杆 / 全 panel 冠军稳定
     return {
         "component_id": component["component_id"],
         "method": method_row["method"],
@@ -203,6 +211,7 @@ def analyze_component_method(
 
 
 def write_csv(path, diagnostics):
+    # 将诊断记录展平写成 CSV 汇总表
     fields = [
         "panel", "component_id", "method", "effect_classification",
         "mean_ensemble_minus_single_state", "negative_transfer_folds",
@@ -237,6 +246,7 @@ def write_csv(path, diagnostics):
 
 
 def write_report(path, output):
+    # 生成 Markdown 报告：主方法组件表、v2 优先事项与 claim boundary
     primary = [
         row for row in output["diagnostics"]
         if row["method"] == output["primary_method"]
@@ -267,6 +277,7 @@ def write_report(path, output):
 
 
 def main():
+    # 主流程：校验冻结输入哈希 -> 重建原始候选池 -> 逐组件 LOO 分解 -> 汇总写 JSON/CSV/报告
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_ecls_failure_decomposition_v1.yml"

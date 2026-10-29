@@ -1,5 +1,12 @@
 #!/usr/bin/env python
-"""Build strict template-transferred pose panels for tau and alpha-synuclein."""
+"""Build strict template-transferred pose panels for tau and alpha-synuclein.
+
+为 tau / alpha-synuclein 构建严格的模板转移构象面板：以实验抗体-表位
+参考为模板把表位姿态移植到各预测构象上，依次做冲突消解（必要时局部
+细化，平移/旋转上限 6Å/30°）、固定表位接触图与几何审计；五项检查
+（表位精确、零严重冲突、接触数>=8、平移/旋转有界）全过才判 pass。
+每个目标最多选前 5 个通过构象（保持远点多样性排序）。
+"""
 from __future__ import annotations
 
 import argparse
@@ -70,6 +77,7 @@ def main():
                 initial["severe_clash_pairs_lt_1_5A"] > args.max_severe_clashes
                 or len(initial_contact_map["contacts"]) < args.min_contacts
             ):
+                # 种子由 (target, conformer) 决定，保证细化过程可复现
                 seed = sum(ord(char) for char in f"{target['target']}:{conformer['conformer']}")
                 if target["target"] == "tau":
                     refined = refine_pose_contacts(

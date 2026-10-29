@@ -31,13 +31,14 @@ from disorderflow.utils.transforms import get_transform
 from disorderflow.datasets.protein import preprocess_protein_structure
 from disorderflow.utils.misc import seed_all
 from build_design_variant_dataset import _batch_af2_wsl
-AA = 'ACDEFGHIKLMNPQRSTVWY'
+AA = 'ACDEFGHIKLMNPQRSTVWY'  # 索引到单字母氨基酸的查找表
 
 
 def graft_cdrs(scaffold, cdr_seq, cdr_spec):
     """Graft designed CDRs into scaffold sequence.
     cdr_spec: list of (start_1based, end_1based, name)
     Returns full antibody sequence."""
+    # 按区域定义把设计 CDR 序列依序替换进骨架（不足长度时截断）
     full = list(scaffold)
     pos = 0
     for start, end, name in cdr_spec:
@@ -57,6 +58,7 @@ def load_bfn_model(ckpt_path, device='cuda'):
     """Load BFN model from checkpoint."""
     import bfn_loader
     # Point app_config to our checkpoint
+    # 临时改写 app_config.yaml 指向目标 checkpoint，加载后立即恢复
     import yaml
     app = yaml.safe_load(open('app_config.yaml', encoding='utf-8'))
     orig_ckpt = app['models']['bfn']['checkpoint']
@@ -66,6 +68,7 @@ def load_bfn_model(ckpt_path, device='cuda'):
     bfn_loader._bfn_config = None
     model, cfg = bfn_loader.load_bfn(device)
     # Restore
+    # 恢复原 checkpoint 配置
     app['models']['bfn']['checkpoint'] = orig_ckpt
     yaml.dump(app, open('app_config.yaml', 'w', encoding='utf-8'))
     return model, cfg
@@ -73,6 +76,7 @@ def load_bfn_model(ckpt_path, device='cuda'):
 
 def get_cdr_spec(entry, scaffold_chain='H'):
     """Extract CDR regions (1-based, inclusive) from a SAbDab entry."""
+    # 从 SAbDab 条目提取 CDR 区间（1-based 闭区间）与骨架序列；每段至少 3 个残基才有效
     d = entry.get('heavy') if scaffold_chain == 'H' else entry.get('light')
     if d is None:
         return [], ''
@@ -93,6 +97,7 @@ def get_cdr_spec(entry, scaffold_chain='H'):
 
 def write_complex_pdb(entry, out_path):
     """Write antibody+antigen complex PDB from a SAbDab entry dict."""
+    # 以简化骨架（CA/N/C/O 用理想化相对坐标）写出重链+抗原复合物 PDB，供 BFN/AF2 使用
     from Bio.PDB import Structure, Model, Chain, Residue, Atom, PDBIO
     AA3 = {'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS',
            'E': 'GLU', 'Q': 'GLN', 'G': 'GLY', 'H': 'HIS', 'I': 'ILE',
@@ -124,6 +129,7 @@ def write_complex_pdb(entry, out_path):
 
 
 def main():
+    # 主流程：选 scaffold -> 生成设计 -> AF2 打分 -> 选 top-K -> 构建微调样本 -> 微调 -> 探针验证
     parser = argparse.ArgumentParser()
     parser.add_argument('--rounds', type=int, default=3,
                         help='Number of RL rounds (≥3 recommended)')
@@ -156,7 +162,7 @@ def main():
     print("Picking scaffolds from phase3 val set...")
     env = lmdb.open('data/sabdab_phase3_processed/val.lmdb', readonly=True, lock=False, readahead=False, subdir=False)
     ids = pickle.load(open('data/sabdab_phase3_processed/val.lmdb-ids', 'rb'))
-    random.seed(42)
+    random.seed(42)  # 固定种子保证 scaffold 选择可复现
     random.shuffle(ids)
 
     scaffolds = []
@@ -367,6 +373,7 @@ def main():
     ft_log_path = os.path.join(tmpdir, 'finetune_log.txt')
 
     for step in range(args.finetune_steps):
+        # 手动训练循环：只用序列损失，梯度范数裁剪到 5.0
         for batch in ft_loader:
             batch = recursive_to(batch, args.device)
             loss_dict = model(batch)

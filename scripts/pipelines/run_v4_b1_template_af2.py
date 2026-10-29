@@ -8,6 +8,10 @@ jump from 0.118 (blind) to >0.6 (template-conditioned).
 Usage (WSL):
     python run_v4_b1_template_af2.py
 """
+# 角色：V4-B1 模板条件 AF2 实验——修复 M0 盲重折叠失败：以晶体结构为模板
+# （ColabFold --templates + --custom-template-path）注入 4HIX/5CSZ 的
+# 抗体-肽复合物几何，检验假设"模板注入下 native CDR 的 ipTM 从盲折叠的
+# 0.118 跃升至 >0.6"，用于确认 AF2 度量在短肽-抗体体系中的可用性。
 import sys,os,json,time,subprocess,tempfile
 os.chdir("/mnt/d/biological/DisorderFlow")
 

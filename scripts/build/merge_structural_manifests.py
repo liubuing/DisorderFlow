@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 
 
+# 合并时每条记录必须具备的最小字段集：序列、H3/CDR、抗原与接触计数、分辨率，
+# 缺任一字段即整体失败，保证下游候选生成拿到的清单字段完备。
 REQUIRED_FIELDS = {
     "instance", "pdb_id", "vh_sequence", "vl_sequence", "paired_cdr_sequence",
     "cdr_h3_sequence", "antigen_sequence", "n_contacting_h3_positions",
@@ -17,10 +19,19 @@ REQUIRED_FIELDS = {
 
 
 def sha256_file(path: Path) -> str:
+    # 计算文件 SHA-256，登记每个来源清单的哈希以保证合并结果可溯源。
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def merge(manifests: list[Path], output: Path) -> dict:
+    # 把多个结构清单合并为一份候选清单。
+    # 参数:
+    #   manifests: 来源清单 JSON 路径列表（至少一个）。
+    #   output: 输出路径；已存在则拒绝写入（fail-closed，防止覆盖既有工件）。
+    # 返回: 合并后的字典（含 sources 溯源、counts 与按 instance 排序的 records）。
+    # 约束: instance 在所有清单间必须全局唯一，重复即抛错——下游以 instance
+    # 为主键做哈希/去重，键冲突会静默污染候选池。合并仅为结构资格元数据，
+    # 不引入任何模型或结果信息（见 claim_boundary）。
     manifests = [Path(path) for path in manifests]
     output = Path(output)
     if output.exists():
@@ -68,6 +79,7 @@ def merge(manifests: list[Path], output: Path) -> dict:
 
 
 def main():
+    # 命令行入口：--manifests 传入一个或多个清单，打印合并计数摘要。
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifests", nargs="+", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)

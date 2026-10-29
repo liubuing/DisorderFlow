@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 """Prepare native plus 20 conservative alpha-synuclein redesigns for paired folding."""
+# 目的：准备 alpha-synuclein（8B9V 家族）重设计验证面板：native 构建体 +
+# 集成重设计候选（VH/VL 截断到与 native 等长），与选中的构象姿态两两组合
+# 生成初始猜测 PDB；并从 native A3M 复制出各候选的单序列 A3M 以固定 MSA 上下文。
+# 预注册门控要求重设计相对 native 的各 delta 指标不劣化（阈值均为 0），
+# 且至少 15 个 refined 无冲突模型。
 from __future__ import annotations
 
 import csv

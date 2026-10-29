@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 """Parse VH:VL:IDP complex folds with antigen-specific interface metrics."""
+# 本脚本解析非 Aβ VH:VL:IDP 三元复合物的折叠结果（ColabFold 多种子）：
+# 对每个构造每种子的 rank_001 模型计算抗原专属界面指标——抗原 pLDDT、
+# 双向跨链 PAE、界面几何（最小距离/严重碰撞/接触残基数）——再按构造聚合，
+# 与同靶标的 native_control 基线做差，按"全部种子零碰撞 + 抗原 pLDDT 不降
+# + PAE 不升"判 pass（种子 <3 记 insufficient_seeds）。
+# 明确声明：全局多聚体置信度本身不作为抗体-IDP 结合证据。
+
 from __future__ import annotations
 
 import argparse
@@ -33,6 +40,7 @@ def load_csv(path):
 
 
 def construct_id(path, panel):
+    # 由文件名前缀反查面板中的构造 ID；匹配到 0 个或多个都报错
     matches = [construct for construct in panel if path.name.startswith(construct + "_")]
     if len(matches) != 1:
         raise ValueError(f"Cannot resolve construct ID for {path.name}: {matches}")
@@ -54,6 +62,8 @@ def model_for_score(score_path):
 
 
 def interface_geometry(pdb_path):
+    # 界面几何：前两条链视作抗体、第三条链为抗原，计算重原子全对距离，
+    # 统计最小距离、<1.5 埃严重碰撞对、<5/<8 埃接触对与接触到的抗原残基数
     model = next(iter(PDBParser(QUIET=True).get_structure("complex", str(pdb_path))))
     chains = list(model)
     if len(chains) != 3:
@@ -83,6 +93,9 @@ def interface_geometry(pdb_path):
 
 
 def main():
+    # 主流程：按 (构造, 种子) 取 mtime 最新的分数文件 → 提取指标与几何 →
+    # 按构造聚合 → 以 native_control 为基线判界面状态 → 选出每靶标优胜者
+    # 写优先级 FASTA → 汇总整体 pass/partial 状态
     args = parse_args()
     panel_rows = load_csv(args.panel)
     panel = {row["construct_id"]: row for row in panel_rows}

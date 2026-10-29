@@ -21,10 +21,15 @@ FIG = ROOT / "publication/figures"
 
 
 def read(path):
+    # 读取仓库内 JSON 工件（相对仓库根）。
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
 
 
 def figures_and_table():
+    # 重绘图并从既有冻结结果汇总主表（不做任何新计算）:
+    # 各行的 (标签, 簇数, 效应均值, CI95, 证据等级) 直接来自
+    # results/publication 下已落盘的分析工件，证据等级如实标注
+    # （如 development_gate_failed / exploratory / superiority_unestablished）。
     build_figures(ROOT)
     a = read("results/publication/h3_ecls_adaptation_v1/results.json")["aggregate"]
     t = read("results/publication/h3_ecls_temporal_final_v1/results.json")["aggregate"]
@@ -42,6 +47,8 @@ def figures_and_table():
 
 
 class NumberedParagraph(Paragraph):
+    # 段落级行号渲染（评审用）: 在每行右侧画灰色小号行号，
+    # 便于审稿人引用具体行。
     def draw(self):
         super().draw()
         canvas=self.canv
@@ -53,6 +60,8 @@ class NumberedParagraph(Paragraph):
 
 
 def inline(text):
+    # 轻量 Markdown 内联转 ReportLab 标记: HTML 转义 → `code` →
+    # **粗体** → CJK 字符段切到中文字体（宋体），避免缺字形。
     text=escape(text)
     text=re.sub(r'`([^`]+)`',r'<font name="Courier" size="10">\1</font>',text)
     text=re.sub(r'\*\*([^*]+)\*\*',r'<b>\1</b>',text)
@@ -61,6 +70,10 @@ def inline(text):
 
 
 def render(source, output, label, stamp=True):
+    # 把 Markdown 手稿渲染为 A4 PDF（ReportLab platypus）:
+    # 支持图片（等比缩放 + Figure 题注 KeepTogether）、管道表格、
+    # 三级标题与段落合并；首页前置区不加行号。stamp=False 生成
+    # 无评审页眉的 clean 版本。返回源文本词数（含参考文献）。
     if 'CJK' not in pdfmetrics.getRegisteredFontNames():
         pdfmetrics.registerFont(TTFont('CJK',r'C:\Windows\Fonts\simsun.ttc',subfontIndex=0))
     styles={

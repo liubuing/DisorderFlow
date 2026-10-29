@@ -24,6 +24,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..')); sys.path.inse
 import numpy as np
 from collections import defaultdict
 
+# 角色：IDP 设计方案 v2 的 P0/M0 门控基准——先验证已知抗 Aβ 抗体的 native CDR
+# 在肽段模式 AF2-Multimer 下 ipTM>0.6（且打乱 CDR 对照显著更低），
+# 以确认度量可信；门控未过则禁止任何模型训练。
 AA = 'ACDEFGHIKLMNPQRSTVWY'
 AA3_TO_1 = {'ALA':'A','ARG':'R','ASN':'N','ASP':'D','CYS':'C','GLU':'E',
             'GLN':'Q','GLY':'G','HIS':'H','ILE':'I','LEU':'L','LYS':'K',
@@ -67,7 +70,7 @@ KNOWN_ABS = {
 # Chothia CDR definitions for VH
 CHOTHIA_H1 = (26, 32)   # 1-based inclusive
 CHOTHIA_H2 = (52, 56)
-CHOTHIA_H3 = (95, 102)
+CHOTHIA_H3 = (95, 102)  # 注意与脚本其他处使用的 Kabat 96-107 方案不同，勿混用
 
 
 def get_pdb_sequence(pdb_path, chain_id):

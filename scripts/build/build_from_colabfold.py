@@ -6,6 +6,11 @@ Scans the af2_results directory for completed ColabFold runs, reads the
 predicted PDB + pLDDT scores + PAE matrices, preprocesses each PDB into
 a BFN batch, and stores everything in LMDB format.
 """
+# 本脚本为策略三：从本地 ColabFold AF2 运行结果构建置信度训练数据集。
+# 扫描 af2_results 目录下已完成的运行（以 design_0.done.txt 为完成标记），
+# 读取 rank_001 预测 PDB、pLDDT 分数与 PAE 矩阵，预处理为 BFN 批次，
+# 按固定种子 8:2 划分写入 train/val 两个 LMDB，供与 EBI 数据集合并训练。
+
 import sys, os, json, pickle, time, shutil
 from pathlib import Path
 import numpy as np
@@ -31,6 +36,7 @@ AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 
 
 def load_pdb_sequence(pdb_path):
+    # 用 Bio.PDB 提取各链一字母序列（跳过非标准残基）
     from Bio.PDB import PDBParser
     parser = PDBParser(QUIET=True)
     structure = parser.get_structure('pdb', str(pdb_path))
@@ -44,6 +50,8 @@ def load_pdb_sequence(pdb_path):
 
 
 def preprocess_pdb_for_bfn(pdb_path):
+    # 取第一条链经 preprocess_protein_structure 处理，再做
+    # mask_region（全残基标记）→ merge_protein → patch_protein 三步变换
     chains = load_pdb_sequence(pdb_path)
     if not chains:
         return None, None, 0
@@ -69,6 +77,8 @@ def preprocess_pdb_for_bfn(pdb_path):
 
 
 def compute_ptm_from_pae(pae_matrix):
+    # 由 PAE 矩阵按 AlphaFold 惯例推算 pTM：d0 为长度相关尺度（下限 0.5），
+    # 对每行计算 1/(1+(PAE/d0)^2) 的均值后取最大值
     pae = np.array(pae_matrix, dtype=np.float64)
     L = pae.shape[0]
     d0 = max(1.24 * (L - 15) ** (1/3) - 1.8, 0.5)
@@ -94,6 +104,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Find completed ColabFold runs
+    # 完成判定：子目录存在 design_0.done.txt 且 rank_001 的 PDB 与分数 JSON 齐全
     completed = []
     for d in sorted(results_dir.iterdir()):
         if d.is_dir() and (d / 'design_0.done.txt').exists():
@@ -213,6 +224,7 @@ def main():
         sys.exit(1)
 
     # Split
+    # 固定种子 2026 的 8:2 随机划分；LMDB map_size 按样本大小 2 倍估计，下限 10MB
     np.random.seed(2026)
     indices = np.random.permutation(len(entries))
     split_idx = int(len(entries) * 0.8)

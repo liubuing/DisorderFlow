@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Build a deduplicated retrospective expanded-IDP SAbDab registry."""
 
+# 目的：构建扩展 IDP（多靶标）开发的 SAbDab 注册表（write-once）：按目标本体
+# 对抗原名称/化合物文本做唯一匹配分类，应用资格过滤（重链/抗原链/抗原类型），
+# 以 (target, lineage_proxy, pdb_id) 去重，并标记此前已暴露的 PDB。
+# 仅用于开发（development_only），不授予未来确证资格（future_confirmation_eligible=0）。
+
 from __future__ import annotations
 
 import argparse
@@ -31,6 +36,8 @@ def split_pipe(value):
 
 
 def classify_target(text, ontology):
+    # 目标分类要求"恰好命中一个"本体条目——多命中或零命中均返回 None，
+    # 由调用方按 not_one_expanded_idp_target 排除，避免目标归属含糊。
     text = text.casefold()
     matches = [
         target for target, spec in ontology.items()

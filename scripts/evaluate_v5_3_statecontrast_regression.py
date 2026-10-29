@@ -20,6 +20,10 @@ from disorderflow.utils.train import recursive_to
 
 
 def evaluate(checkpoint_path, config, loader, device, seed):
+    # 加载 checkpoint 并在完整验证分组上计算 grouped contrastive loss。
+    # fixed_t=0.5 固定扩散/桥时间步，使两个 checkpoint 的损失在同一条件下
+    # 可比（这是回归检查，不是绝对性能评估）；逐 batch 以 seed+index 播种，
+    # 保证基线与候选看到完全相同的随机条件。非有限损失立即抛错。
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     model = get_model(config.model).to(device)
     model.load_state_dict(checkpoint['model'], strict=True)
@@ -50,6 +54,10 @@ def evaluate(checkpoint_path, config, loader, device, seed):
 
 
 def main():
+    # 回归门: 柔性自适应（candidate）在留出 StateContrast 排序上的平均
+    # grouped contrastive loss 相对 baseline 的变化不得超过 5%
+    # （默认 max-relative-regression=0.05；相对量纲可跨数据集比较）。
+    # 超限即以退出码 1 失败并落盘报告。seed=2083 为冻结的评估种子。
     parser = argparse.ArgumentParser()
     parser.add_argument('--candidate', required=True)
     parser.add_argument('--baseline', required=True)

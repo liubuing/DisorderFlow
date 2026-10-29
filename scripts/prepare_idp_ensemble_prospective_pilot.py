@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 """Validate and materialize the pre-candidate prospective pilot contract."""
 
+# 本脚本在校验后物化"候选访问之前"的前瞻性先导（pilot）合同：
+# 校验配置未被 superseded、成分注册表与 pose 清单哈希匹配、
+# 干净成分数与冻结期望一致、候选预算自洽（成分数 × 种子数 × 每臂每种子数），
+# 随后写出带双臂（PoE / single_state）、预算与主要终点的候选清单。
+# 清单与配置一经写出即拒绝覆盖，保证合同先于任何候选生成被锁定。
+
 from __future__ import annotations
 
 import argparse
@@ -14,10 +20,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def sha256(path):
+    # 计算文件 SHA-256，用于配置/注册表/pose 清单的哈希校验
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def display_path(path):
+    # 显示为相对项目根的路径；位于根外时回退绝对路径
     path = Path(path)
     try:
         return str(path.relative_to(ROOT))
@@ -25,6 +33,8 @@ def display_path(path):
         return str(path)
 
 
+# 合同校验与物化主流程：哈希核对 → 排除 sensitivity_only 成分 →
+# 预算一致性检查 → 写候选清单（已存在则拒绝覆盖）
 def prepare(config_path):
     config_path = Path(config_path)
     config = yaml.safe_load(config_path.read_text(encoding="ascii"))
@@ -85,6 +95,7 @@ def prepare(config_path):
 
 
 def main():
+    # 主入口：默认使用 v1 前瞻性先导配置，打印物化后的合同清单
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/benchmarks/idp_ensemble_prospective_pilot_v1.yml"

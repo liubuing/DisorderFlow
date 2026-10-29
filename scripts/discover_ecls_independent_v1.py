@@ -1,4 +1,11 @@
 """Model-free 2025-2026 structural cohort feasibility with conservative exclusions."""
+
+# 目的：ECLS 独立可行性发现（无模型参与）——在 2025-01-01 至 2026-09-16 的
+# RCSB 发布窗口内发现"配对 HL 抗体 + 5-50 残基肽抗原"的新结构候选，
+# 继承并扩展既有精确排除集（含此前管线已见过的元数据 PDB），冻结查询与协议。
+# 协议明确：无模型打分、无 AF2 标签、不放松阈值；12 为可行性最低组分数，
+# 非功效分析。分 prepare/acquire/materialize 三阶段推进，产物一次冻结。
+
 from __future__ import annotations
 
 import argparse
@@ -18,6 +25,7 @@ OUT = ROOT / "data/ecls_independent_feasibility_v1"
 
 
 def freeze(path, value):
+    # 冻结写入：已存在且内容不同则报错，保证协议/查询等产物在发现阶段不可变。
     if path.exists():
         if read(path) != value:
             raise ValueError(f"Refusing changed frozen artifact: {path}")

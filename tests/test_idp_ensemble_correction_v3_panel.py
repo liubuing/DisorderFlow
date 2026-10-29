@@ -1,3 +1,10 @@
+"""IDP 集成校正 v3 面板构建测试：验证未准入队列拦截与预算冻结。
+
+守护 scripts.prepare_idp_ensemble_correction_v3_panel：
+admission 状态非 admitted 时必须拒绝构建（未触碰队列的准入闸门）、
+准入通过后突变空间预算（substitution_buckets、maximum_h3_substitutions）
+必须原样冻结进计划——防止预算被静默放大或绕过队列准入。
+"""
 import json
 
 import pytest
@@ -5,6 +12,8 @@ import pytest
 from scripts.prepare_idp_ensemble_correction_v3_panel import prepare
 
 
+# 准入闸门 fail-closed：队列状态为 blocked 时构建面板必须抛错——
+# 防止未经确认的新结构队列进入校正实验。
 def test_panel_builder_blocks_unadmitted_cohort(tmp_path):
     config = tmp_path / "config.yml"
     config.write_text(
@@ -32,6 +41,8 @@ mutation_space:
         prepare(config, admission, tmp_path / "plan.json")
 
 
+# 预算冻结：准入通过后计划中的突变桶与最大替换数必须与配置逐值一致——
+# 防止实验规模在计划阶段被静默改动（预注册一致性）。
 def test_panel_builder_freezes_required_budget(tmp_path):
     config = tmp_path / "config.yml"
     config.write_text(

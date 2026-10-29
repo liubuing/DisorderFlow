@@ -17,6 +17,8 @@ AA3 = {
 
 
 def parse_seqres(path):
+    # 解析 PDB 的 SEQRES 记录为完整声明序列（不受 ATOM 缺失影响），
+    # 并核对每条链的声明残基数（SEQRES 行的 len 字段），不符即抛错。
     chains = {}
     declared = {}
     with path.open(encoding="ascii") as handle:
@@ -35,6 +37,9 @@ def parse_seqres(path):
 
 
 def apply_mutations(sequence, mutation_text, chain):
+    # 把 "A:52:N>H;..." 形式的突变应用到完整 SEQRES 序列上。
+    # 严格校验: 原残基必须与 SEQRES 一致，否则抛错——防止在错误编号
+    # 骨架上叠突变。返回 (新序列, 实际应用的突变列表)。
     output = list(sequence)
     applied = []
     for token in mutation_text.split(";"):
@@ -52,6 +57,9 @@ def apply_mutations(sequence, mutation_text, chain):
 
 
 def main():
+    # 主流程: 以 5CSZ SEQRES 为母本（重链 228 / 轻链 215 / E 链 Aβ1-11
+    # DAEFRHDSGYE 为硬契约），对最终合成面板的每个构造体重建完整
+    # 生物序列并导出 FASTA/manifest。
     seqres = parse_seqres(PDB)
     heavy_parent = seqres["A"]
     light_parent = seqres["B"]

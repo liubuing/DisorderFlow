@@ -51,6 +51,11 @@ def parse_args():
 
 
 def build_spec(args) -> DesignSpec:
+    """组装设计规约：自定义表位优先，否则加载内建 preset（如 abeta_core）。
+
+    负态表位（--negative-epitope 可重复）定义" off 态"——设计目标是
+    只结合正态（疾病态）而远离负态，这是状态特异性设计的核心。
+    """
     if args.epitope_seq:
         return DesignSpec(
             target=args.target or "custom_idp",

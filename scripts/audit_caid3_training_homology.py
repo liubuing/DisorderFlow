@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 """Audit CAID3 against the exact balanced-v4 training sequence records."""
 
+# 本脚本在用 CAID3 外部基准打分之前，先审计其与本项目训练集
+# （balanced-v4 训练序列记录，存储于 lookup pickle + LMDB）的序列同源性：
+# 用 MMseqs2 easy-search 将 CAID3 序列对训练集搜索，按恒等度/覆盖率阈值
+# 判定同源（需排除）与独立（可参与外评）目标，并结合聚类清单区分
+# "独立但簇号未解析"与"可用于确认性评估"的目标。
+# 输出：同源审计 JSON 与训练集 UniRef50 簇号清单。
+
 from __future__ import annotations
 
 import argparse
@@ -17,10 +24,12 @@ import lmdb
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# 清洗序列：转大写并仅保留 20 种标准氨基酸，其余字符一律剔除
 def clean_sequence(sequence):
     return "".join(residue for residue in sequence.upper() if residue in "ACDEFGHIKLMNPQRSTVWY")
 
 
+# 读取 FASTA：以 ">" 后第一个空白前的字段作为记录 ID，拼接多行序列
 def read_fasta(path):
     records = []
     target_id = None
@@ -39,6 +48,8 @@ def read_fasta(path):
     return records
 
 
+# 加载训练集记录：先读 lookup pickle 获得记录 ID 清单，再从只读 LMDB
+# 逐条取回并清洗序列；lookup 中有而 LMDB 缺失的记录视为致命错误。
 def load_training(lookup_path, lmdb_path):
     envelope = pickle.loads(Path(lookup_path).read_bytes())
     record_ids = sorted(envelope["profiles"])
@@ -61,12 +72,17 @@ def load_training(lookup_path, lmdb_path):
     return records, envelope
 
 
+# 以 ASCII + LF 换行写出 FASTA，保证检索输入字节级可复现
 def write_fasta(path, records):
     with Path(path).open("w", encoding="ascii", newline="\n") as handle:
         for record in records:
             handle.write(f">{record['id']}\n{clean_sequence(record['sequence'])}\n")
 
 
+# 主入口：读 CAID3 与训练集 → MMseqs2 搜索 → 按命中划分同源/独立目标 →
+# 结合簇清单给出可评估目标 → 写审计 JSON 与训练簇号清单。
+# 搜索参数：min-seq-id 0.3、coverage 0.8（cov-mode 0 按查询覆盖），
+# 与输出 threshold 字段一致，用作同源性排除的统一阈值。
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--caid", default=str(ROOT / "data/caid3/disorder_nox/sequences.fasta"))
