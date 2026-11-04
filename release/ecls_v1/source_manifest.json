@@ -100,9 +100,9 @@
     },
     {
       "path": "disorderflow/datasets/__init__.py",
-      "bytes": 1189,
+      "bytes": 1735,
       "hash_mode": "canonical_lf",
-      "sha256": "c4738eff89c99f4825e5758ea06c2d52ff3e4d04b39dfcd5af33c9ff775ebadf"
+      "sha256": "2038d3bcea32e9d9decccc8ff497b7288f13b7acf4f02618864cbcb9f115aee9"
     },
     {
       "path": "disorderflow/datasets/_base.py",
@@ -118,9 +118,9 @@
     },
     {
       "path": "disorderflow/datasets/conformation_dataset.py",
-      "bytes": 3790,
+      "bytes": 4807,
       "hash_mode": "canonical_lf",
-      "sha256": "6c88406d1be31ed135c460c13d90d44f95550ad6d485ba380486e7a49dc0ad7d"
+      "sha256": "66ebd21f24cd9a49f93fcb361188061ffc273c625f62f1b602523c9fa267b7d3"
     },
     {
       "path": "disorderflow/datasets/custom.py",
@@ -142,9 +142,9 @@
     },
     {
       "path": "disorderflow/datasets/disorder_augmented.py",
-      "bytes": 16114,
+      "bytes": 17762,
       "hash_mode": "canonical_lf",
-      "sha256": "b5bb6789f5af3841d1453473a03e19107c71b2f6a80dc02a9beec0c3d0eb2198"
+      "sha256": "278faff4b9d5d2162fa063583fa6af334df5528e92850ef9850914c20cfea84e"
     },
     {
       "path": "disorderflow/datasets/lmdb_dataset.py",
@@ -550,9 +550,9 @@
     },
     {
       "path": "disorderflow/utils/data.py",
-      "bytes": 7120,
+      "bytes": 9131,
       "hash_mode": "canonical_lf",
-      "sha256": "cb5dc20b49a33b4cd212f439deae5d8939a11752a105273445f1f8149541d135"
+      "sha256": "d4131e1ceb9de5683e24c4cd4cbde94b7b35428a8d51e325f1034977e2ed7327"
     },
     {
       "path": "disorderflow/utils/homology_split.py",
@@ -568,9 +568,9 @@
     },
     {
       "path": "disorderflow/utils/misc.py",
-      "bytes": 3546,
+      "bytes": 4868,
       "hash_mode": "canonical_lf",
-      "sha256": "6782d738af409bea9f6a3116f9ebf597ac7db669c90e02321ff90ca7049aecbd"
+      "sha256": "ea4f2aec95ee1b85538677faedabc05fb31e66a200ad765edb409aba739e83e3"
     },
     {
       "path": "disorderflow/utils/protein/__init__.py",
