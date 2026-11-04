@@ -1,0 +1,35 @@
+{
+  "title": "Crystal structure of the phosphorylated C-terminal tail of histone H2AX in complex with a specific nanobody (C6 gammaXbody)",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "uniprot_ids": [],
+      "sequence": "TEVQLVESGGGLVQAGDSLRLSCAASGLTFSRYAMGWFRQAPGNEREFVAVITASGRTTLYADSVKGRFTISRDNAKNTVALQMQSLKPEDTAVYYCAADYGTSRYTRRQSEYEYWGQGTQVTVSSAAATSMFQDPQERPRASAHHHHHH",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
+      "uniprot_ids": [
+        "P16104"
+      ],
+      "sequence": "CKATQASQEY",
+      "description": ""
+    }
+  ]
+}

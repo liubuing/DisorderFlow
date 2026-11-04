@@ -1,0 +1,25 @@
+{
+  "title": "Structure of a single domain camelid antibody fragment in complex with a C-terminal peptide of alpha-synuclein",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A"
+      ],
+      "uniprot_ids": [],
+      "sequence": "GQLVESGGGSVQAGGSLRLSCAASGIDSSSYCMGWFRQRPGKEREGVARINGLGGVKTAYADSVKDRFTISRDNAENTVYLQMNSLKPEDTAIYYCAAKFSPGYCGGSWSNFGYWGQGTQVTVSSH",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "B"
+      ],
+      "uniprot_ids": [
+        "P37840"
+      ],
+      "sequence": "GYQDYEPEA",
+      "description": ""
+    }
+  ]
+}

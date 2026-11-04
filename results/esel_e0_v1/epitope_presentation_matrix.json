@@ -1,0 +1,1353 @@
+{
+  "schema_version": "esel_e0_presentation_matrix_v1",
+  "classification": "epitope_level_presentation_options_not_binding_evidence",
+  "selection_basis": "epitope presentation only; no model affinity scores participate anywhere (DECISION_20261101 constraint #3, inherited verbatim)",
+  "n_rows": 29,
+  "n_variants": 116,
+  "rows": [
+    {
+      "row_id": "ESEL-001",
+      "source": "flex_j0_cohort",
+      "source_pdb": "2x6m",
+      "instance": "2x6m_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "DYEPEA",
+      "parent_length": 6,
+      "family": "seq_1",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DYEPEA",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DYEPEA",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DYEPEA",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DYEPEA",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-002",
+      "source": "flex_j0_cohort",
+      "source_pdb": "5hm1",
+      "instance": "5hm1_A_D",
+      "heavy_chain": "A",
+      "peptide_chain": "D",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "family": "seq_0",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-003",
+      "source": "flex_j0_cohort",
+      "source_pdb": "5hm1",
+      "instance": "5hm1_B_E",
+      "heavy_chain": "B",
+      "peptide_chain": "E",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "family": "seq_0",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context E; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context E"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-004",
+      "source": "flex_j0_cohort",
+      "source_pdb": "5hm1",
+      "instance": "5hm1_C_F",
+      "heavy_chain": "C",
+      "peptide_chain": "F",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "family": "seq_0",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context F; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context F"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-005",
+      "source": "flex_j0_cohort",
+      "source_pdb": "5ivn",
+      "instance": "5ivn_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "DRKAAVSHWQ",
+      "parent_length": 10,
+      "family": "seq_2",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DRKAAVSHWQ",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DRKAAVSHWQ",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DRKAAVSHWQ",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DRKAAVSHWQ",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-006",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6i2g",
+      "instance": "6i2g_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "SRLEEELRRRLTE",
+      "parent_length": 13,
+      "family": "seq_7",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-007",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6j7w",
+      "instance": "6j7w_A_C",
+      "heavy_chain": "A",
+      "peptide_chain": "C",
+      "parent_peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "parent_length": 39,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "LHACIPCQLRCSSNT",
+          "note": "deterministic central 15-mer (parent len 39)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "LHACIPCQLRCSSNT",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context C; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "LHACIPCQLRCSSNT",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context C"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-008",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6j7w",
+      "instance": "6j7w_B_D",
+      "heavy_chain": "B",
+      "peptide_chain": "D",
+      "parent_peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+      "parent_length": 36,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "LLHACIPCQLRCSSN",
+          "note": "deterministic central 15-mer (parent len 36)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "LLHACIPCQLRCSSN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "LLHACIPCQLRCSSN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-009",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6s0y",
+      "instance": "6s0y_B_D",
+      "heavy_chain": "B",
+      "peptide_chain": "D",
+      "parent_peptide": "VETPIRNEWGCRC",
+      "parent_length": 13,
+      "family": "seq_8",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-010",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6zwk",
+      "instance": "6zwk_B_H",
+      "heavy_chain": "B",
+      "peptide_chain": "H",
+      "parent_peptide": "TQAQEY",
+      "parent_length": 6,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "TQAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "TQAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "TQAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context H; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "TQAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context H"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-011",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6zwk",
+      "instance": "6zwk_D_J",
+      "heavy_chain": "D",
+      "peptide_chain": "J",
+      "parent_peptide": "TQAQEY",
+      "parent_length": 6,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "TQAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "TQAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "TQAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context J; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "TQAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context J"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-012",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6zwk",
+      "instance": "6zwk_E_K",
+      "heavy_chain": "E",
+      "peptide_chain": "K",
+      "parent_peptide": "TQAQEY",
+      "parent_length": 6,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "TQAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "TQAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "TQAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context K; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "TQAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context K"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-013",
+      "source": "flex_j0_cohort",
+      "source_pdb": "6zwk",
+      "instance": "6zwk_F_L",
+      "heavy_chain": "F",
+      "peptide_chain": "L",
+      "parent_peptide": "QAQEY",
+      "parent_length": 5,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "QAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "QAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "QAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context L; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "QAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context L"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-014",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_A_I",
+      "heavy_chain": "A",
+      "peptide_chain": "I",
+      "parent_peptide": "KEDAFSKLKEKFMNELH",
+      "parent_length": 17,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNELH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "deterministic central 15-mer (parent len 17)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context I; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context I"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-015",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_B_J",
+      "heavy_chain": "B",
+      "peptide_chain": "J",
+      "parent_peptide": "KEDAFSKLKEKFMNELH",
+      "parent_length": 17,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNELH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "deterministic central 15-mer (parent len 17)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context J; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context J"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-016",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_D_L",
+      "heavy_chain": "D",
+      "peptide_chain": "L",
+      "parent_peptide": "KEDAFSKLKEKFMN",
+      "parent_length": 14,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context L; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context L"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-017",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_E_M",
+      "heavy_chain": "E",
+      "peptide_chain": "M",
+      "parent_peptide": "KEDAFSKLKEKFMNE",
+      "parent_length": 15,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context M; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context M"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-018",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_F_N",
+      "heavy_chain": "F",
+      "peptide_chain": "N",
+      "parent_peptide": "KEDAFSKLKEKFMN",
+      "parent_length": 14,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context N; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context N"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-019",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_G_O",
+      "heavy_chain": "G",
+      "peptide_chain": "O",
+      "parent_peptide": "EDAFSKLKEKFMN",
+      "parent_length": 13,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context O; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context O"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-020",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8b8i",
+      "instance": "8b8i_H_P",
+      "heavy_chain": "H",
+      "peptide_chain": "P",
+      "parent_peptide": "KEDAFSKLKEKFMN",
+      "parent_length": 14,
+      "family": "seq_3",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context P; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context P"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-021",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8op0",
+      "instance": "8op0_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "GSVQIVYKPK",
+      "parent_length": 10,
+      "family": "seq_6",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-022",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8opi",
+      "instance": "8opi_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "GSVQIVYKPK",
+      "parent_length": 10,
+      "family": "seq_6",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-023",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8pii",
+      "instance": "8pii_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "GSVQIVYKPK",
+      "parent_length": 10,
+      "family": "seq_6",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-024",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8skj",
+      "instance": "8skj_A_E",
+      "heavy_chain": "A",
+      "peptide_chain": "E",
+      "parent_peptide": "GKPIPNPLLGLDST",
+      "parent_length": 14,
+      "family": "seq_4",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context E; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context E"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-025",
+      "source": "flex_j0_cohort",
+      "source_pdb": "8skj",
+      "instance": "8skj_G_H",
+      "heavy_chain": "G",
+      "peptide_chain": "H",
+      "parent_peptide": "GKPIPNPLLGLDST",
+      "parent_length": 14,
+      "family": "seq_4",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context H; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context H"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-026",
+      "source": "flex_j0_cohort",
+      "source_pdb": "9eiu",
+      "instance": "9eiu_B_A",
+      "heavy_chain": "B",
+      "peptide_chain": "A",
+      "parent_peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "parent_length": 42,
+      "family": "seq_5",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "QLTQAQLEERQAEME",
+          "note": "deterministic central 15-mer (parent len 42)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "QLTQAQLEERQAEME",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context A; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "QLTQAQLEERQAEME",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context A"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-027",
+      "source": "flex_j0_cohort",
+      "source_pdb": "9lds",
+      "instance": "9lds_A_B",
+      "heavy_chain": "A",
+      "peptide_chain": "B",
+      "parent_peptide": "DPLQPELDSFKEELD",
+      "parent_length": 15,
+      "family": "seq_1",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-028",
+      "source": "flex_j0_cohort",
+      "source_pdb": "9lds",
+      "instance": "9lds_C_D",
+      "heavy_chain": "C",
+      "peptide_chain": "D",
+      "parent_peptide": "DPLQPELDSFKEELD",
+      "parent_length": 15,
+      "family": "seq_1",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "pending_manual_annotation",
+        "note": "no offline sequence-to-accession mapping; E0b manual curation required"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "no exact PDB-prefix match in the 1,938-protein offline cache; E0b sequence-search lookup required"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "cohort PDB absent from the 249-row affinity-metadata inventory"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-029",
+      "source": "design_v1_20261101_anchor",
+      "source_pdb": "4HIX",
+      "instance": "4HIX_anchor",
+      "heavy_chain": "H",
+      "peptide_chain": "C",
+      "parent_peptide": "DAEFRH",
+      "parent_length": 6,
+      "family": "APP_N_terminus",
+      "exposure_clean": true,
+      "iedb_precedent": {
+        "status": "anchored_with_counts",
+        "accession": "P05067.3",
+        "identity": {
+          "accession": "P05067.3",
+          "name": "Amyloid-beta precursor protein",
+          "organism": "Homo sapiens (human)"
+        },
+        "n_distinct_binders": 14,
+        "n_binder_pdbs": 23,
+        "n_own_negative_sequences": 87,
+        "source": "results/flex_phase_d_v1/pilot_families_v3 (leads only, per ESEL_CAMPAIGN_V1 section 4)"
+      },
+      "flexibility_evidence": {
+        "tier": "pending_atlas_lookup",
+        "note": "APP/P05067 ATLAS lookup deferred to E0b"
+      },
+      "affinity_lead": {
+        "status": "not_applicable",
+        "note": "4HIX Abeta N-terminal epitope; candidate package already in synthesis (results/design_v1_20261101)"
+      },
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DAEFRH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DAEFRH",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DAEFRH",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context C; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DAEFRH",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context C"
+        }
+      ],
+      "anchor_note": "4HIX Abeta N-terminal epitope; candidate package already in synthesis (results/design_v1_20261101)"
+    }
+  ]
+}

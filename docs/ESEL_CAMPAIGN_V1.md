@@ -81,5 +81,28 @@ v3 结构桥清单（200 accession + IEDB 计数 + identity 块）当作**扩充
 - 脚本：`scripts/esel_e0_epitope_selection_v1.py`；
 - 契约测试：`tests/test_esel_e0_contracts.py`（跑前全绿）；
 - 产物：`results/esel_e0_v1/{protocol,epitope_presentation_matrix,summary,completion}.json`；
-- 边界（必须保留）：见产物内 protocol 的 `pending_separate_gates`——ATLAS 同源补查、
-  湿实验伙伴确认、病原来源肽段的生物安全审阅均未完成，缺什么列什么，不静默。
+- 停止规则触发：双条件表位 1/3 → **epitope starvation 升级**，E0b 获得准入；
+- 边界（必须保留）：见产物内 protocol 的 `pending_separate_gates`。
+
+### E0b（2026-11-04 冻结，解除升级）
+
+- 脚本：`scripts/esel_e0b_curation_v1.py`；契约测试：`tests/test_esel_e0b_contracts.py`（6 条全绿）；
+- 产物：`results/esel_e0b_v1/{protocol,accession_map,iedb_counts,atlas_lookup,stop_rule,summary,completion}.json`
+  + 三级网络缓存（rcsb / peptidesearch / atlas_search，断点续跑）；
+- **机械**：RCSB entity 元数据定位抗原链 → UniProt ID 或肽搜索取候选 accession →
+  逐候选取 FASTA 并验证「parent 肽是其连续子串」→ 通过者才查 IEDB 计数；
+- **关键 bug（M3 级，已钉死回归测试）**：IEDB 的 curated accession 带序列版本
+  （`P37840.1`→300 条），裸 UniProt ID 静默返回 0——首个运行全零计数即此因；
+  修复为「当前 UniProt sequenceVersion 形式 → 裸形式」重试阶梯，非零者记录所用形式；
+- 结果：**8 行锚定**（spike P0DTC2.1、α-syn P37840.1、HIV gp160 P04578.2、
+  synaptotagmin P21579.1 四个抗原 IEDB 记录丰富），6 行未解决（5 个候选未过
+  包含验证 + 1 个肽不在 entity 序列内——如实记录，不编造）；**停止规则翻转为
+  continue**（8 ≥ 3）；ATLAS 短肽同源搜索 18/18 无同源（短 IDP 肽的预期结果，
+  tier 如实冻结）；
+- 边界（必须保留）：IEDB 访问保持 metadata 级（计数+查询串，零记录级序列落盘）；
+  剩余 pending：湿实验伙伴确认、生物安全审阅（spike/HIV 表位）。
+
+### 下一步（E1 解锁状态）
+
+数据侧解锁：E0b 已把双条件表位推过停止规则阈值。E1 冻结仅剩一个阻塞项：
+**湿实验伙伴确认**（`docs/ESEL_PARTNER_BRIEF_V1.md` 三件事）。

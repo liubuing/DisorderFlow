@@ -1,0 +1,27 @@
+{
+  "title": "Nanobody targeting influenza A matrix protein 2 ectodomain (M2e)",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "B"
+      ],
+      "uniprot_ids": [],
+      "sequence": "QVQLQESGGGLVQTGGSLRLSCAFSGFTSDDYVIGWFRQAPGKGRQGVSCIRLSGGGTIYADSAKGRFTVSADNAKKTVYLQMTRLKPEDTAVYYCGAERYNVEGCGYDVAYWGKGTQVTVSS",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "C",
+        "D"
+      ],
+      "uniprot_ids": [
+        "B2VLW8"
+      ],
+      "sequence": "MSLLTEVETPIRNEWGCRCNDSS",
+      "description": ""
+    }
+  ]
+}

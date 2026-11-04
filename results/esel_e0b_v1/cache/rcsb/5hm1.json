@@ -1,0 +1,29 @@
+{
+  "title": "Llama VHH 2E7 in complex with gp41",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "B",
+        "C"
+      ],
+      "uniprot_ids": [],
+      "sequence": "DVQLQESGGGLVQPGGSLRLSCAASGNIVSIDAAGWFRQAPGKQREPVATILTGGATNYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCYAPMIYYGGRYSDYWGQGTQVTVS",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "D",
+        "E",
+        "F"
+      ],
+      "uniprot_ids": [
+        "P04578"
+      ],
+      "sequence": "AVERYLKDQQLLGIW",
+      "description": ""
+    }
+  ]
+}

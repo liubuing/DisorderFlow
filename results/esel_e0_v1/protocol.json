@@ -1,0 +1,55 @@
+{
+  "classification": "data_first_epitope_selection_not_model_validation",
+  "campaign": "ESEL v1 (docs/ESEL_CAMPAIGN_V1.md)",
+  "selection_basis": "epitope presentation only; no model affinity scores participate anywhere (DECISION_20261101 constraint #3, inherited verbatim)",
+  "mechanical_rules": {
+    "core_rule": "parent if len<=15 else central 15-mer",
+    "biotin_rule": "one terminal biotin via GSG linker, N and C options",
+    "family_source": "flex_j0 preregistration antigen_families reverse map",
+    "exposure_source": "flex_a1b_isolation_families_v1/exposure.json"
+  },
+  "inputs_sha256": {
+    "results\\flex_j0_v1\\preregistration.json": "aa711a1b34bc85f1e28c1f763b2d04ff49cc7788526c4b7a547bc470998de9dd",
+    "results\\flex_a1b_isolation_families_v1\\exposure.json": "148f7ffc300f6bccea6ac0737bdd8c06e890b28663c80aa52b21fa18073bf5a6",
+    "results\\design_v1_20261101\\package.json": "9c45a8061d0c57702b0cc218178be96ebde319148e84f4282cbea2d49a63659b",
+    "results\\flex_phase_d_v1\\iedb_feasibility_audit.json": "b14396b841d1f664172e39d2818301fda86c4d3a32b18ee9ab077b74816efee9",
+    "results\\flex_phase_d_v1\\feasibility_addendum_v3.json": "cd9474d41cfecb6b6b7c3375e9ea6d9a16ef5538f706e6d83412cc5553927f9f",
+    "results\\flex_a4_affinity_inventory_v1\\inventory.json": "ab6461dffea08df6ee9a3cbc3e113fbc9e16b4bccf426cde18f08af4c1e7ea43"
+  },
+  "gates": {
+    "universe_size": {
+      "pass": true,
+      "detail": "29 rows >= 20"
+    },
+    "anchor_present": {
+      "pass": true,
+      "detail": "DAEFRH anchored with P05067.3 counts"
+    },
+    "presentation_complete": {
+      "pass": true,
+      "detail": "every row carries full_length + core + both biotin orientations"
+    },
+    "no_model_scores": {
+      "pass": true,
+      "detail": "matrix is epitope-level; forbidden-key scan enforced in tests and at write time (DECISION_20261101 constraint #3)"
+    }
+  },
+  "stop_rule_evaluation": {
+    "rule": "anchored dual-condition epitopes (IEDB precedent AND mechanically presentable) < 3 -> epitope starvation escalation to user",
+    "anchored_row_count": 1,
+    "anchored_rows": [
+      "ESEL-029"
+    ],
+    "pending_manual_annotation_rows": 28,
+    "outcome": "escalate_epitope_starvation_risk",
+    "escalation_note": "E0b manual IEDB accession curation for the 28 cohort rows is the cheapest unblock (offline curation against IEDB web UI); target purchase is the fallback"
+  },
+  "pending_separate_gates": [
+    "E0b: manual IEDB accession curation for the 28 cohort rows",
+    "E0b: ATLAS sequence-search lookup for source proteins absent from the offline cache",
+    "wet-lab partner confirmation (docs/ESEL_PARTNER_BRIEF_V1.md)",
+    "biosafety review for pathogen-derived epitopes (spike, HIV gp160 leads)"
+  ],
+  "phase_d_boundary": "v3 structural-bridge data read as leads only (docs/ESEL_CAMPAIGN_V1.md section 4); no discriminator revival",
+  "script_sha256": "abf71ee3baf4ebd7771c1f20045eb08f519ac3688b45944520b120114c835496"
+}

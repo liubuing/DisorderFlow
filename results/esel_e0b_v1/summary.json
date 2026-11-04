@@ -1,0 +1,10 @@
+{
+  "rows_resolved_anchored": 8,
+  "rows_unresolved": 6,
+  "accessions_with_counts": 8,
+  "atlas_tiers": {
+    "no_atlas_homolog": 18
+  },
+  "stop_rule_outcome": "continue",
+  "gates_passed": true
+}

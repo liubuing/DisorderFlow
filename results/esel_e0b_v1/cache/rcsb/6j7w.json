@@ -1,0 +1,27 @@
+{
+  "title": "Crystal Structure of Human BCMA in complex with UniAb(TM) VH",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "B"
+      ],
+      "uniprot_ids": [],
+      "sequence": "EVQLVESGGGLVQPGGSLRLSCAASGFTVSSYGMSWVRQAPGKGPEWVSGIRGSDGSTYYADSVKGRFTISRDNSKNTLYLQMNSLRAEDTAVYYCAKQGENDGPFDHRGQGTLVTVS",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "C",
+        "D"
+      ],
+      "uniprot_ids": [
+        "Q02223"
+      ],
+      "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "description": ""
+    }
+  ]
+}

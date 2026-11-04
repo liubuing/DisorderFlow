@@ -1,0 +1,210 @@
+{
+  "schema_version": "esel_e0b_accession_map_v1",
+  "mapping": {
+    "2x6m_A_B": {
+      "status": "anchored",
+      "entry_title": "Structure of a single domain camelid antibody fragment in complex with a C-terminal peptide of alpha-synuclein",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P37840",
+          "verified": true,
+          "sequence_length": 140
+        }
+      ],
+      "anchored_accessions": [
+        "P37840"
+      ],
+      "anchor_accession": "P37840"
+    },
+    "5hm1_A_D": {
+      "status": "anchored",
+      "entry_title": "Llama VHH 2E7 in complex with gp41",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P04578",
+          "verified": true,
+          "sequence_length": 856
+        }
+      ],
+      "anchored_accessions": [
+        "P04578"
+      ],
+      "anchor_accession": "P04578"
+    },
+    "5ivn_A_B": {
+      "status": "anchored",
+      "entry_title": "BC2 nanobody in complex with the BC2 peptide tag",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "G9GAG7",
+          "verified": true,
+          "sequence_length": 71
+        }
+      ],
+      "anchored_accessions": [
+        "G9GAG7"
+      ],
+      "anchor_accession": "G9GAG7"
+    },
+    "6i2g_A_B": {
+      "status": "unresolved_candidates",
+      "entry_title": "ALFA-tag binding nanobody (NbALFA) bound to ALFA-tag peptide.",
+      "antigen_description": "",
+      "method": "uniprot_peptide_search",
+      "candidates_checked": [],
+      "anchored_accessions": [],
+      "anchor_accession": null
+    },
+    "6j7w_A_C": {
+      "status": "anchored",
+      "entry_title": "Crystal Structure of Human BCMA in complex with UniAb(TM) VH",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "Q02223",
+          "verified": true,
+          "sequence_length": 184
+        }
+      ],
+      "anchored_accessions": [
+        "Q02223"
+      ],
+      "anchor_accession": "Q02223"
+    },
+    "6s0y_B_D": {
+      "status": "anchored",
+      "entry_title": "Nanobody targeting influenza A matrix protein 2 ectodomain (M2e)",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "B2VLW8",
+          "verified": true,
+          "sequence_length": 90
+        }
+      ],
+      "anchored_accessions": [
+        "B2VLW8"
+      ],
+      "anchor_accession": "B2VLW8"
+    },
+    "6zwk_B_H": {
+      "status": "peptide_not_in_entity_sequence",
+      "entry_title": "Crystal structure of the phosphorylated C-terminal tail of histone H2AX in complex with a specific nanobody (C6 gammaXbody)",
+      "antigen_description": ""
+    },
+    "8b8i_A_I": {
+      "status": "anchored",
+      "entry_title": "Nanobody (NbLumSyt1) bound to human Syt1",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P21579",
+          "verified": true,
+          "sequence_length": 422
+        }
+      ],
+      "anchored_accessions": [
+        "P21579"
+      ],
+      "anchor_accession": "P21579"
+    },
+    "8op0_A_B": {
+      "status": "unresolved_candidates",
+      "entry_title": "VHH Z70 mutant 20 in interaction with PHF6 Tau peptide",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P10636",
+          "verified": false,
+          "sequence_length": 758
+        }
+      ],
+      "anchored_accessions": [],
+      "anchor_accession": null
+    },
+    "8opi_A_B": {
+      "status": "unresolved_candidates",
+      "entry_title": "VHH Z70 mutant 1 in interaction with PHF6 Tau peptide",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P10636",
+          "verified": false,
+          "sequence_length": 758
+        }
+      ],
+      "anchored_accessions": [],
+      "anchor_accession": null
+    },
+    "8pii_A_B": {
+      "status": "unresolved_candidates",
+      "entry_title": "VHH Z70 mutant 3 in interaction with PHF6 Tau peptide",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P10636",
+          "verified": false,
+          "sequence_length": 758
+        }
+      ],
+      "anchored_accessions": [],
+      "anchor_accession": null
+    },
+    "8skj_A_E": {
+      "status": "unresolved_candidates",
+      "entry_title": "Crystal structure of a Nanobody bound to the V5 peptide.",
+      "antigen_description": "",
+      "method": "uniprot_peptide_search",
+      "candidates_checked": [],
+      "anchored_accessions": [],
+      "anchor_accession": null
+    },
+    "9eiu_B_A": {
+      "status": "anchored",
+      "entry_title": "Crystal structure of the human Cavin1 HR1 TS/DD mutant domain bound to nanobody B7",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "Q6NZI2",
+          "verified": true,
+          "sequence_length": 390
+        }
+      ],
+      "anchored_accessions": [
+        "Q6NZI2"
+      ],
+      "anchor_accession": "Q6NZI2"
+    },
+    "9lds_A_B": {
+      "status": "anchored",
+      "entry_title": "Crystal structure of nanobody H145 bound to SARS-CoV-2 spike stem-helix",
+      "antigen_description": "",
+      "method": "rcsb_entity_uniprot_ids",
+      "candidates_checked": [
+        {
+          "accession": "P0DTC2",
+          "verified": true,
+          "sequence_length": 1273
+        }
+      ],
+      "anchored_accessions": [
+        "P0DTC2"
+      ],
+      "anchor_accession": "P0DTC2"
+    }
+  },
+  "identity_review_used": true
+}

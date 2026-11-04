@@ -1,0 +1,25 @@
+{
+  "title": "BC2 nanobody in complex with the BC2 peptide tag",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A"
+      ],
+      "uniprot_ids": [],
+      "sequence": "QVQLVESGGGLVQPGGSLTLSCTASGFTLDHYDIGWFRQAPGKEREGVSCINNSDDDTYYADSVKGRFTIFMNNAKDTVYLQMNSLKPEDTAIYYCAEARGCKRGRYEYDFWGQGTQVTVSSKKKHHHHHH",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "B"
+      ],
+      "uniprot_ids": [
+        "G9GAG7"
+      ],
+      "sequence": "PDRKAAVSHWQX",
+      "description": ""
+    }
+  ]
+}

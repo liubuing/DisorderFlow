@@ -1,0 +1,40 @@
+{
+  "classification": "data_first_curation_metadata_counts_only_not_model_validation",
+  "campaign": "ESEL v1 (docs/ESEL_CAMPAIGN_V1.md)",
+  "red_line_note": "IEDB access is metadata-level: counts and query strings only, no record-level epitope sequences persisted; anchored accessions are mechanically verified by peptide-in-sequence containment",
+  "inputs_sha256": {
+    "results\\esel_e0_v1\\epitope_presentation_matrix.json": "bda69ed458a4d3968824b42c72c9dc7d3162d9bfc725d7e93ff3be8d5058adfe",
+    "results\\esel_e0_v1\\protocol.json": "bf43244cac202887f96e3b8d6284b4bf50fc383ce731b1d4c1e03c0c5f8ff66b"
+  },
+  "gates": {
+    "anchored_rows_meet_threshold": {
+      "pass": true,
+      "detail": "8 anchored rows >= 3"
+    },
+    "counts_metadata_only": {
+      "pass": true,
+      "detail": "IEDB access persisted as counts + query strings only"
+    },
+    "peptide_containment_verified": {
+      "pass": true,
+      "detail": "every row carries an explicit resolution status; no silent gaps"
+    }
+  },
+  "stop_rule_evaluation": {
+    "rule": "anchored dual-condition epitopes (IEDB precedent AND mechanically presentable) < 3 -> epitope starvation escalation to user",
+    "anchored_row_count": 8,
+    "anchored_rows": [
+      "ESEL-001",
+      "ESEL-002",
+      "ESEL-005",
+      "ESEL-007",
+      "ESEL-009",
+      "ESEL-014",
+      "ESEL-026",
+      "ESEL-027"
+    ],
+    "outcome": "continue",
+    "threshold": 3
+  },
+  "script_sha256": "d73d6b79720dec65504fd3409135effa2690c7c7cc69a3c5fb30c546a91daf39"
+}

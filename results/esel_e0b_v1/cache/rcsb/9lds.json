@@ -1,0 +1,27 @@
+{
+  "title": "Crystal structure of nanobody H145 bound to SARS-CoV-2 spike stem-helix",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "C"
+      ],
+      "uniprot_ids": [],
+      "sequence": "QVQLVESGGGLVQTGGSLRLSCEASGSAFSSYAVNWYRQAPGKQREPVAAIGSFNTVYSDSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYICNARRGATNTWGQGTQVTVSSHHHHHH",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "B",
+        "D"
+      ],
+      "uniprot_ids": [
+        "P0DTC2"
+      ],
+      "sequence": "DPLQPELDSFKEELD",
+      "description": ""
+    }
+  ]
+}

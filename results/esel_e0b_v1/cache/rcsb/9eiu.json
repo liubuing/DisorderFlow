@@ -1,0 +1,25 @@
+{
+  "title": "Crystal structure of the human Cavin1 HR1 TS/DD mutant domain bound to nanobody B7",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A"
+      ],
+      "uniprot_ids": [
+        "Q6NZI2"
+      ],
+      "sequence": "GSPGIQLIKSDQVNGVLVLSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKLGKAHATDDNTVSKLLEKVRKVSVNVKTVRGSLERQAGQIKKLEVNEAELLRRRNFK",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "B"
+      ],
+      "uniprot_ids": [],
+      "sequence": "QVQLQESGGGLVQAGGSLRLSCAVSGIRVNVNAMYWYRQAPGKQRELVAIITTFGSTNYADSAKGRFTISRDNTKNTVYLQMDNLKPEDTAVYYCNAPQFTDRYWGQGTQVTVSSHHHHHH",
+      "description": ""
+    }
+  ]
+}

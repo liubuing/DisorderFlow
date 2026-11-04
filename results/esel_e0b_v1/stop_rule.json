@@ -1,0 +1,16 @@
+{
+  "rule": "anchored dual-condition epitopes (IEDB precedent AND mechanically presentable) < 3 -> epitope starvation escalation to user",
+  "anchored_row_count": 8,
+  "anchored_rows": [
+    "ESEL-001",
+    "ESEL-002",
+    "ESEL-005",
+    "ESEL-007",
+    "ESEL-009",
+    "ESEL-014",
+    "ESEL-026",
+    "ESEL-027"
+  ],
+  "outcome": "continue",
+  "threshold": 3
+}

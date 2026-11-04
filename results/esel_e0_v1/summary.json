@@ -1,0 +1,13 @@
+{
+  "n_rows": 29,
+  "n_unique_parent_peptides": 18,
+  "n_variants": 116,
+  "n_unique_pdbs": 15,
+  "exposure_clean_rows": 29,
+  "anchored_iedb_rows": 1,
+  "flexibility_tiers": {
+    "pending_atlas_lookup": 29
+  },
+  "stop_rule_outcome": "escalate_epitope_starvation_risk",
+  "gates_passed": true
+}

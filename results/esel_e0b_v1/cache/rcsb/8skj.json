@@ -1,0 +1,29 @@
+{
+  "title": "Crystal structure of a Nanobody bound to the V5 peptide.",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "B",
+        "D",
+        "G"
+      ],
+      "uniprot_ids": [],
+      "sequence": "MAEVQLQASGGGFVQPGGSLRLSCAASGTTSFGDTMGWFRQAPGKEREFVSAISRQGDDSHYYADSVKGRFTISRDNSKNTVYLQMNSLRAEDTATYYCAEWMNTRREFITPYWGQGTQVTVSSLEHHHHHH",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "C",
+        "E",
+        "F",
+        "H"
+      ],
+      "uniprot_ids": [],
+      "sequence": "GKPIPNPLLGLDST",
+      "description": ""
+    }
+  ]
+}

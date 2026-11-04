@@ -1,0 +1,95 @@
+{
+  "schema_version": "esel_e0b_atlas_lookup_v1",
+  "by_parent_peptide": {
+    "DYEPEA": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "AVERYLKDQQLLGIW": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "DRKAAVSHWQ": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "SRLEEELRRRLTE": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "VETPIRNEWGCRC": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "TQAQEY": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "QAQEY": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "KEDAFSKLKEKFMNELH": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "KEDAFSKLKEKFMN": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "KEDAFSKLKEKFMNE": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "EDAFSKLKEKFMN": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "GSVQIVYKPK": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "GKPIPNPLLGLDST": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "DPLQPELDSFKEELD": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    },
+    "DAEFRH": {
+      "tier": "no_atlas_homolog",
+      "n_hits": 0,
+      "note": "404-empty or no BLAST hit (expected for short IDP peptides)"
+    }
+  }
+}

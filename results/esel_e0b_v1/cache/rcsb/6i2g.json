@@ -1,0 +1,23 @@
+{
+  "title": "ALFA-tag binding nanobody (NbALFA) bound to ALFA-tag peptide.",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A"
+      ],
+      "uniprot_ids": [],
+      "sequence": "SGEVQLQESGGGLVQPGGSLRLSCTASGVTISALNAMAMGWYRQAPGERRVMVAAVSERGNAMYRESVQGRFTVTRDFTNKMVSLQMDNLKPEDTAVYYCHVLEDRVDSFHDYWGQGTQVTVSS",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "B"
+      ],
+      "uniprot_ids": [],
+      "sequence": "PSRLEEELRRRLTEP",
+      "description": ""
+    }
+  ]
+}

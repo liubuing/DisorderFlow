@@ -1,0 +1,7 @@
+{
+  "classification": "esel_e0_complete_data_first_freeze",
+  "next": "E0b manual IEDB curation + ATLAS lookup; E1 freeze after partner confirmation",
+  "script_sha256": "abf71ee3baf4ebd7771c1f20045eb08f519ac3688b45944520b120114c835496",
+  "protocol_sha256": "bf43244cac202887f96e3b8d6284b4bf50fc383ce731b1d4c1e03c0c5f8ff66b",
+  "matrix_sha256": "bda69ed458a4d3968824b42c72c9dc7d3162d9bfc725d7e93ff3be8d5058adfe"
+}

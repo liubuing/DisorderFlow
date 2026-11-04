@@ -1,0 +1,39 @@
+{
+  "title": "Nanobody (NbLumSyt1) bound to human Syt1",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "uniprot_ids": [],
+      "sequence": "MEVQLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P"
+      ],
+      "uniprot_ids": [
+        "P21579"
+      ],
+      "sequence": "MVSESHHEALAAPPVTTVATVLPSNATEPASPGEGKEDAFSKLKEKFMNELHKIPLPPWA",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "title": "VHH Z70 mutant 20 in interaction with PHF6 Tau peptide",
+  "entities": [
+    {
+      "entity_id": "1",
+      "auth_asym_ids": [
+        "A"
+      ],
+      "uniprot_ids": [],
+      "sequence": "GAMAEVQLQASGGVFVQSGGSLRLSCAASGATSTFDGMGWFRQAPGKEKEFVSAISYEQGSYTYYADSVKGRFTISRDNSKNMVYLQMNSLRAEDTATYYCAPAYEGDLYAFDSYGEQGTQVTVSSAAA",
+      "description": ""
+    },
+    {
+      "entity_id": "2",
+      "auth_asym_ids": [
+        "B"
+      ],
+      "uniprot_ids": [
+        "P10636"
+      ],
+      "sequence": "PGGGSVQIVYKPKK",
+      "description": ""
+    }
+  ]
+}
