@@ -1,8 +1,12 @@
 # ESEL Phase E1：文库设计规格（预注册草案，**未冻结**）
 
-日期：2026-11-04。**状态：草案——冻结被两件事阻塞**：(a) E0b 手工 IEDB 注录完成
-（`results/esel_e0_v1/protocol.json` 的 `stop_rule_evaluation` 已触发升级）；
-(b) 湿实验伙伴确认（`docs/ESEL_PARTNER_BRIEF_V1.md` 的三件事）。冻结动作沿用
+日期：2026-11-04。**状态：草案——冻结被两件事阻塞**：(a) ~~E0b 手工 IEDB 注录~~
+**已完成**（2026-11-04 E0b 冻结，停止规则翻转为 continue，8 行锚定；
+`results/esel_e0b_v1/`）；(b) 湿实验伙伴确认（`docs/ESEL_PARTNER_BRIEF_V1.md`
+的三件事）+ 生物安全审阅。§2 的分布规格已由机械推导产出开发级表格
+（`scripts/esel_e1_distribution_spec_v1.py` →
+`results/esel_e1_v1/distribution_spec_development.json`，纯冻结产物统计，
+无任何亲和力分数参与）；冻结时按该表逐字引用数值。冻结动作沿用
 FLEX 战役先例：本文档定稿 → sha256 记入 `results/esel_e1_v1/preregistration.json`
 → 之后才允许任何文库合成订单或序列级输出。
 

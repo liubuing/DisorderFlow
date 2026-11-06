@@ -102,7 +102,16 @@ v3 结构桥清单（200 accession + IEDB 计数 + identity 块）当作**扩充
 - 边界（必须保留）：IEDB 访问保持 metadata 级（计数+查询串，零记录级序列落盘）；
   剩余 pending：湿实验伙伴确认、生物安全审阅（spike/HIV 表位）。
 
+### E1 前置推进（2026-11-07）
+
+- 分布规格机械推导完成：`scripts/esel_e1_distribution_spec_v1.py` →
+  `results/esel_e1_v1/distribution_spec_development.json`（10 桶；H3 长度直方图、
+  每桶肽/H3 电荷与芳香统计、E0b IEDB 计数联结；开发级，不冻结、不涉亲和力分数）；
+- E1 草案状态更新（`docs/ESEL_E1_LIBRARY_PREREG_DRAFT_V1.md`）：前置条件 1 已完成，
+  冻结剩余阻塞 = 湿实验伙伴确认 + 生物安全审阅。
+
 ### 下一步（E1 解锁状态）
 
-数据侧解锁：E0b 已把双条件表位推过停止规则阈值。E1 冻结仅剩一个阻塞项：
-**湿实验伙伴确认**（`docs/ESEL_PARTNER_BRIEF_V1.md` 三件事）。
+数据侧解锁：E0b 已把双条件表位推过停止规则阈值。E1 冻结仅剩两个阻塞项：
+**湿实验伙伴确认**（`docs/ESEL_PARTNER_BRIEF_V1.md` 三件事）+ **生物安全审阅**
+（spike/HIV 表位保留/跳过决定）。

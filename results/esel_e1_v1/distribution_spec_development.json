@@ -1,0 +1,384 @@
+{
+  "schema_version": "esel_e1_distribution_spec_development_v1",
+  "classification": "development_spec_not_frozen_prereg",
+  "basis": "cohort statistics and metadata counts only; no affinity score involved (DECISION_20261101 rule 3)",
+  "n_components": 28,
+  "h3_length_histogram": {
+    "9": 3,
+    "10": 1,
+    "11": 7,
+    "12": 3,
+    "13": 2,
+    "14": 5,
+    "15": 1,
+    "16": 1,
+    "18": 5
+  },
+  "filter_rule_precedent": [
+    "no cysteine",
+    "no N-X-S/T sequon",
+    "no homopolymer run > 3",
+    "net charge between -4 and +6",
+    "proline count <= 3"
+  ],
+  "n_families": 10,
+  "families": {
+    "APP_N_terminus": {
+      "n_matrix_rows": 1,
+      "n_cohort_components": 0,
+      "parent_peptides": [
+        "DAEFRH"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "DAEFRH",
+          "length": 6,
+          "net_charge": -0.5,
+          "aromatic_fraction": 0.167
+        }
+      ],
+      "native_h3_net_charge": [],
+      "h3_aromatic_fraction_mean": null,
+      "h3_proline_count_range": null,
+      "aromatic_thirds_pooled": {},
+      "iedb_precedent": null
+    },
+    "seq_0": {
+      "n_matrix_rows": 3,
+      "n_cohort_components": 3,
+      "parent_peptides": [
+        "AVERYLKDQQLLGIW"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "AVERYLKDQQLLGIW",
+          "length": 15,
+          "net_charge": 0.0,
+          "aromatic_fraction": 0.133
+        }
+      ],
+      "native_h3_net_charge": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "h3_aromatic_fraction_mean": 0.357,
+      "h3_proline_count_range": [
+        1,
+        1
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 3,
+        "middle": 6,
+        "c_terminal": 6
+      },
+      "iedb_precedent": null
+    },
+    "seq_1": {
+      "n_matrix_rows": 3,
+      "n_cohort_components": 3,
+      "parent_peptides": [
+        "DPLQPELDSFKEELD",
+        "DYEPEA"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "DPLQPELDSFKEELD",
+          "length": 15,
+          "net_charge": -5.0,
+          "aromatic_fraction": 0.067
+        },
+        {
+          "peptide": "DYEPEA",
+          "length": 6,
+          "net_charge": -3.0,
+          "aromatic_fraction": 0.167
+        }
+      ],
+      "native_h3_net_charge": [
+        1.0,
+        2.0,
+        2.0
+      ],
+      "h3_aromatic_fraction_mean": 0.093,
+      "h3_proline_count_range": [
+        0,
+        1
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 1,
+        "middle": 1,
+        "c_terminal": 3
+      },
+      "iedb_precedent": null
+    },
+    "seq_2": {
+      "n_matrix_rows": 1,
+      "n_cohort_components": 1,
+      "parent_peptides": [
+        "DRKAAVSHWQ"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "DRKAAVSHWQ",
+          "length": 10,
+          "net_charge": 1.5,
+          "aromatic_fraction": 0.1
+        }
+      ],
+      "native_h3_net_charge": [
+        1.0
+      ],
+      "h3_aromatic_fraction_mean": 0.2,
+      "h3_proline_count_range": [
+        0,
+        0
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 0,
+        "middle": 0,
+        "c_terminal": 3
+      },
+      "iedb_precedent": null
+    },
+    "seq_3": {
+      "n_matrix_rows": 7,
+      "n_cohort_components": 7,
+      "parent_peptides": [
+        "EDAFSKLKEKFMN",
+        "KEDAFSKLKEKFMN",
+        "KEDAFSKLKEKFMNE",
+        "KEDAFSKLKEKFMNELH"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "EDAFSKLKEKFMN",
+          "length": 13,
+          "net_charge": 0.0,
+          "aromatic_fraction": 0.154
+        },
+        {
+          "peptide": "KEDAFSKLKEKFMN",
+          "length": 14,
+          "net_charge": 1.0,
+          "aromatic_fraction": 0.143
+        },
+        {
+          "peptide": "KEDAFSKLKEKFMNE",
+          "length": 15,
+          "net_charge": 0.0,
+          "aromatic_fraction": 0.133
+        },
+        {
+          "peptide": "KEDAFSKLKEKFMNELH",
+          "length": 17,
+          "net_charge": 0.5,
+          "aromatic_fraction": 0.118
+        }
+      ],
+      "native_h3_net_charge": [
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "h3_aromatic_fraction_mean": 0.091,
+      "h3_proline_count_range": [
+        0,
+        0
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 0,
+        "middle": 7,
+        "c_terminal": 0
+      },
+      "iedb_precedent": null
+    },
+    "seq_4": {
+      "n_matrix_rows": 2,
+      "n_cohort_components": 2,
+      "parent_peptides": [
+        "GKPIPNPLLGLDST"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "GKPIPNPLLGLDST",
+          "length": 14,
+          "net_charge": 0.0,
+          "aromatic_fraction": 0.0
+        }
+      ],
+      "native_h3_net_charge": [
+        0.0,
+        0.0
+      ],
+      "h3_aromatic_fraction_mean": 0.214,
+      "h3_proline_count_range": [
+        1,
+        1
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 2,
+        "middle": 0,
+        "c_terminal": 4
+      },
+      "iedb_precedent": null
+    },
+    "seq_5": {
+      "n_matrix_rows": 7,
+      "n_cohort_components": 7,
+      "parent_peptides": [
+        "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+        "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+        "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+        "QAQEY",
+        "TQAQEY"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+          "length": 36,
+          "net_charge": 0.5,
+          "aromatic_fraction": 0.083
+        },
+        {
+          "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+          "length": 39,
+          "net_charge": 0.5,
+          "aromatic_fraction": 0.077
+        },
+        {
+          "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+          "length": 42,
+          "net_charge": -4.0,
+          "aromatic_fraction": 0.0
+        },
+        {
+          "peptide": "QAQEY",
+          "length": 5,
+          "net_charge": -1.0,
+          "aromatic_fraction": 0.2
+        },
+        {
+          "peptide": "TQAQEY",
+          "length": 6,
+          "net_charge": -1.0,
+          "aromatic_fraction": 0.167
+        }
+      ],
+      "native_h3_net_charge": [
+        -1.5,
+        -1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "h3_aromatic_fraction_mean": 0.183,
+      "h3_proline_count_range": [
+        0,
+        1
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 4,
+        "middle": 5,
+        "c_terminal": 11
+      },
+      "iedb_precedent": null
+    },
+    "seq_6": {
+      "n_matrix_rows": 3,
+      "n_cohort_components": 3,
+      "parent_peptides": [
+        "GSVQIVYKPK"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "GSVQIVYKPK",
+          "length": 10,
+          "net_charge": 2.0,
+          "aromatic_fraction": 0.1
+        }
+      ],
+      "native_h3_net_charge": [
+        -4.0,
+        -3.0,
+        -2.0
+      ],
+      "h3_aromatic_fraction_mean": 0.227,
+      "h3_proline_count_range": [
+        1,
+        1
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 2,
+        "middle": 1,
+        "c_terminal": 5
+      },
+      "iedb_precedent": null
+    },
+    "seq_7": {
+      "n_matrix_rows": 1,
+      "n_cohort_components": 1,
+      "parent_peptides": [
+        "SRLEEELRRRLTE"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "SRLEEELRRRLTE",
+          "length": 13,
+          "net_charge": 0.0,
+          "aromatic_fraction": 0.0
+        }
+      ],
+      "native_h3_net_charge": [
+        -2.0
+      ],
+      "h3_aromatic_fraction_mean": 0.154,
+      "h3_proline_count_range": [
+        0,
+        0
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 0,
+        "middle": 0,
+        "c_terminal": 2
+      },
+      "iedb_precedent": null
+    },
+    "seq_8": {
+      "n_matrix_rows": 1,
+      "n_cohort_components": 1,
+      "parent_peptides": [
+        "VETPIRNEWGCRC"
+      ],
+      "peptide_stats": [
+        {
+          "peptide": "VETPIRNEWGCRC",
+          "length": 13,
+          "net_charge": 0.0,
+          "aromatic_fraction": 0.077
+        }
+      ],
+      "native_h3_net_charge": [
+        -2.0
+      ],
+      "h3_aromatic_fraction_mean": 0.188,
+      "h3_proline_count_range": [
+        0,
+        0
+      ],
+      "aromatic_thirds_pooled": {
+        "n_terminal": 1,
+        "middle": 0,
+        "c_terminal": 2
+      },
+      "iedb_precedent": null
+    }
+  },
+  "usage_note": "tables to be quoted verbatim by the E1 preregistration at freeze time; freeze remains blocked on partner confirmation and biosafety review (docs/ESEL_E1_LIBRARY_PREREG_DRAFT_V1.md section 4)"
+}

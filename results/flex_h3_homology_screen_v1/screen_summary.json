@@ -1,0 +1,28 @@
+{
+  "screen": "h3_and_peptide_homology_vs_sabdab2_snapshot",
+  "universe": "data\\sabdab2_current\\splits.tar.gz",
+  "n_members_screened": 15617,
+  "n_members_excluded_self": 24,
+  "excluded_j0_pdb_ids": [
+    "2x6m",
+    "6zwk",
+    "9lds",
+    "8b8i",
+    "5hm1",
+    "6j7w",
+    "6i2g",
+    "5ivn"
+  ],
+  "limit_applied": null,
+  "k": 8,
+  "n_h3_queries": 28,
+  "n_peptide_queries": 17,
+  "h3_exact_hits": 2,
+  "peptide_exact_hits": 5,
+  "h3_max_kmer_fraction": 1.0,
+  "peptide_max_kmer_fraction": 1.0,
+  "h3_mean_kmer_fraction": 0.07142857142857142,
+  "interpretation_bound": "negative result here bounds the memorization confound only against the SAbDab2 2026 snapshot; the exact base-checkpoint split (train 2950 / val 327) is not locally recoverable and may contain entries absent from this snapshot",
+  "classification": "development_screen_not_confirmatory_claim",
+  "cohort_source": "D:\\biological\\DisorderFlow\\results\\flex_j0_v1\\cohort.json"
+}

@@ -1,0 +1,916 @@
+{
+  "queries": [
+    {
+      "kind": "h3",
+      "instance": "2x6m_A_B",
+      "family": "seq_1",
+      "sequence": "AAKFSPGYCGGSWSNFGY",
+      "length": 18,
+      "n_distinct_kmers": 11,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "5hm1_A_D",
+      "family": "seq_0",
+      "sequence": "YAPMIYYGGRYSDY",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "5hm1_B_E",
+      "family": "seq_0",
+      "sequence": "YAPMIYYGGRYSDY",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "5hm1_C_F",
+      "family": "seq_0",
+      "sequence": "YAPMIYYGGRYSDY",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "5ivn_A_B",
+      "family": "seq_2",
+      "sequence": "AEARGCKRGRYEYDF",
+      "length": 15,
+      "n_distinct_kmers": 8,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6i2g_A_B",
+      "family": "seq_7",
+      "sequence": "HVLEDRVDSFHDY",
+      "length": 13,
+      "n_distinct_kmers": 6,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00008uy6_B_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00009fot_B_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_F_+.cif",
+          "chain": "F"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_L_+.cif",
+          "chain": "L"
+        },
+        {
+          "member": "splits_final/pdb_00009fkn_B_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_N_+.cif",
+          "chain": "N"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_D_+.cif",
+          "chain": "D"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_H_+.cif",
+          "chain": "H"
+        },
+        {
+          "member": "splits_final/pdb_00009qbj_C_+.cif",
+          "chain": "C"
+        },
+        {
+          "member": "splits_final/pdb_00009gf8_B_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_P_+.cif",
+          "chain": "P"
+        },
+        {
+          "member": "splits_final/pdb_00009qbj_D_+.cif",
+          "chain": "D"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_J_+.cif",
+          "chain": "J"
+        }
+      ],
+      "best_kmer_member": 48,
+      "best_kmer_member_file": "splits_final/pdb_00008uy6_B_+.cif",
+      "best_shared_kmers": 6,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "A",
+        "B",
+        "C"
+      ],
+      "best_chain_id": "B"
+    },
+    {
+      "kind": "h3",
+      "instance": "6j7w_A_C",
+      "family": "seq_5",
+      "sequence": "AKQGENDGPFDH",
+      "length": 12,
+      "n_distinct_kmers": 5,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6j7w_B_D",
+      "family": "seq_5",
+      "sequence": "AKQGENDGPFDH",
+      "length": 12,
+      "n_distinct_kmers": 5,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6s0y_B_D",
+      "family": "seq_8",
+      "sequence": "GAERYNVEGCGYDVAY",
+      "length": 16,
+      "n_distinct_kmers": 9,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6zwk_B_H",
+      "family": "seq_5",
+      "sequence": "AADYGTSRYTRRQSEYEY",
+      "length": 18,
+      "n_distinct_kmers": 11,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6zwk_D_J",
+      "family": "seq_5",
+      "sequence": "AADYGTSRYTRRQSEYEY",
+      "length": 18,
+      "n_distinct_kmers": 11,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6zwk_E_K",
+      "family": "seq_5",
+      "sequence": "AADYGTSRYTRRQSEYEY",
+      "length": 18,
+      "n_distinct_kmers": 11,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "6zwk_F_L",
+      "family": "seq_5",
+      "sequence": "AADYGTSRYTRRQSEYEY",
+      "length": 18,
+      "n_distinct_kmers": 11,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_A_I",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_B_J",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_D_L",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_E_M",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_F_N",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_G_O",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8b8i_H_P",
+      "family": "seq_3",
+      "sequence": "AGGDYSDRLGS",
+      "length": 11,
+      "n_distinct_kmers": 4,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8op0_A_B",
+      "family": "seq_6",
+      "sequence": "APAYEGDLYAFDE",
+      "length": 13,
+      "n_distinct_kmers": 6,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8opi_A_B",
+      "family": "seq_6",
+      "sequence": "APAYEGDLYAFD",
+      "length": 12,
+      "n_distinct_kmers": 5,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8pii_A_B",
+      "family": "seq_6",
+      "sequence": "APAYEGDLYA",
+      "length": 10,
+      "n_distinct_kmers": 3,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8skj_A_E",
+      "family": "seq_4",
+      "sequence": "AEWMNTRREFITPY",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "8skj_G_H",
+      "family": "seq_4",
+      "sequence": "AEWMNTRREFITPY",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "9eiu_B_A",
+      "family": "seq_5",
+      "sequence": "NAPQFTDRY",
+      "length": 9,
+      "n_distinct_kmers": 2,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00009eg6_F_+.cif",
+          "chain": "F"
+        },
+        {
+          "member": "splits_final/pdb_00009egn_B_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00009eg6_B_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00009eg6_D_+.cif",
+          "chain": "D"
+        }
+      ],
+      "best_kmer_member": 2974,
+      "best_kmer_member_file": "splits_final/pdb_00009eg6_F_+.cif",
+      "best_shared_kmers": 2,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "A",
+        "E",
+        "F"
+      ],
+      "best_chain_id": "F"
+    },
+    {
+      "kind": "h3",
+      "instance": "9lds_A_B",
+      "family": "seq_1",
+      "sequence": "NARRGATNT",
+      "length": 9,
+      "n_distinct_kmers": 2,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "h3",
+      "instance": "9lds_C_D",
+      "family": "seq_1",
+      "sequence": "NARRGATNT",
+      "length": 9,
+      "n_distinct_kmers": 2,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "2x6m_A_B",
+      "family": "seq_1",
+      "sequence": "DYEPEA",
+      "length": 6,
+      "n_distinct_kmers": 0,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "5hm1_A_D",
+      "family": "seq_0",
+      "sequence": "AVERYLKDQQLLGIW",
+      "length": 15,
+      "n_distinct_kmers": 8,
+      "exact_substring_hits": [],
+      "best_kmer_member": 3613,
+      "best_kmer_member_file": "splits_final/pdb_00007kmd_A_E.cif",
+      "best_shared_kmers": 6,
+      "best_kmer_fraction": 0.75,
+      "best_member_chains": [
+        "A",
+        "E",
+        "T"
+      ],
+      "best_chain_id": "T"
+    },
+    {
+      "kind": "peptide",
+      "instance": "5ivn_A_B",
+      "family": "seq_2",
+      "sequence": "DRKAAVSHWQ",
+      "length": 10,
+      "n_distinct_kmers": 3,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "6i2g_A_B",
+      "family": "seq_7",
+      "sequence": "SRLEEELRRRLTE",
+      "length": 13,
+      "n_distinct_kmers": 6,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00008uy6_B_+.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_B_+.cif",
+          "chain": "C"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_F_+.cif",
+          "chain": "E"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_F_+.cif",
+          "chain": "G"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_L_+.cif",
+          "chain": "K"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_L_+.cif",
+          "chain": "M"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_N_+.cif",
+          "chain": "M"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_N_+.cif",
+          "chain": "O"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_D_+.cif",
+          "chain": "C"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_D_+.cif",
+          "chain": "E"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_H_+.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_H_+.cif",
+          "chain": "G"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_P_+.cif",
+          "chain": "I"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_P_+.cif",
+          "chain": "O"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_J_+.cif",
+          "chain": "I"
+        },
+        {
+          "member": "splits_final/pdb_00008uy6_J_+.cif",
+          "chain": "K"
+        }
+      ],
+      "best_kmer_member": 48,
+      "best_kmer_member_file": "splits_final/pdb_00008uy6_B_+.cif",
+      "best_shared_kmers": 6,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "A",
+        "B",
+        "C"
+      ],
+      "best_chain_id": "A"
+    },
+    {
+      "kind": "peptide",
+      "instance": "6j7w_A_C",
+      "family": "seq_5",
+      "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "length": 39,
+      "n_distinct_kmers": 32,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00008hxq_A_+.cif",
+          "chain": "C"
+        },
+        {
+          "member": "splits_final/pdb_00008hxq_B_+.cif",
+          "chain": "D"
+        }
+      ],
+      "best_kmer_member": 8517,
+      "best_kmer_member_file": "splits_final/pdb_00008hxq_A_+.cif",
+      "best_shared_kmers": 32,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "A",
+        "C"
+      ],
+      "best_chain_id": "C"
+    },
+    {
+      "kind": "peptide",
+      "instance": "6j7w_B_D",
+      "family": "seq_5",
+      "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+      "length": 36,
+      "n_distinct_kmers": 29,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00004zfo_A_B.cif",
+          "chain": "F"
+        },
+        {
+          "member": "splits_final/pdb_00008qya_H_L.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00008hxq_A_+.cif",
+          "chain": "C"
+        },
+        {
+          "member": "splits_final/pdb_00008hxq_B_+.cif",
+          "chain": "D"
+        }
+      ],
+      "best_kmer_member": 4623,
+      "best_kmer_member_file": "splits_final/pdb_00004zfo_A_B.cif",
+      "best_shared_kmers": 29,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "F",
+        "B",
+        "A"
+      ],
+      "best_chain_id": "F"
+    },
+    {
+      "kind": "peptide",
+      "instance": "6s0y_B_D",
+      "family": "seq_8",
+      "sequence": "VETPIRNEWGCRC",
+      "length": 13,
+      "n_distinct_kmers": 6,
+      "exact_substring_hits": [],
+      "best_kmer_member": 3566,
+      "best_kmer_member_file": "splits_final/pdb_00004n8c_I_M.cif",
+      "best_shared_kmers": 3,
+      "best_kmer_fraction": 0.5,
+      "best_member_chains": [
+        "I",
+        "M",
+        "Y"
+      ],
+      "best_chain_id": "Y"
+    },
+    {
+      "kind": "peptide",
+      "instance": "6zwk_B_H",
+      "family": "seq_5",
+      "sequence": "TQAQEY",
+      "length": 6,
+      "n_distinct_kmers": 0,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "6zwk_F_L",
+      "family": "seq_5",
+      "sequence": "QAQEY",
+      "length": 5,
+      "n_distinct_kmers": 0,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "8b8i_A_I",
+      "family": "seq_3",
+      "sequence": "KEDAFSKLKEKFMNELH",
+      "length": 17,
+      "n_distinct_kmers": 10,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "8b8i_D_L",
+      "family": "seq_3",
+      "sequence": "KEDAFSKLKEKFMN",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "8b8i_E_M",
+      "family": "seq_3",
+      "sequence": "KEDAFSKLKEKFMNE",
+      "length": 15,
+      "n_distinct_kmers": 8,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "8b8i_G_O",
+      "family": "seq_3",
+      "sequence": "EDAFSKLKEKFMN",
+      "length": 13,
+      "n_distinct_kmers": 6,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "8op0_A_B",
+      "family": "seq_6",
+      "sequence": "GSVQIVYKPK",
+      "length": 10,
+      "n_distinct_kmers": 3,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "8skj_A_E",
+      "family": "seq_4",
+      "sequence": "GKPIPNPLLGLDST",
+      "length": 14,
+      "n_distinct_kmers": 7,
+      "exact_substring_hits": [],
+      "best_kmer_member": null,
+      "best_kmer_member_file": null,
+      "best_shared_kmers": 0,
+      "best_kmer_fraction": 0.0,
+      "best_member_chains": null,
+      "best_chain_id": null
+    },
+    {
+      "kind": "peptide",
+      "instance": "9eiu_B_A",
+      "family": "seq_5",
+      "sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "length": 42,
+      "n_distinct_kmers": 35,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00009eg6_F_+.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00009egn_B_+.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00009eg6_B_+.cif",
+          "chain": "A"
+        }
+      ],
+      "best_kmer_member": 2974,
+      "best_kmer_member_file": "splits_final/pdb_00009eg6_F_+.cif",
+      "best_shared_kmers": 35,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "A",
+        "E",
+        "F"
+      ],
+      "best_chain_id": "A"
+    },
+    {
+      "kind": "peptide",
+      "instance": "9lds_A_B",
+      "family": "seq_1",
+      "sequence": "DPLQPELDSFKEELD",
+      "length": 15,
+      "n_distinct_kmers": 8,
+      "exact_substring_hits": [
+        {
+          "member": "splits_final/pdb_00007tpr_G_+.cif",
+          "chain": "C"
+        },
+        {
+          "member": "splits_final/pdb_00007tpr_H_+.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00007tpr_H_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00007tpr_F_+.cif",
+          "chain": "A"
+        },
+        {
+          "member": "splits_final/pdb_00007tpr_F_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00007tpr_D_+.cif",
+          "chain": "B"
+        },
+        {
+          "member": "splits_final/pdb_00007tpr_E_+.cif",
+          "chain": "C"
+        }
+      ],
+      "best_kmer_member": 6919,
+      "best_kmer_member_file": "splits_final/pdb_00007tpr_G_+.cif",
+      "best_shared_kmers": 8,
+      "best_kmer_fraction": 1.0,
+      "best_member_chains": [
+        "C",
+        "G"
+      ],
+      "best_chain_id": "C"
+    }
+  ]
+}
