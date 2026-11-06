@@ -9,7 +9,12 @@ Pins the properties the J0 gate silently depends on:
 3. the written component PDBs really contain chain H and chain P, and the
    declared H3 region spec extracts exactly the frozen region sequence;
 4. build_region_batch honours the region spec and the context-chain contract
-   on one real component (complex has peptide context, stripped does not).
+   on one real component (complex has peptide context, stripped does not);
+5. when antigen_chains is passed, the peptide really lands in
+   Fragment.Antigen and the antibody chain in Fragment.Heavy - the FLEX
+   frozen numbers were produced by a batch where H was encoded as padding
+   and P as Heavy, leaving mask_antigen empty (see
+   .dsh-research/flex-distance/code-fix-report.md section 2).
 """
 import sys
 from pathlib import Path
@@ -84,3 +89,23 @@ def test_region_batch_honours_region_and_context_contract(cohort):
     assert complex_len > stripped_len
     assert complex_len - stripped_len <= len(entry['peptide_sequence'])
     inject_candidate_sequence(complex_batch, entry['region_sequence'])
+
+
+def test_antigen_roles_batch_marks_peptide_as_antigen(cohort):
+    # Regression pin for the FLEX chain-role encoding bug: without
+    # antigen_chains the peptide was encoded as Fragment.Heavy and
+    # mask_antigen was empty, silently disabling the antigen branch.
+    pytest.importorskip('torch')
+    from modules.bfn_loader import build_region_batch
+    from disorderflow.utils.protein.constants import Fragment
+    entry = sorted(cohort['components'], key=lambda c: c['instance'])[0]
+    batch = build_region_batch(str(ROOT / entry['component_pdb']),
+                               entry['region_spec'],
+                               context_chains=['P'], antigen_chains=['P'],
+                               device='cpu')
+    roles = batch['fragment_type'][0].tolist()
+    peptide_len = len(entry['peptide_sequence'])
+    antigen_count = sum(1 for role in roles if role == int(Fragment.Antigen))
+    heavy_count = sum(1 for role in roles if role == int(Fragment.Heavy))
+    assert antigen_count == peptide_len
+    assert heavy_count > 0
