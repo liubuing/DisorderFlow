@@ -1,0 +1,6498 @@
+{
+  "schema_version": "pairwise_v1",
+  "unit": "within-complex H3-only variants",
+  "groups": {
+    "1mlc": {
+      "structure": "data\\abbibench_structural_audit_v1\\structures\\1mlc_bae.pdb",
+      "heavy": "B",
+      "light": "A",
+      "antigen": [
+        "E"
+      ],
+      "region_spec": "B:97-105",
+      "label_source": "AbBiBench binding_score (1mlc)",
+      "n_variants": 132,
+      "variants": [
+        {
+          "h3": "AAGDGNYGY",
+          "label": 8.617302024,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ACGDGNYGY",
+          "label": 3.570585515,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ADGDGNYGY",
+          "label": 7.65006649,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AEGDGNYGY",
+          "label": 7.862702064,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AFGDGNYGY",
+          "label": 6.891134103,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AGGDGNYGY",
+          "label": 5.49099428,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AHGDGNYGY",
+          "label": 2.165242959,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AIGDGNYGY",
+          "label": 7.084334475,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGDGNYGY",
+          "label": 8.267227764,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ALGDGNYGY",
+          "label": 5.010822958,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AMGDGNYGY",
+          "label": 8.07962915,
+          "n_measurements": 1
+        },
+        {
+          "h3": "APGDGNYGY",
+          "label": 4.719354955,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AQGDGNYGY",
+          "label": 7.97703628,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARADGNYGY",
+          "label": 5.046748287,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARCDGNYGY",
+          "label": 3.397579227,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDDGNYGY",
+          "label": 3.742464378,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AREDGNYGY",
+          "label": 8.248251863,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFDGNYGY",
+          "label": 6.301993342,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDANYGY",
+          "label": 4.29755534,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDCNYGY",
+          "label": 3.662365318,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDDNYGY",
+          "label": 2.90840056,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDENYGY",
+          "label": 7.828314722,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDFNYGY",
+          "label": 6.814524827,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGAYGY",
+          "label": -0.043906737,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGCYGY",
+          "label": 2.000501711,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGDYGY",
+          "label": 1.921761053,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGEYGY",
+          "label": 3.03496174,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGFYGY",
+          "label": -3.308402289,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGGYGY",
+          "label": 3.674631287,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGHYGY",
+          "label": -2.478647829,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGIYGY",
+          "label": 0.55381056,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGKYGY",
+          "label": 2.085768359,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGLYGY",
+          "label": 3.536078415,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGMYGY",
+          "label": 4.584416506,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNAGY",
+          "label": 5.725983744,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNCGY",
+          "label": 4.648575902,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNDGY",
+          "label": 4.104340196,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNEGY",
+          "label": 8.023670496,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNFGY",
+          "label": 4.45969018,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNGGY",
+          "label": 5.60741742,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNHGY",
+          "label": 3.72518533,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNIGY",
+          "label": 5.832964847,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNKGY",
+          "label": 7.936004883,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNLGY",
+          "label": 6.106642597,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNMGY",
+          "label": 4.940023264,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNNGY",
+          "label": 4.697695068,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNPGY",
+          "label": 6.841193074,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNQGY",
+          "label": 7.07198864,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNRGY",
+          "label": 8.883225916,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNSGY",
+          "label": 2.43565164,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNTGY",
+          "label": 6.082545046,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNVGY",
+          "label": 6.767413312,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNWGY",
+          "label": 8.090903227,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYAY",
+          "label": -3.506456583,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYCY",
+          "label": -0.91113956,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYDY",
+          "label": 0.1773186,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYEY",
+          "label": -4.100742618,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYFY",
+          "label": -1.251889422,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGA",
+          "label": 9.11425706,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGC",
+          "label": 4.362954005,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGD",
+          "label": 3.001653413,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGE",
+          "label": 7.278851305,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGF",
+          "label": 0.613273931,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGG",
+          "label": 8.927898356,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGH",
+          "label": 4.428635507,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGI",
+          "label": 5.811289122,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGK",
+          "label": 5.220310116,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGL",
+          "label": 6.26961886,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGM",
+          "label": 7.930755527,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGN",
+          "label": 5.036972385,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGP",
+          "label": 7.280686168,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGQ",
+          "label": 7.313594254,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGR",
+          "label": 8.555849245,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGS",
+          "label": 2.79816802,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGT",
+          "label": 8.951880321,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGV",
+          "label": 6.041126214,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYGW",
+          "label": 8.108681473,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYHY",
+          "label": -2.816640613,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYIY",
+          "label": -2.892786962,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYKY",
+          "label": -3.96418876,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYLY",
+          "label": -3.569868557,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYMY",
+          "label": -3.666078895,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYNY",
+          "label": -2.494602637,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYPY",
+          "label": 1.444282027,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYQY",
+          "label": -3.353617076,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYRY",
+          "label": -3.37720076,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYSY",
+          "label": 1.179728884,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYTY",
+          "label": 1.666712434,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYVY",
+          "label": -2.913939149,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYWY",
+          "label": 1.067129722,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGNYYY",
+          "label": -1.868925856,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGPYGY",
+          "label": 2.498155217,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGQYGY",
+          "label": 3.715652369,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGRYGY",
+          "label": 3.756573188,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGSYGY",
+          "label": -0.185736799,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGTYGY",
+          "label": 2.39774,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGVYGY",
+          "label": 3.579907823,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGWYGY",
+          "label": -2.064236581,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDGYYGY",
+          "label": -3.515059908,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDHNYGY",
+          "label": 6.342620196,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDINYGY",
+          "label": 8.156002129,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDKNYGY",
+          "label": 7.859881188,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDLNYGY",
+          "label": 6.963039584,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDMNYGY",
+          "label": 8.269105699,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDNNYGY",
+          "label": 9.317049889,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDPNYGY",
+          "label": 6.232334129,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDQNYGY",
+          "label": 7.851370498,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDRNYGY",
+          "label": 4.444719266,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDSNYGY",
+          "label": 4.691611715,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDTNYGY",
+          "label": 6.852508612,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDVNYGY",
+          "label": 5.533878412,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDWNYGY",
+          "label": 5.494881554,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGDYNYGY",
+          "label": 5.364426773,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARHDGNYGY",
+          "label": 8.128311329,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARIDGNYGY",
+          "label": 5.252171218,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARKDGNYGY",
+          "label": 8.439473669,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARLDGNYGY",
+          "label": 9.405157156,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARMDGNYGY",
+          "label": 8.021269535,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNDGNYGY",
+          "label": 8.481307809,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARPDGNYGY",
+          "label": 5.782504483,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARQDGNYGY",
+          "label": 7.834128692,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARRDGNYGY",
+          "label": 5.245523248,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSDGNYGY",
+          "label": 4.901500562,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARTDGNYGY",
+          "label": 8.990918735,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARVDGNYGY",
+          "label": 4.380180745,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWDGNYGY",
+          "label": 6.065035296,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYDGNYGY",
+          "label": 8.426734643,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASGDGNYGY",
+          "label": 2.201669517,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATGDGNYGY",
+          "label": 5.584153549,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AVGDGNYGY",
+          "label": 6.442815168,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AWGDGNYGY",
+          "label": 6.373746628,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AYGDGNYGY",
+          "label": 5.172418828,
+          "n_measurements": 1
+        }
+      ]
+    },
+    "1n8z": {
+      "structure": "data\\abbibench_structural_audit_v1\\structures\\1n8z_bac.pdb",
+      "heavy": "B",
+      "light": "A",
+      "antigen": [
+        "C"
+      ],
+      "region_spec": "B:97-109",
+      "label_source": "AbBiBench binding_score (1n8z)",
+      "n_variants": 397,
+      "variants": [
+        {
+          "h3": "AATYGGLGDMSSI",
+          "label": 7.568636235841013,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AFADSGAYGIWSF",
+          "label": 7.006916639301938,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AGSSASGWYHYTT",
+          "label": 7.374173286714289,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AGSVAEGWYHYRD",
+          "label": 7.219682687859849,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AGYEGYGLYPFAY",
+          "label": 6.892450870255314,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AITFYGYTIVWEY",
+          "label": 7.336299074610352,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AIWSMYDVGYYPF",
+          "label": 7.144057053767684,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKFAYYGPYHFDP",
+          "label": 7.99481948749622,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKFERGYYSFDFG",
+          "label": 7.417028070895194,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKFHWGEDWLSDN",
+          "label": 7.228412519118745,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYAYYGDFWGSV",
+          "label": 7.757707095017069,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYDTAGSYHFDV",
+          "label": 7.010060986715464,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYGATGWYYFDY",
+          "label": 7.850165303284215,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYGGVGYYAMDY",
+          "label": 7.598599459218456,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYINAYSYAFFD",
+          "label": 7.770830297460899,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYLGQEAYAYFS",
+          "label": 7.826813731587726,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYTRGFSYGFGY",
+          "label": 7.422278475490979,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ANDIYIQGYDLNR",
+          "label": 8.399027104313252,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ANVGSSLGIAALD",
+          "label": 7.435097327470795,
+          "n_measurements": 1
+        },
+        {
+          "h3": "APWGTYRYGYFDH",
+          "label": 7.1700533040583645,
+          "n_measurements": 1
+        },
+        {
+          "h3": "APWWSGWYYFFDT",
+          "label": 7.481486060122113,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AQNWDRGSYFYTY",
+          "label": 7.366026844210326,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AQWYDYGGTYLDY",
+          "label": 7.114243118930733,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AQYGRGGYWYFDY",
+          "label": 6.724780813217851,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARAGGTSISLGHG",
+          "label": 7.173925197299174,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGGGFYAYDY",
+          "label": 6.906018296085887,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGGGVYAFTY",
+          "label": 6.43937612545007,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGIAYYYFAY",
+          "label": 6.589982391796948,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGMYRYGLYG",
+          "label": 6.635824367229381,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGRGRYAMDY",
+          "label": 6.395363613701377,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGRSYYSFYY",
+          "label": 6.984598326297051,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGSGYYAYDY",
+          "label": 5.597927856364727,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGGSSSYSYSY",
+          "label": 6.834696307531639,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGIYGYGGFAY",
+          "label": 6.556674416046255,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGYPFYSGMDY",
+          "label": 6.813835038272585,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDGYPQYGGYGY",
+          "label": 6.896983509671685,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDRGVSGYYLYY",
+          "label": 6.246593145685108,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDSPYYGSLYLY",
+          "label": 6.688097868580511,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDVYVGSPVFDY",
+          "label": 6.5562364930224994,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDYDFGLSVGAV",
+          "label": 6.44660248987612,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARENDGSPGSFEY",
+          "label": 7.635636645384269,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFDGPFYYAFAY",
+          "label": 7.639028116274064,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFGGAGGYYFDY",
+          "label": 7.455435902503956,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFGPAYFYGFYY",
+          "label": 7.293709042741237,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFMGGGYTSSDY",
+          "label": 6.195724232870906,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFSGYGAYDYAY",
+          "label": 6.903124731940313,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGFVYAGIPFDY",
+          "label": 6.950781977329818,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGGYGYYTWFDY",
+          "label": 7.375408540873153,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGHYSLGYSFDF",
+          "label": 6.591760034688151,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGYAYYVAGREY",
+          "label": 6.304518323509803,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGYYDTSQSHAY",
+          "label": 6.147032308971181,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGYYQDSQSWGY",
+          "label": 6.781202001888262,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARHFGVASYSFDY",
+          "label": 7.856360764725457,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARHYDYGRYYMDV",
+          "label": 7.509479690636652,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARHYYGWSSGYDY",
+          "label": 6.018022920110226,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARHYYYGYYYFDV",
+          "label": 7.645891560852599,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARLGASHGYLYDD",
+          "label": 6.484695879289678,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNGYYGGYAFDY",
+          "label": 6.964170174747172,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNSGTGIWAFAY",
+          "label": 7.187086643357144,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNYYDLYYYFDY",
+          "label": 8.075204004202089,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNYYDYYYYLDY",
+          "label": 7.380802284207053,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNYYGAAYYFDY",
+          "label": 6.244208963631403,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNYYYGAYYFDY",
+          "label": 7.341893164493607,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARPSYDVGGDMLF",
+          "label": 7.079615757821642,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSAGIGYYAMDY",
+          "label": 6.0024738249901,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGGSYYYYDY",
+          "label": 6.512112511761912,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGRYTYGFDY",
+          "label": 5.851505315338953,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGSGYYSYNY",
+          "label": 6.21965387989447,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGSGYYYYDY",
+          "label": 5.737451620218279,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGSSFYGMDY",
+          "label": 6.167471927665727,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGSSYYYYDY",
+          "label": 5.971807089838353,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGSYSYSFDV",
+          "label": 5.972523996263773,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGYYHYGFVY",
+          "label": 6.642160403462019,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGGYYTYGFDY",
+          "label": 6.471533245943799,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSGYPGYGSFAY",
+          "label": 7.216668237112576,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSHIGYYGQVAL",
+          "label": 6.87137459512405,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSNNWYSYSFQF",
+          "label": 6.555955204081924,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSNYYYGSGFAY",
+          "label": 6.890117856800899,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSRGSSSYMMDY",
+          "label": 6.247068488349481,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSSGSSYYGFDY",
+          "label": 6.175249543960697,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSSGYYYYGFVY",
+          "label": 6.803022864624881,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSTGSGFYSYDY",
+          "label": 6.481525543233364,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSYAFLYGRMDY",
+          "label": 6.724688645458189,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSYAYLYGSWDY",
+          "label": 6.991399828238083,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSYFRFTGDFFY",
+          "label": 6.86847757108693,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSYGSGSYSFDY",
+          "label": 6.305640532097788,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARTDIIYSGHFAY",
+          "label": 6.220252037085032,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARTGGSSYYAYDY",
+          "label": 6.045159541100713,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARTTSSIPSSFDY",
+          "label": 6.827484636989228,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARTVVGWYGRFDY",
+          "label": 7.196269829025456,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARVGGRGYYAYDY",
+          "label": 5.640847788553105,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARVGGYGYYSYDY",
+          "label": 6.772936407657174,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWARGAGYYWDY",
+          "label": 7.04774046340918,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWATALGYYWDY",
+          "label": 6.916891720805265,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWDSGGPYYFDS",
+          "label": 7.812479279163537,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWEGDGSYSMDY",
+          "label": 7.412738150307466,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWEGIGGYYFVY",
+          "label": 8.153044674980176,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWEGYGSYEFAY",
+          "label": 7.372122305420029,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWEQASVGSFGY",
+          "label": 6.646179905102587,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWERYGYYVLDV",
+          "label": 7.554395796726403,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGEFGPYYFDY",
+          "label": 8.034328028779893,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGDGSYYFDY",
+          "label": 7.584025588623434,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGFGYYYFDY",
+          "label": 7.508638306165728,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGGGYYFFDY",
+          "label": 7.580044251510242,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGGGYYFMDY",
+          "label": 7.978810700930062,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGPGYYAFVW",
+          "label": 8.092588639225413,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGSGYYAMDY",
+          "label": 7.422163658707256,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGTYYYAMDY",
+          "label": 7.184887341810187,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGYGFYAMDY",
+          "label": 9.2518119729938,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGYGGYYFDY",
+          "label": 7.686343653381969,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGYGWYGFDY",
+          "label": 6.909741947068683,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGYGYYWFDY",
+          "label": 7.330776126069194,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGYGYYYFDV",
+          "label": 7.488250288655017,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGGYGYYYMDV",
+          "label": 8.056505484093897,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGNVGYYVLDY",
+          "label": 7.176460566343141,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGSEAFYWFDY",
+          "label": 7.483596851552597,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGSGNYYEFDY",
+          "label": 7.283913146225168,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGSIGYYAFDH",
+          "label": 7.688246138944246,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGSYGYYYFDY",
+          "label": 7.510041520575165,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGTYTYGYFDY",
+          "label": 7.05487622987788,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYDYYYAMDY",
+          "label": 7.712198270069774,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYDYYYMMDV",
+          "label": 8.09963287134353,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYDYYYYFDV",
+          "label": 7.573488738635425,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGGAYYMDY",
+          "label": 8.073143291050307,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGGYYFFDY",
+          "label": 7.554395796726403,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGGYYYFDV",
+          "label": 7.62015082123717,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGGYYYFDY",
+          "label": 7.718966632752273,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGWSYYFDY",
+          "label": 7.54821356447571,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGYSYYFDV",
+          "label": 7.675717544702308,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYGYYYSFDY",
+          "label": 7.420788219768501,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYSGWYVMDY",
+          "label": 8.159266765388193,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYYGNYYFDY",
+          "label": 7.872895201635193,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYYGYYWFDY",
+          "label": 7.654626269440912,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWGYYGYYYFDV",
+          "label": 8.0195421077239,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWHYDVGFYFDY",
+          "label": 7.302160631781637,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWIDGYSYFMDY",
+          "label": 8.578396073130168,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWKGYGHYYMDY",
+          "label": 8.114073660198569,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLAFGYYAMDY",
+          "label": 7.775466937393914,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLAGYNYYFDV",
+          "label": 7.802995271976954,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLDYFYYAMDY",
+          "label": 7.312292720375181,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLGEGYYNFDY",
+          "label": 8.465973893943865,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLGSGYYWFDY",
+          "label": 7.962573502059376,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLRALGYYMDY",
+          "label": 7.79997073344623,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLRGLGYYWDY",
+          "label": 7.396747338018353,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLTGLSYNWDY",
+          "label": 7.698752911363789,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLYYGLYYFDV",
+          "label": 8.03526907894637,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWLYYGYYYFDY",
+          "label": 8.187086643357144,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWNYYGYYYFDY",
+          "label": 7.712646227285253,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWPFYGPYNYDY",
+          "label": 8.578396073130168,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWPGYGSYYMDV",
+          "label": 8.316052869248487,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWPPYYWWAFDY",
+          "label": 7.183228587666654,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWPYGYYYYMDY",
+          "label": 7.659952682338607,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWQGRSGYYMDY",
+          "label": 7.31578320486112,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRDGGYYYFDY",
+          "label": 7.534617148551582,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRGDGFYAMDY",
+          "label": 8.29413628771608,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRGDGGYYFDY",
+          "label": 7.882728704344236,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRGYGSYAMDV",
+          "label": 7.866461091629783,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRQDGAYYLDY",
+          "label": 8.090979145788845,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRYGGAYQFAL",
+          "label": 6.637310229273836,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWRYGYYYYMDY",
+          "label": 7.893809102736585,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWSGASFYAMDY",
+          "label": 7.318939756368188,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWSGGSLYALDY",
+          "label": 6.600845666041783,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWTAGYTYYMDY",
+          "label": 8.388276691992658,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWTERGFYSFDI",
+          "label": 8.032452023781138,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWVSGARYYMDV",
+          "label": 7.471083299722346,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWVYGYYYYFDY",
+          "label": 8.086186147616283,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWGGGAYYFDY",
+          "label": 7.826813731587726,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWGGGYYYFDY",
+          "label": 7.58989792335714,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWGYGYYYFAY",
+          "label": 6.854648183441539,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWTPANYPFLY",
+          "label": 6.876148359032914,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWYGGRNYFDI",
+          "label": 6.935055573961383,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWYGGYYFFDY",
+          "label": 7.863279432843593,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWYGGYYYFDY",
+          "label": 8.191114132640188,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWYGGYYYMDY",
+          "label": 8.174573882232178,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWWYYGYYYFDV",
+          "label": 8.330683119433887,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGFGGYYFDY",
+          "label": 7.971022294791222,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGGGYYYMDY",
+          "label": 7.926648297613099,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGLGSYGLTY",
+          "label": 6.65233829087838,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGQVFYAMDY",
+          "label": 7.729554091982037,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGYGGYYFDY",
+          "label": 8.129011186239424,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGYGYYAMDV",
+          "label": 7.621057301386562,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGYGYYFMDV",
+          "label": 7.9931062920521,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYGYGYYLFDV",
+          "label": 7.402304814074488,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYSGYYYAMDY",
+          "label": 7.137630062877117,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYWYGAYYFDY",
+          "label": 7.657577319177794,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGGAYYFDF",
+          "label": 7.483993769613952,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGGSYYFDY",
+          "label": 7.44648105985103,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGGYYAMDY",
+          "label": 7.696803942579511,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGHYYYMDY",
+          "label": 8.10902040301031,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGSYYYFDV",
+          "label": 7.494850021680094,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGTSYYFDV",
+          "label": 7.149047600206507,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGYAYYMDY",
+          "label": 7.791289980093599,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGYYYWFDV",
+          "label": 7.826813731587726,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYGYYYYFDV",
+          "label": 8.152427340857887,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYLGYYYFDY",
+          "label": 8.201349354554731,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGAYYFDY",
+          "label": 8.061480274823507,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGGYYFDV",
+          "label": 7.903437561625864,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGGYYFDY",
+          "label": 8.081445469449726,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGRYYFDY",
+          "label": 7.958607314841775,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGYYAMDV",
+          "label": 7.875169850586141,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGYYYFDV",
+          "label": 8.247183568811728,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWYYYGYYYMDV",
+          "label": 8.0695604052333,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYAHYGPYYFDF",
+          "label": 7.703334809738469,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYDPYGFYHLDY",
+          "label": 7.615467384505751,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYDYYGYYYFDY",
+          "label": 7.004584201457585,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYEAYGLYPFGY",
+          "label": 8.469800301796917,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYFYDHYYYFDV",
+          "label": 7.5269511949114625,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYFYDYYYYFDF",
+          "label": 8.148130399270233,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGARSGYAYEY",
+          "label": 7.345823458122039,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGAYSSYYFGY",
+          "label": 7.553307533628473,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGDADFYAFDP",
+          "label": 7.445874418486987,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGDAFIMSFGV",
+          "label": 7.17134010346468,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGDGTYYFFAH",
+          "label": 7.011887159731648,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGDGYYYYFAY",
+          "label": 8.136082623042139,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGDSYYYYFDY",
+          "label": 7.391473966422806,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGDYGYYYFDY",
+          "label": 7.441051554021961,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGDYYYYYDY",
+          "label": 7.24420134302617,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGGGRYYFDY",
+          "label": 7.707743928643524,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGGPSYRLSY",
+          "label": 6.613750803291077,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGGYYYYFDV",
+          "label": 7.503070351926786,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGGYYYYYDY",
+          "label": 7.239879214735432,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGLGGYTLAY",
+          "label": 7.367846516489368,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGLSYYSFDL",
+          "label": 7.235823867609669,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGRGYYSFDY",
+          "label": 7.581036169296377,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGRSSYYFDY",
+          "label": 6.589864140580731,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGSSNYYYDY",
+          "label": 6.35591608142317,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGSSYYYFDY",
+          "label": 7.012467797270161,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGSSYYYYDY",
+          "label": 7.140621495574399,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGSYFYYYSY",
+          "label": 8.136082623042139,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGYGGYYFDY",
+          "label": 7.853871964321762,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGYGNYWFDT",
+          "label": 7.375511637486551,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGGYGYYWFDY",
+          "label": 7.397940008672037,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGLGDWYYFAY",
+          "label": 8.522878745280337,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGLNHYYVYPY",
+          "label": 6.86867010595719,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGLYGSYYFRY",
+          "label": 7.1438755557577,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGNYYYYYFDY",
+          "label": 7.67778070526608,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGPYYYYAMDY",
+          "label": 7.384576047114056,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGRDGSYYFDY",
+          "label": 6.894489815230026,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGRNGSYSYDY",
+          "label": 7.4179366370882915,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGSGYYYYFDY",
+          "label": 7.804100347590766,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGSLTYYAMHY",
+          "label": 6.820735535660975,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGSRYYYYFDY",
+          "label": 7.804100347590766,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGSSYYYYFDY",
+          "label": 7.856985199745905,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGTGTYYYFLH",
+          "label": 7.374173286714289,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGVYPFYYFDY",
+          "label": 7.568636235841013,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGYDYYYYFDV",
+          "label": 7.301029995663981,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGYGAYYYFDY",
+          "label": 7.267525822718807,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGYGYYYYFDY",
+          "label": 7.407823242604133,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYGYYGPYYFDY",
+          "label": 7.844663962534939,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYHYRTIGSFGY",
+          "label": 6.435333935747911,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYIFGGPYYFDY",
+          "label": 7.443215217692975,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYLQLGPYYFDY",
+          "label": 7.832682665251823,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYLSAVYYYMDH",
+          "label": 8.041914151478915,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYLTAYQYFFYY",
+          "label": 7.586700235918748,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYLTDADFRLHY",
+          "label": 7.124533584133615,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYMRPAFYPFLY",
+          "label": 7.29362364416031,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYNPFDGFYFDV",
+          "label": 6.808269606637143,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYPGGGIYDFDP",
+          "label": 7.398918272215977,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYPNYGFYMFDY",
+          "label": 7.477425367308824,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYPSGYYYYFDY",
+          "label": 7.045130628933522,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYRDGYDYYFDY",
+          "label": 6.418824322981798,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYRGRGFYSFDY",
+          "label": 7.658367664221946,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYRGVWYYDFDN",
+          "label": 7.838631997765025,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYRGYVLYDFAY",
+          "label": 7.636952405478906,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYRYGYYYYMDV",
+          "label": 6.8228676829582255,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSAYGLYDFAY",
+          "label": 7.5934598195660445,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSGDSYYYYDY",
+          "label": 6.436257941704293,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSGSGGNAFAY",
+          "label": 6.063712511489185,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSGSSYYYYDY",
+          "label": 6.374019126688331,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSGYGLYPYAY",
+          "label": 7.759201228882668,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSSSGGSAFDY",
+          "label": 5.701939852521577,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSYYGGGAFDY",
+          "label": 6.719194071606333,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYSYYGGGYFDY",
+          "label": 6.3209811505990245,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYTSVGIYAFNY",
+          "label": 7.667561540084395,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYTYFGSFDFDY",
+          "label": 7.802443786846464,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYVGLGGYPLGY",
+          "label": 7.879097182385473,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYVTANTYSYDP",
+          "label": 7.07805354577059,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYWGLGGYYFDH",
+          "label": 7.783042792638903,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYWYGGYYYFDY",
+          "label": 7.706416486503883,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGGGGYYMDY",
+          "label": 7.102098125731772,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGSSSYYFAY",
+          "label": 7.217384067968396,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGVGPYSMDV",
+          "label": 7.721246399047171,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGYGGYWFAY",
+          "label": 9.008773924307503,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGYGGYWYDT",
+          "label": 8.086716098239581,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGYGGYYFDY",
+          "label": 8.094204119632131,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGYGGYYMDY",
+          "label": 8.003926345514724,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYGYGYYYFHY",
+          "label": 7.695078838099108,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYSDYSYTFSY",
+          "label": 6.950045851977953,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYSYGGYYFDY",
+          "label": 6.975309137644569,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYSYGQYAFDP",
+          "label": 7.711750774428014,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYWDYFYYFDY",
+          "label": 7.401647290130716,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYYDFGYYFDY",
+          "label": 7.369063880935808,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYYDYGYYFDV",
+          "label": 7.522878745280337,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYYDYYYYFDY",
+          "label": 8.073657553374344,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYYGVYYYFDY",
+          "label": 7.510041520575165,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYYYLDYYYFDY",
+          "label": 6.815649325953044,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASSGGSSSYSYSY",
+          "label": 5.799149501908922,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASSGGSSSYSYYY",
+          "label": 5.763256220640341,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASSGRLDLYDFRL",
+          "label": 6.768224676024905,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASVDLGGFYDFRY",
+          "label": 7.336299074610352,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASYGLDGYYYFDV",
+          "label": 7.7146677723561154,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASYGSGSYFSFPL",
+          "label": 7.268169579711838,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASYYAPGSYGFDP",
+          "label": 6.869601896347199,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATGLSPSGSNGPY",
+          "label": 6.352362787729886,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATGSGGGGFSYGY",
+          "label": 6.740167300936516,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATGYGYLLYSDHD",
+          "label": 6.766445507285477,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATSGSVDRYDYVY",
+          "label": 6.810565836598972,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATSGTASWQHYGV",
+          "label": 6.4922115705718575,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATYSTYYNYAFGI",
+          "label": 7.645891560852599,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATYYGPYYYAMDY",
+          "label": 6.891536458796405,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AVSGGSSSYSYQY",
+          "label": 5.615972922206005,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AVTDLDGLHSYRY",
+          "label": 7.632644078973981,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AVYGPYGGFSYDS",
+          "label": 7.150580586203101,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AWASGYGGYGMDY",
+          "label": 6.433586079379844,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AYMGSHTIYSFEH",
+          "label": 6.521433504406157,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SIWERTGQYSYTS",
+          "label": 7.567030709125595,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRIRRWGFYYFDY",
+          "label": 6.956362690407429,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRKGGDGFYGMDY",
+          "label": 6.596553451224123,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRRGGDYFYAMDY",
+          "label": 6.591353074344235,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRSGGDQFYAMDY",
+          "label": 6.573179800036645,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWDGDGNYAMDY",
+          "label": 6.621093599976739,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWEGDGKYAMDY",
+          "label": 7.442132038431978,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGADGFTAMDY",
+          "label": 6.551649298004096,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGDGFQHMDY",
+          "label": 6.404514801016897,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGDGFTFMDY",
+          "label": 6.5074072167442925,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGEGYHAMDY",
+          "label": 6.884023570545183,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGPGLYAMDY",
+          "label": 8.296708621881338,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGRGFYAMDY",
+          "label": 8.455931955649724,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGVGKYAMDY",
+          "label": 7.505845405981558,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGGWGFYSMDY",
+          "label": 8.97061622231479,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGLDGVYAMDY",
+          "label": 6.520323937131855,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGTDGVYAMDY",
+          "label": 6.63712186421107,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWGVDGYYAMDY",
+          "label": 7.41150419899279,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWHGYGFYAMDY",
+          "label": 8.694648630553376,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRWVGDGSYAMDY",
+          "label": 7.380176499542722,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYGRGVYYYFDY",
+          "label": 7.098759697926691,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYGYSGYGAFDY",
+          "label": 5.977951235241623,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYSYSGGGSFDY",
+          "label": 6.441471423037927,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYSYSGGHAFAY",
+          "label": 6.669992299127241,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYSYYGGGGFDY",
+          "label": 6.302997456541026,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYYAGGWYYFDY",
+          "label": 7.929962133392245,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRYYDYNYYFMDY",
+          "label": 6.8494584586259135,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SYPDFGYYVYFAY",
+          "label": 7.434624497285927,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TLWGLPMMYVYFF",
+          "label": 8.036212172654444,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TPYDVLGSYYFRV",
+          "label": 7.94692155651658,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRFIDNGPYYFDY",
+          "label": 8.049635145623878,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRNVVNLYYSYDS",
+          "label": 6.982716178439982,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRNYYDYYYYFDY",
+          "label": 8.122628654130226,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRSGELYGYFHDM",
+          "label": 6.921217039803037,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWAFDGVYYMDY",
+          "label": 7.891434976267166,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWGGYGYYAMDY",
+          "label": 7.946537395074545,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWGYDYWYFFDY",
+          "label": 7.599116784451637,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWGYYGYYAMDY",
+          "label": 8.341035157335565,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWLEGLSYFMDY",
+          "label": 8.619788758288394,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWLYYSAYYFDF",
+          "label": 7.704432900037521,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWNYDGAYFFDY",
+          "label": 7.658961368322477,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWRWGYGYYFDF",
+          "label": 7.107126593111235,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRWYYFIYYYMDV",
+          "label": 9.060480747381382,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYASGYFYAFDY",
+          "label": 8.03905380426617,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYDYDYYYYFDY",
+          "label": 7.913284336055118,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYEYQDYYHFDY",
+          "label": 7.733768303310107,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYFFNGWYYFDV",
+          "label": 9.0268721464003,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYFGAYWYWMDY",
+          "label": 7.22870655737094,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYGGRGAYYFDV",
+          "label": 8.595166283380062,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYGGYGYYYMDY",
+          "label": 7.920818753952375,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYGSFGYYALDS",
+          "label": 7.239351380418644,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYGSFHYYYFDV",
+          "label": 8.05898575629443,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYGYGGPYWFDY",
+          "label": 7.843450848668219,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYLHDYYYYFDY",
+          "label": 7.643974142806877,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYRGAHGYYFDY",
+          "label": 7.450138811528057,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYRGPYYYYFDP",
+          "label": 7.918292729902651,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYSRSYYYGLDP",
+          "label": 7.096367483915762,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYSYYGYHAMDY",
+          "label": 6.451549158419995,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYGDGYYDFDY",
+          "label": 7.534022631714177,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYGGYGYYFDY",
+          "label": 7.381219975493785,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYSGHYYSFDY",
+          "label": 7.249723084846007,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYYGGPYYFDY",
+          "label": 8.52432881167557,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYYGLYYYMDV",
+          "label": 7.888065723667318,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYYGSGYFFDY",
+          "label": 7.622147580993245,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRYYYYGSYHFDY",
+          "label": 8.16621562534352,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TSIFSGGYYGLDS",
+          "label": 8.067019178076801,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VLSRIVVSYFYDY",
+          "label": 6.961777361631282,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRLGDYGGYAMDY",
+          "label": 6.881074247174223,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRSGYDYYSWFAY",
+          "label": 6.332229614493109,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRWGGYGYYAMDY",
+          "label": 7.870310107800699,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRWGRYGVYYFDY",
+          "label": 7.380593589113222,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRWGVGAYYNFDY",
+          "label": 7.91721462968355,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRWYGYGYYYMDY",
+          "label": 7.795608668080701,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYFYDGNYYFDL",
+          "label": 7.639595945270061,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYGFDGSYYFDP",
+          "label": 7.880744110722063,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYGFYGYYYFDY",
+          "label": 7.782516055786094,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYGGWGFWYFDY",
+          "label": 8.170053304058364,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYGSDVYYYFDI",
+          "label": 7.701802132890185,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYGYGDYYYFDY",
+          "label": 7.6006724678413216,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYPEVYGYYFDY",
+          "label": 7.440332721611942,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRYYGDGGYYFDY",
+          "label": 8.271646217978772,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VYYYEAGSYYFDG",
+          "label": 7.148497047229456,
+          "n_measurements": 1
+        }
+      ]
+    },
+    "2fjg": {
+      "structure": "data\\abbibench_structural_audit_v1\\structures\\2fjg_hlv.pdb",
+      "heavy": "H",
+      "light": "L",
+      "antigen": [
+        "V"
+      ],
+      "region_spec": "H:97-109",
+      "label_source": "AbBiBench binding_score (2fjg)",
+      "n_variants": 247,
+      "variants": [
+        {
+          "h3": "AAFVFFLPYAMDY",
+          "label": -0.4406185524764135,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ACFVFFLPYAMDY",
+          "label": -0.366680224407838,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ADFVFFLPYAMDY",
+          "label": -0.6873385017918097,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AEFVFFLPYAMDY",
+          "label": -0.7093800322249009,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AFFVFFLPYAMDY",
+          "label": -0.6180850435203714,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AGFVFFLPYAMDY",
+          "label": -0.1426076933841829,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AHFVFFLPYAMDY",
+          "label": -0.2128557972366273,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AIFVFFLPYAMDY",
+          "label": -0.614085058385097,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKFVFFLPYAMDY",
+          "label": -0.0290875250276228,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ALFVFFLPYAMDY",
+          "label": -0.7635982539188614,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AMFVFFLPYAMDY",
+          "label": -0.6119194662667511,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ANFVFFLPYAMDY",
+          "label": -0.2457517055099535,
+          "n_measurements": 1
+        },
+        {
+          "h3": "APFVFFLPYAMDY",
+          "label": -0.6644911309180057,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AQFVFFLPYAMDY",
+          "label": -0.4684370477178446,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARAVFFLPYAMDY",
+          "label": -0.4550812597137986,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARCVFFLPYAMDY",
+          "label": -0.7193642531510085,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARDVFFLPYAMDY",
+          "label": 0.125192385000766,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AREVFFLPYAMDY",
+          "label": 0.4552850273393055,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFAFFLPYAMDY",
+          "label": -0.0774743829934484,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFCFFLPYAMDY",
+          "label": -0.6468802722753886,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFDFFLPYAMDY",
+          "label": 0.0676219862331537,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFEFFLPYAMDY",
+          "label": 0.126165317017258,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFFFFLPYAMDY",
+          "label": -0.201320429340201,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFGFFLPYAMDY",
+          "label": -0.0399167609931352,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFHFFLPYAMDY",
+          "label": -0.0292173219069303,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFIFFLPYAMDY",
+          "label": -0.0653055037024682,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFKFFLPYAMDY",
+          "label": 0.0864438659108714,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFLFFLPYAMDY",
+          "label": -0.1877025356929474,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFMFFLPYAMDY",
+          "label": -0.2252152484731514,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFNFFLPYAMDY",
+          "label": 0.0073886118840969,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFPFFLPYAMDY",
+          "label": 0.0703329345266644,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFQFFLPYAMDY",
+          "label": -0.0764062575859596,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFRFFLPYAMDY",
+          "label": 0.0146855447518812,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFSFFLPYAMDY",
+          "label": 0.0310484738242045,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFTFFLPYAMDY",
+          "label": -0.0082274005394829,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVAFLPYAMDY",
+          "label": 0.1184590023503633,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVCFLPYAMDY",
+          "label": -0.5687194772841883,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVDFLPYAMDY",
+          "label": 0.1699819884027761,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVEFLPYAMDY",
+          "label": 0.1336103464078892,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFALPYAMDY",
+          "label": 0.1915852752440686,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFCLPYAMDY",
+          "label": -0.3962130391159561,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFDLPYAMDY",
+          "label": 0.0893294049491043,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFELPYAMDY",
+          "label": 0.0966210183459384,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFAPYAMDY",
+          "label": 0.037635809213456,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFCPYAMDY",
+          "label": -0.5546643448230555,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFDPYAMDY",
+          "label": 0.1155295174783164,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFEPYAMDY",
+          "label": 0.0268388778905893,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFFPYAMDY",
+          "label": -0.0632451876135879,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFGPYAMDY",
+          "label": -0.2326643597703179,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFHPYAMDY",
+          "label": -0.0291796243721183,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFIPYAMDY",
+          "label": -0.017008601025097,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFKPYAMDY",
+          "label": 0.1104900726674053,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLAYAMDY",
+          "label": -0.4071746786698173,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLCYAMDY",
+          "label": -1.305955901868219,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLDYAMDY",
+          "label": -0.4349090651069578,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLEYAMDY",
+          "label": -0.4737077483771836,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLFYAMDY",
+          "label": -0.8634427755719548,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLGYAMDY",
+          "label": -0.2730785147324987,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLHYAMDY",
+          "label": -0.3895019533057872,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLIYAMDY",
+          "label": -0.949342697981225,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLKYAMDY",
+          "label": -0.3233173680529101,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLLYAMDY",
+          "label": -0.5662705628984372,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLMYAMDY",
+          "label": -0.8873705413241196,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLNYAMDY",
+          "label": -0.2909463914006758,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPAAMDY",
+          "label": 0.0388297990852127,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPCAMDY",
+          "label": -0.602212743008765,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPDAMDY",
+          "label": 0.0053279217353439,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPEAMDY",
+          "label": -0.1669033610791625,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPFAMDY",
+          "label": 0.1222519913435303,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPGAMDY",
+          "label": 0.163181225455869,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPHAMDY",
+          "label": -0.1825709933136178,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPIAMDY",
+          "label": -0.0786962001984164,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPKAMDY",
+          "label": -0.0554164637348184,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPLAMDY",
+          "label": 0.0093768822834969,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPMAMDY",
+          "label": -0.0049898718233881,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPNAMDY",
+          "label": 0.0235052740967433,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPPAMDY",
+          "label": -0.1282133310036145,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPQAMDY",
+          "label": -0.1299875157636853,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPRAMDY",
+          "label": -0.0293426172438886,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPSAMDY",
+          "label": -0.042745937101572,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPTAMDY",
+          "label": -0.0763709045630629,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPVAMDY",
+          "label": 0.0114657387854421,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPWAMDY",
+          "label": 0.0169595723600122,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAADY",
+          "label": 0.0752010552499543,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYACDY",
+          "label": -0.652597431273872,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYADDY",
+          "label": -0.431129808921575,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAEDY",
+          "label": -0.2409122856788193,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAFDY",
+          "label": -0.005534588129194,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAGDY",
+          "label": -0.0052716820773309,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAHDY",
+          "label": 0.0716969399387543,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAIDY",
+          "label": 0.0186545591686268,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAKDY",
+          "label": -0.3817557583054788,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYALDY",
+          "label": 0.2698958283834859,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMAY",
+          "label": -0.5606594850642458,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMCY",
+          "label": -1.485149277551501,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDA",
+          "label": 0.214965583390875,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDC",
+          "label": -0.3633447180442134,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDD",
+          "label": -0.0079327114697507,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDE",
+          "label": 0.1965725294009236,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDF",
+          "label": 0.0820782043776431,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDG",
+          "label": 0.0257709112162172,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDH",
+          "label": 0.2722738666715989,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDI",
+          "label": 0.159742307191027,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDK",
+          "label": 0.223554076634877,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDL",
+          "label": 0.0875586499742892,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDM",
+          "label": 0.1412362171902786,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDN",
+          "label": 0.2447733957130011,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDP",
+          "label": -0.0103678039428387,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDQ",
+          "label": 0.2097891379625513,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDR",
+          "label": 0.1986134256534446,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDS",
+          "label": 0.2958985843531117,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDT",
+          "label": 0.3146425747169704,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDV",
+          "label": 0.1105224356195612,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMDW",
+          "label": 0.093836527431088,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMEY",
+          "label": -0.093902622389717,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMFY",
+          "label": -1.906846862925487,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMGY",
+          "label": -0.3306122236632095,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMHY",
+          "label": -0.6257572570879153,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMIY",
+          "label": -1.445812428117248,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMKY",
+          "label": -0.6586105675698511,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMLY",
+          "label": -1.234366438879538,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMMY",
+          "label": -1.49784142810253,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMNY",
+          "label": -0.1959939663059072,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMPY",
+          "label": -0.4607381060281186,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMQY",
+          "label": -0.665941197313908,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMRY",
+          "label": -0.6075385522962174,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMSY",
+          "label": -0.5700603828284279,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMTY",
+          "label": -0.8023597516159892,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMVY",
+          "label": -1.38328472728601,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMWY",
+          "label": -1.326106218427756,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAMYY",
+          "label": -0.965043617480438,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYANDY",
+          "label": -0.063384585603783,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAPDY",
+          "label": -0.3580096685206323,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAQDY",
+          "label": -0.2362123161869963,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYARDY",
+          "label": -0.5187868385689531,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYASDY",
+          "label": 0.0815531900034055,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYATDY",
+          "label": 0.0507653604421916,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAVDY",
+          "label": -0.051821433060199,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAWDY",
+          "label": -0.0733485746049123,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYAYDY",
+          "label": 0.2678476288422402,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYCMDY",
+          "label": -0.7128507531949737,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYDMDY",
+          "label": -0.4866920659686404,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYEMDY",
+          "label": -0.5117086106758846,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYFMDY",
+          "label": -0.0812410299052998,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYGMDY",
+          "label": 0.0971209468069294,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYHMDY",
+          "label": -0.1146246762493247,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYIMDY",
+          "label": -0.2051956129481221,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYKMDY",
+          "label": -0.123812418647173,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYLMDY",
+          "label": -0.2863204308557589,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYMMDY",
+          "label": -0.1278900749699717,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYNMDY",
+          "label": -0.4236859636625347,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYPMDY",
+          "label": -0.1532816172281613,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYQMDY",
+          "label": -0.2086737958798306,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYRMDY",
+          "label": -0.2208950845833649,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYSMDY",
+          "label": 0.2440100250657245,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYTMDY",
+          "label": 0.0460147407872123,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYVMDY",
+          "label": -0.0071388548826503,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYWMDY",
+          "label": -0.43168318971354,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLPYYMDY",
+          "label": -0.1630288856142033,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLQYAMDY",
+          "label": -0.2505173104080139,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLRYAMDY",
+          "label": -0.3066261192912839,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLSYAMDY",
+          "label": -0.3235331883775894,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLTYAMDY",
+          "label": -0.3817490727002022,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLVYAMDY",
+          "label": -0.8636196815985798,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLWYAMDY",
+          "label": -0.7901168826440226,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFLYYAMDY",
+          "label": -0.8183478570122924,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFMPYAMDY",
+          "label": 0.1025428621481195,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFNPYAMDY",
+          "label": 0.1261799964740695,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFPPYAMDY",
+          "label": -0.066318435892415,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFQPYAMDY",
+          "label": 0.0284154482889854,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFRPYAMDY",
+          "label": 0.1015183850665,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFSPYAMDY",
+          "label": 0.0391312578981056,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFTPYAMDY",
+          "label": 0.0568867013379492,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFVPYAMDY",
+          "label": -0.0330496130753012,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFWPYAMDY",
+          "label": -0.0650937906310497,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFFYPYAMDY",
+          "label": -0.0608854141097409,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFGLPYAMDY",
+          "label": 0.1084328712154781,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFHLPYAMDY",
+          "label": 0.1318229638907486,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFILPYAMDY",
+          "label": -0.0355039421778932,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFKLPYAMDY",
+          "label": 0.1274758206692486,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFLLPYAMDY",
+          "label": 0.0373038417630776,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFMLPYAMDY",
+          "label": 0.2002486314871771,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFNLPYAMDY",
+          "label": 0.1481296729924206,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFPLPYAMDY",
+          "label": 0.1157531089525398,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFQLPYAMDY",
+          "label": 0.0473262093908539,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFRLPYAMDY",
+          "label": 0.1711326978976274,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFSLPYAMDY",
+          "label": 0.1396021023193533,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFTLPYAMDY",
+          "label": 0.1387482088818747,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFVLPYAMDY",
+          "label": 0.0697616936852625,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFWLPYAMDY",
+          "label": 0.0453251938028795,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVFYLPYAMDY",
+          "label": 0.1293249204163063,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVGFLPYAMDY",
+          "label": 0.1823490669266095,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVHFLPYAMDY",
+          "label": 0.2389079746853792,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVIFLPYAMDY",
+          "label": -0.2424096949718306,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVKFLPYAMDY",
+          "label": 0.0820297367120584,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVLFLPYAMDY",
+          "label": -0.364237354373267,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVMFLPYAMDY",
+          "label": -0.1264550513439827,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVNFLPYAMDY",
+          "label": 0.1631230812111764,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVPFLPYAMDY",
+          "label": 0.0231311203328756,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVQFLPYAMDY",
+          "label": -0.0025846903830382,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVRFLPYAMDY",
+          "label": 0.0719161689163836,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVSFLPYAMDY",
+          "label": 0.1866492464885889,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVTFLPYAMDY",
+          "label": 0.1645907233938907,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVVFLPYAMDY",
+          "label": 0.0100966933786497,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVWFLPYAMDY",
+          "label": 0.1968776590939954,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFVYFLPYAMDY",
+          "label": 0.099311491512337,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFWFFLPYAMDY",
+          "label": -0.6445848297847051,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARFYFFLPYAMDY",
+          "label": -0.1758524916596088,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARGVFFLPYAMDY",
+          "label": -0.5160793328544729,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARHVFFLPYAMDY",
+          "label": -0.4076248828155065,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARIVFFLPYAMDY",
+          "label": -0.2162831728675215,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARKVFFLPYAMDY",
+          "label": 0.2976571334646926,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARLVFFLPYAMDY",
+          "label": -0.0102200349105241,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARMVFFLPYAMDY",
+          "label": -0.0725500463333092,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARNVFFLPYAMDY",
+          "label": -0.2902048717381066,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARPVFFLPYAMDY",
+          "label": -0.5872705856585221,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARQVFFLPYAMDY",
+          "label": 0.0808428147235696,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARRVFFLPYAMDY",
+          "label": 0.2389525160769366,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARSVFFLPYAMDY",
+          "label": -0.295066427900281,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARTVFFLPYAMDY",
+          "label": -0.0687972541764932,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARVVFFLPYAMDY",
+          "label": -0.1893305769826802,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARWVFFLPYAMDY",
+          "label": 0.0288482280659508,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ARYVFFLPYAMDY",
+          "label": 0.2575163392358155,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ASFVFFLPYAMDY",
+          "label": -0.104707789200896,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ATFVFFLPYAMDY",
+          "label": -0.1700806179307615,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AVFVFFLPYAMDY",
+          "label": -0.643873497711131,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AWFVFFLPYAMDY",
+          "label": -1.001932106514441,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AYFVFFLPYAMDY",
+          "label": -0.6872052844892794,
+          "n_measurements": 1
+        },
+        {
+          "h3": "CRFVFFLPYAMDY",
+          "label": -0.9053077196127484,
+          "n_measurements": 1
+        },
+        {
+          "h3": "DRFVFFLPYAMDY",
+          "label": -0.6596922480570147,
+          "n_measurements": 1
+        },
+        {
+          "h3": "ERFVFFLPYAMDY",
+          "label": -0.6944543543102253,
+          "n_measurements": 1
+        },
+        {
+          "h3": "FRFVFFLPYAMDY",
+          "label": -1.24326883368017,
+          "n_measurements": 1
+        },
+        {
+          "h3": "GRFVFFLPYAMDY",
+          "label": -0.1003842371281992,
+          "n_measurements": 1
+        },
+        {
+          "h3": "HRFVFFLPYAMDY",
+          "label": -0.4549558075402126,
+          "n_measurements": 1
+        },
+        {
+          "h3": "IRFVFFLPYAMDY",
+          "label": -0.9874564969508244,
+          "n_measurements": 1
+        },
+        {
+          "h3": "KRFVFFLPYAMDY",
+          "label": -0.7640902824496764,
+          "n_measurements": 1
+        },
+        {
+          "h3": "LRFVFFLPYAMDY",
+          "label": -0.7310481565924273,
+          "n_measurements": 1
+        },
+        {
+          "h3": "MRFVFFLPYAMDY",
+          "label": -0.7979949462120686,
+          "n_measurements": 1
+        },
+        {
+          "h3": "NRFVFFLPYAMDY",
+          "label": -0.1402819312125421,
+          "n_measurements": 1
+        },
+        {
+          "h3": "PRFVFFLPYAMDY",
+          "label": -0.6596922480570147,
+          "n_measurements": 1
+        },
+        {
+          "h3": "QRFVFFLPYAMDY",
+          "label": -0.8062030907056129,
+          "n_measurements": 1
+        },
+        {
+          "h3": "RRFVFFLPYAMDY",
+          "label": -1.047112498868807,
+          "n_measurements": 1
+        },
+        {
+          "h3": "SRFVFFLPYAMDY",
+          "label": -0.070882048278647,
+          "n_measurements": 1
+        },
+        {
+          "h3": "TRFVFFLPYAMDY",
+          "label": -0.0618357556914443,
+          "n_measurements": 1
+        },
+        {
+          "h3": "VRFVFFLPYAMDY",
+          "label": -0.2315938713074661,
+          "n_measurements": 1
+        },
+        {
+          "h3": "WRFVFFLPYAMDY",
+          "label": -0.9564434457476516,
+          "n_measurements": 1
+        },
+        {
+          "h3": "YRFVFFLPYAMDY",
+          "label": -0.7746467637455755,
+          "n_measurements": 1
+        }
+      ]
+    },
+    "AAYL49": {
+      "structure": "data\\abbibench_structural_audit_v1\\structures\\AAYL49_bca.pdb",
+      "heavy": "B",
+      "light": "C",
+      "antigen": [
+        "A"
+      ],
+      "region_spec": "B:97-107",
+      "label_source": "9 - median(original log10 estimated Kd in nM)",
+      "n_variants": 281,
+      "variants": [
+        {
+          "h3": "AKARAKGTFDV",
+          "label": 7.307047732817429,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKCRAAGHFMS",
+          "label": 8.138193443110977,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKCRAAGTFDS",
+          "label": 7.537324786379246,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKCRSAGTFDI",
+          "label": 7.408203510130251,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKDDAPGTFDS",
+          "label": 8.090025988449069,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKDRFVGTFDS",
+          "label": 7.358939147828124,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKDRSAGTFDS",
+          "label": 7.65402777957847,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKERAAGTVDS",
+          "label": 7.623816747755551,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKERAAQTFWS",
+          "label": 7.359474412112599,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKERARGTFDS",
+          "label": 8.519305989290325,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGAAAGTFDS",
+          "label": 8.316093065374767,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGAPAGTFDS",
+          "label": 7.7580732647957635,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGCAAGTFDD",
+          "label": 7.552538866659745,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGCAAGTFDS",
+          "label": 6.951205595957344,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGCKAGTFDS",
+          "label": 7.3826773417629035,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGDAAVTFDS",
+          "label": 6.886166207903219,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGDAAYTFQS",
+          "label": 7.686827344565119,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGDAMHTFDS",
+          "label": 8.101145466247816,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGEAAETFDS",
+          "label": 5.559576266710986,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGEAAGTFDS",
+          "label": 8.94804893699164,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGEAAGTFDW",
+          "label": 8.112749773344708,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGEAAGTFLS",
+          "label": 6.3556547038741105,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGEDAGFFDS",
+          "label": 8.442115192104003,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGFAAGTFDS",
+          "label": 7.6454835377739965,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGFDAGTFDS",
+          "label": 7.133408593732643,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGFGAGTFDG",
+          "label": 6.597976685640878,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGAAGTFDI",
+          "label": 6.477706965729395,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGAAGTFDL",
+          "label": 8.203604228365553,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGAAGTFDS",
+          "label": 7.225905187215275,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGAHGTFRS",
+          "label": 8.335624185653275,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGARGTWDS",
+          "label": 8.06995437947052,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGIAGTFDS",
+          "label": 8.222939775900224,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGHAAGTFDA",
+          "label": 7.985617568017686,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGHAAGTFDI",
+          "label": 8.326091063384238,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGHAAGWFDS",
+          "label": 6.0972209477901185,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGHAAPTFDK",
+          "label": 8.286512908461058,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGHSAGWFDS",
+          "label": 7.330618589103874,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGIAAAIFDS",
+          "label": 8.821084866706629,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGIGAGTFDS",
+          "label": 7.918550920446027,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGINAGDFDS",
+          "label": 7.961125525533657,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGKAAGTFDS",
+          "label": 8.313190349533425,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGKAAGYFIS",
+          "label": 7.799088388120817,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGKAPGTFDV",
+          "label": 7.238953282191934,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGKSAGTFSS",
+          "label": 8.476648868361048,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGLAAGGFRS",
+          "label": 7.0450336405089065,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGLAAGMFDM",
+          "label": 7.711063722957558,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGLAAWTADS",
+          "label": 6.126855675823126,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGMAAGSFGS",
+          "label": 4.391325790174459,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGMAAGTFDS",
+          "label": 7.807890021407895,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGMAGGTFDS",
+          "label": 7.599866834493966,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGNNAGTFDS",
+          "label": 7.955459730797672,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGPAAGTFDS",
+          "label": 8.089141287195392,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGPAAGTFTC",
+          "label": 7.694620880668417,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGPAAGTFWD",
+          "label": 7.075328086857544,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGQAAGTFAS",
+          "label": 7.259119910257356,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGQAAGTTDS",
+          "label": 6.891131698449982,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGQATGTFDG",
+          "label": 8.427248299922734,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAADAFDS",
+          "label": 4.853009222676231,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAFTFDQ",
+          "label": 8.455376566139126,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGCFDS",
+          "label": 7.457426839348308,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGCFPW",
+          "label": 8.571051035630722,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGGADK",
+          "label": 7.036919282239076,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGGFDY",
+          "label": 7.167630997132354,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGGFRS",
+          "label": 8.574243411252208,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGHAGS",
+          "label": 6.349449592314851,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGHFDS",
+          "label": 7.694796617530578,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGIFDS",
+          "label": 7.4645682383123155,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGKFDS",
+          "label": 7.8314891844580945,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGLFDS",
+          "label": 8.258672558123196,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGMFDS",
+          "label": 8.307925725973208,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGNFDS",
+          "label": 6.9071310137630135,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGQTRS",
+          "label": 7.462514200211036,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGSFDS",
+          "label": 7.803893897206963,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGSFMS",
+          "label": 7.382119580224151,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGSYDS",
+          "label": 7.488523607916692,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTADS",
+          "label": 7.043339119638926,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTCPS",
+          "label": 7.652306566012902,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTEDS",
+          "label": 4.815335856721384,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTEFS",
+          "label": 7.042407942779752,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFAS",
+          "label": 6.827257770779097,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDA",
+          "label": 7.9798804319272705,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDC",
+          "label": 6.904898248787813,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDG",
+          "label": 6.703170648889996,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDH",
+          "label": 7.441006593858839,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDK",
+          "label": 7.542898019569925,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDN",
+          "label": 7.218793319014923,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDQ",
+          "label": 8.027987311663004,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDR",
+          "label": 7.3364906255516384,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDV",
+          "label": 6.799586734723583,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFDW",
+          "label": 7.033898107319555,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFED",
+          "label": 8.238696566472862,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFGS",
+          "label": 8.021760864951306,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFHH",
+          "label": 8.197938712162433,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFHS",
+          "label": 8.497401901572921,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFHT",
+          "label": 8.510734900934002,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFIS",
+          "label": 7.744353738906685,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFKS",
+          "label": 8.01653308760238,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFLQ",
+          "label": 8.438846996085363,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFNS",
+          "label": 7.0602516963566595,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFPS",
+          "label": 7.729537690488183,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFSS",
+          "label": 7.238907860676255,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFTH",
+          "label": 8.163537029936528,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFTS",
+          "label": 7.716875404721998,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFVS",
+          "label": 7.441174196900592,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFWS",
+          "label": 8.13391432422274,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTFYS",
+          "label": 8.203302282960223,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTGDS",
+          "label": 8.08515160445375,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTHDS",
+          "label": 6.84488631529798,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTKDS",
+          "label": 5.7225015071918275,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTLDS",
+          "label": 7.154318620162508,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTMDM",
+          "label": 4.908954016082252,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTNDS",
+          "label": 7.13097573622677,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTNDT",
+          "label": 7.784555343836368,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTPPS",
+          "label": 8.232731712410171,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTRDR",
+          "label": 7.147429066579138,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTRDS",
+          "label": 6.852847221226639,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTREC",
+          "label": 7.404472924486466,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTTDS",
+          "label": 6.20826562114161,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTTMG",
+          "label": 7.624976086745546,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTVDS",
+          "label": 7.011179628375245,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTWDS",
+          "label": 7.141709889243055,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGTYDS",
+          "label": 7.980036888952556,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAGYMDS",
+          "label": 6.291550710279889,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAITSFS",
+          "label": 8.585816683470826,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAKRFDV",
+          "label": 8.435106929485356,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAKTFDS",
+          "label": 7.9067968879245605,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAKTFNS",
+          "label": 4.421394954618515,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAKTFQA",
+          "label": 7.313927992727198,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAMTVDG",
+          "label": 5.71849264696476,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAANKIDS",
+          "label": 7.6020716842746445,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAANTFDS",
+          "label": 7.843567189640405,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAPKFRS",
+          "label": 4.254994331600819,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAPTEDS",
+          "label": 6.540686480766418,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAARTFDS",
+          "label": 7.52650431147247,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAARTSTS",
+          "label": 7.727044041732778,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAASTCDS",
+          "label": 7.84472625182015,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAASTFDQ",
+          "label": 6.693328273122798,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAASTFDS",
+          "label": 7.81953671460845,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAATSKDS",
+          "label": 7.058473735260796,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAATTFDK",
+          "label": 7.597845432639586,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAATTFDS",
+          "label": 7.526112812408259,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAATTQDS",
+          "label": 7.1173528619282145,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAWIFDN",
+          "label": 8.293742977352887,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAAYTWDP",
+          "label": 8.34581168779535,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRACGVFDC",
+          "label": 8.065574369843738,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRADGTFDS",
+          "label": 6.416382097535444,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAEGAFDS",
+          "label": 7.909784514127338,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAFGTFDN",
+          "label": 6.48727810220676,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAGGTFDS",
+          "label": 7.55687976136962,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAGQGFDS",
+          "label": 7.236319319754438,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAIGTFDS",
+          "label": 6.634594813600536,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRALGTFIF",
+          "label": 5.384921044146145,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRALQTFDA",
+          "label": 8.297006333945985,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAMGQFDE",
+          "label": 7.364756918277418,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAMGTFDS",
+          "label": 8.281325926238495,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAMGTFWV",
+          "label": 7.859278366157946,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRANGPFDS",
+          "label": 5.4578470878568535,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRANGTFDS",
+          "label": 8.188036489558431,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRANGVPDS",
+          "label": 7.228818959642124,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGAFRS",
+          "label": 7.163743138514283,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGPTDS",
+          "label": 7.220050105583036,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGTFDI",
+          "label": 7.485638984487204,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGTFDP",
+          "label": 8.052127486227734,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGTFDS",
+          "label": 8.120563154888023,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGTFTH",
+          "label": 8.37930831250487,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAPGTTDV",
+          "label": 8.359684363977816,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAQGTFDS",
+          "label": 8.491616642137693,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRASGTFDS",
+          "label": 7.823402870366918,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRASGTFRS",
+          "label": 7.204028638723477,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRASGTQDS",
+          "label": 7.580156802997248,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRATGHADS",
+          "label": 7.297157490000405,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAVGNFQS",
+          "label": 5.929730482944423,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAVGTFDS",
+          "label": 7.618633987151773,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAWVTMDS",
+          "label": 8.070712261290012,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAYGTFDS",
+          "label": 8.675413569997666,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAYGTVVS",
+          "label": 7.806188333954239,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAYITFDS",
+          "label": 7.651919611050014,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRAYQTFDS",
+          "label": 5.982004985345041,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRCAGRFCS",
+          "label": 8.532029195018252,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRCAGTFDS",
+          "label": 7.496524168906678,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRCRGVFDS",
+          "label": 7.195376834267465,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRDAGTFDF",
+          "label": 7.516683555307271,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRDAGTFDS",
+          "label": 7.869966712060544,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGREAGFFFS",
+          "label": 8.265142674327778,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGREAGTFDN",
+          "label": 8.867808327122075,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGREAGTFDS",
+          "label": 6.637638589818092,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGREALTFDE",
+          "label": 7.965901531174952,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGREAPTFDS",
+          "label": 5.135769573646323,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRFAGTFDS",
+          "label": 7.6119595490162215,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRFSGTIDS",
+          "label": 8.372328609536982,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRGAGTKDS",
+          "label": 8.277474196235554,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRGAGWVDS",
+          "label": 8.29348901918962,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHAGQFDT",
+          "label": 7.89325269251289,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHAGTFDL",
+          "label": 7.879799385297941,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHAGTFDS",
+          "label": 7.673539218191822,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHAGTFIF",
+          "label": 7.177692493871195,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHAGTFLT",
+          "label": 7.3447597374811995,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHKGTFDS",
+          "label": 7.458294662872886,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRHVGTFDS",
+          "label": 7.639140644480095,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRIAGTFDS",
+          "label": 8.275392931951574,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRIAGTFSS",
+          "label": 7.910559280178042,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRKAGTFDS",
+          "label": 6.788994369045367,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRKAGTSDS",
+          "label": 6.830242288582767,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRLAGTFDS",
+          "label": 7.628626613421405,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRLAGTQDY",
+          "label": 7.487558761273105,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRLAGTVNS",
+          "label": 8.95612615176091,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRMAGTFDS",
+          "label": 8.618799014704901,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRNAGTFDS",
+          "label": 8.441358467590838,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRNAGTGDV",
+          "label": 7.902041136920591,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRNTGYFDS",
+          "label": 7.756606956371012,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRPAGTFDS",
+          "label": 8.424405505624852,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRPWGTFDN",
+          "label": 4.338175556358298,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRQAGTFDV",
+          "label": 8.27487766605203,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRQAGTVDS",
+          "label": 7.581271144071762,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRRAITFDS",
+          "label": 7.384931875397497,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRRPGTFDS",
+          "label": 6.540482386660055,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRSAGTFRS",
+          "label": 8.0518959094644,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRTAGTFDS",
+          "label": 7.54886735087462,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRTAGTFNS",
+          "label": 8.268965825302038,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRVAGMFDS",
+          "label": 7.782693592925714,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRVAGTFDS",
+          "label": 8.586815262044167,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRVAGTFES",
+          "label": 8.496437008974347,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRVAYTFDG",
+          "label": 8.192953484337275,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRVWGTFDP",
+          "label": 8.177316930490658,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRWAGTFDS",
+          "label": 7.914455495479917,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRWAGTGDS",
+          "label": 8.366730082072621,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGRYAGTFDS",
+          "label": 6.729819361070549,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGSAAGTFDS",
+          "label": 7.939531860033966,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGSAPGTFDA",
+          "label": 7.701070686015331,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGSQAGTFDW",
+          "label": 8.493749849009998,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGTAACTFDS",
+          "label": 3.4293406292768633,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGTAAGTSDA",
+          "label": 3.8493103971762217,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGVAADTFDS",
+          "label": 7.896888114939969,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGVAAQTFDS",
+          "label": 7.448110289488659,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGVHAGTYDS",
+          "label": 6.4022803224488065,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGVIAGTFIS",
+          "label": 8.711325605302795,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGWAAGTFDS",
+          "label": 8.371771990769055,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGWAAWTFES",
+          "label": 7.999725633265433,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGYAAGTFDS",
+          "label": 7.336783766751154,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGYAAGTFES",
+          "label": 6.751406764139933,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGYVHGTFDS",
+          "label": 8.66791492867586,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIRAAGTFRC",
+          "label": 7.583679945398963,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIRAANMFDS",
+          "label": 6.282921996625932,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIRQAGTFSS",
+          "label": 7.158577505266716,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKKRAAGTHDS",
+          "label": 6.484072313152524,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKKRAAGTYDS",
+          "label": 6.223008065980276,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKLRAAGCFDS",
+          "label": 7.504411114746366,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKLRAAGTFDS",
+          "label": 8.400822126925787,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMCAAGTFDK",
+          "label": 7.6577803400807625,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMHAEGTFDS",
+          "label": 8.319119577267301,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMRAAGLFCS",
+          "label": 7.550459500470845,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMRAAGTFDL",
+          "label": 6.7138615648345805,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKNHWAGTFDS",
+          "label": 7.984312590845784,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKNRAAGTFKS",
+          "label": 7.570948549922566,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKNRYAGTFCS",
+          "label": 7.262778186029234,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKPRAAGTCWS",
+          "label": 6.406793244279214,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKPRAAGTHRS",
+          "label": 8.286243109651885,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKPRALGTFDS",
+          "label": 7.595486497011185,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRRAAGTFDE",
+          "label": 7.49904707009013,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRRAAGTFDS",
+          "label": 7.404892629313894,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRRAHGTFDS",
+          "label": 8.076276013663316,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRRAICTFDS",
+          "label": 8.484415684487969,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRRAKTTFDS",
+          "label": 8.547702116050402,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKSAAAGKFDS",
+          "label": 8.465556768948769,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKSRAWTTFDS",
+          "label": 8.069900201550858,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKSRIAGTFDS",
+          "label": 6.824196298295428,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKTRAAGTFDS",
+          "label": 7.960923029291509,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKTRAHGTFCS",
+          "label": 6.505995405146141,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVRAAATFDS",
+          "label": 8.464316948534638,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVRLAGTFDA",
+          "label": 7.301075425521196,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVRVAGAFDS",
+          "label": 6.6879382120848305,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWRAAGPFDS",
+          "label": 7.136575979591237,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWRAAGTDDS",
+          "label": 7.504644237147927,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWRAAGTFDS",
+          "label": 7.354563189949298,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWRAAGTKPS",
+          "label": 8.451029132380414,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWRTAMTFDS",
+          "label": 6.423375585244164,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYCAAGTFDS",
+          "label": 7.754629534904838,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYRAAGTFDS",
+          "label": 7.487678271460199,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYRAAKSFDS",
+          "label": 8.312295916402705,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYRAFGAFDS",
+          "label": 7.701878614364928,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYRVATTFDS",
+          "label": 7.906883711165136,
+          "n_measurements": 1
+        }
+      ]
+    },
+    "AAYL51": {
+      "structure": "data\\abbibench_structural_audit_v1\\structures\\AAYL51_bca.pdb",
+      "heavy": "B",
+      "light": "C",
+      "antigen": [
+        "A"
+      ],
+      "region_spec": "B:97-108",
+      "label_source": "9 - median(original log10 estimated Kd in nM)",
+      "n_variants": 227,
+      "variants": [
+        {
+          "h3": "AKAFRGGGYDDY",
+          "label": 5.665619746618249,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKAGRFGVYFDY",
+          "label": 7.634204532562974,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKATRGGGYHDY",
+          "label": 3.466798265461339,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKAVRWGGYFDY",
+          "label": 3.9718063129896812,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKCGRHGGYFDI",
+          "label": 3.2412260117202996,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKDGRGGGKFPY",
+          "label": 6.133575972357008,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKDGRGGGYFDD",
+          "label": 4.749613796204532,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKEDRGGGYFIY",
+          "label": 5.763930673040591,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKEGRGGGYFDL",
+          "label": 9.119433058735005,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKEGRGGVYFKY",
+          "label": 3.835171219857222,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKEGRYWGYFDY",
+          "label": 6.81398788467014,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKFVRGGGLFDY",
+          "label": 7.364331716370279,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGRGGGFFDH",
+          "label": 6.363661170879696,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGRGGGWFDY",
+          "label": 6.145613554107401,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGRGGGYFDT",
+          "label": 5.353949445592637,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGRGGGYFDY",
+          "label": 7.415335384756306,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKGGRGGKYKDY",
+          "label": 7.228231812402882,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKHGFGGGYFDE",
+          "label": 3.575785966799157,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKHGRGWGYFDC",
+          "label": 3.4079602888970832,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKHGVGHGYFDY",
+          "label": 4.165348544797531,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKHWQGGGYFDY",
+          "label": 3.068120736540841,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKHYRGGGYFLY",
+          "label": 4.11948990445865,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIGIGGGYLDY",
+          "label": 7.683377720489441,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIGRGGGYFDY",
+          "label": 7.470718673841819,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIGRGGGYVDY",
+          "label": 5.751060470504445,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIGRGGMYFDY",
+          "label": 6.028845566561412,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKIRRGGIYFDY",
+          "label": 4.901893745047872,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKKGRGGGYRFY",
+          "label": 4.016096555130017,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKLGRGGGYFDV",
+          "label": 5.962684754332718,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKLGRGGGYFHY",
+          "label": 4.360775590898921,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMGIGGGYFDF",
+          "label": 5.476533014298548,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMGRGGGYDDY",
+          "label": 7.611013898107704,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKMGRIGGYFDY",
+          "label": 8.101205956677598,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKNGRGGGYFDY",
+          "label": 4.310811002764937,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKNGRGGGYLDY",
+          "label": 6.919978721457433,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKPGRGGGIFPY",
+          "label": 8.361256511999095,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKPGRGPGYIDY",
+          "label": 7.119682691277596,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKQGRAGQYFDY",
+          "label": 7.462047062978728,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKQGRGGGYFDY",
+          "label": 6.109964998936631,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKQGRGIGYCDY",
+          "label": 7.65941263331923,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRGRAGGYFDY",
+          "label": 5.542743777410298,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRGRGGGGFDY",
+          "label": 7.8239613178643435,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKRGRGGGWFDY",
+          "label": 5.619261642949995,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKSGRGGGYFDY",
+          "label": 6.5917087137842465,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVARGGGEFCY",
+          "label": 7.87167282794087,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVARGGGYFDA",
+          "label": 6.284379497097429,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVARGRGYFDG",
+          "label": 7.404834040195746,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVDRGGGGFDY",
+          "label": 4.08960760903728,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVDRVGKYFDY",
+          "label": 6.669511906437112,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVERGGGYWDS",
+          "label": 6.72981340597088,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVERGSGYWDY",
+          "label": 6.863924633642149,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVERSGGYIDY",
+          "label": 7.089567420302105,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVFEDGGYFDY",
+          "label": 4.669317927616557,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVFRGGGYFDY",
+          "label": 7.3690047442754665,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVFRQDGYFDY",
+          "label": 3.6352520401137802,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVFRSGGYFKY",
+          "label": 6.602029147399707,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGAGGQYFDY",
+          "label": 5.945855174046196,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGCGWGYFDY",
+          "label": 6.0435571953219505,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGDGGGVFDR",
+          "label": 6.656256516604655,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGDGGGYFDY",
+          "label": 7.842278064916071,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGDGGGYFTR",
+          "label": 5.865235615322231,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGDGVGYFDK",
+          "label": 6.075238731780775,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGFGGGTFDN",
+          "label": 7.320429916284223,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGFGGGYFDY",
+          "label": 6.304788634213347,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGFGGTCFDY",
+          "label": 7.950611144205414,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGFGGYYIDY",
+          "label": 6.701930403784608,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGGGGGYWAY",
+          "label": 7.804343788988023,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGGGGPCFDY",
+          "label": 7.9822135051397005,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGHGGGYFDY",
+          "label": 6.816032581520796,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGKGGHYFDY",
+          "label": 5.053766326593073,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGKQGGYFDQ",
+          "label": 6.6408806783024446,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGLAGGYFVY",
+          "label": 8.44440492812971,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGLGGGYFDY",
+          "label": 7.139335398433381,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGLYGGYFDY",
+          "label": 7.4328056461273775,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGMGGGYFDY",
+          "label": 7.293766696102894,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGMGTGHFDY",
+          "label": 2.7110871486382377,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGNGGGYFDY",
+          "label": 6.528285427141153,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGQGGGYFDY",
+          "label": 7.421850134206279,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGQGMGYFDY",
+          "label": 7.6917473557822404,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGQTGGWFDY",
+          "label": 6.921176471180328,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRAGGYFDL",
+          "label": 7.199916209897722,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRCYGGFDY",
+          "label": 7.860132200903074,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGREGMYFDT",
+          "label": 7.777908818813188,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGREGSYFDY",
+          "label": 4.891754506666942,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRFGGYDDQ",
+          "label": 3.873701872522396,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRFGGYFDY",
+          "label": 6.321598291043186,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRFGQYFDY",
+          "label": 6.729718666466063,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRFGWPFDY",
+          "label": 3.34124735640836,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGALYFDL",
+          "label": 7.720646317899378,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGCGYFDI",
+          "label": 7.096680217913205,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGCMTFDY",
+          "label": 5.523013135641843,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGFGYFDY",
+          "label": 7.192342295013805,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGAFFHY",
+          "label": 7.1811370719481715,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGAWFDY",
+          "label": 7.676888424989281,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGEYFDW",
+          "label": 6.688889410361434,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGCFDY",
+          "label": 7.827328257703881,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGDFDY",
+          "label": 8.125076712391273,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGENDY",
+          "label": 4.056256720314732,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGFFDP",
+          "label": 5.57958608301502,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGFTDY",
+          "label": 7.668350673556574,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGGFDY",
+          "label": 7.950613522396766,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGHFQI",
+          "label": 7.799410236868081,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGIFDY",
+          "label": 6.168693834122687,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGLGDW",
+          "label": 5.178380106333288,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGLIFY",
+          "label": 8.15638709495654,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGLWDY",
+          "label": 6.612671227143796,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGRHDY",
+          "label": 6.197411256674377,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGSFDE",
+          "label": 7.435228768434481,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGVFAY",
+          "label": 4.505502408103926,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGVFDH",
+          "label": 7.086155790818811,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGWDGY",
+          "label": 7.302626442880335,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGWFDQ",
+          "label": 7.5700678876819065,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGWFDY",
+          "label": 7.8780691128955365,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGWFMY",
+          "label": 6.353779866518554,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYALY",
+          "label": 7.0606849785909755,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYCDR",
+          "label": 4.656890301544294,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYCQY",
+          "label": 8.07519806934025,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFCC",
+          "label": 7.5976528004136465,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFCY",
+          "label": 4.90023789708621,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDG",
+          "label": 6.245827791443707,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDH",
+          "label": 7.803455711782883,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDL",
+          "label": 8.252833213269543,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDM",
+          "label": 6.356993609518378,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDN",
+          "label": 6.023308984868708,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDS",
+          "label": 8.586624299824303,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDT",
+          "label": 8.202794805995431,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFDW",
+          "label": 7.802402019653437,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFFA",
+          "label": 6.6171549002578,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFRP",
+          "label": 7.405420448937424,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFRY",
+          "label": 3.999075937790309,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFSN",
+          "label": 7.705650276244519,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYFSY",
+          "label": 8.482606713829568,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYKDY",
+          "label": 6.68012546665609,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYLDY",
+          "label": 5.162277899548801,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYQTY",
+          "label": 5.232462104838888,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYRDY",
+          "label": 4.225783145177324,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYTDY",
+          "label": 4.814752530100993,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYWDY",
+          "label": 6.392171019919788,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYWIA",
+          "label": 4.0311915066295265,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGGYYDY",
+          "label": 6.651640365686545,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGIPFDY",
+          "label": 7.267987476014449,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGIYFDY",
+          "label": 5.381670433919513,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGKSVDY",
+          "label": 8.001449560907698,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGNYFFY",
+          "label": 7.2399051876630605,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGPYFDY",
+          "label": 5.8405299810126525,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGPYYDL",
+          "label": 4.450890298939491,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGQKFDY",
+          "label": 7.6947437807691905,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGTYFDY",
+          "label": 7.6208774264226715,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGVRFDY",
+          "label": 6.651938342473111,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGGWYFSY",
+          "label": 4.011143291608668,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGHGYFHR",
+          "label": 7.883992148515619,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGHGYLHY",
+          "label": 8.474995245056926,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGKGYQDL",
+          "label": 7.192342295013805,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGMGYHDY",
+          "label": 6.5786132796359365,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGNGWFDW",
+          "label": 3.8391640723329132,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGPGKFDY",
+          "label": 7.720362648259995,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGRCYFHY",
+          "label": 5.671200851026896,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGTGYFDY",
+          "label": 7.576374546597654,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGVGYFDY",
+          "label": 7.886947550345381,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGVGYVDF",
+          "label": 7.378933103085187,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGVVYSDY",
+          "label": 6.7544556398175315,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGYGYFDY",
+          "label": 4.669831390262826,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRGYLYFEY",
+          "label": 7.685442413831252,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRHGGVFDR",
+          "label": 7.585546072479909,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRHGGYFDY",
+          "label": 6.769670525273808,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRHGGYIDY",
+          "label": 3.1287248386434854,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRHGGYQDY",
+          "label": 7.646451819919449,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRIGGYFWY",
+          "label": 6.809175711020075,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRIRGYFDY",
+          "label": 3.9855704759679975,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRMCGYWDY",
+          "label": 4.808210004020115,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRMGGYFSY",
+          "label": 7.395301398472803,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRNGGCFKY",
+          "label": 4.476935201512383,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRNGGVFDY",
+          "label": 6.910365867510814,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRQGGYFDY",
+          "label": 5.847736033142732,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRRGGGFDR",
+          "label": 7.357618551433859,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRSGGPFDY",
+          "label": 7.923117403523875,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRSGGYFDY",
+          "label": 7.918213762798802,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRSPVYFDY",
+          "label": 5.880748502962817,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRTGGYFDG",
+          "label": 4.341298822285519,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRTGGYWDR",
+          "label": 4.593997099016782,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRTGSYFDY",
+          "label": 6.063067748810754,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRVGYYFDY",
+          "label": 7.993556052191677,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRWGGYFDV",
+          "label": 8.566372695103952,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRWGGYFFN",
+          "label": 4.212739601890938,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGRYGDYFDN",
+          "label": 6.74075953865956,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGSGEGYFDY",
+          "label": 6.658349281632534,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGSGGGYFDY",
+          "label": 7.435139234995278,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGSGGKYFDC",
+          "label": 8.020105419614293,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGSGGLYFDR",
+          "label": 6.557026225332718,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGSMGGYFDY",
+          "label": 8.576395844335336,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGVGGGYFDN",
+          "label": 7.174407485586325,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGVGGGYFDY",
+          "label": 6.241168996977059,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGWGGGYFDW",
+          "label": 8.105772374541614,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVGWGGGYFDY",
+          "label": 4.973486260440165,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVHRGGAYIDY",
+          "label": 7.568823136060145,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVHRGGGYFDY",
+          "label": 7.488248369895226,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVIRGGGEFDY",
+          "label": 3.775508967178876,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVKRGGQYFDY",
+          "label": 6.694538952772,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVMRGGGYFDY",
+          "label": 7.301826507839786,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVMRGLGYFDN",
+          "label": 3.9660325198713364,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVNDGGGYFDY",
+          "label": 7.892951959784535,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVPRCGGYFDY",
+          "label": 3.8594577346722074,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVPRGGGYFDY",
+          "label": 6.891665562000852,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVQKIGGYFDY",
+          "label": 7.060655409148646,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVQRGGGYHTY",
+          "label": 5.399132832580396,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVQRGGGYKNY",
+          "label": 6.421627729730879,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVQRHGGYFDY",
+          "label": 4.43826898862446,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVRRGGGYFDY",
+          "label": 6.861394165277945,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVRRGGGYFHK",
+          "label": 4.385301246871113,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVSRSGGYFRY",
+          "label": 3.653823586528045,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVTRGTGYFDY",
+          "label": 3.9365588949668835,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVVRGGGLLDY",
+          "label": 8.107115042749438,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVVRGGSYFHY",
+          "label": 6.933868640973767,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVVRGTGYFDY",
+          "label": 3.2717378214892356,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVWIGGGYFDI",
+          "label": 7.3370156373073705,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVWRGGGMFIY",
+          "label": 7.132826531703545,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVWRGMAYFDY",
+          "label": 3.850649660918293,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVWRGWGYFDY",
+          "label": 8.47306509978135,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVWVGRGYFDY",
+          "label": 7.351849224172442,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVYIGGGYVDY",
+          "label": 6.435040853568562,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVYRGGGQFDY",
+          "label": 8.116592145740903,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKVYRGGGYFDY",
+          "label": 7.212253411255663,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWGRGGGYEDY",
+          "label": 7.711768997431861,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKWGRGGGYFDY",
+          "label": 6.171091551202526,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYGRAGGIFDY",
+          "label": 8.432379219926023,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYGRGGLYFYY",
+          "label": 7.342474593588296,
+          "n_measurements": 1
+        },
+        {
+          "h3": "AKYGSGFGYFDY",
+          "label": 4.115840377253914,
+          "n_measurements": 1
+        }
+      ]
+    }
+  },
+  "n_groups": 5,
+  "n_variants": 1284,
+  "notes": [
+    "labels are not comparable across groups; only within-group order is used",
+    "AbBiBench binding_score is higher-is-better (benchmark convention); AAYL endpoint is 9 - median(log10 Kd nM), higher-is-better",
+    "H3-only filter: heavy chain outside H3, light chain and antigen must match parent"
+  ]
+}

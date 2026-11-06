@@ -1,0 +1,142 @@
+{
+  "schema_version": "within_group_v1",
+  "groups": {
+    "1mlc": {
+      "n": 132,
+      "label_range": [
+        -4.100742618,
+        9.405157156
+      ],
+      "signals": {
+        "composition": {
+          "mean_accuracy": 0.5775270655270656,
+          "mean_spearman": 0.2591062271062271
+        },
+        "bfn": {
+          "mean_accuracy": 0.5659487179487179,
+          "mean_spearman": 0.20575824175824176
+        },
+        "bfn+composition": {
+          "mean_accuracy": 0.6136524216524216,
+          "mean_spearman": 0.3271892551892551
+        },
+        "biophys": {
+          "mean_accuracy": 0.48998290598290595,
+          "mean_spearman": 0.08203663003663005
+        }
+      },
+      "delta_bfn_plus_composition_minus_composition": 0.06808302808302802
+    },
+    "1n8z": {
+      "n": 397,
+      "label_range": [
+        5.597927856364727,
+        9.2518119729938
+      ],
+      "signals": {
+        "composition": {
+          "mean_accuracy": 0.691783267261467,
+          "mean_spearman": 0.5434319665332323
+        },
+        "bfn": {
+          "mean_accuracy": 0.5919727626127063,
+          "mean_spearman": 0.2766791085145516
+        },
+        "bfn+composition": {
+          "mean_accuracy": 0.6932107627747571,
+          "mean_spearman": 0.5488387608640772
+        },
+        "biophys": {
+          "mean_accuracy": 0.6697608709985644,
+          "mean_spearman": 0.499536045295539
+        }
+      },
+      "delta_bfn_plus_composition_minus_composition": 0.0054067943308449
+    },
+    "2fjg": {
+      "n": 247,
+      "label_range": [
+        -1.906846862925487,
+        0.4552850273393055
+      ],
+      "signals": {
+        "composition": {
+          "mean_accuracy": 0.7255850340136054,
+          "mean_spearman": 0.6196290516206482
+        },
+        "bfn": {
+          "mean_accuracy": 0.5881768707482993,
+          "mean_spearman": 0.26334813925570233
+        },
+        "bfn+composition": {
+          "mean_accuracy": 0.7234829931972789,
+          "mean_spearman": 0.6186170468187275
+        },
+        "biophys": {
+          "mean_accuracy": 0.6557074829931973,
+          "mean_spearman": 0.5063325330132054
+        }
+      },
+      "delta_bfn_plus_composition_minus_composition": -0.0010120048019206518
+    },
+    "AAYL49": {
+      "n": 281,
+      "label_range": [
+        3.4293406292768633,
+        8.95612615176091
+      ],
+      "signals": {
+        "composition": {
+          "mean_accuracy": 0.5067737525632262,
+          "mean_spearman": 0.024474980554835362
+        },
+        "bfn": {
+          "mean_accuracy": 0.5248598769651402,
+          "mean_spearman": 0.0780321493388644
+        },
+        "bfn+composition": {
+          "mean_accuracy": 0.5015447710184552,
+          "mean_spearman": 0.004822165130695076
+        },
+        "biophys": {
+          "mean_accuracy": 0.496388699020278,
+          "mean_spearman": 0.019667428759987747
+        }
+      },
+      "delta_bfn_plus_composition_minus_composition": -0.019652815424140286
+    },
+    "AAYL51": {
+      "n": 227,
+      "label_range": [
+        2.7110871486382377,
+        9.119433058735005
+      ],
+      "signals": {
+        "composition": {
+          "mean_accuracy": 0.5309705753184015,
+          "mean_spearman": 0.10206150309758082
+        },
+        "bfn": {
+          "mean_accuracy": 0.5247342995169083,
+          "mean_spearman": 0.0802679897962044
+        },
+        "bfn+composition": {
+          "mean_accuracy": 0.5331137461572244,
+          "mean_spearman": 0.09847503714293723
+        },
+        "biophys": {
+          "mean_accuracy": 0.5330259112867809,
+          "mean_spearman": 0.1097670507106215
+        }
+      },
+      "delta_bfn_plus_composition_minus_composition": -0.0035864659546435834
+    }
+  },
+  "summary": {
+    "n_groups": 5,
+    "mean_delta_spearman": 0.00984770724663368,
+    "median_delta_spearman": -0.0010120048019206518,
+    "groups_bfn_helps": 2,
+    "verdict": "no evidence that bfn adds within-complex ranking information"
+  }
+}

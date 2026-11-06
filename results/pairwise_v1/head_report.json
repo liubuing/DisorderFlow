@@ -1,0 +1,208 @@
+{
+  "schema_version": "pairwise_head_v1",
+  "n_groups": 5,
+  "groups": [
+    "1mlc",
+    "1n8z",
+    "2fjg",
+    "AAYL49",
+    "AAYL51"
+  ],
+  "records": 1284,
+  "kinds": [
+    "composition",
+    "bfn",
+    "biophys",
+    "bfn+composition",
+    "bfn+composition+biophys"
+  ],
+  "results": {
+    "composition": {
+      "per_group": {
+        "1mlc": {
+          "n_test": 132,
+          "n_pairs": 8646,
+          "pairwise_accuracy": 0.48438584316446914,
+          "spearman": -0.020088388911209322
+        },
+        "1n8z": {
+          "n_test": 397,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.37185,
+          "spearman": -0.3724235251519026
+        },
+        "2fjg": {
+          "n_test": 247,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.3447,
+          "spearman": -0.45908653647069314
+        },
+        "AAYL49": {
+          "n_test": 281,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.48585,
+          "spearman": -0.033956559832989
+        },
+        "AAYL51": {
+          "n_test": 227,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.4461,
+          "spearman": -0.16202302567459154
+        }
+      },
+      "mean_spearman": -0.2095156072082771,
+      "mean_accuracy": 0.42657716863289386
+    },
+    "bfn": {
+      "per_group": {
+        "1mlc": {
+          "n_test": 132,
+          "n_pairs": 8646,
+          "pairwise_accuracy": 0.42285449919037704,
+          "spearman": -0.23511241671145247
+        },
+        "1n8z": {
+          "n_test": 397,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.4253,
+          "spearman": -0.21374792441713952
+        },
+        "2fjg": {
+          "n_test": 247,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.47025,
+          "spearman": -0.0885551878243087
+        },
+        "AAYL49": {
+          "n_test": 281,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.4672,
+          "spearman": -0.08937576393470995
+        },
+        "AAYL51": {
+          "n_test": 227,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.49795,
+          "spearman": -0.012439240082976144
+        }
+      },
+      "mean_spearman": -0.12784610659411735,
+      "mean_accuracy": 0.45671089983807545
+    },
+    "biophys": {
+      "per_group": {
+        "1mlc": {
+          "n_test": 132,
+          "n_pairs": 8646,
+          "pairwise_accuracy": 0.42331714087439276,
+          "spearman": -0.10790334615163864
+        },
+        "1n8z": {
+          "n_test": 397,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.3659,
+          "spearman": -0.3845494551606978
+        },
+        "2fjg": {
+          "n_test": 247,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.31345,
+          "spearman": -0.47405132239908004
+        },
+        "AAYL49": {
+          "n_test": 281,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.50945,
+          "spearman": 0.0631299419139201
+        },
+        "AAYL51": {
+          "n_test": 227,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.49345,
+          "spearman": -0.005449669552228394
+        }
+      },
+      "mean_spearman": -0.18176477026994495,
+      "mean_accuracy": 0.42111342817487857
+    },
+    "bfn+composition": {
+      "per_group": {
+        "1mlc": {
+          "n_test": 132,
+          "n_pairs": 8646,
+          "pairwise_accuracy": 0.4864677307425399,
+          "spearman": -0.03996284952492265
+        },
+        "1n8z": {
+          "n_test": 397,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.3846,
+          "spearman": -0.3352268172401585
+        },
+        "2fjg": {
+          "n_test": 247,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.3513,
+          "spearman": -0.4404434647715943
+        },
+        "AAYL49": {
+          "n_test": 281,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.48855,
+          "spearman": -0.029643370939653215
+        },
+        "AAYL51": {
+          "n_test": 227,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.45215,
+          "spearman": -0.1458443191914135
+        }
+      },
+      "mean_spearman": -0.19822416433354842,
+      "mean_accuracy": 0.43261354614850794
+    },
+    "bfn+composition+biophys": {
+      "per_group": {
+        "1mlc": {
+          "n_test": 132,
+          "n_pairs": 8646,
+          "pairwise_accuracy": 0.47837150127226463,
+          "spearman": -0.06231574773157738
+        },
+        "1n8z": {
+          "n_test": 397,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.38405,
+          "spearman": -0.33570934590516127
+        },
+        "2fjg": {
+          "n_test": 247,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.3514,
+          "spearman": -0.4409284346859402
+        },
+        "AAYL49": {
+          "n_test": 281,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.4886,
+          "spearman": -0.03038107497106513
+        },
+        "AAYL51": {
+          "n_test": 227,
+          "n_pairs": 20000,
+          "pairwise_accuracy": 0.45255,
+          "spearman": -0.1439863840334531
+        }
+      },
+      "mean_spearman": -0.20266419746543943,
+      "mean_accuracy": 0.43099430025445284
+    }
+  },
+  "verdict": {
+    "margin_required": 0.05,
+    "delta_spearman_bfn_plus_composition_minus_composition": 0.011291442874728691,
+    "passes": false,
+    "interpretation": "no evidence that the BFN judge adds binding information beyond composition"
+  },
+  "classification": "development_test_not_confirmatory"
+}
