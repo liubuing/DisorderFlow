@@ -1,0 +1,31 @@
+{
+  "gate": "j0b_ensemble_corrected_roles",
+  "n_components_valid": 26,
+  "n_families": 8,
+  "positive_families": 8,
+  "positive_fraction": 1.0,
+  "mean_advantage": 5.678808977906074,
+  "bootstrap_ci_family_mean": [
+    5.3359063516722784,
+    6.005560707472989
+  ],
+  "mean_advantage_alt_order": 5.633432518450115,
+  "j0a_v2_mean_advantage_reference": 5.553179393297149,
+  "attenuation_vs_j0a_v2": -0.1256295846089257,
+  "frozen_j0b_v1_mean_advantage_reference": 0.141,
+  "role_encoding_note": "H -> Fragment.Heavy(1), P -> Fragment.Antigen(3), other context -> Fragment.Light(2)",
+  "nll_field": "seq",
+  "stripped_source": "j0a_v2_cache_corrected_roles_with_equivalence_verification",
+  "stripped_equivalence_verification": null,
+  "scoring_seeds": [
+    20261029,
+    20261030,
+    20261031
+  ],
+  "fixed_t": 0.5,
+  "checkpoint_path": "D:\\biological\\DisorderFlow\\logs\\bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032\\checkpoints\\best.pt",
+  "checkpoint_sha256": "ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252",
+  "verdict": "pass",
+  "classification": "development_gate_not_confirmatory_claim",
+  "provenance": "re-scores frozen results/flex_j0b_v1 ensembles; frozen J0b v1 artifacts untouched"
+}

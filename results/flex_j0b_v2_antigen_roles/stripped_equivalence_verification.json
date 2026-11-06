@@ -1,0 +1,197 @@
+{
+  "schema_version": "j0b_v2_stripped_equivalence_verification_v1",
+  "purpose": "standalone record of the stripped-cache equivalence check whose in-run result was lost when the endpoint phase crashed on the write-once guard; re-verified post hoc on all 26 components, 3 candidates each",
+  "n_checked": 26,
+  "all_pass": true,
+  "max_abs_diff_overall": 0.0,
+  "checks": [
+    {
+      "instance": "2x6m_A_B",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "5hm1_A_D",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "5hm1_B_E",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "5hm1_C_F",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6i2g_A_B",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6j7w_A_C",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6j7w_B_D",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6s0y_B_D",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6zwk_B_H",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6zwk_D_J",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "6zwk_E_K",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_A_I",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_B_J",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_D_L",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_E_M",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_F_N",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_G_O",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8b8i_H_P",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8op0_A_B",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8opi_A_B",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8pii_A_B",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8skj_A_E",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "8skj_G_H",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "9eiu_B_A",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "9lds_A_B",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    {
+      "instance": "9lds_C_D",
+      "conformer_seed": 2701,
+      "candidates_checked": 3,
+      "max_abs_diff": 0.0,
+      "pass": true
+    }
+  ],
+  "scoring_seeds": [
+    20261029,
+    20261030,
+    20261031
+  ],
+  "classification": "development_verification"
+}

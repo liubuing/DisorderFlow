@@ -1,0 +1,238 @@
+{
+  "components": [
+    {
+      "instance": "2x6m_A_B",
+      "pdb": "2x6m",
+      "peptide": "DYEPEA",
+      "family": "seq_1",
+      "ecls_native_marginal": -2.023234074314435,
+      "advantage": 5.158471805453301,
+      "advantage_mean_of_per_conformer": 5.158471805453301
+    },
+    {
+      "instance": "5hm1_A_D",
+      "pdb": "5hm1",
+      "peptide": "AVERYLKDQQLLGIW",
+      "family": "seq_0",
+      "ecls_native_marginal": -2.439501558740934,
+      "advantage": 6.254055984616279,
+      "advantage_mean_of_per_conformer": 6.254055984616279
+    },
+    {
+      "instance": "5hm1_B_E",
+      "pdb": "5hm1",
+      "peptide": "AVERYLKDQQLLGIW",
+      "family": "seq_0",
+      "ecls_native_marginal": -2.397099574406942,
+      "advantage": 6.260321926275889,
+      "advantage_mean_of_per_conformer": 6.260321926275889
+    },
+    {
+      "instance": "5hm1_C_F",
+      "pdb": "5hm1",
+      "peptide": "AVERYLKDQQLLGIW",
+      "family": "seq_0",
+      "ecls_native_marginal": -2.3817943582932157,
+      "advantage": 6.348770176768302,
+      "advantage_mean_of_per_conformer": 6.348770176768303
+    },
+    {
+      "instance": "6i2g_A_B",
+      "pdb": "6i2g",
+      "peptide": "SRLEEELRRRLTE",
+      "family": "seq_7",
+      "ecls_native_marginal": -2.3703855921824775,
+      "advantage": 5.2556272874275844,
+      "advantage_mean_of_per_conformer": 5.2556272874275844
+    },
+    {
+      "instance": "6j7w_A_C",
+      "pdb": "6j7w",
+      "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "family": "seq_5",
+      "ecls_native_marginal": -2.3146801590919495,
+      "advantage": 6.893377151489258,
+      "advantage_mean_of_per_conformer": 6.893377151489258
+    },
+    {
+      "instance": "6j7w_B_D",
+      "pdb": "6j7w",
+      "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+      "family": "seq_5",
+      "ecls_native_marginal": -2.295380860567093,
+      "advantage": 6.653626429637273,
+      "advantage_mean_of_per_conformer": 6.653626429637273
+    },
+    {
+      "instance": "6s0y_B_D",
+      "pdb": "6s0y",
+      "peptide": "VETPIRNEWGCRC",
+      "family": "seq_8",
+      "ecls_native_marginal": -2.4529445121685662,
+      "advantage": 6.172586718201637,
+      "advantage_mean_of_per_conformer": 6.172586718201638
+    },
+    {
+      "instance": "6zwk_B_H",
+      "pdb": "6zwk",
+      "peptide": "TQAQEY",
+      "family": "seq_5",
+      "ecls_native_marginal": -2.6035853425661726,
+      "advantage": 5.7501346286137895,
+      "advantage_mean_of_per_conformer": 5.7501346286137895
+    },
+    {
+      "instance": "6zwk_D_J",
+      "pdb": "6zwk",
+      "peptide": "TQAQEY",
+      "family": "seq_5",
+      "ecls_native_marginal": -2.5684033185243607,
+      "advantage": 5.614122796654701,
+      "advantage_mean_of_per_conformer": 5.614122796654701
+    },
+    {
+      "instance": "6zwk_E_K",
+      "pdb": "6zwk",
+      "peptide": "TQAQEY",
+      "family": "seq_5",
+      "ecls_native_marginal": -2.634760797023773,
+      "advantage": 5.819817921320597,
+      "advantage_mean_of_per_conformer": 5.819817921320597
+    },
+    {
+      "instance": "8b8i_A_I",
+      "pdb": "8b8i",
+      "peptide": "KEDAFSKLKEKFMNELH",
+      "family": "seq_3",
+      "ecls_native_marginal": -2.4395130574703217,
+      "advantage": 6.1413751486937205,
+      "advantage_mean_of_per_conformer": 6.14137514869372
+    },
+    {
+      "instance": "8b8i_B_J",
+      "pdb": "8b8i",
+      "peptide": "KEDAFSKLKEKFMNELH",
+      "family": "seq_3",
+      "ecls_native_marginal": -2.446318030357361,
+      "advantage": 6.144937599102656,
+      "advantage_mean_of_per_conformer": 6.144937599102656
+    },
+    {
+      "instance": "8b8i_D_L",
+      "pdb": "8b8i",
+      "peptide": "KEDAFSKLKEKFMN",
+      "family": "seq_3",
+      "ecls_native_marginal": -2.392536101241906,
+      "advantage": 5.712738481263319,
+      "advantage_mean_of_per_conformer": 5.712738481263321
+    },
+    {
+      "instance": "8b8i_E_M",
+      "pdb": "8b8i",
+      "peptide": "KEDAFSKLKEKFMNE",
+      "family": "seq_3",
+      "ecls_native_marginal": -1.7652913232644396,
+      "advantage": 5.264617508252461,
+      "advantage_mean_of_per_conformer": 5.264617508252462
+    },
+    {
+      "instance": "8b8i_F_N",
+      "pdb": "8b8i",
+      "peptide": "KEDAFSKLKEKFMN",
+      "family": "seq_3",
+      "ecls_native_marginal": -2.4038640161355334,
+      "advantage": 5.90304701368014,
+      "advantage_mean_of_per_conformer": 5.9030470136801405
+    },
+    {
+      "instance": "8b8i_G_O",
+      "pdb": "8b8i",
+      "peptide": "EDAFSKLKEKFMN",
+      "family": "seq_3",
+      "ecls_native_marginal": 0.8005631764729817,
+      "advantage": 2.5700621167818705,
+      "advantage_mean_of_per_conformer": 2.5700621167818705
+    },
+    {
+      "instance": "8b8i_H_P",
+      "pdb": "8b8i",
+      "peptide": "KEDAFSKLKEKFMN",
+      "family": "seq_3",
+      "ecls_native_marginal": -0.16764533519744884,
+      "advantage": 3.7653074868520107,
+      "advantage_mean_of_per_conformer": 3.7653074868520098
+    },
+    {
+      "instance": "8op0_A_B",
+      "pdb": "8op0",
+      "peptide": "GSVQIVYKPK",
+      "family": "seq_6",
+      "ecls_native_marginal": -2.1581274668375654,
+      "advantage": 6.046442867914836,
+      "advantage_mean_of_per_conformer": 6.046442867914837
+    },
+    {
+      "instance": "8opi_A_B",
+      "pdb": "8opi",
+      "peptide": "GSVQIVYKPK",
+      "family": "seq_6",
+      "ecls_native_marginal": -1.3505330085754395,
+      "advantage": 4.742712426185609,
+      "advantage_mean_of_per_conformer": 4.742712426185608
+    },
+    {
+      "instance": "8pii_A_B",
+      "pdb": "8pii",
+      "peptide": "GSVQIVYKPK",
+      "family": "seq_6",
+      "ecls_native_marginal": -2.5083000734448433,
+      "advantage": 6.353304252127806,
+      "advantage_mean_of_per_conformer": 6.353304252127805
+    },
+    {
+      "instance": "8skj_A_E",
+      "pdb": "8skj",
+      "peptide": "GKPIPNPLLGLDST",
+      "family": "seq_4",
+      "ecls_native_marginal": -2.153623953461647,
+      "advantage": 5.739352868199349,
+      "advantage_mean_of_per_conformer": 5.739352868199349
+    },
+    {
+      "instance": "8skj_G_H",
+      "pdb": "8skj",
+      "peptide": "GKPIPNPLLGLDST",
+      "family": "seq_4",
+      "ecls_native_marginal": -2.143221601843834,
+      "advantage": 5.772641562024752,
+      "advantage_mean_of_per_conformer": 5.772641562024752
+    },
+    {
+      "instance": "9eiu_B_A",
+      "pdb": "9eiu",
+      "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "family": "seq_5",
+      "ecls_native_marginal": -1.9042131702105203,
+      "advantage": 6.2756197110811875,
+      "advantage_mean_of_per_conformer": 6.2756197110811875
+    },
+    {
+      "instance": "9lds_A_B",
+      "pdb": "9lds",
+      "peptide": "DPLQPELDSFKEELD",
+      "family": "seq_1",
+      "ecls_native_marginal": -2.064419135451317,
+      "advantage": 4.8586301813522965,
+      "advantage_mean_of_per_conformer": 4.858630181352297
+    },
+    {
+      "instance": "9lds_C_D",
+      "pdb": "9lds",
+      "peptide": "DPLQPELDSFKEELD",
+      "family": "seq_1",
+      "ecls_native_marginal": -2.0630118598540625,
+      "advantage": 4.997543429732323,
+      "advantage_mean_of_per_conformer": 4.997543429732323
+    }
+  ]
+}

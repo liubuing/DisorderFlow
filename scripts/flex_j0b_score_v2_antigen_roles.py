@@ -267,11 +267,11 @@ def main():
         'provenance': 're-scores frozen results/flex_j0b_v1 ensembles; '
                       'frozen J0b v1 artifacts untouched',
     }
-    freeze(OUT / 'j0b_v2_results.json', {'components': advantages})
-    freeze(OUT / 'j0b_v2_summary.json', summary)
-    freeze(OUT / 'completion.json', {
+    freeze(out_dir / 'j0b_v2_results.json', {'components': advantages})
+    freeze(out_dir / 'j0b_v2_summary.json', summary)
+    freeze(out_dir / 'completion.json', {
         'status': 'completed',
-        'summary_sha256': digest(OUT / 'j0b_v2_summary.json')})
+        'summary_sha256': digest(out_dir / 'j0b_v2_summary.json')})
     print(json.dumps(summary, indent=1, ensure_ascii=False), flush=True)
 
 
