@@ -1,0 +1,80 @@
+{
+  "classification": "frozen_power_mathematics_no_data_claims",
+  "endpoint_convention": "family-level sign test: family counts as positive when its binder-vs-nonbinder AUC > 0.5; one-sided alpha = 0.05",
+  "feasibility_reading": "the Phase D data-feasibility gate must deliver enough families that the detectable family-positive fraction is scientifically meaningful; compare with the J0/C1 experience (8-9 families -> detectable only at >= 8/9 positive)",
+  "table": {
+    "families_12": {
+      "critical_count": 10,
+      "realized_alpha": 0.019287109375,
+      "family_positive_fraction_required": 0.8333333333333334,
+      "power": {
+        "p_alt_0.65": 0.15128757833526738,
+        "p_alt_0.7": 0.2528153478549999,
+        "p_alt_0.75": 0.39067500829696655,
+        "p_alt_0.8": 0.5583457484800002,
+        "p_alt_0.9": 0.889130022255
+      }
+    },
+    "families_16": {
+      "critical_count": 12,
+      "realized_alpha": 0.0384063720703125,
+      "family_positive_fraction_required": 0.75,
+      "power": {
+        "p_alt_0.65": 0.28920699856389326,
+        "p_alt_0.7": 0.44990411982490436,
+        "p_alt_0.75": 0.6301861752290279,
+        "p_alt_0.8": 0.7982454417653762,
+        "p_alt_0.9": 0.9829960017221205
+      }
+    },
+    "families_20": {
+      "critical_count": 15,
+      "realized_alpha": 0.020694732666015625,
+      "family_positive_fraction_required": 0.75,
+      "power": {
+        "p_alt_0.65": 0.24539574514843923,
+        "p_alt_0.7": 0.4163708294474812,
+        "p_alt_0.75": 0.6171726543871046,
+        "p_alt_0.8": 0.8042077854595496,
+        "p_alt_0.9": 0.988746865835491
+      }
+    },
+    "families_24": {
+      "critical_count": 17,
+      "realized_alpha": 0.03195732831954956,
+      "family_positive_fraction_required": 0.7083333333333334,
+      "power": {
+        "p_alt_0.65": 0.3575155170794646,
+        "p_alt_0.7": 0.5646740099334309,
+        "p_alt_0.75": 0.7662041693168753,
+        "p_alt_0.8": 0.9108287412264922,
+        "p_alt_0.9": 0.9983158923567184
+      }
+    },
+    "families_30": {
+      "critical_count": 20,
+      "realized_alpha": 0.04936857335269451,
+      "family_positive_fraction_required": 0.6666666666666666,
+      "power": {
+        "p_alt_0.65": 0.5077582144883535,
+        "p_alt_0.7": 0.7303703863027229,
+        "p_alt_0.75": 0.8942718773073399,
+        "p_alt_0.8": 0.9743837446646735,
+        "p_alt_0.9": 0.9999109221261769
+      }
+    },
+    "families_40": {
+      "critical_count": 26,
+      "realized_alpha": 0.0403452338759962,
+      "family_positive_fraction_required": 0.65,
+      "power": {
+        "p_alt_0.65": 0.5720821478352985,
+        "p_alt_0.7": 0.8074482452648238,
+        "p_alt_0.75": 0.9455627519813652,
+        "p_alt_0.8": 0.9920841461264805,
+        "p_alt_0.9": 0.999996519449733
+      }
+    }
+  },
+  "script_sha256": "7d1d05c824e7792da329f69c62aa384909bbcfb99d4b7b9ef6896738fc764707"
+}

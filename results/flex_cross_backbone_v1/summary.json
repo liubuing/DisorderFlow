@@ -1,0 +1,507 @@
+{
+  "schema_version": "flex_cross_backbone_v1",
+  "checkpoint_path": "D:\\biological\\DisorderFlow\\logs\\bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032\\checkpoints\\best.pt",
+  "role_encoding": "H=Heavy(1), P=Antigen(3)",
+  "cross_backbone": {
+    "n_rows": 112,
+    "length_groups": {
+      "9": 3,
+      "11": 7,
+      "12": 3,
+      "13": 2,
+      "14": 5,
+      "18": 4
+    },
+    "self_rank_one": 11,
+    "n_backbones": 24,
+    "median_self_rank": 2.0,
+    "mean_self_minus_best_foreign": -1.0456431532899537,
+    "per_backbone": [
+      {
+        "length": 9,
+        "backbone": "9eiu_B_A",
+        "n_sequences": 3,
+        "self_rank": 1,
+        "self_ecls": -1.908953110376994,
+        "best_foreign_ecls": 4.133001486460367,
+        "self_minus_best_foreign": -6.041954596837361
+      },
+      {
+        "length": 9,
+        "backbone": "9lds_A_B",
+        "n_sequences": 3,
+        "self_rank": 1,
+        "self_ecls": -2.066361864407857,
+        "best_foreign_ecls": -2.066361864407857,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 9,
+        "backbone": "9lds_C_D",
+        "n_sequences": 3,
+        "self_rank": 2,
+        "self_ecls": -2.066227376461029,
+        "best_foreign_ecls": -2.066227376461029,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_A_I",
+        "n_sequences": 7,
+        "self_rank": 1,
+        "self_ecls": -2.4376056094964347,
+        "best_foreign_ecls": -2.4376056094964347,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_B_J",
+        "n_sequences": 7,
+        "self_rank": 2,
+        "self_ecls": -2.4459341565767923,
+        "best_foreign_ecls": -2.4459341565767923,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_D_L",
+        "n_sequences": 7,
+        "self_rank": 3,
+        "self_ecls": -2.4076133271058398,
+        "best_foreign_ecls": -2.4076133271058398,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_E_M",
+        "n_sequences": 7,
+        "self_rank": 4,
+        "self_ecls": -1.8631758689880369,
+        "best_foreign_ecls": -1.8631758689880369,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_F_N",
+        "n_sequences": 7,
+        "self_rank": 5,
+        "self_ecls": -2.40251761674881,
+        "best_foreign_ecls": -2.40251761674881,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_G_O",
+        "n_sequences": 7,
+        "self_rank": 6,
+        "self_ecls": -0.8183900515238443,
+        "best_foreign_ecls": -0.8183900515238443,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 11,
+        "backbone": "8b8i_H_P",
+        "n_sequences": 7,
+        "self_rank": 7,
+        "self_ecls": -1.0863817930221558,
+        "best_foreign_ecls": -1.0863817930221558,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 12,
+        "backbone": "6j7w_A_C",
+        "n_sequences": 3,
+        "self_rank": 1,
+        "self_ecls": -2.3083897630373635,
+        "best_foreign_ecls": -2.3083897630373635,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 12,
+        "backbone": "6j7w_B_D",
+        "n_sequences": 3,
+        "self_rank": 2,
+        "self_ecls": -2.2705187598864236,
+        "best_foreign_ecls": -2.2705187598864236,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 12,
+        "backbone": "8opi_A_B",
+        "n_sequences": 3,
+        "self_rank": 1,
+        "self_ecls": -1.4297018845876057,
+        "best_foreign_ecls": 3.4140548706054683,
+        "self_minus_best_foreign": -4.843756755193074
+      },
+      {
+        "length": 13,
+        "backbone": "6i2g_A_B",
+        "n_sequences": 2,
+        "self_rank": 1,
+        "self_ecls": -2.357992728551229,
+        "best_foreign_ecls": 2.461802085240682,
+        "self_minus_best_foreign": -4.819794813791911
+      },
+      {
+        "length": 13,
+        "backbone": "8op0_A_B",
+        "n_sequences": 2,
+        "self_rank": 1,
+        "self_ecls": -2.1757278442382812,
+        "best_foreign_ecls": 3.223984638849894,
+        "self_minus_best_foreign": -5.399712483088175
+      },
+      {
+        "length": 14,
+        "backbone": "5hm1_A_D",
+        "n_sequences": 5,
+        "self_rank": 1,
+        "self_ecls": -2.455023944377899,
+        "best_foreign_ecls": -2.455023944377899,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 14,
+        "backbone": "5hm1_B_E",
+        "n_sequences": 5,
+        "self_rank": 2,
+        "self_ecls": -2.431930184364319,
+        "best_foreign_ecls": -2.431930184364319,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 14,
+        "backbone": "5hm1_C_F",
+        "n_sequences": 5,
+        "self_rank": 3,
+        "self_ecls": -2.401296019554138,
+        "best_foreign_ecls": -2.401296019554138,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 14,
+        "backbone": "8skj_A_E",
+        "n_sequences": 5,
+        "self_rank": 1,
+        "self_ecls": -2.16380767027537,
+        "best_foreign_ecls": -2.16380767027537,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 14,
+        "backbone": "8skj_G_H",
+        "n_sequences": 5,
+        "self_rank": 2,
+        "self_ecls": -2.1598390738169355,
+        "best_foreign_ecls": -2.1598390738169355,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 18,
+        "backbone": "2x6m_A_B",
+        "n_sequences": 4,
+        "self_rank": 1,
+        "self_ecls": -2.014958282311757,
+        "best_foreign_ecls": 1.9752587477366133,
+        "self_minus_best_foreign": -3.9902170300483704
+      },
+      {
+        "length": 18,
+        "backbone": "6zwk_B_H",
+        "n_sequences": 4,
+        "self_rank": 1,
+        "self_ecls": -2.620887080828349,
+        "best_foreign_ecls": -2.620887080828349,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 18,
+        "backbone": "6zwk_D_J",
+        "n_sequences": 4,
+        "self_rank": 2,
+        "self_ecls": -2.6022286415100098,
+        "best_foreign_ecls": -2.6022286415100098,
+        "self_minus_best_foreign": 0.0
+      },
+      {
+        "length": 18,
+        "backbone": "6zwk_E_K",
+        "n_sequences": 4,
+        "self_rank": 3,
+        "self_ecls": -2.62535830338796,
+        "best_foreign_ecls": -2.62535830338796,
+        "self_minus_best_foreign": 0.0
+      }
+    ]
+  },
+  "peptide_swap": {
+    "n": 26,
+    "prefers_own_peptide": 18,
+    "mean_delta_own_minus_scrambled": -0.07553938948191129,
+    "rows": [
+      {
+        "instance": "2x6m_A_B",
+        "native_h3": "AAKFSPGYCGGSWSNFGY",
+        "peptide": "DYEPEA",
+        "scrambled_peptide": "EADEYP",
+        "complex_nll_own_peptide": 0.9179344375928243,
+        "complex_nll_scrambled_peptide": 0.9016465942064921,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.016287843386332268
+      },
+      {
+        "instance": "5hm1_A_D",
+        "native_h3": "YAPMIYYGGRYSDY",
+        "peptide": "AVERYLKDQQLLGIW",
+        "scrambled_peptide": "AELVGQKYRDILLWQ",
+        "complex_nll_own_peptide": 0.5512060125668844,
+        "complex_nll_scrambled_peptide": 0.5741691986719767,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.022963186105092293
+      },
+      {
+        "instance": "5hm1_B_E",
+        "native_h3": "YAPMIYYGGRYSDY",
+        "peptide": "AVERYLKDQQLLGIW",
+        "scrambled_peptide": "EDGIRWQQLKLYAVL",
+        "complex_nll_own_peptide": 0.5661551554997762,
+        "complex_nll_scrambled_peptide": 0.770048995812734,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.20389384031295776
+      },
+      {
+        "instance": "5hm1_C_F",
+        "native_h3": "YAPMIYYGGRYSDY",
+        "peptide": "AVERYLKDQQLLGIW",
+        "scrambled_peptide": "LGIKVRLAQWEQYDL",
+        "complex_nll_own_peptide": 0.5982243617375692,
+        "complex_nll_scrambled_peptide": 0.8744165500005087,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.27619218826293945
+      },
+      {
+        "instance": "6i2g_A_B",
+        "native_h3": "HVLEDRVDSFHDY",
+        "peptide": "SRLEEELRRRLTE",
+        "scrambled_peptide": "LRRELERERELTS",
+        "complex_nll_own_peptide": 0.7918357054392496,
+        "complex_nll_scrambled_peptide": 0.8497934540112814,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.05795774857203173
+      },
+      {
+        "instance": "6j7w_A_C",
+        "native_h3": "AKQGENDGPFDH",
+        "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+        "scrambled_peptide": "RNYPECFLNLQLQHSCSCSYTLACPANPRCSIDCGTSQQ",
+        "complex_nll_own_peptide": 0.6621250112851461,
+        "complex_nll_scrambled_peptide": 0.7116164565086365,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.04949144522349036
+      },
+      {
+        "instance": "6j7w_B_D",
+        "native_h3": "AKQGENDGPFDH",
+        "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+        "scrambled_peptide": "QICEQFLQLCLNLNSYSGRPASCRCYTSCTPHPCQD",
+        "complex_nll_own_peptide": 0.6941840847333273,
+        "complex_nll_scrambled_peptide": 0.7354375521341959,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.04125346740086866
+      },
+      {
+        "instance": "6s0y_B_D",
+        "native_h3": "GAERYNVEGCGYDVAY",
+        "peptide": "VETPIRNEWGCRC",
+        "scrambled_peptide": "RTCWGRPNEEVIC",
+        "complex_nll_own_peptide": 0.6182030638058981,
+        "complex_nll_scrambled_peptide": 0.6092201073964437,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.008982956409454346
+      },
+      {
+        "instance": "6zwk_B_H",
+        "native_h3": "AADYGTSRYTRRQSEYEY",
+        "peptide": "TQAQEY",
+        "scrambled_peptide": "TYEQAQ",
+        "complex_nll_own_peptide": 0.4851131836573283,
+        "complex_nll_scrambled_peptide": 1.1122605005900066,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.6271473169326782
+      },
+      {
+        "instance": "6zwk_D_J",
+        "native_h3": "AADYGTSRYTRRQSEYEY",
+        "peptide": "TQAQEY",
+        "scrambled_peptide": "TQAQYE",
+        "complex_nll_own_peptide": 0.5015532175699869,
+        "complex_nll_scrambled_peptide": 0.6314400633176168,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.12988684574762988
+      },
+      {
+        "instance": "6zwk_E_K",
+        "native_h3": "AADYGTSRYTRRQSEYEY",
+        "peptide": "TQAQEY",
+        "scrambled_peptide": "QETQYA",
+        "complex_nll_own_peptide": 0.4930378198623657,
+        "complex_nll_scrambled_peptide": 0.7125348051389059,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.21949698527654016
+      },
+      {
+        "instance": "8b8i_A_I",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "KEDAFSKLKEKFMNELH",
+        "scrambled_peptide": "KFAFKLMEELHSKEKND",
+        "complex_nll_own_peptide": 0.4730680088202159,
+        "complex_nll_scrambled_peptide": 0.4607776403427124,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.012290368477503477
+      },
+      {
+        "instance": "8b8i_B_J",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "KEDAFSKLKEKFMNELH",
+        "scrambled_peptide": "KKKEEMSFLAFKEHLND",
+        "complex_nll_own_peptide": 0.4660824735959371,
+        "complex_nll_scrambled_peptide": 0.4802189767360687,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.014136503140131651
+      },
+      {
+        "instance": "8b8i_D_L",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "KEDAFSKLKEKFMN",
+        "scrambled_peptide": "AELEKNFDSFKKMK",
+        "complex_nll_own_peptide": 0.49294625719388324,
+        "complex_nll_scrambled_peptide": 0.47558335463205975,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.01736290256182349
+      },
+      {
+        "instance": "8b8i_E_M",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "KEDAFSKLKEKFMNE",
+        "scrambled_peptide": "SEDKAKNEKMELFFK",
+        "complex_nll_own_peptide": 1.0338958899180095,
+        "complex_nll_scrambled_peptide": 1.0259204308191936,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.007975459098815918
+      },
+      {
+        "instance": "8b8i_F_N",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "KEDAFSKLKEKFMN",
+        "scrambled_peptide": "KFFEENKADMSKLK",
+        "complex_nll_own_peptide": 0.4936010241508484,
+        "complex_nll_scrambled_peptide": 0.5112289587656657,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.017627934614817264
+      },
+      {
+        "instance": "8b8i_G_O",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "EDAFSKLKEKFMN",
+        "scrambled_peptide": "KFNDLKEFAMKES",
+        "complex_nll_own_peptide": 2.102788050969442,
+        "complex_nll_scrambled_peptide": 2.118054231007894,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.015266180038452148
+      },
+      {
+        "instance": "8b8i_H_P",
+        "native_h3": "AGGDYSDRLGS",
+        "peptide": "KEDAFSKLKEKFMN",
+        "scrambled_peptide": "FMKESLEADKKFNK",
+        "complex_nll_own_peptide": 1.7999292612075806,
+        "complex_nll_scrambled_peptide": 1.7618543704350789,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.0380748907725017
+      },
+      {
+        "instance": "8op0_A_B",
+        "native_h3": "APAYEGDLYAFDE",
+        "peptide": "GSVQIVYKPK",
+        "scrambled_peptide": "YIVPKKSGVQ",
+        "complex_nll_own_peptide": 0.8008352120717367,
+        "complex_nll_scrambled_peptide": 0.7260470589001974,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.0747881531715393
+      },
+      {
+        "instance": "8opi_A_B",
+        "native_h3": "APAYEGDLYAFD",
+        "peptide": "GSVQIVYKPK",
+        "scrambled_peptide": "IVSVGKPKYQ",
+        "complex_nll_own_peptide": 1.5447600682576497,
+        "complex_nll_scrambled_peptide": 1.5319368839263916,
+        "prefers_own_peptide": false,
+        "delta_own_minus_scrambled": 0.012823184331258064
+      },
+      {
+        "instance": "8pii_A_B",
+        "native_h3": "APAYEGDLYA",
+        "peptide": "GSVQIVYKPK",
+        "scrambled_peptide": "QPSVGIVKYK",
+        "complex_nll_own_peptide": 0.47706139087677,
+        "complex_nll_scrambled_peptide": 0.48748500148455304,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.010423610607783018
+      },
+      {
+        "instance": "8skj_A_E",
+        "native_h3": "AEWMNTRREFITPY",
+        "peptide": "GKPIPNPLLGLDST",
+        "scrambled_peptide": "PINKGDLGSPTPLL",
+        "complex_nll_own_peptide": 0.8649059534072876,
+        "complex_nll_scrambled_peptide": 0.955681324005127,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.09077537059783936
+      },
+      {
+        "instance": "8skj_G_H",
+        "native_h3": "AEWMNTRREFITPY",
+        "peptide": "GKPIPNPLLGLDST",
+        "scrambled_peptide": "PPLTGKSLDLPNIG",
+        "complex_nll_own_peptide": 0.8867394129435221,
+        "complex_nll_scrambled_peptide": 0.9823053081830343,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.0955658952395122
+      },
+      {
+        "instance": "9eiu_B_A",
+        "native_h3": "NAPQFTDRY",
+        "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+        "scrambled_peptide": "QDLVTKLQLQSGGRIMLVLSQQEAIIESQAIGEDQAKEELAL",
+        "complex_nll_own_peptide": 1.0609620412190754,
+        "complex_nll_scrambled_peptide": 1.2934216260910034,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.23245958487192797
+      },
+      {
+        "instance": "9lds_A_B",
+        "native_h3": "NARRGATNT",
+        "peptide": "DPLQPELDSFKEELD",
+        "scrambled_peptide": "LEDDLQEKPFEDSLP",
+        "complex_nll_own_peptide": 0.7124027808507284,
+        "complex_nll_scrambled_peptide": 0.7366878191630045,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.02428503831227613
+      },
+      {
+        "instance": "9lds_C_D",
+        "native_h3": "NARRGATNT",
+        "peptide": "DPLQPELDSFKEELD",
+        "scrambled_peptide": "PDPLELQDKELDFES",
+        "complex_nll_own_peptide": 0.71158899863561,
+        "complex_nll_scrambled_peptide": 0.7353757421175638,
+        "prefers_own_peptide": true,
+        "delta_own_minus_scrambled": -0.023786743481953865
+      }
+    ]
+  },
+  "classification": "control_experiment_not_confirmatory_claim",
+  "provenance": "re-scores frozen results/flex_c1_v1/preregistration.json"
+}

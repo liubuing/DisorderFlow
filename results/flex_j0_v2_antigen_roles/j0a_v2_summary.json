@@ -1,0 +1,49 @@
+{
+  "gate": "j0a_single_pose_corrected_roles",
+  "n_components": 28,
+  "n_families": 9,
+  "mean_advantage": 5.553179393297149,
+  "positive_components": 28,
+  "per_family": {
+    "seq_1": {
+      "mean_advantage": 4.986566859881083,
+      "n_components": 3
+    },
+    "seq_0": {
+      "mean_advantage": 6.293700982994504,
+      "n_components": 3
+    },
+    "seq_2": {
+      "mean_advantage": 5.520699204603831,
+      "n_components": 1
+    },
+    "seq_7": {
+      "mean_advantage": 5.230254672368368,
+      "n_components": 1
+    },
+    "seq_5": {
+      "mean_advantage": 5.928455372537885,
+      "n_components": 7
+    },
+    "seq_8": {
+      "mean_advantage": 6.199139298597971,
+      "n_components": 1
+    },
+    "seq_3": {
+      "mean_advantage": 4.928132707504998,
+      "n_components": 7
+    },
+    "seq_6": {
+      "mean_advantage": 5.707391117413839,
+      "n_components": 3
+    },
+    "seq_4": {
+      "mean_advantage": 5.789918197790782,
+      "n_components": 2
+    }
+  },
+  "role_encoding_note": "H -> Fragment.Heavy(1), P -> Fragment.Antigen(3), other context -> Fragment.Light(2)",
+  "checkpoint_path": "D:\\biological\\DisorderFlow\\logs\\bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032\\checkpoints\\best.pt",
+  "classification": "development_gate_not_confirmatory_claim",
+  "provenance": "re-scores frozen results/flex_j0_v1/cohort.json; frozen J0a artifacts untouched"
+}

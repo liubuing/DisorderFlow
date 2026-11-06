@@ -1,0 +1,12 @@
+{
+  "pool_distinct_sequences": 709890,
+  "families_attempted": 200,
+  "families_passed": 1,
+  "freeze_readiness": false,
+  "mean_yield": 0.0163,
+  "binders_matched_total": 8,
+  "binders_total": 339,
+  "same_antigen_positional_total": 0,
+  "verdict": "exact_composition_infeasible_at_full_pool_scale",
+  "classification": "pilot_v3b_summary_no_gate_claim"
+}

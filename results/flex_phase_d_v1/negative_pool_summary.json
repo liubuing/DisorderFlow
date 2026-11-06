@@ -1,0 +1,8 @@
+{
+  "classification": "inert_control_pool_no_model_scoring",
+  "source_query": "IEDB B-cell negatives, linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+  "n_records_streamed": 1234987,
+  "n_distinct_sequences": 709890,
+  "n_distinct_compositions": 672336,
+  "script_sha256": "8aebc6f75ae029d67eb4e2068979dce34d62dc9d808c2e4f90dadca3699f8213"
+}

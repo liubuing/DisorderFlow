@@ -1,0 +1,73 @@
+{
+  "classification": "metadata_level_feasibility_verdict_v1",
+  "iedb_audit_sha256": "b14396b841d1f664172e39d2818301fda86c4d3a32b18ee9ab077b74816efee9",
+  "iedb_counts": {
+    "I1_negative_linear_5_50": 1234987,
+    "I2_negative_linear_5_50_with_antigen": 1232182,
+    "I4_positive_linear_5_50_with_pdb": 665,
+    "I5_positive_linear_5_50": 325843,
+    "I6_total_bcell_records": 1693595,
+    "I3_distinct_negative_source_antigens": 30388
+  },
+  "distinct_negative_source_antigens": 30388,
+  "top_antigens_with_both_labels": [
+    {
+      "accession": "AEA11012.1",
+      "negative_records": 26367,
+      "positive_records": 2994
+    },
+    {
+      "accession": "SRC265912",
+      "negative_records": 24989,
+      "positive_records": 2710
+    },
+    {
+      "accession": "NP_073549.1",
+      "negative_records": 20391,
+      "positive_records": 1807
+    },
+    {
+      "accession": "AXN92247.1",
+      "negative_records": 19224,
+      "positive_records": 1887
+    },
+    {
+      "accession": "APO40578.1",
+      "negative_records": 16465,
+      "positive_records": 1685
+    },
+    {
+      "accession": "AVV62524.1",
+      "negative_records": 16173,
+      "positive_records": 1677
+    },
+    {
+      "accession": "AEN19363.1",
+      "negative_records": 14395,
+      "positive_records": 1418
+    },
+    {
+      "accession": "AWK59942.1",
+      "negative_records": 14258,
+      "positive_records": 1348
+    }
+  ],
+  "a4_binder_side": {
+    "affinity_annotated_peptide_rows": 249,
+    "unique_pdbs": 138,
+    "distinct_antigen_names": 106,
+    "source": "results/flex_a4_affinity_inventory_v1 + summary aggregation 2026-10-30"
+  },
+  "protabank_status": "unreachable from current network (SSL failure); backup source, non-blocking",
+  "gate_reference": {
+    "required_families": ">=24 (target 30), per frozen power table (results/flex_phase_d_v1/power_table.json)",
+    "per_family": ">=2 verified binders + >=1 composition-matched experimentally-confirmed non-binder"
+  },
+  "verdict": {
+    "raw_material": "PASS with ~3 orders of magnitude margin: 30,388 distinct antigens carry negative measurements; the top-8 by negative count each also carry 1,300-3,000 positive records (both labels on the same antigen)",
+    "assembly_risk": "OPEN - the gate requires curated families (composition-matched negatives, verified binder counts, per-family identity review); record-level assembly is labor, not luck, and is the next step",
+    "overall": "feasible_to_proceed_to_assembly_pilot; preregistration freeze remains blocked until the assembly pilot demonstrates >=24 curated families or a definitive shortfall"
+  },
+  "red_line_note": "antigen names were streamed through distinct counters and discarded; only counts and top-name tallies are stored; no epitope sequences or record-level label tables are persisted",
+  "script_sha256": "dd26edecbb7032d5a29680672642e181871fa20fa1a1a7299130bf5eb5a40276"
+}

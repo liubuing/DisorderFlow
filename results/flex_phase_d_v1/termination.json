@@ -1,0 +1,27 @@
+{
+  "decision": "B_terminate_phase_d",
+  "date": "2026-11-02",
+  "classification": "line_termination_decision_with_measured_rationale",
+  "rationale": [
+    "The preregistration freeze condition requires >=24 curated families with composition-matched experimentally-confirmed non-binders.",
+    "Exact multiset-composition matching is measurably infeasible at any reachable pool scale: the full IEDB negative universe (1,234,987 records -> 709,890 distinct sequences, 672,336 distinct compositions, mean 1.056 sequences per composition) raises the matched yield only from 0.96% to 1.63% (1/200 families pass; pilot_v3b_summary.json).",
+    "Loosening to nearest-neighbour composition matching would weaken the control below the level the C1 ranking result already showed is decisive (a composition baseline beat the judge in 3/8 families), so a Phase D positive result under relaxed matching would not survive its own baseline.",
+    "Volume is not the constraint: 30,388 distinct antigens carry negative measurements, and the top-volume antigens are dense overlapping-window scans whose negatives are position-confounded (pilot v1/v2); per-antibody families do not exist in public B-cell data (12 receptor-annotated negatives vs 4,160 positives)."
+  ],
+  "what_survives": [
+    "The boundary-study manuscript (publication/flex_boundary_manuscript_draft_v1.md), which now also carries the measured data-infeasibility of the binder-vs-nonbinder extension.",
+    "The frozen Phase D audit chain (this directory), including the power table any future re-opening must meet (>=24 families; results/flex_phase_d_v1/power_table.json)."
+  ],
+  "reopen_condition": "a new experimental negative dataset (e.g. curated DMS or Proteome-scans with per-mutant binding readouts) that changes the composition-collision mathematics; re-opening requires a fresh preregistration frozen before any new data contact.",
+  "evidence_sha256": {
+    "feasibility_report_v1": "b8bc590b1327a884a315004ac70f5fe6aa60364cbb64f9d2d12bd3c7c568cef1",
+    "iedb_feasibility_audit": "b14396b841d1f664172e39d2818301fda86c4d3a32b18ee9ab077b74816efee9",
+    "pilot_v1_summary": "8dee7d77370bd123fe889076156e7117748ce10790a4a0e869373d599c4a7782",
+    "pilot_v2_summary": "b891491db832b005e59c9e959fbef339bf7f89ec1bd63ccc9822992e458ff7c7",
+    "pilot_v3_summary": "b61d726b1e98cb23ee84b8e49a6122403fe71537de5091f3033f78d50437fd85",
+    "pilot_v3b_summary": "e43b9a9acd548cba66f2e5f13ef393660cd5e8916bcb9b75359d8cdbf89ffa63",
+    "negative_pool_summary": "7479faeeed0f3fcd808111b91d4a1cf186b1e6715b42eeb8753fc9bb636e64f4",
+    "power_table": "11ef24f81ae39c94a08113ebaa945b91e9e155953b69b92b094bfab486537e6c"
+  },
+  "script_sha256": "a298c8166d63c327f2fb5a8241d00d234c24eadc5e4afb67c615b9df1e48d333"
+}

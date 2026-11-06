@@ -1,0 +1,89 @@
+{
+  "gate": "c1_v2_corrected_roles",
+  "n_components": 26,
+  "n_families": 8,
+  "stats": {
+    "judge": {
+      "mean_percentile": 1.0,
+      "bootstrap_ci_family_bootstrap": [
+        1.0,
+        1.0
+      ],
+      "mean_percentile_component_equal": 1.0,
+      "n_families": 8,
+      "top1_rate": 1.0,
+      "top5_rate": 1.0,
+      "median_rank": 1.0,
+      "min_rank": 1
+    },
+    "proteinmpnn_nll": {
+      "mean_percentile": 0.6374231451274002,
+      "bootstrap_ci_family_bootstrap": [
+        0.5871507716116108,
+        0.6682134407340609
+      ],
+      "mean_percentile_component_equal": 0.6374231451274002,
+      "n_families": 8,
+      "top1_rate": 0.0,
+      "top5_rate": 0.0,
+      "median_rank": 29.5,
+      "min_rank": 8
+    },
+    "composition_logistic": {
+      "mean_percentile": 0.5439936131332544,
+      "bootstrap_ci_family_bootstrap": [
+        0.5449594460017216,
+        0.6302462522558713
+      ],
+      "mean_percentile_component_equal": 0.5439936131332544,
+      "n_families": 8,
+      "top1_rate": 0.23076923076923078,
+      "top5_rate": 0.4230769230769231,
+      "median_rank": 7.0,
+      "min_rank": 1
+    }
+  },
+  "baseline_comparisons": {
+    "composition_logistic": {
+      "family_mean_paired_diff": {
+        "seq_1": 0.579960568655378,
+        "seq_0": 0.34046035265547464,
+        "seq_7": 0.2680412371134021,
+        "seq_5": 0.6083775710412088,
+        "seq_8": 0.28409090909090906,
+        "seq_3": 0.36890339580168835,
+        "seq_6": 0.5598901625648821,
+        "seq_4": 0.3152557319223986
+      },
+      "families_judge_better": 8,
+      "n_families": 8
+    },
+    "proteinmpnn_nll": {
+      "family_mean_paired_diff": {
+        "seq_1": 0.3743538007068629,
+        "seq_0": 0.36891563720832016,
+        "seq_7": 0.48453608247422686,
+        "seq_5": 0.41421606908254055,
+        "seq_8": 0.43181818181818177,
+        "seq_3": 0.3456017296998815,
+        "seq_6": 0.19628305737020146,
+        "seq_4": 0.3937389770723104
+      },
+      "families_judge_better": 8,
+      "n_families": 8
+    }
+  },
+  "gate_parts": {
+    "beats_composition_70pct": true,
+    "beats_proteinmpnn_70pct": true,
+    "ci_beats_random": true
+  },
+  "verdict": "pass",
+  "role_encoding": "H=Heavy(1), P=Antigen(3)",
+  "baselines_reused": [
+    "mpnn_nll_cache.json",
+    "composition_prob_cache.json"
+  ],
+  "classification": "development_gate_not_confirmatory_claim",
+  "provenance": "re-scores frozen results/flex_c1_v1/preregistration.json; frozen C1 artifacts untouched"
+}

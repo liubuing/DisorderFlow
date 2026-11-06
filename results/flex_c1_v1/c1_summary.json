@@ -1,0 +1,72 @@
+{
+  "gate": "c1_ranker_development_gate",
+  "stats": {
+    "flex_ecls_marginal": {
+      "mean_percentile": 0.7674401903698136,
+      "bootstrap_ci": [
+        0.6759789838680078,
+        0.8090018036095263
+      ],
+      "top1_rate": 0.0,
+      "top5_rate": 0.0
+    },
+    "proteinmpnn_nll": {
+      "mean_percentile": 0.6374231451274002,
+      "bootstrap_ci": [
+        0.5871507716116108,
+        0.6682134407340609
+      ],
+      "top1_rate": 0.0,
+      "top5_rate": 0.0
+    },
+    "composition_logistic": {
+      "mean_percentile": 0.5439936131332544,
+      "bootstrap_ci": [
+        0.5449594460017216,
+        0.6302462522558713
+      ],
+      "top1_rate": 0.0,
+      "top5_rate": 0.0
+    }
+  },
+  "baseline_comparisons": {
+    "composition_logistic": {
+      "family_mean_paired_diff": {
+        "seq_1": -0.07990583953157145,
+        "seq_0": 0.07121740048569318,
+        "seq_7": 0.24742268041237114,
+        "seq_5": 0.5569475448615027,
+        "seq_8": -0.05681818181818188,
+        "seq_3": 0.18411173141397288,
+        "seq_6": 0.5438158237122862,
+        "seq_4": -0.3084215167548501
+      },
+      "families_judge_better": 3,
+      "n_families": 8
+    },
+    "proteinmpnn_nll": {
+      "family_mean_paired_diff": {
+        "seq_1": -0.2855126074800865,
+        "seq_0": 0.0996726850385387,
+        "seq_7": 0.4639175257731959,
+        "seq_5": 0.3627860429028346,
+        "seq_8": 0.09090909090909083,
+        "seq_3": 0.160810065312166,
+        "seq_6": 0.18020871851760548,
+        "seq_4": -0.22993827160493827
+      },
+      "families_judge_better": 2,
+      "n_families": 8
+    }
+  },
+  "gate_parts": {
+    "composition_logistic": false,
+    "proteinmpnn_nll": false,
+    "judge_ci_beats_random": false
+  },
+  "verdict": "fail",
+  "on_fail_consequence": "M8 repositioning clause",
+  "checkpoint_path": "D:\\biological\\DisorderFlow\\logs\\bfn_disorder_v4_afdb_supervised_2026_08_05__17_22_45_disorder_v4_balanced_long_s2032\\checkpoints\\best.pt",
+  "checkpoint_sha256": "ed9984504d799187b7660c1d40c3dc68c01a0ce9b3cf92e25af1273195931252",
+  "classification": "development_ranker_comparison_not_confirmatory_claim"
+}

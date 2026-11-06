@@ -1,0 +1,57 @@
+{
+  "schema_version": "aayl_bfn_v2_antigen_roles",
+  "classification": "retrospective_single_antigen_descriptive",
+  "endpoint": "9 - median(original log10 estimated Kd in nM); higher = stronger",
+  "desired_direction": "spearman(ecls, endpoint) < 0",
+  "references_frozen_proteinmpnn": {
+    "AAYL49": {
+      "ECLS": -0.12137340587783532,
+      "negative_complex_NLL": 0.06346850696059449
+    },
+    "AAYL51": {
+      "ECLS": -0.07147922607901694,
+      "negative_complex_NLL": 0.1317821126759523
+    }
+  },
+  "families": [
+    {
+      "family": "AAYL49",
+      "n_variants": 281,
+      "spearman": {
+        "bfn_ecls_vs_endpoint": 0.0620931540633214,
+        "bfn_negative_complex_nll_vs_endpoint": -0.06795909095825807,
+        "frozen_proteinmpnn_ecls_vs_endpoint": -0.12137340587783535
+      },
+      "bootstrap_ci_bfn_ecls": [
+        -0.058501589793244504,
+        0.18408720421095687
+      ],
+      "bfn_ecls_mean": -1.2421953400612442,
+      "bfn_ecls_sd": 0.5981542075884198
+    },
+    {
+      "family": "AAYL51",
+      "n_variants": 227,
+      "spearman": {
+        "bfn_ecls_vs_endpoint": -0.048890586211523625,
+        "bfn_negative_complex_nll_vs_endpoint": 0.06049165531959949,
+        "frozen_proteinmpnn_ecls_vs_endpoint": -0.07147922607901694
+      },
+      "bootstrap_ci_bfn_ecls": [
+        -0.17459793098915483,
+        0.07618523197255389
+      ],
+      "bfn_ecls_mean": -1.0811592003497434,
+      "bfn_ecls_sd": 0.5881766736223241
+    }
+  ],
+  "independent_antigens": 1,
+  "structure_source": "AF3 predicted parent complexes (AbBiBench)",
+  "limitations": [
+    "one antigen, two parent lineages",
+    "AlphaSeq-estimated Kd, not SPR/ITC",
+    "AF3 predicted rather than experimental coordinates",
+    "retrospective and not blinded (labels previously inspected)",
+    "complete-readings subset excludes weak/no-reading variants"
+  ]
+}

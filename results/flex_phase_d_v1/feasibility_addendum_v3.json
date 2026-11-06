@@ -1,0 +1,20 @@
+{
+  "classification": "feasibility_addendum_v3_structural_bridge",
+  "receptor_level_counts": {
+    "total": 4734,
+    "positive": 4160,
+    "negative": 12
+  },
+  "receptor_level_reading": "per-antibody families impossible: negatives 12 vs positives 4160",
+  "pdb_anchored_positives": {
+    "records": 665,
+    "distinct_pdbs": 652,
+    "distinct_antigen_accessions": 200,
+    "accessions_with_same_antigen_negatives": 200,
+    "negative_records_total": 20799
+  },
+  "head_antigens_note": "P05877 alpha-synuclein, P05067 APP, P10636 tau, P04578 HIV Gag among the highest-record antigens",
+  "family_unit_v3": "(PDB complex as antibody context) x (same-antigen IEDB positives as binders) x (same-antigen negatives, composition-matched and position-deconfounded)",
+  "verdict": "feasible: 200/200 structural-bridge antigens carry same-antigen negatives; full assembly proceeds on this unit",
+  "script_sha256": "dc295cf05c3220caa6aa8c0b83cfcc514b3d835cf259f88fbca4067d7db8777c"
+}

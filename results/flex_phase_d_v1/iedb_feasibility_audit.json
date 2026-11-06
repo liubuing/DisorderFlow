@@ -1,0 +1,95 @@
+{
+  "classification": "metadata_level_feasibility_counts_no_records_persisted",
+  "red_line_note": "antigen names were streamed through distinct counters and discarded; only counts and top-name tallies are stored; no epitope sequences or record-level label tables are persisted",
+  "counts": {
+    "I1_negative_linear_5_50": 1234987,
+    "I2_negative_linear_5_50_with_antigen": 1232182,
+    "I4_positive_linear_5_50_with_pdb": 665,
+    "I5_positive_linear_5_50": 325843,
+    "I6_total_bcell_records": 1693595,
+    "I3_distinct_negative_source_antigens": 30388
+  },
+  "top_negative_source_antigens_by_records": [
+    [
+      "AEA11012.1",
+      26367
+    ],
+    [
+      "SRC265912",
+      24989
+    ],
+    [
+      "NP_073549.1",
+      20391
+    ],
+    [
+      "AXN92247.1",
+      19224
+    ],
+    [
+      "APO40578.1",
+      16465
+    ],
+    [
+      "AVV62524.1",
+      16173
+    ],
+    [
+      "AEN19363.1",
+      14395
+    ],
+    [
+      "AWK59942.1",
+      14258
+    ],
+    [
+      "AUM60013.1",
+      14253
+    ],
+    [
+      "YP_009047202.1",
+      11420
+    ],
+    [
+      "YP_009555238.1",
+      11317
+    ],
+    [
+      "YP_009724389.1",
+      11021
+    ],
+    [
+      "YP_003766.2",
+      10619
+    ],
+    [
+      "YP_173236.1",
+      10501
+    ],
+    [
+      "AVV62535.1",
+      9328
+    ],
+    [
+      "ARU07575.1",
+      7527
+    ],
+    [
+      "NP_828849.2",
+      6926
+    ],
+    [
+      "P0DTC1.1",
+      6528
+    ],
+    [
+      "AIG13097.1",
+      6197
+    ],
+    [
+      "QHD43415.1",
+      6176
+    ]
+  ],
+  "script_sha256": "83f5f9ba8472ee44c92ead44f181336a89afef6298d4204c4cdcfe0e360a1fcf"
+}

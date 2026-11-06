@@ -1,0 +1,10 @@
+{
+  "families_attempted": 200,
+  "families_passed": 1,
+  "freeze_readiness": false,
+  "mean_yield": 0.0096,
+  "same_antigen_positional_total": 0,
+  "cross_antigen_pool_total": 5,
+  "verdict": "shortfall_documented",
+  "classification": "pilot_v3_summary_no_gate_claim"
+}

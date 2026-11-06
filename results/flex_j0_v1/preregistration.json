@@ -1,0 +1,409 @@
+{
+  "classification": "judge_validation_gate_not_confirmatory_claim",
+  "cohort": {
+    "definition": "A1 passing x A1b same-PDB-clean x >=1 exposure-clean component",
+    "pdbs": [
+      "2x6m",
+      "5hm1",
+      "5ivn",
+      "6i2g",
+      "6j7w",
+      "6s0y",
+      "6zwk",
+      "8b8i",
+      "8op0",
+      "8opi",
+      "8pii",
+      "8skj",
+      "9eiu",
+      "9lds"
+    ],
+    "n_pdbs": 14,
+    "components": [
+      {
+        "instance": "2x6m_A_B",
+        "pdb_id": "2x6m",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "GQLVESGGGSVQAGGSLRLSCAASGIDSSSYCMGWFRQRPGKEREGVARINGLGGVKTAYADSVKDRFTISRDNAENTVYLQMNSLKPEDTAIYYCAAKFSPGYCGGSWSNFGYWGQGTQVTVSSH",
+        "peptide_sequence": "DYEPEA",
+        "region_sequence": "AAKFSPGYCGGSWSNFGY"
+      },
+      {
+        "instance": "5hm1_A_D",
+        "pdb_id": "5hm1",
+        "heavy_chain": "A",
+        "peptide_chain": "D",
+        "heavy_sequence": "DVQLQESGGGLVQPGGSLRLSCAASGNIVSIDAAGWFRQAPGKQREPVATILTGGATNYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCYAPMIYYGGRYSDYWGQGTQVTVS",
+        "peptide_sequence": "AVERYLKDQQLLGIW",
+        "region_sequence": "YAPMIYYGGRYSDY"
+      },
+      {
+        "instance": "5hm1_B_E",
+        "pdb_id": "5hm1",
+        "heavy_chain": "B",
+        "peptide_chain": "E",
+        "heavy_sequence": "DVQLQESGGGLVQPGGSLRLSCAASGNIVSIDAAGWFRQAPGKQREPVATILTGGATNYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCYAPMIYYGGRYSDYWGQGTQVTVS",
+        "peptide_sequence": "AVERYLKDQQLLGIW",
+        "region_sequence": "YAPMIYYGGRYSDY"
+      },
+      {
+        "instance": "5hm1_C_F",
+        "pdb_id": "5hm1",
+        "heavy_chain": "C",
+        "peptide_chain": "F",
+        "heavy_sequence": "DVQLQESGGGLVQPGGSLRLSCAASGNIVSIDAAGWFRQAPGKQREPVATILTGGATNYADSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYYCYAPMIYYGGRYSDYWGQGTQVTVS",
+        "peptide_sequence": "AVERYLKDQQLLGIW",
+        "region_sequence": "YAPMIYYGGRYSDY"
+      },
+      {
+        "instance": "5ivn_A_B",
+        "pdb_id": "5ivn",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "VQLVESGGGLVQPGGSLTLSCTASGFTLDHYDIGWFRQAPGKEREGVSCINNSDDDTYYADSVKGRFTIFMNNAKDTVYLQMNSLKPEDTAIYYCAEARGCKRGRYEYDFWGQGTQVTVSS",
+        "peptide_sequence": "DRKAAVSHWQ",
+        "region_sequence": "AEARGCKRGRYEYDF"
+      },
+      {
+        "instance": "6i2g_A_B",
+        "pdb_id": "6i2g",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "VQLQESGGGLVQPGGSLRLSCTASGVTISALNAMAMGWYRQAPGERRVMVAAVSERGNAMYRESVQGRFTVTRDFTNKMVSLQMDNLKPEDTAVYYCHVLEDRVDSFHDYWGQGTQVTVSS",
+        "peptide_sequence": "SRLEEELRRRLTE",
+        "region_sequence": "HVLEDRVDSFHDY"
+      },
+      {
+        "instance": "6j7w_A_C",
+        "pdb_id": "6j7w",
+        "heavy_chain": "A",
+        "peptide_chain": "C",
+        "heavy_sequence": "EVQLVESGGGLVQPGGSLRLSCAASGFTVSSYGMSWVRQAPGKGPEWVSGIRGSDGSTYYADSVKGRFTISRDNSKNTLYLQMNSLRAEDTAVYYCAKQGENDGPFDHRGQGTLVTVS",
+        "peptide_sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+        "region_sequence": "AKQGENDGPFDH"
+      },
+      {
+        "instance": "6j7w_B_D",
+        "pdb_id": "6j7w",
+        "heavy_chain": "B",
+        "peptide_chain": "D",
+        "heavy_sequence": "EVQLVESGGGLVQPGGSLRLSCAASGFTVSSYGMSWVRQAPGKGPEWVSGIRGSDGSTYYADSVKGRFTISRDNSKNTLYLQMNSLRAEDTAVYYCAKQGENDGPFDHRGQGTLVTVS",
+        "peptide_sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+        "region_sequence": "AKQGENDGPFDH"
+      },
+      {
+        "instance": "6s0y_B_D",
+        "pdb_id": "6s0y",
+        "heavy_chain": "B",
+        "peptide_chain": "D",
+        "heavy_sequence": "VQLQESGGGLVQTGGSLRLSCAFSGSDDYVIGWFRQAPGKGRQGVSCIRLSGGGTIYADSAKGRFTVSADNAKKTVYLQMTRLKPEDTAVYYCGAERYNVEGCGYDVAYWGKGTQVTVS",
+        "peptide_sequence": "VETPIRNEWGCRC",
+        "region_sequence": "GAERYNVEGCGYDVAY"
+      },
+      {
+        "instance": "6zwk_B_H",
+        "pdb_id": "6zwk",
+        "heavy_chain": "B",
+        "peptide_chain": "H",
+        "heavy_sequence": "TEVQLVESGGGLVQAGDSLRLSCAASGLTFSRYAMGWFRQAPGNEREFVAVITASGRTTLYADSVKGRFTISRDNAKNTVALQMQSLKPEDTAVYYCAADYGTSRYTRRQSEYEYWGQGTQVTVSS",
+        "peptide_sequence": "TQAQEY",
+        "region_sequence": "AADYGTSRYTRRQSEYEY"
+      },
+      {
+        "instance": "6zwk_D_J",
+        "pdb_id": "6zwk",
+        "heavy_chain": "D",
+        "peptide_chain": "J",
+        "heavy_sequence": "TEVQLVESGGGLVQAGDSLRLSCAASGLTFSRYAMGWFRQAPGNEREFVAVITASGRTTLYADSVKGRFTISRDNAKNTVALQMQSLKPEDTAVYYCAADYGTSRYTRRQSEYEYWGQGTQVTVSSA",
+        "peptide_sequence": "TQAQEY",
+        "region_sequence": "AADYGTSRYTRRQSEYEY"
+      },
+      {
+        "instance": "6zwk_E_K",
+        "pdb_id": "6zwk",
+        "heavy_chain": "E",
+        "peptide_chain": "K",
+        "heavy_sequence": "TEVQLVESGGGLVQAGDSLRLSCAASGLTFSRYAMGWFRQAPGNEREFVAVITASGRTTLYADSVKGRFTISRDNAKNTVALQMQSLKPEDTAVYYCAADYGTSRYTRRQSEYEYWGQGTQVTVSSAA",
+        "peptide_sequence": "TQAQEY",
+        "region_sequence": "AADYGTSRYTRRQSEYEY"
+      },
+      {
+        "instance": "6zwk_F_L",
+        "pdb_id": "6zwk",
+        "heavy_chain": "F",
+        "peptide_chain": "L",
+        "heavy_sequence": "TEVQLVESGGGLVQAGDSLRLSCAASGLTFSRYAMGWFRQAPGNEREFVAVITASGRTTLYADSVKGRFTISRDNAKNTVALQMQSLKPEDTAVYYCAADYGTSRYTRRQSEYEYWGQGTQVTVSSAAA",
+        "peptide_sequence": "QAQEY",
+        "region_sequence": "AADYGTSRYTRRQSEYEY"
+      },
+      {
+        "instance": "8b8i_A_I",
+        "pdb_id": "8b8i",
+        "heavy_chain": "A",
+        "peptide_chain": "I",
+        "heavy_sequence": "MEVQLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "KEDAFSKLKEKFMNELH",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8b8i_B_J",
+        "pdb_id": "8b8i",
+        "heavy_chain": "B",
+        "peptide_chain": "J",
+        "heavy_sequence": "MEVQLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "KEDAFSKLKEKFMNELH",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8b8i_D_L",
+        "pdb_id": "8b8i",
+        "heavy_chain": "D",
+        "peptide_chain": "L",
+        "heavy_sequence": "EVQLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "KEDAFSKLKEKFMN",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8b8i_E_M",
+        "pdb_id": "8b8i",
+        "heavy_chain": "E",
+        "peptide_chain": "M",
+        "heavy_sequence": "EVQLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "KEDAFSKLKEKFMNE",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8b8i_F_N",
+        "pdb_id": "8b8i",
+        "heavy_chain": "F",
+        "peptide_chain": "N",
+        "heavy_sequence": "EVQLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "KEDAFSKLKEKFMN",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8b8i_G_O",
+        "pdb_id": "8b8i",
+        "heavy_chain": "G",
+        "peptide_chain": "O",
+        "heavy_sequence": "QLVESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "EDAFSKLKEKFMN",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8b8i_H_P",
+        "pdb_id": "8b8i",
+        "heavy_chain": "H",
+        "peptide_chain": "P",
+        "heavy_sequence": "VESGGGLVQTGGSLRLSCTASGSIGSISVMGWYRQVPGTQYELVAGISRGGSTWYEDSVKGRFTISRDNAKNTLYLQMNSLKPEDTGMYYCAGGDYSDRLGSWGQGTQVTVSS",
+        "peptide_sequence": "KEDAFSKLKEKFMN",
+        "region_sequence": "AGGDYSDRLGS"
+      },
+      {
+        "instance": "8op0_A_B",
+        "pdb_id": "8op0",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "ASGGVFVQSGGSLRLSCAASGATSTFDGMGWFRQAPGKEKEFVSAISYEQGSYTYYADSVKGRFTISRDNSKNMVYLQMNSLRAEDTATYYCAPAYEGDLYAFDEQGTQVTVSS",
+        "peptide_sequence": "GSVQIVYKPK",
+        "region_sequence": "APAYEGDLYAFDE"
+      },
+      {
+        "instance": "8opi_A_B",
+        "pdb_id": "8opi",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "ASGGVFVQSGGSLRLSCAASGATSTFDGMGWFRQAPGKEREFVSAISYEQGSYTYYADSVKGRFTISRDNSKNMVYLQMNSLRAEDTATYYCAPAYEGDLYAFDQGTQVTVSS",
+        "peptide_sequence": "GSVQIVYKPK",
+        "region_sequence": "APAYEGDLYAFD"
+      },
+      {
+        "instance": "8pii_A_B",
+        "pdb_id": "8pii",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "SGGVFVQSGGSLRLSCAASGATSTFDGMGWFRQAPGKEKEFVSAISYEQGSYTYYADSVKGRFTISRDNSKNMVYLQMNSLRAEDTATYYCAPAYEGDLYAFQGTQVTVSS",
+        "peptide_sequence": "GSVQIVYKPK",
+        "region_sequence": "APAYEGDLYA"
+      },
+      {
+        "instance": "8skj_A_E",
+        "pdb_id": "8skj",
+        "heavy_chain": "A",
+        "peptide_chain": "E",
+        "heavy_sequence": "VQLQASGGGFVQPGGSLRLSCAASGTTSFGDTMGWFRQAPGKEREFVSAISRQDDSHYYADSVKGRFTISRDNSKNTVYLQMNSLRAEDTATYYCAEWMNTRREFITPYWGQGTQVTVSS",
+        "peptide_sequence": "GKPIPNPLLGLDST",
+        "region_sequence": "AEWMNTRREFITPY"
+      },
+      {
+        "instance": "8skj_G_H",
+        "pdb_id": "8skj",
+        "heavy_chain": "G",
+        "peptide_chain": "H",
+        "heavy_sequence": "VQLQASGGGFVQPGGSLRLSCAASGTTSFGDTMGWFRQAPGKEREFVSAISRDDSHYYADSVKGRFTISRDNSKNTVYLQMNSLRAEDTATYYCAEWMNTRREFITPYWGQGTQVTVSS",
+        "peptide_sequence": "GKPIPNPLLGLDST",
+        "region_sequence": "AEWMNTRREFITPY"
+      },
+      {
+        "instance": "9eiu_B_A",
+        "pdb_id": "9eiu",
+        "heavy_chain": "B",
+        "peptide_chain": "A",
+        "heavy_sequence": "QVQLQESGGGLVQAGGSLRLSCAVSGIRVNVNAMYWYRQAPGKQRELVAIITTFGSTNYADSAKGRFTISRDNTKNTVYLQMDNLKPEDTAVYYCNAPQFTDRYWGQGTQVTVSS",
+        "peptide_sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+        "region_sequence": "NAPQFTDRY"
+      },
+      {
+        "instance": "9lds_A_B",
+        "pdb_id": "9lds",
+        "heavy_chain": "A",
+        "peptide_chain": "B",
+        "heavy_sequence": "QVQLVESGGGLVQTGGSLRLSCEASGSAFSSYAVNWYRQAPGKQREPVAAIGSFNTVYSDSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYICNARRGATNTWGQGTQVTVSS",
+        "peptide_sequence": "DPLQPELDSFKEELD",
+        "region_sequence": "NARRGATNT"
+      },
+      {
+        "instance": "9lds_C_D",
+        "pdb_id": "9lds",
+        "heavy_chain": "C",
+        "peptide_chain": "D",
+        "heavy_sequence": "QVQLVESGGGLVQTGGSLRLSCEASGSAFSSYAVNWYRQAPGKQREPVAAIGSFNTVYSDSVKGRFTISRDNAKNTVYLQMNSLKPEDTAVYICNARRGATNTWGQGTQVTVSS",
+        "peptide_sequence": "DPLQPELDSFKEELD",
+        "region_sequence": "NARRGATNT"
+      }
+    ],
+    "n_components": 28,
+    "n_antigen_families": 9,
+    "antigen_families": {
+      "seq_0": [
+        "AVERYLKDQQLLGIW"
+      ],
+      "seq_1": [
+        "DPLQPELDSFKEELD",
+        "DYEPEA"
+      ],
+      "seq_2": [
+        "DRKAAVSHWQ"
+      ],
+      "seq_3": [
+        "EDAFSKLKEKFMN",
+        "KEDAFSKLKEKFMN",
+        "KEDAFSKLKEKFMNE",
+        "KEDAFSKLKEKFMNELH"
+      ],
+      "seq_4": [
+        "GKPIPNPLLGLDST"
+      ],
+      "seq_5": [
+        "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+        "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+        "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+        "QAQEY",
+        "TQAQEY"
+      ],
+      "seq_6": [
+        "GSVQIVYKPK"
+      ],
+      "seq_7": [
+        "SRLEEELRRRLTE"
+      ],
+      "seq_8": [
+        "VETPIRNEWGCRC"
+      ]
+    }
+  },
+  "judge_primary": {
+    "name": "bfn_ecls",
+    "definition": "ECLS = factual H3 NLL(complex context) - factual H3 NLL(stripped context); lower ECLS = peptide coordinates help the sequence",
+    "model": "production checkpoint per app_config.yaml (CHECKPOINT_TRUTH s2032); path and sha256 recorded at run time",
+    "region": "CDR-H3 Chothia 93-102 indices from the frozen A1 ANARCII numbering",
+    "contexts": {
+      "complex": "context_chains=['P']",
+      "stripped": "context_chains=[] (heavy chain only)"
+    },
+    "fixed_t": 0.5,
+    "scoring_seeds": [
+      20261029,
+      20261030,
+      20261031
+    ],
+    "seed_note": "seed-repeats averaged per context; if a determinism check on the first component shows bit-identical repeats, collapse to one pass and record that fact in the run output"
+  },
+  "judge_secondary_optional": {
+    "name": "proteinmpnn_nll",
+    "definition": "same two contexts, ProteinMPNN sequence NLL; comparison only",
+    "status": "run if environment permits; absence is disclosed, not hidden"
+  },
+  "shuffle_protocol": {
+    "k_shuffles_per_component": 50,
+    "method": "composition-matched multiset permutation of the native region",
+    "rng_seed": 20261029
+  },
+  "endpoint": {
+    "component_level": "advantage = mean(ECLS over shuffles) - ECLS(native); positive means native contrast more favorable",
+    "family_level": "mean advantage over components of each antigen family",
+    "uncertainty": "family-level cluster bootstrap, 10,000 draws, seed 20261029"
+  },
+  "gates": {
+    "j0a_single_pose": {
+      "pass": ">= 70% of antigen families positive AND family-level bootstrap 95% CI of mean advantage excludes zero",
+      "meaning_on_pass": "single-pose judge admissible for development calibration only; T1 already showed single-pose overestimates, so this alone cannot unlock Phase C"
+    },
+    "j0b_ensemble": {
+      "status": "defined now, executed after j0a",
+      "protocol": "T1-style restrained OpenMM ensemble per component (4 seeds, peptide backbone 25 kJ/mol/nm^2), ECLS averaged over conformers (ensemble-marginalized)",
+      "pass": "same thresholds as j0a AND ensemble mean advantage positive with CI excluding zero",
+      "meaning_on_pass": "judge admissible for Phase C development work"
+    },
+    "on_fail": "either gate failing returns to judge design; Phase C is forbidden"
+  },
+  "power_statement": {
+    "n_families": 9,
+    "test": "exact binomial sign test over antigen families, one-sided",
+    "alpha_nominal": 0.05,
+    "critical_count": 8,
+    "realized_alpha": 0.01953125,
+    "power_curve": {
+      "p_alt_0.6": {
+        "critical_count": 8,
+        "realized_alpha": 0.01953125,
+        "power": 0.07054387199999998
+      },
+      "p_alt_0.7": {
+        "critical_count": 8,
+        "realized_alpha": 0.01953125,
+        "power": 0.19600323399999994
+      },
+      "p_alt_0.8": {
+        "critical_count": 8,
+        "realized_alpha": 0.01953125,
+        "power": 0.43620761600000013
+      },
+      "p_alt_0.85": {
+        "critical_count": 8,
+        "realized_alpha": 0.01953125,
+        "power": 0.5994791550859374
+      },
+      "p_alt_0.9": {
+        "critical_count": 8,
+        "realized_alpha": 0.01953125,
+        "power": 0.7748409780000001
+      },
+      "p_alt_0.95": {
+        "critical_count": 8,
+        "realized_alpha": 0.01953125,
+        "power": 0.9287886038046873
+      }
+    },
+    "min_p_alt_for_80pct_power": 0.9074,
+    "reading": "with 9 families the gate can only detect a judge that is positive on >= 9 of 9 families; weaker judges are invisible here"
+  },
+  "status_declaration": "Gate J0 is an internal go/no-go on the judge, run on a development cohort. It is NOT a confirmatory endpoint (M7): any confirmatory claim still requires universe expansion per the campaign document section 6.",
+  "provenance": {
+    "a1_manifest_sha256": "b6a05ae76ecbbc07537b7771424cc57b313947bd657d4239652f3956c9b65665",
+    "a1b_summary_v2_sha256": "c60d412f0070dda7cd85affb48d5aa1ed2a54a523a7becdb2d933f9bd3c3687b",
+    "a1b_exposure_sha256": "148f7ffc300f6bccea6ac0737bdd8c06e890b28663c80aa52b21fa18073bf5a6",
+    "script_sha256": "b1a590ab3ab83c31ced72590cb25b9c919154e48087733eb35fc5f2a57845283"
+  }
+}
