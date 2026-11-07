@@ -1,0 +1,1074 @@
+{
+  "components": [
+    {
+      "instance": "1mvf_A_D",
+      "pdb_id": "1mvf",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/1mvf_A_D.pdb",
+      "component_pdb_sha256": "fdd796ffe72fa04f2ae5474cbc6ef0574c4f5a4ec1ee627e0e8b548857050910",
+      "region_spec": "H:97-115",
+      "region_sequence": "AASSRWMDYSALTAKAYNS",
+      "peptide_sequence": "SSVKRWGNSPAVRIPATLMQALNLNIDDEVKIDLVDGKLIIEPV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "1mvf_A_E",
+      "pdb_id": "1mvf",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/1mvf_A_E.pdb",
+      "component_pdb_sha256": "58846c7c52f9b082f325b62b699efdd2cfaf9643152990329efb5060f7cce56a",
+      "region_spec": "H:97-115",
+      "region_sequence": "AASSRWMDYSALTAKAYNS",
+      "peptide_sequence": "SSVKRWGNSPAVRIPATLMQALNLNIDDEVKIDLVDGKLIIEPV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "1mvf_B_D",
+      "pdb_id": "1mvf",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/1mvf_B_D.pdb",
+      "component_pdb_sha256": "88ec1b09713fdf2161300240e32a3a560eb1e586c304dc7f93d92cd36e4d1864",
+      "region_spec": "H:93-111",
+      "region_sequence": "AASSRWMDYSALTAKAYNS",
+      "peptide_sequence": "SSVKRWGNSPAVRIPATLMQALNLNIDDEVKIDLVDGKLIIEPV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "1mvf_B_E",
+      "pdb_id": "1mvf",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/1mvf_B_E.pdb",
+      "component_pdb_sha256": "e7bc9da1c3e03f4ab36a3acdf60636ca9921827f4d8d9e5712da8a3e896e2e8b",
+      "region_spec": "H:93-111",
+      "region_sequence": "AASSRWMDYSALTAKAYNS",
+      "peptide_sequence": "SSVKRWGNSPAVRIPATLMQALNLNIDDEVKIDLVDGKLIIEPV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "2x6m_A_B",
+      "pdb_id": "2x6m",
+      "component_pdb": "results/flex_j0_v1/pdb/2x6m_A_B.pdb",
+      "component_pdb_sha256": "4cd101edf411685b1462fff03e380ab52b8cd690c66d915e7ab2c1b78bdd2914",
+      "region_spec": "H:97-114",
+      "region_sequence": "AAKFSPGYCGGSWSNFGY",
+      "peptide_sequence": "DYEPEA",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "4laj_I_C",
+      "pdb_id": "4laj",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/4laj_I_C.pdb",
+      "component_pdb_sha256": "848482e4f103a3756a7cd1dbeb82e911df0ddb1b776929f77d86a01a6fee9a43",
+      "region_spec": "H:97-112",
+      "region_sequence": "ATDCTVDPSLLYVMDY",
+      "peptide_sequence": "NLHFCQLRCKSLGLLGRCATCACV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "5hm1_A_D",
+      "pdb_id": "5hm1",
+      "component_pdb": "results/flex_j0_v1/pdb/5hm1_A_D.pdb",
+      "component_pdb_sha256": "47406869580884d9d9e036d28382cb88b285a2e5b77373747755a51cedb03686",
+      "region_spec": "H:96-109",
+      "region_sequence": "YAPMIYYGGRYSDY",
+      "peptide_sequence": "AVERYLKDQQLLGIW",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "5hm1_B_E",
+      "pdb_id": "5hm1",
+      "component_pdb": "results/flex_j0_v1/pdb/5hm1_B_E.pdb",
+      "component_pdb_sha256": "6be79435353fde84ff841c153e970ec1d77958e89cf99dc32a43704e85e14ddd",
+      "region_spec": "H:96-109",
+      "region_sequence": "YAPMIYYGGRYSDY",
+      "peptide_sequence": "AVERYLKDQQLLGIW",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "5hm1_C_F",
+      "pdb_id": "5hm1",
+      "component_pdb": "results/flex_j0_v1/pdb/5hm1_C_F.pdb",
+      "component_pdb_sha256": "845223be82d5c37d81128aaaec296fa1a4dfd63c5c6a819d6efe2e2b2aa8c0a2",
+      "region_spec": "H:96-109",
+      "region_sequence": "YAPMIYYGGRYSDY",
+      "peptide_sequence": "AVERYLKDQQLLGIW",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "5ivn_A_B",
+      "pdb_id": "5ivn",
+      "component_pdb": "results/flex_j0_v1/pdb/5ivn_A_B.pdb",
+      "component_pdb_sha256": "f896ff630da2ed7451bb7723634bdef5e746d6a2e37c9ac76f3744b103ae6803",
+      "region_spec": "H:96-110",
+      "region_sequence": "AEARGCKRGRYEYDF",
+      "peptide_sequence": "DRKAAVSHWQ",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6i2g_A_B",
+      "pdb_id": "6i2g",
+      "component_pdb": "results/flex_j0_v1/pdb/6i2g_A_B.pdb",
+      "component_pdb_sha256": "6695177787f64842c6b00b77f3ba257580a1b440e4e7169717f0ccdb0fd2cbc0",
+      "region_spec": "H:98-110",
+      "region_sequence": "HVLEDRVDSFHDY",
+      "peptide_sequence": "SRLEEELRRRLTE",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6j7w_A_C",
+      "pdb_id": "6j7w",
+      "component_pdb": "results/flex_j0_v1/pdb/6j7w_A_C.pdb",
+      "component_pdb_sha256": "f6ea60ec5c02cdd0fd2935eb6cf918089bff9407abe5ff757906d5f3db4cb609",
+      "region_spec": "H:97-108",
+      "region_sequence": "AKQGENDGPFDH",
+      "peptide_sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6j7w_B_D",
+      "pdb_id": "6j7w",
+      "component_pdb": "results/flex_j0_v1/pdb/6j7w_B_D.pdb",
+      "component_pdb_sha256": "48c0e12c469d500e19abdf9580d1c4f9eb9501477cd904cd6b373b8d043ebc88",
+      "region_spec": "H:97-108",
+      "region_sequence": "AKQGENDGPFDH",
+      "peptide_sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6s0y_A_C",
+      "pdb_id": "6s0y",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/6s0y_A_C.pdb",
+      "component_pdb_sha256": "6adcfad0cf7ba05f6aac166534f0046bc832bceac24a37b7008a99f76ea77537",
+      "region_spec": "H:94-109",
+      "region_sequence": "GAERYNVEGCGYDVAY",
+      "peptide_sequence": "EVETPIRNEWGCRC",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "6s0y_B_D",
+      "pdb_id": "6s0y",
+      "component_pdb": "results/flex_j0_v1/pdb/6s0y_B_D.pdb",
+      "component_pdb_sha256": "9bc6a40e522d0be2699497d72909c5321b0debdba86b3ad1f4eafd148b548075",
+      "region_spec": "H:94-109",
+      "region_sequence": "GAERYNVEGCGYDVAY",
+      "peptide_sequence": "VETPIRNEWGCRC",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6zwk_B_H",
+      "pdb_id": "6zwk",
+      "component_pdb": "results/flex_j0_v1/pdb/6zwk_B_H.pdb",
+      "component_pdb_sha256": "2c02a8d495580fb606c419ef259719e1eb510b2fc7a23b8c52e8c15992bdbcdc",
+      "region_spec": "H:98-115",
+      "region_sequence": "AADYGTSRYTRRQSEYEY",
+      "peptide_sequence": "TQAQEY",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6zwk_D_J",
+      "pdb_id": "6zwk",
+      "component_pdb": "results/flex_j0_v1/pdb/6zwk_D_J.pdb",
+      "component_pdb_sha256": "16f878f2c4e6d5abc67ecc824e4b2a0cf7fc3d511f8b5571db69bc8948cc2272",
+      "region_spec": "H:98-115",
+      "region_sequence": "AADYGTSRYTRRQSEYEY",
+      "peptide_sequence": "TQAQEY",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6zwk_E_K",
+      "pdb_id": "6zwk",
+      "component_pdb": "results/flex_j0_v1/pdb/6zwk_E_K.pdb",
+      "component_pdb_sha256": "1b22021ae606c2da9dfd104856881855205ba91e9941bf546392f8fe3261053d",
+      "region_spec": "H:98-115",
+      "region_sequence": "AADYGTSRYTRRQSEYEY",
+      "peptide_sequence": "TQAQEY",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "6zwk_F_L",
+      "pdb_id": "6zwk",
+      "component_pdb": "results/flex_j0_v1/pdb/6zwk_F_L.pdb",
+      "component_pdb_sha256": "5ae0d6edb969382e1031f9b3cf8acff696afa2139390e1bc1bb23c3772e329e4",
+      "region_spec": "H:98-115",
+      "region_sequence": "AADYGTSRYTRRQSEYEY",
+      "peptide_sequence": "QAQEY",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "7a48_A_B",
+      "pdb_id": "7a48",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a48_A_B.pdb",
+      "component_pdb_sha256": "ebf9c4f0e90376e21034cd2dcab7656e5cb739ab8b8aa7688bfac24b78e4cf10",
+      "region_spec": "H:97-107",
+      "region_sequence": "AADKDNTGYNY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_A_E",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_A_E.pdb",
+      "component_pdb_sha256": "60dcbbc24e4ea6538677a1f883f68c205332d1bb6d62512e7dc13d766bfd707b",
+      "region_spec": "H:95-105",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_A_F",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_A_F.pdb",
+      "component_pdb_sha256": "84c49e8af8d6156953db77c0273895c33d054baf09ea1b7f5aa0fde2bf5e5530",
+      "region_spec": "H:95-105",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_B_E",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_B_E.pdb",
+      "component_pdb_sha256": "de8c05e2e82b5e01275956823187b76a675cb37119dc65c9d65dab6553d008bb",
+      "region_spec": "H:96-106",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_B_F",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_B_F.pdb",
+      "component_pdb_sha256": "0d42c718f905e62131eb4ca6c7a3242a329696e57e477dade3ae3ccadcf6ca3d",
+      "region_spec": "H:96-106",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_C_E",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_C_E.pdb",
+      "component_pdb_sha256": "3ac2d54233297e19e35beaa547612f33438a852b2d083a75a048705d293d5214",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_C_F",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_C_F.pdb",
+      "component_pdb_sha256": "62aa8ac9390833239973d68e987a279820e779934f3f450392500d358c8d2843",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_D_E",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_D_E.pdb",
+      "component_pdb_sha256": "9b9ccf09c704ce0111384485510a7067b9f7cfa0928f004b03e26c00014c64e0",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_D_F",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_D_F.pdb",
+      "component_pdb_sha256": "685d221037284d7cf51ecfa31950d78450326d5e8fc0e18d165b926a7f20f6c9",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_G_K",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_G_K.pdb",
+      "component_pdb_sha256": "61c591d9ee96522378d0c1d7a5e3f2086a4a2612197fcc2e89dd42f6ed47b027",
+      "region_spec": "H:97-107",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_G_L",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_G_L.pdb",
+      "component_pdb_sha256": "dd3f153a4b293259179252f9e499fade4e8f90c81d1b041d16664919ba45c1a5",
+      "region_spec": "H:97-107",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_H_K",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_H_K.pdb",
+      "component_pdb_sha256": "8dd449d873d897185a00068e96e08d53b1675d902f9a481fc21ec12f0acfdde8",
+      "region_spec": "H:95-105",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_H_L",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_H_L.pdb",
+      "component_pdb_sha256": "bb5ac09c8ca95d7acb5f67581bf76a02181c1f7695e10ca9fb0e1786874227f1",
+      "region_spec": "H:95-105",
+      "region_sequence": "ATACYSSYVTY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_I_K",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_I_K.pdb",
+      "component_pdb_sha256": "433a802eb34d2378de12de44a4db79a088024f979e6b0a0adf7320690039be33",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_I_L",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_I_L.pdb",
+      "component_pdb_sha256": "c87e30b87a9c66ed29f7cedd858b78a18c28a137e92e53e4cc720517684a90fe",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_J_K",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_J_K.pdb",
+      "component_pdb_sha256": "88f42b24b6f037f18ca2124af260691ed9aa36e8a92a84dae239b3d7cd3cec54",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4d_J_L",
+      "pdb_id": "7a4d",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4d_J_L.pdb",
+      "component_pdb_sha256": "7a4f13e39b40d9253fca46bb543fd3c803ba52443596fb3d20493ac30c976a90",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAVPGRRGS",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4t_A_B",
+      "pdb_id": "7a4t",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4t_A_B.pdb",
+      "component_pdb_sha256": "9848e99467079216437229df0eb2bd3a8378c326022afd5fe8080edf5914a81c",
+      "region_spec": "H:96-109",
+      "region_sequence": "NSRGWTTTRGDYDY",
+      "peptide_sequence": "QLEDKVEELLSKNYHLENEVERLKKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4y_B_D",
+      "pdb_id": "7a4y",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4y_B_D.pdb",
+      "component_pdb_sha256": "485aadc29557fe4acb298508cbc6dda81debed56be1d0b4a4a151381de1c76d9",
+      "region_spec": "H:95-102",
+      "region_sequence": "SKTRAGTG",
+      "peptide_sequence": "KNSELKEEIQQLEEENQQLEEKISELKYG",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a4y_B_E",
+      "pdb_id": "7a4y",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a4y_B_E.pdb",
+      "component_pdb_sha256": "d80b2ecb162b9f25665ac818e52611a9360ca494c24da16fcbe4b07d5310ae41",
+      "region_spec": "H:95-102",
+      "region_sequence": "SKTRAGTG",
+      "peptide_sequence": "ENSQLEEKISQLKQKNSELKEEIQQLEYG",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a50_A_B",
+      "pdb_id": "7a50",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a50_A_B.pdb",
+      "component_pdb_sha256": "f71bd9c2174d15cdf7cd08cd4691e346634dc5e54c6a8ab36d4ed9f42fa4ea6f",
+      "region_spec": "H:94-112",
+      "region_sequence": "VADSSPYYRRYDAAQDYDY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a50_A_D",
+      "pdb_id": "7a50",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a50_A_D.pdb",
+      "component_pdb_sha256": "d1511e2b855434a87d621c57afe3e041c71c479a2380de1771aac0620425ac56",
+      "region_spec": "H:94-112",
+      "region_sequence": "VADSSPYYRRYDAAQDYDY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a50_C_B",
+      "pdb_id": "7a50",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a50_C_B.pdb",
+      "component_pdb_sha256": "65ad696bd8c1f0aaf8bf04b312a2c2617a28a0eeb558ddc8afe98a3dfce384c2",
+      "region_spec": "H:94-112",
+      "region_sequence": "VADSSPYYRRYDAAQDYDY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "7a50_C_D",
+      "pdb_id": "7a50",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/7a50_C_D.pdb",
+      "component_pdb_sha256": "ef037bbf23413353d7ec4a8976a9f68d36ae550501a6d6b3a8347fa88961c5e7",
+      "region_spec": "H:94-112",
+      "region_sequence": "VADSSPYYRRYDAAQDYDY",
+      "peptide_sequence": "LEEELKQLEEELQAIEEQLAQLQWKAQARKEKLAQLKEKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8afe_I_G",
+      "pdb_id": "8afe",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8afe_I_G.pdb",
+      "component_pdb_sha256": "737f8962d73bd459790e2893dc30ceaa6520dea5c3fa2a4c6927f3d3cdf64b0b",
+      "region_spec": "H:93-101",
+      "region_sequence": "NAIYRGSEY",
+      "peptide_sequence": "RRDSATHEAKIAELQATIERLTSEAALAEGALEAARRDRSRLQ",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8afe_J_H",
+      "pdb_id": "8afe",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8afe_J_H.pdb",
+      "component_pdb_sha256": "d9452ed09c63af314debbfa1300c382f657910e95a73cd65c229345f77cbadd5",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAIYRGSEY",
+      "peptide_sequence": "RRDSATHEAKIAELQATIERLTSEAALAEGALEAARRDR",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8afh_I_G",
+      "pdb_id": "8afh",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8afh_I_G.pdb",
+      "component_pdb_sha256": "e3c8433c9c47c118a600a18a2f374981ec8b0f4c172548667da41bdd75faabc1",
+      "region_spec": "H:93-101",
+      "region_sequence": "NAIYRGSEY",
+      "peptide_sequence": "RRDSATHEAKIAELQATIERLTSEAALAEGALEAARRDRSRLQ",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8afh_J_H",
+      "pdb_id": "8afh",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8afh_J_H.pdb",
+      "component_pdb_sha256": "139d03d788ec3313230698ca097a01194a96da1b63df280807d18e47e20722a8",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAIYRGSEY",
+      "peptide_sequence": "RRDSATHEAKIAELQATIERLTSEAALAEGALEAARRDR",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8afh_S_Q",
+      "pdb_id": "8afh",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8afh_S_Q.pdb",
+      "component_pdb_sha256": "21df0a5e6ad2961992e960456d7c82199fe551ead6bfa3c1a43b69565c756858",
+      "region_spec": "H:93-101",
+      "region_sequence": "NAIYRGSEY",
+      "peptide_sequence": "RRDSATHEAKIAELQATIERLTSEAALAEGALEAARRDRSRLQ",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8afh_T_R",
+      "pdb_id": "8afh",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8afh_T_R.pdb",
+      "component_pdb_sha256": "100c6b95056f7f88501165c165d14a4836079347331e8c2b21913d715324b871",
+      "region_spec": "H:94-102",
+      "region_sequence": "NAIYRGSEY",
+      "peptide_sequence": "RRDSATHEAKIAELQATIERLTSEAALAEGALEAARRDR",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8b8i_A_I",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_A_I.pdb",
+      "component_pdb_sha256": "f67a0ac421c4f86fe27dbcb508cad9f2adfa31e34391eeea47792fecc13ee756",
+      "region_spec": "H:97-107",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "KEDAFSKLKEKFMNELH",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8b8i_B_J",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_B_J.pdb",
+      "component_pdb_sha256": "3204bf3974e4ae2890302876fe11c3988c9c3e32272529cc169913a545e53997",
+      "region_spec": "H:97-107",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "KEDAFSKLKEKFMNELH",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8b8i_C_K",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8b8i_C_K.pdb",
+      "component_pdb_sha256": "3cd41f6db8db5886a5036801a6790ce2261d6fb116a9d124d73cf8b443e184c8",
+      "region_spec": "H:96-106",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "EGKEDAFSKLKEKFMN",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8b8i_D_L",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_D_L.pdb",
+      "component_pdb_sha256": "bee81fee2fc51c542ff8a3b0a771797a7378bb2bc202328f2bb76b88542f3828",
+      "region_spec": "H:96-106",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "KEDAFSKLKEKFMN",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8b8i_E_M",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_E_M.pdb",
+      "component_pdb_sha256": "9f5828edc44c15889790d5c040441203c1f0ddc7e462ba547c937e261f5db2b1",
+      "region_spec": "H:96-106",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "KEDAFSKLKEKFMNE",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8b8i_F_N",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_F_N.pdb",
+      "component_pdb_sha256": "ea0039d958673f24efff3169c81c20a511ae7831fbd623869621bf8aff88097f",
+      "region_spec": "H:96-106",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "KEDAFSKLKEKFMN",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8b8i_G_O",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_G_O.pdb",
+      "component_pdb_sha256": "9151902353b5bec264b40f333a73c028c40b12c42d63153dd9ba587361e463f9",
+      "region_spec": "H:94-104",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "EDAFSKLKEKFMN",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8b8i_H_P",
+      "pdb_id": "8b8i",
+      "component_pdb": "results/flex_j0_v1/pdb/8b8i_H_P.pdb",
+      "component_pdb_sha256": "3f58ab06437550548b239fbc72c3652afc5f467c91aa49a0598f6345ac12da12",
+      "region_spec": "H:92-102",
+      "region_sequence": "AGGDYSDRLGS",
+      "peptide_sequence": "KEDAFSKLKEKFMN",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8dtn_A_B",
+      "pdb_id": "8dtn",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8dtn_A_B.pdb",
+      "component_pdb_sha256": "b777c49df6028b3a613b2299eeb89fc564e789e5e8c2e73f82da4646bf3ff930",
+      "region_spec": "H:94-103",
+      "region_sequence": "AALDYVIDGY",
+      "peptide_sequence": "DVYKCEICKPFSVYSTLEKHKKWHSDR",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8dtn_C_D",
+      "pdb_id": "8dtn",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8dtn_C_D.pdb",
+      "component_pdb_sha256": "591fe1f06987ce696438bd4871d6277e18cb0bebb0a437b154b0a15d81aaca35",
+      "region_spec": "H:94-103",
+      "region_sequence": "AALDYVIDGY",
+      "peptide_sequence": "DVYKCEICKPFSVYSTLEKHKKWHSD",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8dtn_E_F",
+      "pdb_id": "8dtn",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8dtn_E_F.pdb",
+      "component_pdb_sha256": "cd3fb4286e93a61ae308faa2820cf353a4582df6a4bcc4eca409da5771ef7b68",
+      "region_spec": "H:94-103",
+      "region_sequence": "AALDYVIDGY",
+      "peptide_sequence": "KDVYKCEICKPFSVYSTLEKHKKWHSDR",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8dtn_G_H",
+      "pdb_id": "8dtn",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8dtn_G_H.pdb",
+      "component_pdb_sha256": "09b5b346bc4379e42460745d8771478ac2b0acc9db177019421e64126cad2587",
+      "region_spec": "H:94-103",
+      "region_sequence": "AALDYVIDGY",
+      "peptide_sequence": "DVYKCEICKPFSVYSTLEKHKKWHSD",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8dtu_A_B",
+      "pdb_id": "8dtu",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8dtu_A_B.pdb",
+      "component_pdb_sha256": "f13760ffbbe1e65416b76fc21d2b3ccf11089ac3c3d1da955cf8572ee7933d6a",
+      "region_spec": "H:89-100",
+      "region_sequence": "AALDEGYLDYDS",
+      "peptide_sequence": "QVQLVK",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8dtu_A_C",
+      "pdb_id": "8dtu",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8dtu_A_C.pdb",
+      "component_pdb_sha256": "0753e5a1753266a5fbddf35a7ab97171607a2ad9b9c6efd19b1f98b55ac16bfe",
+      "region_spec": "H:89-100",
+      "region_sequence": "AALDEGYLDYDS",
+      "peptide_sequence": "VYKCEICKMPFSVYSTLEKHMKKWHSDR",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8hxq_A_C",
+      "pdb_id": "8hxq",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8hxq_A_C.pdb",
+      "component_pdb_sha256": "58662bf40f9be2430a8063e4204b3c98d15339d7254182c43d811c6478009cdd",
+      "region_spec": "H:97-108",
+      "region_sequence": "AARRIDAADFDS",
+      "peptide_sequence": "LQMAGQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNASV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8hxq_B_D",
+      "pdb_id": "8hxq",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8hxq_B_D.pdb",
+      "component_pdb_sha256": "a63ef7c2ca6921d935e1f0e2423fc26573fb0d83b15f0c5023b042c3ccd93dac",
+      "region_spec": "H:97-108",
+      "region_sequence": "AARRIDAADFDS",
+      "peptide_sequence": "MLQMAGQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNASV",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8hxr_A_C",
+      "pdb_id": "8hxr",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8hxr_A_C.pdb",
+      "component_pdb_sha256": "f767aa362d2707c6afd9d2c95f9ef9dfa9aa6742a1915c589ed4f5c672720161",
+      "region_spec": "H:94-107",
+      "region_sequence": "AADRKSVMSIRPDY",
+      "peptide_sequence": "QCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8hxr_B_D",
+      "pdb_id": "8hxr",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8hxr_B_D.pdb",
+      "component_pdb_sha256": "63f745f3913175d46a6a85ce42c3efa1c95260f292dc7f5420fdbf007a7e3a46",
+      "region_spec": "H:94-107",
+      "region_sequence": "AADRKSVMSIRPDY",
+      "peptide_sequence": "QCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNASVTN",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8jjv_A_B",
+      "pdb_id": "8jjv",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8jjv_A_B.pdb",
+      "component_pdb_sha256": "807aa90fc6babcec14234566a7ee6d00637f62b23383469ec33f654e941f54f2",
+      "region_spec": "H:88-98",
+      "region_sequence": "ASRWRSVSEGC",
+      "peptide_sequence": "EGVVHGVATVA",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8jly_A_B",
+      "pdb_id": "8jly",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8jly_A_B.pdb",
+      "component_pdb_sha256": "e00347469877bbecae3d8c49d1d8ef12df92a1fdc8f6ff02f54ae4a884c6d954",
+      "region_spec": "H:88-98",
+      "region_sequence": "ASRWRSVSEGC",
+      "peptide_sequence": "GVVHGVATVA",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8op0_A_B",
+      "pdb_id": "8op0",
+      "component_pdb": "results/flex_j0_v1/pdb/8op0_A_B.pdb",
+      "component_pdb_sha256": "b002f8ea0359c90a63b7345fd9a14d3b82737ff6dbea6e96fa04b8737521cd00",
+      "region_spec": "H:93-105",
+      "region_sequence": "APAYEGDLYAFDE",
+      "peptide_sequence": "GSVQIVYKPK",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8opi_A_B",
+      "pdb_id": "8opi",
+      "component_pdb": "results/flex_j0_v1/pdb/8opi_A_B.pdb",
+      "component_pdb_sha256": "11d7b4ce684b22e19d614d246176ffa693b1a74a6ccfd0504ccf2b503c5dbba9",
+      "region_spec": "H:93-104",
+      "region_sequence": "APAYEGDLYAFD",
+      "peptide_sequence": "GSVQIVYKPK",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8pii_A_B",
+      "pdb_id": "8pii",
+      "component_pdb": "results/flex_j0_v1/pdb/8pii_A_B.pdb",
+      "component_pdb_sha256": "bca83d71ea19ec4a93639dea512c18f98b1bf1751935912c41831182fc79b069",
+      "region_spec": "H:92-101",
+      "region_sequence": "APAYEGDLYA",
+      "peptide_sequence": "GSVQIVYKPK",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8skj_A_E",
+      "pdb_id": "8skj",
+      "component_pdb": "results/flex_j0_v1/pdb/8skj_A_E.pdb",
+      "component_pdb_sha256": "c66e3e188989d2233d0e4ae9ad129f1ff3aef9cee252347d0ad28a41f483de89",
+      "region_spec": "H:96-109",
+      "region_sequence": "AEWMNTRREFITPY",
+      "peptide_sequence": "GKPIPNPLLGLDST",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "8skj_B_C",
+      "pdb_id": "8skj",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8skj_B_C.pdb",
+      "component_pdb_sha256": "23b583c388742e600988aa1e1bdf7bac57bd9c01f4d5706fcb7dae7783197a1f",
+      "region_spec": "H:96-109",
+      "region_sequence": "AEWMNTRREFITPY",
+      "peptide_sequence": "GKPIPNPLLGLDST",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8skj_B_F",
+      "pdb_id": "8skj",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8skj_B_F.pdb",
+      "component_pdb_sha256": "3214c8274b639a52e85efeeda3e4993e7956521ab70e55b4fbac8ec54535ed20",
+      "region_spec": "H:96-109",
+      "region_sequence": "AEWMNTRREFITPY",
+      "peptide_sequence": "GKPIPNPLLGLDST",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8skj_D_C",
+      "pdb_id": "8skj",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8skj_D_C.pdb",
+      "component_pdb_sha256": "6f14996e3a4caa98c1dd3ba56e2246b673dd58761e385041d6d55d44e987614a",
+      "region_spec": "H:96-109",
+      "region_sequence": "AEWMNTRREFITPY",
+      "peptide_sequence": "GKPIPNPLLGLDST",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8skj_D_F",
+      "pdb_id": "8skj",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/8skj_D_F.pdb",
+      "component_pdb_sha256": "fae9f8e024e1656299037f3d51d789de86a5511c7664d0413ac84d74aca5cccf",
+      "region_spec": "H:96-109",
+      "region_sequence": "AEWMNTRREFITPY",
+      "peptide_sequence": "GKPIPNPLLGLDST",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "8skj_G_H",
+      "pdb_id": "8skj",
+      "component_pdb": "results/flex_j0_v1/pdb/8skj_G_H.pdb",
+      "component_pdb_sha256": "134feba379d8d1c1e1aafa2006ebe5002c91ce33272bcc7281be960b162deb38",
+      "region_spec": "H:95-108",
+      "region_sequence": "AEWMNTRREFITPY",
+      "peptide_sequence": "GKPIPNPLLGLDST",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "9b0a_A_D",
+      "pdb_id": "9b0a",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9b0a_A_D.pdb",
+      "component_pdb_sha256": "8115a64a19a00eb65e666c097228e701907f6d59853fd5625bf9e50940171ca3",
+      "region_spec": "H:100-107",
+      "region_sequence": "TVGVGVSY",
+      "peptide_sequence": "CGPIPVLDENGLFAPGPC",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9b0a_B_C",
+      "pdb_id": "9b0a",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9b0a_B_C.pdb",
+      "component_pdb_sha256": "9b1d36bee2f93376969ec96000de78f1e4e3aa80efa23602c41570fbdbab84f6",
+      "region_spec": "H:101-108",
+      "region_sequence": "TVGVGVSY",
+      "peptide_sequence": "CGPIPVLDENGLFAPGPC",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9eg6_B_A",
+      "pdb_id": "9eg6",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9eg6_B_A.pdb",
+      "component_pdb_sha256": "b9325dbafdb91173e2737c67db9292ae3efeb35ddb13dcde4ce1901355bb183e",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9eg6_B_C",
+      "pdb_id": "9eg6",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9eg6_B_C.pdb",
+      "component_pdb_sha256": "bd2b6fc174ed526cfa3064987c70babbd174c49b4b6e820c056ed9f9094b92b7",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9eg6_D_C",
+      "pdb_id": "9eg6",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9eg6_D_C.pdb",
+      "component_pdb_sha256": "4c6dd1ee4b1f69c7683cf624d31855fdc923964b7ee0b811af45a87f466397bb",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9eg6_F_A",
+      "pdb_id": "9eg6",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9eg6_F_A.pdb",
+      "component_pdb_sha256": "4eadc43401ad491d90ae53b6c1c042e7f93bc3c5464fdc72d495db66edb61d71",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9eg6_F_E",
+      "pdb_id": "9eg6",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9eg6_F_E.pdb",
+      "component_pdb_sha256": "8cec1c080afbc0e1bf291e0343ebb6f5eec5a1f2d7f5daabf6c4c4c992e0e662",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9egn_B_A",
+      "pdb_id": "9egn",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9egn_B_A.pdb",
+      "component_pdb_sha256": "519eebc65d38451d554e20ec3a3b3aa32600c5aeec3d12e955c1f8945a7ae37b",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9eiu_B_A",
+      "pdb_id": "9eiu",
+      "component_pdb": "results/flex_j0_v1/pdb/9eiu_B_A.pdb",
+      "component_pdb_sha256": "163b684b44bc5332c3e29615fef321ddf4abc295b98711677da15004515d039a",
+      "region_spec": "H:96-104",
+      "region_sequence": "NAPQFTDRY",
+      "peptide_sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "9fcm_A_D",
+      "pdb_id": "9fcm",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9fcm_A_D.pdb",
+      "component_pdb_sha256": "f5305aa8d659b42567a322ab155dde40e859930403208093ea0fe98cb46439c2",
+      "region_spec": "H:93-115",
+      "region_sequence": "GAAYVSKANYGSLWYQDSRRYDY",
+      "peptide_sequence": "GDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQYIK",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9fcm_A_E",
+      "pdb_id": "9fcm",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9fcm_A_E.pdb",
+      "component_pdb_sha256": "2bb3f7a48cfcf8ee5016097e863ee5ff97f9d74adac82259b6a77d2c7a577852",
+      "region_spec": "H:93-115",
+      "region_sequence": "GAAYVSKANYGSLWYQDSRRYDY",
+      "peptide_sequence": "LGDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQY",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9fcm_B_E",
+      "pdb_id": "9fcm",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9fcm_B_E.pdb",
+      "component_pdb_sha256": "02adccfa4cf43e9ff522f4193c697e2508da2df854294c51fec83073912d21f9",
+      "region_spec": "H:93-115",
+      "region_sequence": "GAAYVSKANYGSLWYQDSRRYDY",
+      "peptide_sequence": "LGDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQY",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9fcm_B_F",
+      "pdb_id": "9fcm",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9fcm_B_F.pdb",
+      "component_pdb_sha256": "177678a4613723af005ba6e57cca7db3595db1e7f5e6f1c2ef4437c385a27607",
+      "region_spec": "H:93-115",
+      "region_sequence": "GAAYVSKANYGSLWYQDSRRYDY",
+      "peptide_sequence": "ISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQY",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9fcm_C_D",
+      "pdb_id": "9fcm",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9fcm_C_D.pdb",
+      "component_pdb_sha256": "94564dbadff393a8bc906322559c41e24de12d80c86e6e3c636cae1536a97937",
+      "region_spec": "H:93-115",
+      "region_sequence": "GAAYVSKANYGSLWYQDSRRYDY",
+      "peptide_sequence": "GDISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQYIK",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9fcm_C_F",
+      "pdb_id": "9fcm",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9fcm_C_F.pdb",
+      "component_pdb_sha256": "9685ca3cc70e0a2b2c45e6cadd1e65330e59b1b47f5164bfd2bab9a6beb5754d",
+      "region_spec": "H:93-115",
+      "region_sequence": "GAAYVSKANYGSLWYQDSRRYDY",
+      "peptide_sequence": "ISGINASVVNIQKEIDRLNEVAKNLNESLIDLQELGKYEQY",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_A_B",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_A_B.pdb",
+      "component_pdb_sha256": "f8eb11a829d9174c5d7cfa61bc8c57438c484be96ada95be3378acc98bcf0184",
+      "region_spec": "H:96-112",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KKIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_A_D",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_A_D.pdb",
+      "component_pdb_sha256": "081de96dc173da0bd50c8a3076c4002641fbb96aaf5e5862d0db0bfa696493fd",
+      "region_spec": "H:96-112",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KKIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_C_D",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_C_D.pdb",
+      "component_pdb_sha256": "9609cc6534f7c049743ecc4c5431c83aad70985c46359a7b5a4e0a3303364bae",
+      "region_spec": "H:96-112",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KKIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_E_F",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_E_F.pdb",
+      "component_pdb_sha256": "bf7ea6f136f9611a19e0d0d2683030c33be463e635fcfdbe65ea5cdc9832aa9a",
+      "region_spec": "H:97-113",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KKIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_E_H",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_E_H.pdb",
+      "component_pdb_sha256": "634c141ba021b2fc7d4d8a7c64691b94b90764cf7f9d7e606ff34d3505d786c7",
+      "region_spec": "H:97-113",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_G_F",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_G_F.pdb",
+      "component_pdb_sha256": "ff3a01fa6f781377d1e9fa1ded20afc87184618c219d9f48c2580a6a5ae68850",
+      "region_spec": "H:97-113",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KKIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9g13_G_H",
+      "pdb_id": "9g13",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9g13_G_H.pdb",
+      "component_pdb_sha256": "75c8a69e2a6c22c70f03004a73fcd179471db3ce20aa99641e903d8589e927b4",
+      "region_spec": "H:97-113",
+      "region_sequence": "APMTLAETYYEWLISGY",
+      "peptide_sequence": "KIETHKLTFRE",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9h1j_A_E",
+      "pdb_id": "9h1j",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9h1j_A_E.pdb",
+      "component_pdb_sha256": "bea892dc15e1528d42cc5459f9daaa51125115333e48d59fc985f4f1bc438ffa",
+      "region_spec": "H:97-104",
+      "region_sequence": "ATDLRGAQ",
+      "peptide_sequence": "ADPRLIESLSQMLSMGFSDEGGWLTRLLQTKNYDIGAALDTIQYS",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9h1j_B_F",
+      "pdb_id": "9h1j",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9h1j_B_F.pdb",
+      "component_pdb_sha256": "4be4110cd40a329c970561b12d109a8231538fcbcd096dfbc2cc0d250f6cf12e",
+      "region_spec": "H:96-103",
+      "region_sequence": "ATDLRGAQ",
+      "peptide_sequence": "EADPRLIESLSQMLSMGFSDEGGWLTRLLQTKNYDIGAALDTIQY",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9h1j_C_G",
+      "pdb_id": "9h1j",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9h1j_C_G.pdb",
+      "component_pdb_sha256": "56465f7826689125647f70c5b48a9937ac43f418ce521bd61f1549b13467e2c6",
+      "region_spec": "H:97-104",
+      "region_sequence": "ATDLRGAQ",
+      "peptide_sequence": "EADPRLIESLSQMLSMGFSDEGGWLTRLLQTKNYDIGAALDTIQYSK",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9h1j_D_H",
+      "pdb_id": "9h1j",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9h1j_D_H.pdb",
+      "component_pdb_sha256": "a7c6eb777f72f3ec2df32534cea160ee8794e8bdb212ccd16f9d9ca95fbf48f0",
+      "region_spec": "H:97-104",
+      "region_sequence": "ATDLRGAQ",
+      "peptide_sequence": "ADPRLIESLSQMLSMGFSDEGGWLTRLLQTKNYDIGAALDTIQYS",
+      "in_c1_cohort": false
+    },
+    {
+      "instance": "9lds_A_B",
+      "pdb_id": "9lds",
+      "component_pdb": "results/flex_j0_v1/pdb/9lds_A_B.pdb",
+      "component_pdb_sha256": "cad17540ed74dd2c9e851d2646333218ca230f0789896b6a0b46fdcc3082043b",
+      "region_spec": "H:95-103",
+      "region_sequence": "NARRGATNT",
+      "peptide_sequence": "DPLQPELDSFKEELD",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "9lds_C_D",
+      "pdb_id": "9lds",
+      "component_pdb": "results/flex_j0_v1/pdb/9lds_C_D.pdb",
+      "component_pdb_sha256": "b6ca4e35b28475f6cdbfd30e0c40b27f1f35602ad64a538c79628d9ceb0e2e3e",
+      "region_spec": "H:95-103",
+      "region_sequence": "NARRGATNT",
+      "peptide_sequence": "DPLQPELDSFKEELD",
+      "in_c1_cohort": true
+    },
+    {
+      "instance": "9nk9_A_B",
+      "pdb_id": "9nk9",
+      "component_pdb": "results/flex_cross_backbone_v2_expanded/pdb/9nk9_A_B.pdb",
+      "component_pdb_sha256": "0f2c30d32cfc025ecc8eadadef284160bf5081f571861ba47c6b9110b8a8e106",
+      "region_spec": "H:96-104",
+      "region_sequence": "KVNIRGQDY",
+      "peptide_sequence": "SFEDFWKGED",
+      "in_c1_cohort": false
+    }
+  ]
+}

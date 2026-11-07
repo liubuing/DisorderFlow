@@ -1,0 +1,81 @@
+{
+  "rows": [
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "6j7w_A_C",
+      "sequence_pdb": "6j7w",
+      "sequence": "AKQGENDGPFDH",
+      "complex_nll": 5.846047878265381,
+      "stripped_nll": 3.010808785756429,
+      "ecls": 2.8352390925089517
+    },
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "6j7w_B_D",
+      "sequence_pdb": "6j7w",
+      "sequence": "AKQGENDGPFDH",
+      "complex_nll": 5.846047878265381,
+      "stripped_nll": 3.010808785756429,
+      "ecls": 2.8352390925089517
+    },
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "8dtu_A_B",
+      "sequence_pdb": "8dtu",
+      "sequence": "AALDEGYLDYDS",
+      "complex_nll": 5.216318607330322,
+      "stripped_nll": 2.8780031204223633,
+      "ecls": 2.338315486907959
+    },
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "8dtu_A_C",
+      "sequence_pdb": "8dtu",
+      "sequence": "AALDEGYLDYDS",
+      "complex_nll": 5.216318607330322,
+      "stripped_nll": 2.8780031204223633,
+      "ecls": 2.338315486907959
+    },
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "8hxq_A_C",
+      "sequence_pdb": "8hxq",
+      "sequence": "AARRIDAADFDS",
+      "complex_nll": 0.4864030679066976,
+      "stripped_nll": 2.8286701838175454,
+      "ecls": -2.3422671159108477
+    },
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "8hxq_B_D",
+      "sequence_pdb": "8hxq",
+      "sequence": "AARRIDAADFDS",
+      "complex_nll": 0.4864030679066976,
+      "stripped_nll": 2.8286701838175454,
+      "ecls": -2.3422671159108477
+    },
+    {
+      "length": 12,
+      "backbone": "8hxq_A_C",
+      "backbone_pdb": "8hxq",
+      "sequence_of": "8opi_A_B",
+      "sequence_pdb": "8opi",
+      "sequence": "APAYEGDLYAFD",
+      "complex_nll": 7.990132649739583,
+      "stripped_nll": 2.9907092253367105,
+      "ecls": 4.999423424402872
+    }
+  ]
+}

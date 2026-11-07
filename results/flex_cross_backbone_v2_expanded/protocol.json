@@ -1,0 +1,33 @@
+{
+  "schema_version": "flex_cross_backbone_v2_expanded",
+  "source": "results/flex_a1_scaffold_audit_v1/manifest.json (coordinate-gate-passing components)",
+  "n_components_built": 107,
+  "n_skipped": 0,
+  "skipped": [],
+  "min_distinct_per_group": 4,
+  "selected_length_groups": {
+    "9": {
+      "n_backbones": 24,
+      "n_distinct_sequences": 5
+    },
+    "11": {
+      "n_backbones": 19,
+      "n_distinct_sequences": 4
+    },
+    "12": {
+      "n_backbones": 7,
+      "n_distinct_sequences": 4
+    },
+    "14": {
+      "n_backbones": 12,
+      "n_distinct_sequences": 4
+    }
+  },
+  "disclosure": "expanded components bypass campaign-level exclusions (exposure/isolation/prior-panel/clone); they support only the within-backbone sequence-preference control, never the native-recognition claim",
+  "scoring_seeds": [
+    20261029,
+    20261030,
+    20261031
+  ],
+  "classification": "control_experiment_not_confirmatory_claim"
+}

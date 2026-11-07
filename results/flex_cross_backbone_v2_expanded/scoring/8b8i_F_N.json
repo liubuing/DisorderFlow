@@ -1,0 +1,213 @@
+{
+  "rows": [
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a48_A_B",
+      "sequence_pdb": "7a48",
+      "sequence": "AADKDNTGYNY",
+      "complex_nll": 7.011607646942139,
+      "stripped_nll": 2.9982942740122476,
+      "ecls": 4.0133133729298915
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_A_E",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_A_F",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_B_E",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_B_F",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_G_K",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_G_L",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_H_K",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "7a4d_H_L",
+      "sequence_pdb": "7a4d",
+      "sequence": "ATACYSSYVTY",
+      "complex_nll": 5.569422721862793,
+      "stripped_nll": 3.1467729409535727,
+      "ecls": 2.4226497809092202
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_A_I",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_B_J",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_C_K",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_D_L",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_E_M",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_F_N",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_G_O",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8b8i_H_P",
+      "sequence_pdb": "8b8i",
+      "sequence": "AGGDYSDRLGS",
+      "complex_nll": 0.4936010241508484,
+      "stripped_nll": 2.896118640899658,
+      "ecls": -2.40251761674881
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8jjv_A_B",
+      "sequence_pdb": "8jjv",
+      "sequence": "ASRWRSVSEGC",
+      "complex_nll": 5.180456797281901,
+      "stripped_nll": 2.946683724721273,
+      "ecls": 2.2337730725606284
+    },
+    {
+      "length": 11,
+      "backbone": "8b8i_F_N",
+      "backbone_pdb": "8b8i",
+      "sequence_of": "8jly_A_B",
+      "sequence_pdb": "8jly",
+      "sequence": "ASRWRSVSEGC",
+      "complex_nll": 5.180456797281901,
+      "stripped_nll": 2.946683724721273,
+      "ecls": 2.2337730725606284
+    }
+  ]
+}
