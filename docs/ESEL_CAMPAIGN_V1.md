@@ -107,11 +107,19 @@ v3 结构桥清单（200 accession + IEDB 计数 + identity 块）当作**扩充
 - 分布规格机械推导完成：`scripts/esel_e1_distribution_spec_v1.py` →
   `results/esel_e1_v1/distribution_spec_development.json`（10 桶；H3 长度直方图、
   每桶肽/H3 电荷与芳香统计、E0b IEDB 计数联结；开发级，不冻结、不涉亲和力分数）；
+- 表位短名单 + 阈值提案：`scripts/esel_e1_shortlist_v1.py` →
+  `results/esel_e1_v1/epitope_shortlist_development.json`
+  （锚定+暴露洁净 8 行 → RFQ 短名单 4 条 + 备用 4 条；阈值提案 T*=100 nM、
+  富集 fold≥10×，冻结时写死；spike/HIV 行带生物安全旗标，不静默淘汰）；
+- **询价包立档**：`docs/ESEL_RFQ_PACKAGE_V1.md`（可随伙伴简报发送的订单载荷：
+  表位×呈现变体×数量、对照、判定式、决策点）；
 - E1 草案状态更新（`docs/ESEL_E1_LIBRARY_PREREG_DRAFT_V1.md`）：前置条件 1 已完成，
   冻结剩余阻塞 = 湿实验伙伴确认 + 生物安全审阅。
 
 ### 下一步（E1 解锁状态）
 
-数据侧解锁：E0b 已把双条件表位推过停止规则阈值。E1 冻结仅剩两个阻塞项：
-**湿实验伙伴确认**（`docs/ESEL_PARTNER_BRIEF_V1.md` 三件事）+ **生物安全审阅**
-（spike/HIV 表位保留/跳过决定）。
+数据侧解锁：E0b 已把双条件表位推过停止规则阈值；RFQ 载荷已备齐
+（`docs/ESEL_RFQ_PACKAGE_V1.md`）。E1 冻结仅剩两个阻塞项：
+**湿实验伙伴确认**（把伙伴简报 + 询价包发给候选供应商，取回三件事答复）
++ **生物安全审阅**（spike/HIV 表位保留/跳过决定）。
+并行订单线：design_v1_20261101 包 52 构建体可直接下基因合成订单。

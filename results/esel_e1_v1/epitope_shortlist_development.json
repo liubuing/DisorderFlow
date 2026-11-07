@@ -1,0 +1,1298 @@
+{
+  "schema_version": "esel_e1_epitope_shortlist_development_v1",
+  "classification": "development_evidence_not_frozen_prereg",
+  "n_matrix_rows": 29,
+  "n_anchored_exposure_clean": 8,
+  "n_shortlist": 4,
+  "rows": [
+    {
+      "row_id": "ESEL-001",
+      "instance": "2x6m_A_B",
+      "source_pdb": "2x6m",
+      "entry_title": "Structure of a single domain camelid antibody fragment in complex with a C-terminal peptide of alpha-synuclein",
+      "family": "seq_1",
+      "parent_peptide": "DYEPEA",
+      "parent_length": 6,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P37840",
+      "iedb_total_5_50": 300,
+      "iedb_positive_5_50": 263,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DYEPEA",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DYEPEA",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DYEPEA",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DYEPEA",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-002",
+      "instance": "5hm1_A_D",
+      "source_pdb": "5hm1",
+      "entry_title": "Llama VHH 2E7 in complex with gp41",
+      "family": "seq_0",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P04578",
+      "iedb_total_5_50": 50,
+      "iedb_positive_5_50": 48,
+      "biosafety_flag": "HIV gp160/gp41-derived epitope",
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-003",
+      "instance": "5hm1_B_E",
+      "source_pdb": "5hm1",
+      "entry_title": null,
+      "family": "seq_0",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context E; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context E"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-004",
+      "instance": "5hm1_C_F",
+      "source_pdb": "5hm1",
+      "entry_title": null,
+      "family": "seq_0",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context F; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context F"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-005",
+      "instance": "5ivn_A_B",
+      "source_pdb": "5ivn",
+      "entry_title": "BC2 nanobody in complex with the BC2 peptide tag",
+      "family": "seq_2",
+      "parent_peptide": "DRKAAVSHWQ",
+      "parent_length": 10,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "G9GAG7",
+      "iedb_total_5_50": 0,
+      "iedb_positive_5_50": 0,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DRKAAVSHWQ",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DRKAAVSHWQ",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DRKAAVSHWQ",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DRKAAVSHWQ",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-006",
+      "instance": "6i2g_A_B",
+      "source_pdb": "6i2g",
+      "entry_title": "ALFA-tag binding nanobody (NbALFA) bound to ALFA-tag peptide.",
+      "family": "seq_7",
+      "parent_peptide": "SRLEEELRRRLTE",
+      "parent_length": 13,
+      "exposure_clean": true,
+      "anchor_status": "unresolved_candidates",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "SRLEEELRRRLTE",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-007",
+      "instance": "6j7w_A_C",
+      "source_pdb": "6j7w",
+      "entry_title": "Crystal Structure of Human BCMA in complex with UniAb(TM) VH",
+      "family": "seq_5",
+      "parent_peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "parent_length": 39,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "Q02223",
+      "iedb_total_5_50": 0,
+      "iedb_positive_5_50": 0,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "LHACIPCQLRCSSNT",
+          "note": "deterministic central 15-mer (parent len 39)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "LHACIPCQLRCSSNT",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context C; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "LHACIPCQLRCSSNT",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context C"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-008",
+      "instance": "6j7w_B_D",
+      "source_pdb": "6j7w",
+      "entry_title": null,
+      "family": "seq_5",
+      "parent_peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+      "parent_length": 36,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "LLHACIPCQLRCSSN",
+          "note": "deterministic central 15-mer (parent len 36)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "LLHACIPCQLRCSSN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "LLHACIPCQLRCSSN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-009",
+      "instance": "6s0y_B_D",
+      "source_pdb": "6s0y",
+      "entry_title": "Nanobody targeting influenza A matrix protein 2 ectodomain (M2e)",
+      "family": "seq_8",
+      "parent_peptide": "VETPIRNEWGCRC",
+      "parent_length": 13,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "B2VLW8",
+      "iedb_total_5_50": 0,
+      "iedb_positive_5_50": 0,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "VETPIRNEWGCRC",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-010",
+      "instance": "6zwk_B_H",
+      "source_pdb": "6zwk",
+      "entry_title": "Crystal structure of the phosphorylated C-terminal tail of histone H2AX in complex with a specific nanobody (C6 gammaXbody)",
+      "family": "seq_5",
+      "parent_peptide": "TQAQEY",
+      "parent_length": 6,
+      "exposure_clean": true,
+      "anchor_status": "peptide_not_in_entity_sequence",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "TQAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "TQAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "TQAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context H; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "TQAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context H"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-011",
+      "instance": "6zwk_D_J",
+      "source_pdb": "6zwk",
+      "entry_title": null,
+      "family": "seq_5",
+      "parent_peptide": "TQAQEY",
+      "parent_length": 6,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "TQAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "TQAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "TQAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context J; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "TQAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context J"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-012",
+      "instance": "6zwk_E_K",
+      "source_pdb": "6zwk",
+      "entry_title": null,
+      "family": "seq_5",
+      "parent_peptide": "TQAQEY",
+      "parent_length": 6,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "TQAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "TQAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "TQAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context K; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "TQAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context K"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-013",
+      "instance": "6zwk_F_L",
+      "source_pdb": "6zwk",
+      "entry_title": null,
+      "family": "seq_5",
+      "parent_peptide": "QAQEY",
+      "parent_length": 5,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "QAQEY",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "QAQEY",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "QAQEY",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context L; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "QAQEY",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context L"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-014",
+      "instance": "8b8i_A_I",
+      "source_pdb": "8b8i",
+      "entry_title": "Nanobody (NbLumSyt1) bound to human Syt1",
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMNELH",
+      "parent_length": 17,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P21579",
+      "iedb_total_5_50": 1,
+      "iedb_positive_5_50": 1,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNELH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "deterministic central 15-mer (parent len 17)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context I; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context I"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-015",
+      "instance": "8b8i_B_J",
+      "source_pdb": "8b8i",
+      "entry_title": null,
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMNELH",
+      "parent_length": 17,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNELH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "deterministic central 15-mer (parent len 17)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context J; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context J"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-016",
+      "instance": "8b8i_D_L",
+      "source_pdb": "8b8i",
+      "entry_title": null,
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMN",
+      "parent_length": 14,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context L; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context L"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-017",
+      "instance": "8b8i_E_M",
+      "source_pdb": "8b8i",
+      "entry_title": null,
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMNE",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context M; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMNE",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context M"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-018",
+      "instance": "8b8i_F_N",
+      "source_pdb": "8b8i",
+      "entry_title": null,
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMN",
+      "parent_length": 14,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context N; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context N"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-019",
+      "instance": "8b8i_G_O",
+      "source_pdb": "8b8i",
+      "entry_title": null,
+      "family": "seq_3",
+      "parent_peptide": "EDAFSKLKEKFMN",
+      "parent_length": 13,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context O; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context O"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-020",
+      "instance": "8b8i_H_P",
+      "source_pdb": "8b8i",
+      "entry_title": null,
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMN",
+      "parent_length": 14,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context P; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "KEDAFSKLKEKFMN",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context P"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-021",
+      "instance": "8op0_A_B",
+      "source_pdb": "8op0",
+      "entry_title": "VHH Z70 mutant 20 in interaction with PHF6 Tau peptide",
+      "family": "seq_6",
+      "parent_peptide": "GSVQIVYKPK",
+      "parent_length": 10,
+      "exposure_clean": true,
+      "anchor_status": "unresolved_candidates",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-022",
+      "instance": "8opi_A_B",
+      "source_pdb": "8opi",
+      "entry_title": "VHH Z70 mutant 1 in interaction with PHF6 Tau peptide",
+      "family": "seq_6",
+      "parent_peptide": "GSVQIVYKPK",
+      "parent_length": 10,
+      "exposure_clean": true,
+      "anchor_status": "unresolved_candidates",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-023",
+      "instance": "8pii_A_B",
+      "source_pdb": "8pii",
+      "entry_title": "VHH Z70 mutant 3 in interaction with PHF6 Tau peptide",
+      "family": "seq_6",
+      "parent_peptide": "GSVQIVYKPK",
+      "parent_length": 10,
+      "exposure_clean": true,
+      "anchor_status": "unresolved_candidates",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GSVQIVYKPK",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GSVQIVYKPK",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-024",
+      "instance": "8skj_A_E",
+      "source_pdb": "8skj",
+      "entry_title": "Crystal structure of a Nanobody bound to the V5 peptide.",
+      "family": "seq_4",
+      "parent_peptide": "GKPIPNPLLGLDST",
+      "parent_length": 14,
+      "exposure_clean": true,
+      "anchor_status": "unresolved_candidates",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context E; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context E"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-025",
+      "instance": "8skj_G_H",
+      "source_pdb": "8skj",
+      "entry_title": null,
+      "family": "seq_4",
+      "parent_peptide": "GKPIPNPLLGLDST",
+      "parent_length": 14,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context H; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "GKPIPNPLLGLDST",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context H"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-026",
+      "instance": "9eiu_B_A",
+      "source_pdb": "9eiu",
+      "entry_title": "Crystal structure of the human Cavin1 HR1 TS/DD mutant domain bound to nanobody B7",
+      "family": "seq_5",
+      "parent_peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "parent_length": 42,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "Q6NZI2",
+      "iedb_total_5_50": 0,
+      "iedb_positive_5_50": 0,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "QLTQAQLEERQAEME",
+          "note": "deterministic central 15-mer (parent len 42)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "QLTQAQLEERQAEME",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context A; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "QLTQAQLEERQAEME",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context A"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-027",
+      "instance": "9lds_A_B",
+      "source_pdb": "9lds",
+      "entry_title": "Crystal structure of nanobody H145 bound to SARS-CoV-2 spike stem-helix",
+      "family": "seq_1",
+      "parent_peptide": "DPLQPELDSFKEELD",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P0DTC2",
+      "iedb_total_5_50": 8967,
+      "iedb_positive_5_50": 3793,
+      "biosafety_flag": "SARS-CoV-2 spike-derived epitope",
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-028",
+      "instance": "9lds_C_D",
+      "source_pdb": "9lds",
+      "entry_title": null,
+      "family": "seq_1",
+      "parent_peptide": "DPLQPELDSFKEELD",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ]
+    },
+    {
+      "row_id": "ESEL-029",
+      "instance": "4HIX_anchor",
+      "source_pdb": "4HIX",
+      "entry_title": null,
+      "family": "APP_N_terminus",
+      "parent_peptide": "DAEFRH",
+      "parent_length": 6,
+      "exposure_clean": true,
+      "anchor_status": "unresolved",
+      "anchor_accession": null,
+      "iedb_total_5_50": null,
+      "iedb_positive_5_50": null,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DAEFRH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DAEFRH",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DAEFRH",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context C; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DAEFRH",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context C"
+        }
+      ]
+    }
+  ],
+  "shortlist": [
+    {
+      "row_id": "ESEL-027",
+      "instance": "9lds_A_B",
+      "source_pdb": "9lds",
+      "entry_title": "Crystal structure of nanobody H145 bound to SARS-CoV-2 spike stem-helix",
+      "family": "seq_1",
+      "parent_peptide": "DPLQPELDSFKEELD",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P0DTC2",
+      "iedb_total_5_50": 8967,
+      "iedb_positive_5_50": 3793,
+      "biosafety_flag": "SARS-CoV-2 spike-derived epitope",
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DPLQPELDSFKEELD",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ],
+      "shortlist_rank": 1,
+      "order_block": "pending biosafety review"
+    },
+    {
+      "row_id": "ESEL-001",
+      "instance": "2x6m_A_B",
+      "source_pdb": "2x6m",
+      "entry_title": "Structure of a single domain camelid antibody fragment in complex with a C-terminal peptide of alpha-synuclein",
+      "family": "seq_1",
+      "parent_peptide": "DYEPEA",
+      "parent_length": 6,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P37840",
+      "iedb_total_5_50": 300,
+      "iedb_positive_5_50": 263,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "DYEPEA",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "DYEPEA",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "DYEPEA",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context B; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "DYEPEA",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context B"
+        }
+      ],
+      "shortlist_rank": 2,
+      "order_block": "pending E1 freeze"
+    },
+    {
+      "row_id": "ESEL-002",
+      "instance": "5hm1_A_D",
+      "source_pdb": "5hm1",
+      "entry_title": "Llama VHH 2E7 in complex with gp41",
+      "family": "seq_0",
+      "parent_peptide": "AVERYLKDQQLLGIW",
+      "parent_length": 15,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P04578",
+      "iedb_total_5_50": 50,
+      "iedb_positive_5_50": 48,
+      "biosafety_flag": "HIV gp160/gp41-derived epitope",
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "parent already within core length; identical to full_length"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context D; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "AVERYLKDQQLLGIW",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context D"
+        }
+      ],
+      "shortlist_rank": 3,
+      "order_block": "pending biosafety review"
+    },
+    {
+      "row_id": "ESEL-014",
+      "instance": "8b8i_A_I",
+      "source_pdb": "8b8i",
+      "entry_title": "Nanobody (NbLumSyt1) bound to human Syt1",
+      "family": "seq_3",
+      "parent_peptide": "KEDAFSKLKEKFMNELH",
+      "parent_length": 17,
+      "exposure_clean": true,
+      "anchor_status": "anchored",
+      "anchor_accession": "P21579",
+      "iedb_total_5_50": 1,
+      "iedb_positive_5_50": 1,
+      "biosafety_flag": null,
+      "n_presentation_variants": 4,
+      "variants": [
+        {
+          "variant_type": "full_length",
+          "sequence": "KEDAFSKLKEKFMNELH",
+          "note": "parent peptide as deposited"
+        },
+        {
+          "variant_type": "core_15",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "deterministic central 15-mer (parent len 17)"
+        },
+        {
+          "variant_type": "biotin_N_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "biotin on N-terminus via GSG linker; epitope chain context I; synthesis adds Biotin-GSG-pep"
+        },
+        {
+          "variant_type": "biotin_C_GSG",
+          "sequence": "EDAFSKLKEKFMNEL",
+          "note": "pep-GSG-Biotin on C-terminus; epitope chain context I"
+        }
+      ],
+      "shortlist_rank": 4,
+      "order_block": "pending E1 freeze"
+    }
+  ],
+  "threshold_proposals": {
+    "capability_endpoint_T_star_nM": {
+      "proposal": 100,
+      "basis": "lower edge of the published 3-100 nM band for de novo disordered-target binders (Liu 2025, Nature 10.1038/s41586-025-09248-9); display-selected clones routinely reach this band; 10 nM is the stretch goal, not the gate",
+      "status": "proposal, written into the preregistration at E1 freeze"
+    },
+    "e2_enrichment_gate_fold": {
+      "proposal": 10,
+      "basis": "round-over-round specific enrichment (R_n/R_1 on target minus parallel negative-control matrix) at or above 10x is the conventional display-panning continuation signal; exact value frozen at E1",
+      "status": "proposal, written into the preregistration at E1 freeze"
+    },
+    "e2_control_matrix": {
+      "proposal": [
+        "irrelevant scFv negative",
+        "native positive control",
+        "composition-perturbed peptide per epitope"
+      ],
+      "status": "frozen in the E1 draft section 3; listed here for the RFQ so the vendor quotes the parallel screens"
+    }
+  },
+  "order_path_note": "design_v1_20261101 package (4HIX Abeta-fab, 52 constructs) is separately synthesis-ready via order_list_v1.csv / synthesis_aa.fasta",
+  "freeze_blockers": [
+    "partner confirmation (three items, docs/ESEL_PARTNER_BRIEF_V1.md)",
+    "biosafety review for flagged accessions"
+  ]
+}
