@@ -32,6 +32,7 @@ from pathlib import Path
 
 import numpy as np
 from Bio.PDB import MMCIFParser, PDBParser, SASA
+from Bio.PDB.vectors import calc_dihedral
 import warnings
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,7 +49,7 @@ C1 = ROOT / 'results/csn_c1_v1'
 POOL = ROOT / 'data/sabdab2_abag_project_pool_v2/cif'
 C0_COMPS = ROOT / 'results/csn_c0_v2/components.json'
 NMR_V2 = ROOT / 'results/flex_a2_nmr_rmsf_v2/rmsf.json'
-OUT = ROOT / 'results/csn_c1_enrich_v6'
+OUT = ROOT / 'results/csn_c1_enrich_v7'
 CACHE = OUT / 'cache'
 
 
@@ -71,7 +72,8 @@ RCSB_SEARCH = 'https://search.rcsb.org/rcsbsearch/v2/query'
 RCSB_PDB = 'https://files.rcsb.org/download/{}.pdb'
 ATLAS_TRACK = 'https://www.dsimb.inserm.fr/ATLAS/api/tracks/{}.js'
 ATLAS_REFERER = 'https://www.dsimb.inserm.fr/ATLAS/database/ATLAS/{pdb_id}/{pdb_id}.html'
-AFDB = 'https://alphafold.ebi.ac.uk/files/AF-{acc}-F1-model_v6.pdb'
+AFDB_TPL = 'https://alphafold.ebi.ac.uk/files/AF-{acc}-F1-model_{ver}.pdb'
+AFDB_VERSIONS = ('v6', 'v5', 'v4', 'v3', 'v2')
 LOCAL_AFDB = ROOT / 'data/disprot_afdb_cache'
 
 CASE_PARENTS = {
@@ -232,7 +234,8 @@ def fetch_nmr_ensemble_rmsf(acc):
         entry = nmr_parse_entry(path)
         if entry and len(set(entry['rmsf'])) >= 1:
             return {'source': 'nmr_fetched', 'pdb': entry['pdb'],
-                    'sequence': entry['sequence'], 'rmsf': entry['rmsf']}
+                    'sequence': entry['sequence'], 'rmsf': entry['rmsf'],
+                    'path': str(path)}
     return None
 
 
@@ -319,20 +322,24 @@ def fetch_atlas_label(parent_seq, acc):
 
 def fetch_afdb(acc):
     def produce():
-        # Local AFDB cache first (disorder line), then the v6 download.
-        local = LOCAL_AFDB / f'AF-{acc}-F1-model_v6.pdb'
-        if local.exists():
-            return local.read_text(encoding='utf-8', errors='replace')
-        for attempt in range(5):
-            try:
-                request = urllib.request.Request(
-                    AFDB.format(acc=acc), headers={'User-Agent': 'csn-c1-enrich/1'})
-                with urllib.request.urlopen(request, timeout=300) as response:
-                    return response.read().decode('utf-8', errors='replace')
-            except Exception as error:  # noqa: BLE001 - big models need patience
-                if attempt == 4:
-                    raise
-                time.sleep(5 * (attempt + 1))
+        # Local AFDB caches first (disorder line), then version fallback v6..v2.
+        for ver in AFDB_VERSIONS:
+            local = LOCAL_AFDB / f'AF-{acc}-F1-model_{ver}.pdb'
+            if local.exists():
+                return local.read_text(encoding='utf-8', errors='replace')
+        last = None
+        for ver in AFDB_VERSIONS:
+            for attempt in range(2):
+                try:
+                    request = urllib.request.Request(
+                        AFDB_TPL.format(acc=acc, ver=ver),
+                        headers={'User-Agent': 'csn-c1-enrich/1'})
+                    with urllib.request.urlopen(request, timeout=300) as response:
+                        return response.read().decode('utf-8', errors='replace')
+                except Exception as error:  # noqa: BLE001 - version/transport fallback
+                    last = error
+                    time.sleep(3 * (attempt + 1))
+        raise RuntimeError(f'all AFDB versions failed for {acc}: {last}')
     text = cached_text(CACHE / 'afdb' / f'AF-{acc}-F1.pdb', produce)
     plddt = {}
     idx = 0
@@ -410,6 +417,64 @@ def exposure_values(acc, info, parent_seq, comp_by_pdb, nmr_cache):
     return None, None
 
 
+def circular_r(angles):
+    a = np.asarray([x for x in angles if x is not None], dtype=float)
+    if len(a) < 3:
+        return None
+    return float(np.abs(np.exp(1j * np.deg2rad(a)).mean()))
+
+
+def dihedral_stability_map(path):
+    """Label v2 (prereg amendment 8f904b81): per-residue circular mean resultant
+    length of phi/psi across ensemble models; higher = more locally stable."""
+    structure = parse_any_structure(path)
+    models = list(structure)
+    if len(models) < 5:
+        return None, None
+    best_ch, best_n = None, 0
+    for ch in models[0]:
+        n = len([r for r in ch if r.id[0] == ' '])
+        if n > best_n:
+            best_ch, best_n = ch.id, n
+    per_model = []
+    for model in models:
+        ch = next((c for c in model if c.id == best_ch), None)
+        if ch is None:
+            return None, None
+        residues = [r for r, _aa in chain_residues(ch)]
+        n = len(residues)
+
+        def vec(r, name):
+            try:
+                return r[name].get_vector()
+            except KeyError:
+                return None
+
+        angles = []
+        for i, res in enumerate(residues):
+            nv, cav, cv_ = vec(res, 'N'), vec(res, 'CA'), vec(res, 'C')
+            phi = psi = None
+            if nv is not None and cav is not None and cv_ is not None:
+                if i > 0:
+                    pc = vec(residues[i - 1], 'C')
+                    if pc is not None:
+                        phi = float(calc_dihedral(pc, nv, cav, cv_) * 180.0 / np.pi)
+                if i < n - 1:
+                    nx = vec(residues[i + 1], 'N')
+                    if nx is not None:
+                        psi = float(calc_dihedral(nv, cav, cv_, nx) * 180.0 / np.pi)
+            angles.append((phi, psi))
+        per_model.append(angles)
+    ch0 = next(c for c in models[0] if c.id == best_ch)
+    seq = ''.join(aa for _r, aa in chain_residues(ch0))
+    stab = {}
+    for i in range(len(per_model[0])):
+        vals = [circular_r([m[i][k] for m in per_model]) for k in (0, 1)]
+        vals = [v for v in vals if v is not None]
+        stab[i] = float(np.mean(vals)) if vals else None
+    return seq, stab
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--protocol', action='store_true')
@@ -441,11 +506,7 @@ def main():
                              'uncertainty': f'cluster bootstrap {DRAWS} draws, seed {SEED}'},
             },
             'claims_boundary': 'see frozen prereg claims_boundary; descriptive only',
-            'revision_note': ('v6: v5 left alpha-syn unscored (nmr_v2 tuple not converted '
-                              'to a position map), RCSB NMR search used GET, AFDB big-file '
-                              'downloads timed out, and new accessions lacked ATLAS '
-                              'search caches; all four fixed, mechanical parameters '
-                              'otherwise unchanged'),
+            'revision_note': ('v7: label v2 amendment (dihedral circular stability) frozen before any read; AFDB version fallback v6..v2 fixes 404s; three stale RCSB search caches purged (documented in the amendment); v1 RMSF and v2 dihedral labels both reported, no gate shopping'),
             'script_sha256': digest(Path(__file__))})
         print('protocol frozen:', digest(OUT / 'protocol.json'))
     if args.run:
@@ -559,7 +620,7 @@ def run():
         label_map, label_target = None, None
         try:
             if label_kind == 'nmr_v2':
-                series, covered = read_nmr_v2_full(parent_seq)
+                series, covered, _nmr_pdb = read_nmr_v2_full(parent_seq)
                 label_map = {pos: val for pos, val in zip(covered, series)}
             elif label_kind == 'nmr_fetched':
                 fetched = fetch_nmr_ensemble_rmsf(acc)
@@ -600,12 +661,37 @@ def run():
             rows.append({'accession': acc, 'status': 'control_labels_insufficient'})
             continue
         diff = case_mean - float(np.mean(control_means))
+        paired_v2 = None
+        if label_kind in ('nmr_v2', 'nmr_fetched'):
+            try:
+                if label_kind == 'nmr_v2':
+                    _s, _c, nmr_pdb_id = read_nmr_v2_full(parent_seq)
+                    ens_path = ROOT / 'data/calibration_nmr_pdb' / f'{nmr_pdb_id}.pdb'
+                else:
+                    fetched = fetch_nmr_ensemble_rmsf(acc)
+                    ens_path = Path(fetched['path'])
+                seq_ens, stab = dihedral_stability_map(ens_path)
+                if seq_ens and stab:
+                    pairs2 = map_chain_to_parent(seq_ens, parent_seq)
+                    p2e = {b: a for a, b in pairs2}
+                    if all((w_start + i) in p2e for i in range(L)):
+                        v2_case = float(np.mean([stab[p2e[w_start + i]] for i in range(L)]))
+                        v2_ctrl = [float(np.mean([stab[p2e[s + i]] for i in range(L)]))
+                                   for s in controls
+                                   if all((s + i) in p2e for i in range(L))]
+                        if len(v2_ctrl) >= K_CONTROLS:
+                            paired_v2 = {'case': round(v2_case, 4),
+                                         'controls': [round(x, 4) for x in v2_ctrl],
+                                         'paired_diff': round(v2_case - float(np.mean(v2_ctrl)), 4)}
+            except Exception as error:  # noqa: BLE001 - v2 is additive, never fatal
+                paired_v2 = {'error': repr(error)[:100]}
         rows.append({
             'accession': acc, 'status': 'scored', 'pdb': info['pdb'],
             'window': info['window'], 'window_start': w_start,
             'mismatch': info.get('mismatch'), 'note': info.get('note'),
             'exposure_source': exposure_source,
             'label_kind': label_kind, 'label_target': label_target,
+            'paired_diff_v2_dihedral': paired_v2,
             'case_window_mean': round(case_mean, 4),
             'control_windows': control_windows,
             'control_means': [round(m, 4) for m in control_means],
@@ -646,16 +732,32 @@ def run():
             verdict = 'inverse_enrichment_exposed_flexible'
         primary_summary = {'n_parents': len(primary), 'mean_paired_diff': mean_diff,
                            'ci95': ci, 'verdict': verdict}
+    v2_rows = [r for r in primary
+               if isinstance(r.get('paired_diff_v2_dihedral'), dict)
+               and 'paired_diff' in r['paired_diff_v2_dihedral']]
+    v2_summary = None
+    if v2_rows:
+        diffs2 = [r['paired_diff_v2_dihedral']['paired_diff'] for r in v2_rows]
+        v2_summary = {'n_parents': len(v2_rows),
+                      'mean_paired_diff': round(float(np.mean(diffs2)), 4),
+                      'reading': ('v2 dihedral stability: positive diff = case window '
+                                  'more locally stable than controls (H1-v2 supported); '
+                                  'negative = case more disordered'),
+                      'per_parent': {r['accession']: r['paired_diff_v2_dihedral']
+                                     for r in v2_rows}}
     summary = {
         'classification': CLASSIFICATION,
         'date': DATE,
         'n_scored': len(scored),
+        'label_v2_amendment': 'results/csn_c1_v1/prereg_label_v2_amendment.json '
+                              '(frozen before any v7 label read)',
         'primary_stratum': {'rows': [r['accession'] for r in primary],
                             **(primary_summary or {'verdict': 'primary_stratum_underpowered',
                                                    'n_parents': len(primary),
                                                    'note': 'frozen stop rule: >=3 '
                                                            'primary-label parents required '
                                                            'for the CI endpoint'})},
+        'label_v2_dihedral': v2_summary,
         'downgraded_stratum': {'rows': [
             {'accession': r['accession'], 'paired_diff': r['paired_diff'],
              'note': 'pLDDT higher = more model-ordered; opposite sign convention '
@@ -701,7 +803,7 @@ def read_nmr_v2_full(parent_seq):
                           if p in p2e]
             except KeyError:
                 continue
-            return series, sorted(p2e)
+            return series, sorted(p2e), entry['pdb']
     return None
 
 
