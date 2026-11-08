@@ -1,0 +1,11 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "date": "2026-11-08",
+  "protocol_sha256": "1d18b2fdeef0f85969dab5da00cdb918e8b727fd64ab603ea01431009842c6fa",
+  "script_sha256": "a92b9188edc8e71a9a4d94af6bd259bbf29db0129fdd7730b6f2e2340d39a457",
+  "artifacts": [
+    "windows.json",
+    "summary.json",
+    "completion.json"
+  ]
+}

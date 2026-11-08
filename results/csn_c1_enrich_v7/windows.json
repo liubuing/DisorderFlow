@@ -1,0 +1,190 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "rows": [
+    {
+      "accession": "P37840",
+      "status": "scored",
+      "pdb": "2x6m",
+      "window": "DYEPEA",
+      "window_start": 134,
+      "mismatch": null,
+      "note": null,
+      "exposure_source": "parent_structure_nmr_2kkw",
+      "label_kind": "nmr_v2",
+      "label_target": null,
+      "paired_diff_v2_dihedral": {
+        "case": 0.588,
+        "controls": [
+          0.8515,
+          0.9996,
+          0.9997
+        ],
+        "paired_diff": -0.3623
+      },
+      "case_window_mean": 21.8128,
+      "control_windows": [
+        "VGSKTK",
+        "GAGSIA",
+        "AGSIAA"
+      ],
+      "control_means": [
+        8.5522,
+        9.7611,
+        10.0073
+      ],
+      "paired_diff": 12.3726,
+      "lower_is_more_transient": true
+    },
+    {
+      "accession": "P04578",
+      "status": "exposure_unavailable"
+    },
+    {
+      "accession": "P0DTC2",
+      "status": "exposure_unavailable"
+    },
+    {
+      "accession": "P21579",
+      "status": "scored",
+      "pdb": "8b8i",
+      "window": "KEDAFSKLKEKFMNEL",
+      "window_start": 35,
+      "mismatch": null,
+      "note": null,
+      "exposure_source": "parent_structure_afdb",
+      "label_kind": "afdb_downgraded",
+      "label_target": "AF-P21579-F1",
+      "paired_diff_v2_dihedral": null,
+      "case_window_mean": 0.6893,
+      "control_windows": [
+        "AIGKVFVGYNSTGAEL",
+        "STGAELRHWSDMLANP",
+        "ICFSLRYVPTAGKLTV"
+      ],
+      "control_means": [
+        0.937,
+        0.9416,
+        0.9757
+      ],
+      "paired_diff": -0.2621,
+      "lower_is_more_transient": false
+    },
+    {
+      "accession": "G9GAG7",
+      "status": "scored",
+      "pdb": "5ivn",
+      "window": "DRKAAVSHWQ",
+      "window_start": 16,
+      "mismatch": null,
+      "note": null,
+      "exposure_source": "parent_structure_afdb",
+      "label_kind": "afdb_downgraded",
+      "label_target": "AF-G9GAG7-F1",
+      "paired_diff_v2_dihedral": null,
+      "case_window_mean": 0.712,
+      "control_windows": [
+        "ATQADLMELD",
+        "GIHSGATTTA",
+        "DLMELDMAME"
+      ],
+      "control_means": [
+        0.7814,
+        0.4881,
+        0.7531
+      ],
+      "paired_diff": 0.0378,
+      "lower_is_more_transient": false
+    },
+    {
+      "accession": "Q02223",
+      "status": "control_labels_insufficient"
+    },
+    {
+      "accession": "B2VLW8",
+      "status": "exposure_unavailable"
+    },
+    {
+      "accession": "Q6NZI2",
+      "status": "scored",
+      "pdb": "9eiu",
+      "window": "LSLLDKIIGAVDQIQL",
+      "window_start": 54,
+      "mismatch": null,
+      "note": null,
+      "exposure_source": "parent_structure_afdb",
+      "label_kind": "afdb_downgraded",
+      "label_target": "AF-Q6NZI2-F1",
+      "paired_diff_v2_dihedral": null,
+      "case_window_mean": 0.975,
+      "control_windows": [
+        "GKAHATTSNTVSKLLE",
+        "LGKAHATTSNTVSKLL",
+        "LSKLGKAHATTSNTVS"
+      ],
+      "control_means": [
+        0.984,
+        0.9843,
+        0.9841
+      ],
+      "paired_diff": -0.0091,
+      "lower_is_more_transient": false
+    },
+    {
+      "accession": "P10636",
+      "status": "scored",
+      "pdb": "8op0",
+      "window": "GSVQIVYKPV",
+      "window_start": 620,
+      "mismatch": "deposited GSVQIVYKPK; canonical window used per prereg anchored_with_mismatch; peptidematch verified zero for the deposited peptide in Swiss-Prot+isoforms",
+      "note": null,
+      "exposure_source": "parent_structure_afdb",
+      "label_kind": "afdb_downgraded",
+      "label_target": "AF-P10636-F1",
+      "paired_diff_v2_dihedral": null,
+      "case_window_mean": 0.6774,
+      "control_windows": [
+        "ATLADEVSAS",
+        "TLADEVSASL",
+        "LADEVSASLA"
+      ],
+      "control_means": [
+        0.8119,
+        0.8331,
+        0.8462
+      ],
+      "paired_diff": -0.1529,
+      "lower_is_more_transient": false
+    },
+    {
+      "accession": "P11207",
+      "status": "control_candidates_insufficient",
+      "n_candidates": 0
+    },
+    {
+      "accession": "Q08346",
+      "status": "scored",
+      "pdb": "6zwk",
+      "window": "TQAQEY",
+      "window_start": 137,
+      "mismatch": null,
+      "note": "peptidematch single hit; E0b entity check failed because the deposited antigen is a derived peptide",
+      "exposure_source": "parent_structure_afdb",
+      "label_kind": "afdb_downgraded",
+      "label_target": "AF-Q08346-F1",
+      "paired_diff_v2_dihedral": null,
+      "case_window_mean": 0.9608,
+      "control_windows": [
+        "TVAFGG",
+        "VISLLM",
+        "RIMFPI"
+      ],
+      "control_means": [
+        0.9686,
+        0.9536,
+        0.9815
+      ],
+      "paired_diff": -0.0071,
+      "lower_is_more_transient": false
+    }
+  ]
+}

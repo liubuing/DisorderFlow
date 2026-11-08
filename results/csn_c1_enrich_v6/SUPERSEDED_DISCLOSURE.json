@@ -1,0 +1,8 @@
+{
+  "classification": "superseded_protocol_disclosure",
+  "date": "2026-11-08",
+  "reason": "label v2 amendment (dihedral stability) and AFDB version fallback require a fresh protocol freeze; v6 rows (6 scored) will be recomputed under both labels in v7",
+  "superseded_by": "results/csn_c1_enrich_v7",
+  "labels_read": true,
+  "v6_result_preserved": "results/csn_c1_enrich_v6/*"
+}

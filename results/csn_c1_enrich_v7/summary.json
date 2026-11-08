@@ -1,0 +1,82 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "date": "2026-11-08",
+  "n_scored": 6,
+  "label_v2_amendment": "results/csn_c1_v1/prereg_label_v2_amendment.json (frozen before any v7 label read)",
+  "primary_stratum": {
+    "rows": [
+      "P37840"
+    ],
+    "verdict": "primary_stratum_underpowered",
+    "n_parents": 1,
+    "note": "frozen stop rule: >=3 primary-label parents required for the CI endpoint"
+  },
+  "label_v2_dihedral": {
+    "n_parents": 1,
+    "mean_paired_diff": -0.3623,
+    "reading": "v2 dihedral stability: positive diff = case window more locally stable than controls (H1-v2 supported); negative = case more disordered",
+    "per_parent": {
+      "P37840": {
+        "case": 0.588,
+        "controls": [
+          0.8515,
+          0.9996,
+          0.9997
+        ],
+        "paired_diff": -0.3623
+      }
+    }
+  },
+  "downgraded_stratum": {
+    "rows": [
+      {
+        "accession": "P21579",
+        "paired_diff": -0.2621,
+        "note": "pLDDT higher = more model-ordered; opposite sign convention to RMSF; descriptive only, never pooled"
+      },
+      {
+        "accession": "G9GAG7",
+        "paired_diff": 0.0378,
+        "note": "pLDDT higher = more model-ordered; opposite sign convention to RMSF; descriptive only, never pooled"
+      },
+      {
+        "accession": "Q6NZI2",
+        "paired_diff": -0.0091,
+        "note": "pLDDT higher = more model-ordered; opposite sign convention to RMSF; descriptive only, never pooled"
+      },
+      {
+        "accession": "P10636",
+        "paired_diff": -0.1529,
+        "note": "pLDDT higher = more model-ordered; opposite sign convention to RMSF; descriptive only, never pooled"
+      },
+      {
+        "accession": "Q08346",
+        "paired_diff": -0.0071,
+        "note": "pLDDT higher = more model-ordered; opposite sign convention to RMSF; descriptive only, never pooled"
+      }
+    ]
+  },
+  "unscored": [
+    {
+      "accession": "P04578",
+      "status": "exposure_unavailable"
+    },
+    {
+      "accession": "P0DTC2",
+      "status": "exposure_unavailable"
+    },
+    {
+      "accession": "Q02223",
+      "status": "control_labels_insufficient"
+    },
+    {
+      "accession": "B2VLW8",
+      "status": "exposure_unavailable"
+    },
+    {
+      "accession": "P11207",
+      "status": "control_candidates_insufficient"
+    }
+  ],
+  "claims_boundary": "see frozen prereg claims_boundary"
+}

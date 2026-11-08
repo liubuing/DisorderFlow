@@ -1,0 +1,25 @@
+{
+  "classification": "prereg_amendment_before_label_read",
+  "date": "2026-11-08",
+  "amends": "preregistration.json (e8b19110)",
+  "rationale": "v1 RMSF label conflated local flexibility with terminal global swing: alpha-syn case window read 21.8 A absolute (tail diffusion), controls 8-10 A - the comparison measures where the free end dangles, not local transient structure",
+  "label_v2": {
+    "name": "dihedral_circular_stability",
+    "definition": "per-residue circular mean resultant length R of phi and psi across ensemble models (same ensembles as v1); local score = mean(R_phi,R_psi); higher = more conformationally stable = transient structure",
+    "applies_to": "NMR ensembles only (nmr_v2 / nmr_fetched); AFDB single models have no ensemble and keep pLDDT (downgraded)",
+    "direction": "H1-v2 predicts case windows HIGHER stability than matched controls"
+  },
+  "reporting_rules": {
+    "both_labels_reported": "v1 RMSF and v2 dihedral stability each under their own closed rules",
+    "no_gate_shopping": "a direction flip between labels is reported as a label-dependence finding, not cherry-picked",
+    "primary_interpretation": "v2 is the local-structure-faithful label; v1 is retained as the displacement-scale view"
+  },
+  "provenance": {
+    "purged_caches": [
+      "G9GAG7",
+      "Q6NZI2",
+      "Q08346"
+    ],
+    "prereg_sha256": "e8b191107b5ab7990e92227d6b3e835a754501027ede864e75aa3449872b440c"
+  }
+}

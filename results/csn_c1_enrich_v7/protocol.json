@@ -1,0 +1,25 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "date": "2026-11-08",
+  "prereg_sha256": "e8b191107b5ab7990e92227d6b3e835a754501027ede864e75aa3449872b440c",
+  "mechanical_parameters": {
+    "control_matching": "nearest-3 control windows per case window by |mean CA SASA difference|, deterministic, ties by lower start",
+    "sasa_engine": "Bio.PDB.SASA.ShrakeRupley, residue level",
+    "exposure_source_rule": "deposited antigen chain when it spans the case window plus >=5 residues on one side and >=L+5 total; else the parent own structure (NMR model or AFDB model); deviation from the frozen bound-chain proxy is recorded per parent",
+    "precedent_universe": "every chain sequence of the local pool CIFs plus queue component sequences; precedent = exact substring match of the window",
+    "label_kinds": [
+      "nmr_v2",
+      "nmr_fetched",
+      "atlas_ge90",
+      "afdb_downgraded"
+    ],
+    "atlas_identity_threshold": 90.0,
+    "endpoint": {
+      "statistic": "parent-level paired difference (case - control mean)",
+      "uncertainty": "cluster bootstrap 10000 draws, seed 20261108"
+    }
+  },
+  "claims_boundary": "see frozen prereg claims_boundary; descriptive only",
+  "revision_note": "v7: label v2 amendment (dihedral circular stability) frozen before any read; AFDB version fallback v6..v2 fixes 404s; three stale RCSB search caches purged (documented in the amendment); v1 RMSF and v2 dihedral labels both reported, no gate shopping",
+  "script_sha256": "a92b9188edc8e71a9a4d94af6bd259bbf29db0129fdd7730b6f2e2340d39a457"
+}
