@@ -1,0 +1,27 @@
+{
+  "classification": "development_diagnostic_not_gate_revision",
+  "date": "2026-11-08",
+  "n_components": 26,
+  "missing_components": [
+    "5ivn_A_B",
+    "6zwk_F_L"
+  ],
+  "n_frame_ok": 26,
+  "median_spread_corrected_complex_frame": 0.4453,
+  "median_spread_corrected_peptide_superposed": 0.3317,
+  "median_spread_legacy_peptide_superposed": 0.5641,
+  "tier_counts": {
+    "near_rigid": 2,
+    "modest": 22,
+    "t1_like": 2
+  },
+  "t1_reference_mean_pairwise_rmsd_a": 0.63,
+  "t1_reference_instrument_note": "frozen read-only reference from 7 development clusters (INTEGRATIVE_ANALYSIS section 2.2); its alignment convention is not recoverable from the frozen record, so the legacy column above is the apples-to-apples bridge if T1 used the legacy function",
+  "frozen_gate_reference": {
+    "j0b_v2_mean_advantage": 5.678808977906074,
+    "j0b_v2_attenuation_vs_j0a_v2": -0.1256295846089257,
+    "usage": "read-only context; not recomputed here"
+  },
+  "verdict": "intermediate_requires_deeper_resolution",
+  "claims_boundary": "see protocol.json claims_boundary (frozen)"
+}

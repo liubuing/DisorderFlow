@@ -1,0 +1,535 @@
+{
+  "classification": "flexibility_label_reaudit_not_model_result",
+  "audits": [
+    {
+      "pdb": "1awz",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1aze",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1ba9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1bcn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1bo9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1cmz",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1cqg",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1dgn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1dt7",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1dz7",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1f16",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1irp",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1j3s",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1jjj",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1jnj",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1jun",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1klv",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1m31",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1mk3",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1mq1",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1mwn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1oca",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1oef",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1pfl",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1pqn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1qtt",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1r6h",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1rjh",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1rjv",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1tl4",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1txp",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1u81",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1uc6",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1wh9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1wxs",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1wym",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1x2k",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1xpw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "1yho",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2cp9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2crl",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2dj0",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2dmw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2dzj",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2eki",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2ew3",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2go0",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2gpq",
+      "status": "audited",
+      "target": "5gw6_A",
+      "identity": "98.40",
+      "aligned_pairs": 196,
+      "alignment_score": 1018.0,
+      "spearman": 0.7369494598520763,
+      "recall_nmr_top20_in_atlas": 0.6923076923076923,
+      "recall_atlas_top20_in_nmr": 0.6923076923076923
+    },
+    {
+      "pdb": "2h35",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2hlw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2hm2",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2il6",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2jqk",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2jrj",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2jyw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2jz3",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2k11",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2k3u",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2k4t",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2k8v",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kax",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kg2",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kjh",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kkw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2ko3",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kwn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kwo",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2kz3",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2l0p",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2l3h",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lc2",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lcp",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2leh",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2len",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lfw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lgc",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2ll0",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2llh",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lot",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lp8",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lue",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lvm",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lxt",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lyh",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2lyv",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2m1k",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2m5b",
+      "status": "audited",
+      "target": "2ims_A",
+      "identity": "100.00",
+      "aligned_pairs": 169,
+      "alignment_score": 844.0,
+      "spearman": 0.712807541854829,
+      "recall_nmr_top20_in_atlas": 0.5882352941176471,
+      "recall_atlas_top20_in_nmr": 0.5882352941176471
+    },
+    {
+      "pdb": "2m5r",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2m9g",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2ma9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2mmc",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2mt5",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2mt6",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2mxn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2mxx",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2n1t",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2n80",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2n9c",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2ncn",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2rli",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2rmk",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2rny",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2rs9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "2rvq",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "4c7q",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5aj1",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5i8n",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5jpw",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5js7",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5kj3",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5kk9",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5t7c",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5xf0",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "5yfg",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6fgp",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6hpi",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6hq1",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6ib6",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6jhd",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6k2k",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6l8r",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6mpp",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6n13",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6rpv",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "6zze",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "7dfe",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "7rno",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "8k6z",
+      "status": "no_atlas_match"
+    },
+    {
+      "pdb": "8u27",
+      "status": "no_atlas_match"
+    }
+  ]
+}

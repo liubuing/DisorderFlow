@@ -1,0 +1,31 @@
+{
+  "classification": "flexibility_label_reaudit_not_model_result",
+  "date": "2026-11-08",
+  "nmr_entries": 129,
+  "audited": 2,
+  "rho_median": 0.7249,
+  "gate_threshold": 0.3,
+  "verdict": "pass_physical_label",
+  "v1_reference": {
+    "rho_median": 0.6558,
+    "verdict": "pass_physical_label",
+    "usage": "read-only; superseded NMR side"
+  },
+  "v1_vs_v2_disclosure": [
+    {
+      "pdb": "2gpq",
+      "target": "5gw6_A",
+      "v1_spearman": 0.5846659419307002,
+      "v2_spearman": 0.7369494598520763,
+      "delta": 0.1523
+    },
+    {
+      "pdb": "2m5b",
+      "target": "2ims_A",
+      "v1_spearman": 0.7270299720998509,
+      "v2_spearman": 0.712807541854829,
+      "delta": -0.0142
+    }
+  ],
+  "claims_boundary": "Label-infrastructure re-audit only; no model result and no design claim. The ATLAS caches are raw service responses reused read-only from the frozen v1 audit directory."
+}

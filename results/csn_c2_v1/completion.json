@@ -1,0 +1,11 @@
+{
+  "classification": "development_diagnostic_not_gate_revision",
+  "date": "2026-11-08",
+  "protocol_sha256": "a6ce1fb52767b076bf00e143c5bdf2162604568d6ec8566ea01ac2dac7c44072",
+  "script_sha256": "add7594f954cfe6335f1625d06e0253aee91f0620c9aa9915126a95983f6635d",
+  "artifacts": [
+    "conformer_spread.json",
+    "summary.json",
+    "completion.json"
+  ]
+}

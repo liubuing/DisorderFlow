@@ -1,0 +1,112 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "campaign": "CSN v1",
+  "phase": "C0",
+  "date": "2026-11-08",
+  "question": "Do independently deposited binders (different PDB entries) of the same disordered-epitope peptide report the same backbone conformation (conformer-selection signal) or distinct ones (induced-fit signal)?",
+  "universe": {
+    "queue_components": 28,
+    "queue_pdbs": 14,
+    "unique_peptides": [
+      "AVERYLKDQQLLGIW",
+      "DPLQPELDSFKEELD",
+      "DRKAAVSHWQ",
+      "DYEPEA",
+      "EDAFSKLKEKFMN",
+      "GKPIPNPLLGLDST",
+      "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+      "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "GSVQIVYKPK",
+      "KEDAFSKLKEKFMN",
+      "KEDAFSKLKEKFMNE",
+      "KEDAFSKLKEKFMNELH",
+      "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "QAQEY",
+      "SRLEEELRRRLTE",
+      "TQAQEY",
+      "VETPIRNEWGCRC"
+    ],
+    "sweep_parents": [
+      "AVERYLKDQQLLGIW",
+      "DPLQPELDSFKEELD",
+      "DRKAAVSHWQ",
+      "DYEPEA",
+      "GKPIPNPLLGLDST",
+      "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "GSVQIVYKPK",
+      "KEDAFSKLKEKFMNELH",
+      "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "SRLEEELRRRLTE",
+      "TQAQEY",
+      "VETPIRNEWGCRC"
+    ],
+    "sweep_pool": "data/sabdab2_abag_project_pool_v2/cif (local, frozen)",
+    "sweep_rule": "peptide-like antigen chains (<=40 residues) become expansion components; protein-embedded matches recorded as context only",
+    "resolution_order": [
+      "sabdab2_pool",
+      "multiscaffold",
+      "calibration_full_entry"
+    ],
+    "known_missing_coordinates": [
+      "5ivn_A_B",
+      "6zwk_B_H",
+      "6zwk_D_J",
+      "6zwk_E_K",
+      "6zwk_F_L",
+      "8skj_G_H"
+    ]
+  },
+  "metric": "C-alpha RMSD after Kabsch superposition restricted to overlapped residues; identical peptides use full length; >=4 usable CA points",
+  "tiers": {
+    "same_bound_conformer": "rmsd <= 1.0",
+    "related_conformers": "1.0 < rmsd <= 2.5",
+    "distinct_induced_fit": "rmsd > 2.5",
+    "grounding": "T2.1 v2 moderate-perturbation tier 1.5-3.0 A (frozen, read-only reference); thresholds fixed before any pair RMSD was computed"
+  },
+  "floor_control": {
+    "rule": "same-entry same-binder (NCS-copy) pairs expected mean <= 0.5 A",
+    "invalidation": "mean > 1.0 A -> floor_check_failed; all same-entry diversity interpretations downgraded"
+  },
+  "dihedral_windows": {
+    "extended": "phi in [-180,-80] and psi in [80,180]",
+    "helical": "phi in [-140,-55] and psi in [-70,-10]",
+    "ppii": "phi in [-85,-35] and psi in [115,165]",
+    "priority": [
+      "extended",
+      "helical",
+      "ppii"
+    ],
+    "purpose": "descriptive class per bound copy; no mechanism claim"
+  },
+  "validity_gates": [
+    "peptide chain located by exact substring, never a binder chain",
+    "overlap >= 5 residues for distinct windows; full length for identical peptides",
+    ">= 4 usable CA points in overlap",
+    "multiple candidate chains are recorded, never silently dropped"
+  ],
+  "verdict_closed_set": [
+    "conformer_sharing",
+    "related_conformers",
+    "distinct_induced_fit",
+    "mixed",
+    "no_cross_entry_evidence",
+    "no_valid_coordinates",
+    "coordinate_starvation"
+  ],
+  "family_verdict_rules": {
+    "conformer_sharing": "all valid cross-entry pairs tier same_bound_conformer",
+    "related_conformers": "all cross-entry pairs <= related_conformers",
+    "distinct_induced_fit": "all cross-entry pairs tier distinct_induced_fit",
+    "mixed": "any other tier mix"
+  },
+  "stop_rules": {
+    "starvation": "0 families with a valid cross-entry pair -> coordinate_starvation",
+    "generalization": "<3 cross-entry families -> single_or_few_family_descriptive, insufficient for generalization"
+  },
+  "claims_boundary": "Coordinate bookkeeping only; no model, no scores, no network. Verdicts describe deposited bound conformations; they do not establish conformer selection as a mechanism, binding, affinity, or any design claim. Read-only references: flex_j0 preregistration, T2.1 v2 tier, INTEGRATIVE_ANALYSIS section 2.2.",
+  "revision_note": "v2 of results/csn_c0_v1: the v1 run froze components.json and sweep.json (extraction unaffected) and crashed in pair_record before pairs/summary/completion; dihedral-agreement positions were indexed in the parent frame instead of per-component local indices (off_a/off_b mapping now applied). Prereg scientific content is unchanged; only the script sha256 and OUT directory moved. v1 partial artifacts remain write-once preserved.",
+  "provenance": {
+    "script_sha256": "7f114671a463c9b6bfa94e0d959cb931da365f3385865d55e3a4f44b2a4a4698",
+    "queue_sha256": "aa711a1b34bc85f1e28c1f763b2d04ff49cc7788526c4b7a547bc470998de9dd"
+  }
+}

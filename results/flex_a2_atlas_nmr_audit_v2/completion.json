@@ -1,0 +1,11 @@
+{
+  "classification": "flexibility_label_reaudit_not_model_result",
+  "date": "2026-11-08",
+  "protocol_sha256": "91294f70e2d8453e9aa446ab596ab37c24b98ae63227d53e67a343b61edc6d2b",
+  "script_sha256": "1603535cc6d0984339afcdd768d8a0a2e96f8a0d88fd9dc73ef4bfbcf61d749b",
+  "artifacts": [
+    "audits.json",
+    "summary.json",
+    "completion.json"
+  ]
+}

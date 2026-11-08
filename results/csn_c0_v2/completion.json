@@ -1,0 +1,18 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "date": "2026-11-08",
+  "prereg_sha256": "93fd5ae925c2eda1bd445444ec5792bb35ed0389d25287c84210e111096d9c7a",
+  "script_sha256": "7f114671a463c9b6bfa94e0d959cb931da365f3385865d55e3a4f44b2a4a4698",
+  "queue_sha256": "aa711a1b34bc85f1e28c1f763b2d04ff49cc7788526c4b7a547bc470998de9dd",
+  "sweep_stats": {
+    "n_files": 1146,
+    "runtime_s": 82.8
+  },
+  "artifacts": [
+    "components.json",
+    "sweep.json",
+    "pairs.json",
+    "summary.json",
+    "completion.json"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "classification": "development_diagnostic_not_gate_revision",
+  "campaign": "CSN v1",
+  "phase": "C2",
+  "date": "2026-11-08",
+  "question": "Do the frozen J0b generated conformers contain peptide motion at T1-like amplitude (0.63 A mean pairwise reference), or are they near-rigid (which would render the J0b \"no attenuation\" result expected and uninformative about ensembles)?",
+  "inputs": {
+    "conformer_pdbs": "results\\flex_j0b_v1\\conformer_component_pdbs",
+    "queue": "results\\flex_j0_v1\\preregistration.json",
+    "frozen_gate_reference": "results\\flex_j0b_v2_antigen_roles\\j0b_v2_summary.json"
+  },
+  "metrics": {
+    "corrected_complex_frame": "primary; heavy-chain CA RMSD across seeds <= 0.1 A without realignment is required, else component flagged frame_shifted and only superposed readings apply",
+    "corrected_peptide_superposed": "secondary; Kabsch (row convention, unit-tested)",
+    "legacy_peptide_superposed": "disclosure only; legacy flex kabsch with the transposed-rotation bug; enables future apples-to-apples checks against legacy-instrument reference numbers"
+  },
+  "tiers": {
+    "near_rigid": "mean pairwise spread < 0.3 A",
+    "modest": "0.3 <= spread < 0.6 A",
+    "t1_like": "spread >= 0.6 A (T1 reference 0.63 A, read-only)",
+    "interpretation_closed_rules": {
+      "median_component_spread < 0.3": "marginalization_trivial_explanation",
+      "median_component_spread >= 0.6": "magnitude_parity_preserved",
+      "otherwise": "intermediate_requires_deeper_resolution"
+    }
+  },
+  "red_lines": [
+    "the frozen J0a/J0b v2 gate numbers are read-only references",
+    "no model inference, no network, no scores",
+    "diagnostic only; never revises or reinterprets a frozen gate"
+  ],
+  "claims_boundary": "This diagnostic characterizes conformer amplitude only. It does not re-evaluate the ECLS endpoint, does not revise the frozen J0b v2 gate, and does not establish any binding or design claim.",
+  "provenance": {
+    "script_sha256": "add7594f954cfe6335f1625d06e0253aee91f0620c9aa9915126a95983f6635d",
+    "queue_sha256": "aa711a1b34bc85f1e28c1f763b2d04ff49cc7788526c4b7a547bc470998de9dd",
+    "j0b_summary_sha256": "f2415822a0f20ada571daca000ecff097a419e3e54a9d8a8759cde0ee4fa22fd"
+  }
+}

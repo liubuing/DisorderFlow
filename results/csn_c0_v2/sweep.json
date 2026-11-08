@@ -1,0 +1,137 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "stats": {
+    "n_files": 1146,
+    "runtime_s": 82.8
+  },
+  "hits": [
+    {
+      "file": "pdb_00002x6m_A_+.cif",
+      "pdb_id": "2x6m",
+      "chain": "B",
+      "chain_len": 6,
+      "peptide": "DYEPEA",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00005hm1_A_+.cif",
+      "pdb_id": "5hm1",
+      "chain": "D",
+      "chain_len": 15,
+      "peptide": "AVERYLKDQQLLGIW",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00005hm1_B_+.cif",
+      "pdb_id": "5hm1",
+      "chain": "E",
+      "chain_len": 15,
+      "peptide": "AVERYLKDQQLLGIW",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00005hm1_C_+.cif",
+      "pdb_id": "5hm1",
+      "chain": "F",
+      "chain_len": 15,
+      "peptide": "AVERYLKDQQLLGIW",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00006j7w_A_+.cif",
+      "pdb_id": "6j7w",
+      "chain": "C",
+      "chain_len": 39,
+      "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00008b8i_A_+.cif",
+      "pdb_id": "8b8i",
+      "chain": "I",
+      "chain_len": 17,
+      "peptide": "KEDAFSKLKEKFMNELH",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00008b8i_B_+.cif",
+      "pdb_id": "8b8i",
+      "chain": "J",
+      "chain_len": 17,
+      "peptide": "KEDAFSKLKEKFMNELH",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00008hxq_A_+.cif",
+      "pdb_id": "8hxq",
+      "chain": "C",
+      "chain_len": 44,
+      "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "context": "protein_embedded",
+      "covered_by_queue": false
+    },
+    {
+      "file": "pdb_00008hxq_B_+.cif",
+      "pdb_id": "8hxq",
+      "chain": "D",
+      "chain_len": 45,
+      "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "context": "protein_embedded",
+      "covered_by_queue": false
+    },
+    {
+      "file": "pdb_00009eg6_B_+.cif",
+      "pdb_id": "9eg6",
+      "chain": "A",
+      "chain_len": 42,
+      "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "context": "protein_embedded",
+      "covered_by_queue": false
+    },
+    {
+      "file": "pdb_00009eg6_F_+.cif",
+      "pdb_id": "9eg6",
+      "chain": "A",
+      "chain_len": 42,
+      "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "context": "protein_embedded",
+      "covered_by_queue": false
+    },
+    {
+      "file": "pdb_00009egn_B_+.cif",
+      "pdb_id": "9egn",
+      "chain": "A",
+      "chain_len": 42,
+      "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "context": "protein_embedded",
+      "covered_by_queue": false
+    },
+    {
+      "file": "pdb_00009lds_A_+.cif",
+      "pdb_id": "9lds",
+      "chain": "B",
+      "chain_len": 15,
+      "peptide": "DPLQPELDSFKEELD",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    },
+    {
+      "file": "pdb_00009lds_C_+.cif",
+      "pdb_id": "9lds",
+      "chain": "D",
+      "chain_len": 15,
+      "peptide": "DPLQPELDSFKEELD",
+      "context": "peptide_like",
+      "covered_by_queue": true
+    }
+  ],
+  "parse_errors": [],
+  "expansion_records": []
+}

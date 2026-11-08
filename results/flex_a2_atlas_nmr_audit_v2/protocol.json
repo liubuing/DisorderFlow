@@ -1,0 +1,19 @@
+{
+  "classification": "flexibility_label_reaudit_not_model_result",
+  "date": "2026-11-08",
+  "nmr_source_sha256": "400504f9227fe3685b04ca02c1273a40020e248869bd8969a1e7f0aeb5b5e2b2",
+  "nmr_source_supersedes": "d6b55b29993e87c633d70d40e73483e303080741a80161000e6ac07d30b00328",
+  "atlas_caches": "results\\flex_a2_atlas_nmr_audit_v1/search, /fasta, /tracks (read-only reuse)",
+  "offline": true,
+  "match_rules": {
+    "min_identity": 90.0,
+    "min_query_coverage": 0.8,
+    "min_aligned_residues": 50
+  },
+  "verdict_gate": {
+    "metric": "median within-protein Spearman(NMR RMSF, ATLAS RMSF)",
+    "threshold": 0.3,
+    "provenance": "v5.1 pass_physical_label threshold (inherited unchanged)"
+  },
+  "script_sha256": "1603535cc6d0984339afcdd768d8a0a2e96f8a0d88fd9dc73ef4bfbcf61d749b"
+}

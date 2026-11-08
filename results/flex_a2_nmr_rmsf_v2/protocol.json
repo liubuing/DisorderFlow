@@ -1,0 +1,7 @@
+{
+  "classification": "label_infrastructure_repair_not_model_result",
+  "alignment": "per-model global Kabsch (corrected row convention) to first model, C-alpha only; unit-tested rigid roundtrips",
+  "min_models": 5,
+  "min_residues": 20,
+  "script_sha256": "e87ef5fa37a54ca34c87d3e3eda889724751b0c6218c60bfab5a53bfc8d288f5"
+}

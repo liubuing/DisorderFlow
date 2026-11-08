@@ -1,0 +1,190 @@
+{
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "date": "2026-11-08",
+  "n_components_queue": 28,
+  "n_components_valid_queue": 22,
+  "n_expansion_components": 0,
+  "n_expansion_valid": 0,
+  "n_families": 10,
+  "n_cross_entry_families": 1,
+  "n_pairs_scored": 29,
+  "n_cross_entry_pairs": 3,
+  "floor_control": {
+    "n_ncs_pairs": 9,
+    "mean_rmsd": 0.2113,
+    "flag": "ok",
+    "expected_mean_le": 0.5,
+    "invalidation_gt": 1.0
+  },
+  "global_verdict": "conformer_sharing",
+  "global_classification": "single_or_few_family_descriptive",
+  "families": [
+    {
+      "parent": "AVERYLKDQQLLGIW",
+      "members": [
+        "AVERYLKDQQLLGIW"
+      ],
+      "components": [
+        "5hm1_A_D",
+        "5hm1_B_E",
+        "5hm1_C_F"
+      ],
+      "n_pairs_scored": 3,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 3,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "DPLQPELDSFKEELD",
+      "members": [
+        "DPLQPELDSFKEELD"
+      ],
+      "components": [
+        "9lds_A_B",
+        "9lds_C_D"
+      ],
+      "n_pairs_scored": 1,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 1,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "DYEPEA",
+      "members": [
+        "DYEPEA"
+      ],
+      "components": [
+        "2x6m_A_B"
+      ],
+      "n_pairs_scored": 0,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 0,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "GKPIPNPLLGLDST",
+      "members": [
+        "GKPIPNPLLGLDST"
+      ],
+      "components": [
+        "8skj_A_E"
+      ],
+      "n_pairs_scored": 0,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 0,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "members": [
+        "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYC",
+        "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS"
+      ],
+      "components": [
+        "6j7w_A_C",
+        "6j7w_B_D"
+      ],
+      "n_pairs_scored": 1,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 1,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "GSVQIVYKPK",
+      "members": [
+        "GSVQIVYKPK"
+      ],
+      "components": [
+        "8op0_A_B",
+        "8opi_A_B",
+        "8pii_A_B"
+      ],
+      "n_pairs_scored": 3,
+      "n_cross_entry": 3,
+      "n_ncs_copy": 0,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "conformer_sharing"
+    },
+    {
+      "parent": "KEDAFSKLKEKFMNELH",
+      "members": [
+        "EDAFSKLKEKFMN",
+        "KEDAFSKLKEKFMN",
+        "KEDAFSKLKEKFMNE",
+        "KEDAFSKLKEKFMNELH"
+      ],
+      "components": [
+        "8b8i_A_I",
+        "8b8i_B_J",
+        "8b8i_D_L",
+        "8b8i_E_M",
+        "8b8i_F_N",
+        "8b8i_G_O",
+        "8b8i_H_P"
+      ],
+      "n_pairs_scored": 21,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 4,
+      "n_same_entry_diff_binder": 17,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "members": [
+        "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL"
+      ],
+      "components": [
+        "9eiu_B_A"
+      ],
+      "n_pairs_scored": 0,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 0,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "SRLEEELRRRLTE",
+      "members": [
+        "SRLEEELRRRLTE"
+      ],
+      "components": [
+        "6i2g_A_B"
+      ],
+      "n_pairs_scored": 0,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 0,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    },
+    {
+      "parent": "VETPIRNEWGCRC",
+      "members": [
+        "VETPIRNEWGCRC"
+      ],
+      "components": [
+        "6s0y_B_D"
+      ],
+      "n_pairs_scored": 0,
+      "n_cross_entry": 0,
+      "n_ncs_copy": 0,
+      "n_same_entry_diff_binder": 0,
+      "verdict": "no_cross_entry_evidence"
+    }
+  ],
+  "neuro_annotations": {
+    "tau_phf6_star": {
+      "family_parent": "GSVQIVYKPK",
+      "note": "extended-class fraction per bound copy is reported in components.json dihedral_classes; descriptive only"
+    },
+    "alpha_syn_c_term": {
+      "family_parent": "DYEPEA",
+      "note": "single deposited complex (2x6m); no cross-binder evidence available; classes recorded descriptively"
+    }
+  },
+  "claims_boundary": "see preregistration.json claims_boundary (frozen)"
+}
