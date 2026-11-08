@@ -1,0 +1,7 @@
+{
+  "classification": "superseded_protocol_disclosure",
+  "date": "2026-11-08",
+  "reason": "alpha-syn lost to an unconverted nmr_v2 tuple; RCSB search GET; AFDB timeouts; missing on-demand ATLAS caches. 5 AFDB-stratum rows scored in v5 and will be recomputed identically in v6",
+  "superseded_by": "results/csn_c1_enrich_v6",
+  "labels_read": true
+}

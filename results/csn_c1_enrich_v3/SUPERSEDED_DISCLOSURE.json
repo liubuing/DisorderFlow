@@ -1,0 +1,7 @@
+{
+  "classification": "superseded_protocol_disclosure",
+  "date": "2026-11-08",
+  "reason": "unbound control_windows after dead-code removal; v4 rebuilds label reads as position->value maps",
+  "superseded_by": "results/csn_c1_enrich_v4",
+  "labels_read": false
+}

@@ -1,0 +1,7 @@
+{
+  "classification": "superseded_protocol_disclosure",
+  "date": "2026-11-08",
+  "reason": "unbound covered variable in the nmr_v2 branch (first parent is alpha-syn)",
+  "superseded_by": "results/csn_c1_enrich_v3",
+  "labels_read": false
+}

@@ -1,0 +1,12 @@
+{
+  "classification": "csn_c1_parent_curation_evidence",
+  "date": "2026-11-08",
+  "protocol_sha256": "2304e5cacbd80638e44d570285f910f63a357da172b4a4a54b921c14b82116bf",
+  "script_sha256": "44df56bcd743862b360e5b12003f9b93e5b8084340c5a866d7beb77e093d54fa",
+  "artifacts": [
+    "protocol.json",
+    "matches.json",
+    "summary.json",
+    "completion.json"
+  ]
+}

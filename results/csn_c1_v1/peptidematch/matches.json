@@ -1,0 +1,138 @@
+{
+  "classification": "csn_c1_parent_curation_evidence",
+  "entries_scanned": 617447,
+  "controls_ok": true,
+  "matches": {
+    "control_syt1": {
+      "accessions": [
+        "A0A075F932",
+        "P21579",
+        "P48018",
+        "Q5R4J5",
+        "Q60HC0"
+      ],
+      "n_swissprot": 5,
+      "n_isoforms_extra": 0
+    },
+    "control_alpha_syn": {
+      "accessions": [
+        "A1A8B3",
+        "A7ZIK2",
+        "A7ZXA2",
+        "B1J004",
+        "B1LJK1",
+        "B1XFN2",
+        "B2U4P9",
+        "B5Z3V1",
+        "B6HZQ1",
+        "B7L681",
+        "B7LMD5",
+        "B7M3T7",
+        "B7MDA3",
+        "B7MQG0",
+        "B7N8Z8",
+        "B7NJ50",
+        "B7UJR7",
+        "C4ZTK1",
+        "O55042",
+        "P37377",
+        "P37840",
+        "P37840-2",
+        "P37840-3",
+        "P61138",
+        "P61139",
+        "P61140",
+        "P61141",
+        "P61142",
+        "P61143",
+        "P61144",
+        "P61145",
+        "P61146",
+        "P61147",
+        "P77756",
+        "Q0T7D9",
+        "Q0TKJ7",
+        "Q12252",
+        "Q1RF91",
+        "Q325F7",
+        "Q32JK2",
+        "Q3I5G7",
+        "Q3T0G8",
+        "Q3Z4V4",
+        "Q6DIF4",
+        "Q6PAX7",
+        "Q83M51",
+        "Q8FKA4",
+        "Q8XE52",
+        "Q91448",
+        "Q9W7F2"
+      ],
+      "n_swissprot": 48,
+      "n_isoforms_extra": 2
+    },
+    "control_tau_canonical": {
+      "accessions": [
+        "O02828",
+        "P10636",
+        "P10636-6",
+        "P10636-7",
+        "P10636-8",
+        "P10636-9",
+        "P10637",
+        "P10637-2",
+        "P10637-5",
+        "P10637-6",
+        "P29172",
+        "P29172-10",
+        "P29172-12",
+        "P29172-13",
+        "P29172-15",
+        "P29172-16",
+        "P29172-18",
+        "P29172-19",
+        "P29172-2",
+        "P29172-4",
+        "P29172-5",
+        "P29172-7",
+        "P29172-8",
+        "P29172-9",
+        "P57786",
+        "P57786-3",
+        "P57786-4",
+        "Q5S6V2",
+        "Q5YCV9",
+        "Q5YCW0",
+        "Q5YCW1",
+        "Q6TS35",
+        "Q9MYX8"
+      ],
+      "n_swissprot": 11,
+      "n_isoforms_extra": 22
+    },
+    "tau_deposited": {
+      "accessions": [],
+      "n_swissprot": 0,
+      "n_isoforms_extra": 0
+    },
+    "i2g": {
+      "accessions": [],
+      "n_swissprot": 0,
+      "n_isoforms_extra": 0
+    },
+    "pktag": {
+      "accessions": [
+        "P11207",
+        "P11208"
+      ],
+      "n_swissprot": 2,
+      "n_isoforms_extra": 0
+    },
+    "tqaqey": {
+      "accessions": [
+        "Q08346"
+      ],
+      "n_swissprot": 1,
+      "n_isoforms_extra": 0
+    }
+  }
+}

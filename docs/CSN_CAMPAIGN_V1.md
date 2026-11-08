@@ -176,10 +176,46 @@ canary。修正实现为 `scripts/csn_c0_conformer_sharing_v1.kabsch_row`（行�
   anchored_with_mismatch 规则、标签分层、封闭判读、停止规则；
 - 契约测试 13/13 全绿。
 
-### 下一步（2026-11-08 晚更新）
+### C1 执行（2026-11-08 晚，v1–v6 迭代）
 
-1. **C1 执行**（`csn_c1_enrich_v1`，另立脚本）：窗口构造 → 标签读取（预注册
-   分层约束下）→ parent 级配对 bootstrap → 封闭判读；
-2. **C3 三列已并入 ESEL RFQ 附录**（§9，用户 2026-11-08 全部批准）；
-3. T1 vs J0b v2 张力的下一层分解（judge/队列消融）另立预注册；
-4. ESEL E1 冻结仍等伙伴报价确认（不受本战役影响）。
+- **肽匹配服务问题真正解决**（回应"回避"批评）：UniProt asyncrest 轮询失效
+  与 PIR 503 后，改为**本地 Swiss-Prot+异构体流式精确扫描**
+  （`scripts/csn_peptidematch_local_v1.py`，~57 万条）；**三个阳性对照全过**
+  （Syt1 肽→P21579、DYEPEA→P37840、canonical tau 段→P10636），管线自证可用；
+- **四个肽定性定论**（`results/csn_c1_v1/peptidematch/`）：
+  - tau deposited `GSVQIVYKPK`：**全库验证零命中**——与数据库差 1 个替换
+    （canonical 同源段 GSVQIVYKPV）从"API 失败"升格为"验证事实"；
+  - PK tag `GKPIPNPLLGLDST` → P11207/P11208（PIV5）→ 8skj 亲本解决；
+  - `TQAQEY` → Q08346 → 6zwk 亲本解决；
+  - `SRLEEELRRRLTE` 验证零 → 6i2g 保守排除。C1 宇宙 9 → 11 亲本；
+- **执行迭代**（`csn_c1_enrich_v1..v6`，全部披露于各目录
+  SUPERSEDED_DISCLOSURE / protocol revision_note）：v1 CIF/PDB 解析器、
+  v2/v3 未绑定变量、v4 AFDB v4 URL 404 + 沉积链暴露度无对照窗、v5 nmr_v2
+  元组未转 map + RCSB GET + 大文件超时——**全部在读取任何标签结论之前修复**；
+  v6（protocol 3113af4a…）跑通；
+- **v6 结果**（`results/csn_c1_enrich_v6/`）：6/11 亲本评分
+  （1 主层 + 5 AFDB 降级层；5 个未评分各有记录原因：AFDB 404×3、
+  对照不足×2）；
+- **科学结果（诚实版）**：
+  - 主层（α-syn，2kkw NMR RMSF）：case DYEPEA 21.81 Å vs 匹配对照
+    8.55–10.01 Å，**配对差 +12.37——反方向**（case 更柔性）；
+    附标签局限：末端尾巴的全局摆动主导 RMSF，"局部柔性"解释受限；
+  - AFDB 降级层（pLDDT，高=更有序）：Syt1 −0.262、tau −0.153、
+    Q6NZI2 −0.009、Q08346 −0.007、G9GAG7 +0.038——**4/5 反方向**
+    （case 窗口比匹配对照更无序）；
+  - 封闭判读：主层 n=1 < 3 → `primary_stratum_underpowered`（冻结停止规则
+    生效，CI 终点不可发）；描述层两方向证据一致指向——
+  - **H1（表位=瞬态结构岛）在现有数据下不成立；反向图景成立：抗体先例
+    窗口落在亲本最无序/最柔性的区段**。这与免疫学常识（可及性=免疫原性）
+    和临床记录（prasinezumab 靶 C 尾）一致，并与 C0 呼应：构象选择发生在
+    结合时刻（跨结合者共享结合构象），而非表位固有结构；
+- **叙事更新（CSN v2 的方向）**：问题从"哪些窗口被读"变为"**被读的最无序
+    窗口如何在结合时刻选择构象**"——C0（共享结合构象）+ C1（最无序窗口）
+    + ESEL（态×呈现富集谱）构成完整闭环。
+
+### 下一步（2026-11-08 深夜更新）
+
+1. **C1 v7（可选）**：清 3 个 RCSB 搜索坏缓存 + AFDB 404 亲本换 pLDDT 来源，
+   补齐降级层行数；标签 v2 用二面角稳定性替代 RMSF（消除末端摆动混淆）；
+2. **C3 三列已并入 ESEL RFQ 附录**（§9，用户批准）；RFQ 发送在用户手中；
+3. T1 vs J0b v2 张力分解、ECLS/PAE 稿件流程照旧。

@@ -1,0 +1,8 @@
+{
+  "classification": "superseded_protocol_disclosure",
+  "date": "2026-11-08",
+  "reason": "ran clean but zero scored: AFDB v4 URLs 404 (v6 is current) and the deposited-chain exposure proxy yields no control windows for short chains",
+  "superseded_by": "results/csn_c1_enrich_v5",
+  "labels_read": true,
+  "note": "v4 window reads happened but produced no scored rows"
+}
