@@ -1,0 +1,132 @@
+{
+  "classification": "csn_c1_freeze_prerequisite_data_not_labels",
+  "date": "2026-11-08",
+  "mapping": {
+    "2x6m": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "P37840",
+      "peptide": "DYEPEA",
+      "instance_example": "2x6m_A_B"
+    },
+    "5hm1": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "P04578",
+      "peptide": "AVERYLKDQQLLGIW",
+      "instance_example": "5hm1_A_D"
+    },
+    "5ivn": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "G9GAG7",
+      "peptide": "DRKAAVSHWQ",
+      "instance_example": "5ivn_A_B"
+    },
+    "6i2g": {
+      "source": "csn_c1_ladder",
+      "peptide": "SRLEEELRRRLTE",
+      "instance_example": "6i2g_A_B",
+      "status": "unresolved",
+      "trials": []
+    },
+    "6j7w": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "Q02223",
+      "peptide": "GQCSQNEYFDSLLHACIPCQLRCSSNTPPLTCQRYCNAS",
+      "instance_example": "6j7w_A_C"
+    },
+    "6s0y": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "B2VLW8",
+      "peptide": "VETPIRNEWGCRC",
+      "instance_example": "6s0y_B_D"
+    },
+    "6zwk": {
+      "source": "csn_c1_ladder",
+      "peptide": "TQAQEY",
+      "instance_example": "6zwk_B_H",
+      "status": "unresolved",
+      "trials": [
+        {
+          "accession": "P16104",
+          "entity_id": "2",
+          "length": null,
+          "contains_peptide": false
+        }
+      ]
+    },
+    "8b8i": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "P21579",
+      "peptide": "KEDAFSKLKEKFMNELH",
+      "instance_example": "8b8i_A_I"
+    },
+    "8op0": {
+      "source": "csn_c1_ladder",
+      "peptide": "GSVQIVYKPK",
+      "instance_example": "8op0_A_B",
+      "status": "unresolved",
+      "trials": [
+        {
+          "accession": "P10636",
+          "entity_id": "2",
+          "length": null,
+          "contains_peptide": false
+        }
+      ]
+    },
+    "8opi": {
+      "source": "csn_c1_ladder",
+      "peptide": "GSVQIVYKPK",
+      "instance_example": "8opi_A_B",
+      "status": "unresolved",
+      "trials": [
+        {
+          "accession": "P10636",
+          "entity_id": "2",
+          "length": null,
+          "contains_peptide": false
+        }
+      ]
+    },
+    "8pii": {
+      "source": "csn_c1_ladder",
+      "peptide": "GSVQIVYKPK",
+      "instance_example": "8pii_A_B",
+      "status": "unresolved",
+      "trials": [
+        {
+          "accession": "P10636",
+          "entity_id": "2",
+          "length": null,
+          "contains_peptide": false
+        }
+      ]
+    },
+    "8skj": {
+      "source": "csn_c1_ladder",
+      "peptide": "GKPIPNPLLGLDST",
+      "instance_example": "8skj_A_E",
+      "status": "unresolved",
+      "trials": []
+    },
+    "9eiu": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "Q6NZI2",
+      "peptide": "LSLLDKIIGAVDQIQLTQAQLEERQAEMEGAVQSIQGELSKL",
+      "instance_example": "9eiu_B_A"
+    },
+    "9lds": {
+      "status": "anchored",
+      "source": "esel_e0b_v1_readonly",
+      "accession": "P0DTC2",
+      "peptide": "DPLQPELDSFKEELD",
+      "instance_example": "9lds_A_B"
+    }
+  }
+}

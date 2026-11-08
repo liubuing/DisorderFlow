@@ -1,0 +1,111 @@
+{
+  "classification": "csn_c1_freeze_prerequisite_data_not_labels",
+  "date": "2026-11-08",
+  "metadata_only_note": "counts and query strings only; zero record-level data",
+  "counts_by_pdb": {
+    "2x6m": {
+      "accession": "P37840",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "P37840.1",
+      "total_5_50": 300,
+      "positive_5_50": 263,
+      "negative_5_50": 37,
+      "query": "curated_source_antigen->>accession=eq.P37840.1&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "5hm1": {
+      "accession": "P04578",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "P04578.2",
+      "total_5_50": 50,
+      "positive_5_50": 48,
+      "negative_5_50": 2,
+      "query": "curated_source_antigen->>accession=eq.P04578.2&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "5ivn": {
+      "accession": "G9GAG7",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "G9GAG7",
+      "total_5_50": 0,
+      "positive_5_50": 0,
+      "negative_5_50": 0,
+      "query": "curated_source_antigen->>accession=eq.G9GAG7&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "6i2g": {
+      "accession": null,
+      "status": "no_accession"
+    },
+    "6j7w": {
+      "accession": "Q02223",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "Q02223",
+      "total_5_50": 0,
+      "positive_5_50": 0,
+      "negative_5_50": 0,
+      "query": "curated_source_antigen->>accession=eq.Q02223&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "6s0y": {
+      "accession": "B2VLW8",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "B2VLW8",
+      "total_5_50": 0,
+      "positive_5_50": 0,
+      "negative_5_50": 0,
+      "query": "curated_source_antigen->>accession=eq.B2VLW8&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "6zwk": {
+      "accession": null,
+      "status": "no_accession"
+    },
+    "8b8i": {
+      "accession": "P21579",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "P21579.1",
+      "total_5_50": 1,
+      "positive_5_50": 1,
+      "negative_5_50": 0,
+      "query": "curated_source_antigen->>accession=eq.P21579.1&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "8op0": {
+      "accession": null,
+      "status": "no_accession"
+    },
+    "8opi": {
+      "accession": null,
+      "status": "no_accession"
+    },
+    "8pii": {
+      "accession": null,
+      "status": "no_accession"
+    },
+    "8skj": {
+      "accession": null,
+      "status": "no_accession"
+    },
+    "9eiu": {
+      "accession": "Q6NZI2",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "Q6NZI2",
+      "total_5_50": 0,
+      "positive_5_50": 0,
+      "negative_5_50": 0,
+      "query": "curated_source_antigen->>accession=eq.Q6NZI2&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    },
+    "9lds": {
+      "accession": "P0DTC2",
+      "status": "esel_e0b_v1_readonly",
+      "accession_form_used": "P0DTC2.1",
+      "total_5_50": 8967,
+      "positive_5_50": 3793,
+      "negative_5_50": 5174,
+      "query": "curated_source_antigen->>accession=eq.P0DTC2.1&linear_sequence_length=gte.5&linear_sequence_length=lte.50",
+      "red_line_note": "counts only; no IEDB record-level sequences persisted"
+    }
+  }
+}

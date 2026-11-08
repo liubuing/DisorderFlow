@@ -1,0 +1,62 @@
+{
+  "classification": "csn_c1_freeze_prerequisite_data_not_labels",
+  "date": "2026-11-08",
+  "parents": {
+    "P37840": {
+      "length": 140,
+      "sequence_sha256": "9a06387610edd099466d614941c42a433f444feb6a8f25375bb0b6ad8ec9c6f4",
+      "atlas_hits": 0,
+      "atlas_best": null,
+      "peptide_offset": 134
+    },
+    "P04578": {
+      "length": 856,
+      "sequence_sha256": "311f5899cfd9afdd7395f1610fc3aa31bd87cab83d312322f068ba0eb59d99bb",
+      "atlas_hits": 3,
+      "atlas_best": 58.8,
+      "peptide_offset": 581
+    },
+    "G9GAG7": {
+      "length": 71,
+      "sequence_sha256": "07cc01df051c8139eb8937d975ade0ee5190fc152b46bcb56361e0335fe38e0b",
+      "atlas_hits": 0,
+      "atlas_best": null,
+      "peptide_offset": 16
+    },
+    "Q02223": {
+      "length": 184,
+      "sequence_sha256": "4b524cded1d0dcca58eed976f96f88678f4c739ef87aefccfd2f2ffc05de1410",
+      "atlas_hits": 0,
+      "atlas_best": null,
+      "peptide_offset": 5
+    },
+    "B2VLW8": {
+      "length": 90,
+      "sequence_sha256": "da39208f00be6d1a6a367c57021e3a061dfacb1bf276e4e1d26b7e614c0c5ec7",
+      "atlas_hits": 0,
+      "atlas_best": null,
+      "peptide_offset": 6
+    },
+    "P21579": {
+      "length": 422,
+      "sequence_sha256": "901a380698323bfb3e337449e9b23f41ebe959080f78b72eddd568460f73a264",
+      "atlas_hits": 0,
+      "atlas_best": null,
+      "peptide_offset": 35
+    },
+    "Q6NZI2": {
+      "length": 390,
+      "sequence_sha256": "e97187de055974045a8f42a58ad25d8a3dfb0df0879bf746b941babc4600624a",
+      "atlas_hits": 0,
+      "atlas_best": null,
+      "peptide_offset": 54
+    },
+    "P0DTC2": {
+      "length": 1273,
+      "sequence_sha256": "794d56c4e53ad15197d12fcee6c8231e888d2fc60728f4ef875561b80af2639d",
+      "atlas_hits": 2,
+      "atlas_best": 100.0,
+      "peptide_offset": 1138
+    }
+  }
+}

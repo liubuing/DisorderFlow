@@ -1,0 +1,17 @@
+{
+  "classification": "csn_c1_freeze_prerequisite_data_not_labels",
+  "date": "2026-11-08",
+  "inputs": {
+    "queue_sha256": "aa711a1b34bc85f1e28c1f763b2d04ff49cc7788526c4b7a547bc470998de9dd",
+    "e0b_map_sha256": "ec312261146690455f41379a225abfc869de348d60daabcd8c0cb003f1bb8cd6",
+    "e0b_counts_sha256": "693fdbd5978c1debea5f0a9a25bf246f6af7385b3935f19589254a1f00a0f2f3"
+  },
+  "script_sha256": "ebc26ce5d26987073410aa7d300ed6b699320e5dd5abed61636f87a4ca926582",
+  "artifacts": [
+    "accession_map_csn.json",
+    "iedb_counts_csn.json",
+    "parents.json",
+    "summary.json",
+    "completion.json"
+  ]
+}

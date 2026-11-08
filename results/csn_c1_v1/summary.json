@@ -1,0 +1,19 @@
+{
+  "classification": "csn_c1_freeze_prerequisite_data_not_labels",
+  "date": "2026-11-08",
+  "n_pdbs": 14,
+  "n_anchored": 8,
+  "anchored_accessions": {
+    "2x6m": "P37840",
+    "5hm1": "P04578",
+    "5ivn": "G9GAG7",
+    "6j7w": "Q02223",
+    "6s0y": "B2VLW8",
+    "8b8i": "P21579",
+    "9eiu": "Q6NZI2",
+    "9lds": "P0DTC2"
+  },
+  "n_with_iedb_counts": 8,
+  "n_parents_with_atlas_hits": 2,
+  "e0b_reuse_note": "E0b anchored rows imported read-only; only the 6 unresolved rows rerun through the ladder with a CSN-local cache"
+}

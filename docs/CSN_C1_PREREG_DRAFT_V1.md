@@ -1,10 +1,30 @@
-# CSN C1：瞬态结构富集图谱（预注册草案，**未冻结**）
+# CSN C1：瞬态结构富集图谱（预注册**已冻结**）
 
-日期：2026-11-08。**状态：草案**——冻结前置：(a) C0/C2 已完成 ✓；
-(b) 标签源决策（下表）；(c) IEDB 控制窗口 metadata 查询（网络化，
-metadata-only 红线不变，E0b 阶梯复用）。冻结动作沿用先例：本草案定稿 →
-sha256 记入 `results/csn_c1_v1/preregistration.json` → 之后才允许任何
-case/control 窗口的标签读取。
+日期：2026-11-08。**状态：已冻结**——`results/csn_c1_v1/preregistration.json`
+（sha256 e8b191107b5ab7990e92227d6b3e835a754501027ede864e75aa3449872b440c，
+由 `scripts/csn_c1_prereg_v1.py` 在数据产物落地后、任何标签读取前冻结）。
+本草案文本保留为冻结前记录；**冻结版与草案的差异（披露）**：
+
+1. **control 定义修正（草案缺陷）**：草案写"IEDB metadata 计数 = 0 的区段"——
+   IEDB 计数是蛋白级 metadata，**窗口级 IEDB 先例在 metadata-only 红线下不可
+   获得**。冻结版改为：control = 同亲本、同长度、暴露匹配（结合态抗原链 CA
+   SASA）、局部证据宇宙（1,146 池 + 队列）内无结构先例的窗口；IEDB 蛋白级
+   计数只作协变量记录；
+2. **mismatch 锚定规则**：tau（GSVQIVYKPK）与 canonical P10636 差 1 个替换
+   （canonical 为 VQIVYKPVL 段），肽搜索服务降级无法独立验证 → 冻结版定义
+   `anchored_with_mismatch`（RCSB entity 指名 + ≤1 替换 + 条目标题指名），
+   逐窗记录；
+3. **标签分层**：主层（ATLAS/NMR v2 覆盖，预数 3 亲本：α-syn 经 2kkw、
+   gp160/spike 经 ATLAS）承载主终点；AFDB 降级层（预期 6 亲本）仅描述性，
+   永不与主层合并；
+4. **环境事实**：UniProt 肽搜索 API 轮询 ≥90 s 返回空（已知阳性对照肽
+   KEDAFSKLKEKFMNEL⊂P21579 亦空）——记为服务不可用，非零证据；6i2g/8skj/
+   6zwk 保持未解析并排除出 C1 宇宙。
+
+数据产物（`results/csn_c1_v1/`）：8/14 PDB 经 E0b 只读复用锚定；tau 三行走
+mismatch 规则（预注册内授权）；IEDB 计数 8 accession（metadata-only）；ATLAS
+可用性 2/8（旗标行）。**下一步**：C1 执行脚本（窗口构造 + 标签读取 + 配对
+bootstrap），在预注册约束下进行——本战役 v1 内另起 `csn_c1_enrich_v1`。
 
 ## 1. 问题（H1）
 

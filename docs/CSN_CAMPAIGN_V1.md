@@ -155,15 +155,31 @@ canary。修正实现为 `scripts/csn_c0_conformer_sharing_v1.kabsch_row`（行�
   MD 约束采样）层面继续分解；
 - 红线遵守：J0a/J0b v2 冻结门数字只读引用，未重跑未修正。
 
-### 下一步（2026-11-08 更新）
+### C1 数据与预注册（2026-11-08）
 
-1. ~~legacy kabsch 影响面重算~~ **已完成**：`flex_a2_nmr_rmsf_v2`（RMSF 均值
-   3.195→2.244 Å，残基级 r 中位 0.981）+ `flex_a2_atlas_nmr_audit_v2`（v1 的
-   pass 判定幸存且更强，rho 中位 0.656→0.725）；IDP 线经逐一读码确认
-   **不受影响**（本地 kabsch 正确），无需重算——详见 §6 影响面表；
-2. **C1 预注册草案已立**（`docs/CSN_C1_PREREG_DRAFT_V1.md`）：冻结剩余阻塞 =
-   IEDB 控制窗口 metadata 查询（网络化）+ 标签源决策；
-3. **C3 提案已立**（`docs/CSN_C3_PRESENTATION_COLUMNS_PROPOSAL_V1.md`）：
-   等用户三个决策点（tau PHF6* 行入 RFQ？预聚集 QC？B 列二期？）；
-4. T1 vs J0b v2 张力的下一层分解（judge/队列消融）另立预注册，不在本战役
-   v1 内进行。
+- **数据采集**（`scripts/csn_c1_data_v1.py` → `results/csn_c1_v1/`）：
+  E0b 8 行只读复用锚定；6 个未解析行走 CSN 本地缓存阶梯——RCSB entity 直接
+  给出 tau 候选 P10636 但包含验证**正确拒绝**（deposited 肽 GSVQIVYKPK 非字
+  canonical tau 子串：canonical 同源段为 VQIVYKPVL，PDB 肽末位 K）；
+  UniProt 肽搜索 API 提交正常（202）但轮询 ≥90 s 恒空（已知阳性对照肽
+  KEDAFSKLKEKFMNEL⊂P21579 亦空）——**服务降级记为环境事实**，非零证据；
+  6i2g/8skj/6zwk 排除出宇宙；
+- **首次运行的坑**：run-1 用了我手写的同步肽搜索（错误参数、无轮询），产物
+  已按纪律移入 `results/csn_c1_v1/superseded_buggy_peptidesearch/` + 披露；
+  run-2 镜像 E0b 异步轮询后重冻结；
+- **关键标签事实**：α-syn DYEPEA 窗口被 **2kkw**（游离态 NMR 系综）直接覆盖
+  ——头号神经行获主标签；ATLAS 仅覆盖 gp160/spike（2/8）；主层 = 3 亲本，
+  其余 6 亲本 AFDB 降级层（仅描述性）；
+- **预注册冻结**（`scripts/csn_c1_prereg_v1.py` →
+  `results/csn_c1_v1/preregistration.json`，e8b19110…）：含 control 定义修正
+  （窗口级 IEDB 先例在 metadata-only 下不可得——草案缺陷已披露修正）、
+  anchored_with_mismatch 规则、标签分层、封闭判读、停止规则；
+- 契约测试 13/13 全绿。
+
+### 下一步（2026-11-08 晚更新）
+
+1. **C1 执行**（`csn_c1_enrich_v1`，另立脚本）：窗口构造 → 标签读取（预注册
+   分层约束下）→ parent 级配对 bootstrap → 封闭判读；
+2. **C3 三列已并入 ESEL RFQ 附录**（§9，用户 2026-11-08 全部批准）；
+3. T1 vs J0b v2 张力的下一层分解（judge/队列消融）另立预注册；
+4. ESEL E1 冻结仍等伙伴报价确认（不受本战役影响）。

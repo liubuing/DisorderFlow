@@ -1,0 +1,7 @@
+{
+  "classification": "superseded_run_disclosure",
+  "date": "2026-11-08",
+  "reason": "run 1 used a broken uniprot_peptide_search (synchronous call to an async API, wrong params, no polling); 6i2g/8op0/8opi/8pii/8skj mis-recorded as unresolved",
+  "superseded_by": "results/csn_c1_v1/*.json (run 2 with E0b-mirrored async polling)",
+  "caches_kept": "rcsb + fasta caches from run 1 are valid raw responses and were reused"
+}
