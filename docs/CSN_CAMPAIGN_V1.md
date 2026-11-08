@@ -240,6 +240,17 @@ v2 = 系综内 φ/ψ 圆周稳定度 R（高=局部瞬态结构）；AFDB 版本
 无 gate shopping。边界：6/11 亲本、主层 n=1、development 级、
 湿实验（ESEL 态×呈现矩阵）仍是最终裁决。
 
+### 全量执行收尾（2026-11-08 深夜 II）
+
+- **CSN 手稿初稿**：`publication/csn_manuscript_draft_v1.md`（英文，本地留存；
+  C0+C1 三标签证据链 + 全部边界声明；未投稿）；
+- **AQP4 round 6**（姊妹项目，本轮执行）：MPNN Top-5 + WT rAB186 阳性对照 +
+  G0 阴性对照的基因合成包（`round6/package.json` + 订单列表），可开发性机械
+  筛查逐条记录；AF3 配对 MSA 双链作业（M1/M1scr）**已补造**——round5 报告
+  声称已生成但盘上缺失，现从 build_mimetic 同源 MSA 重建
+  （`round6/af3_jobs/` + 提交说明与预登记判读）；
+- 待用户动作：RFQ 发送、AF3 作业网页提交、ECLS/PAE 作者确认。
+
 ### 下一步（2026-11-08 深夜更新）
 
 1. **C1 v7（可选）**：清 3 个 RCSB 搜索坏缓存 + AFDB 404 亲本换 pLDDT 来源，
