@@ -74,7 +74,7 @@ print(f"Scram H CDRs: {scram_h}")
 print(f"Scram L CDRs: {scram_l}")
 
 # Build modified FASTA sequences
-def build_fv_sequence(h_seq, l_seq, h_cdr_info, new_h_cdr, new_l_cdr):
+def build_fv_sequence(h_seq, l_seq, h_cdr_info, l_cdr_info, new_h_cdr, new_l_cdr):
     """Replace CDR regions in antibody Fv sequences with new CDRs."""
     h_new = list(h_seq)
     l_new = list(l_seq)
@@ -101,7 +101,7 @@ designs = [
 ]
 
 for name, h_cdr_seq, l_cdr_seq in designs:
-    h_new, l_new = build_fv_sequence(h_full_seq, l_full_seq, h_cdr, h_cdr_seq, l_cdr_seq)
+    h_new, l_new = build_fv_sequence(h_full_seq, l_full_seq, h_cdr, l_cdr, h_cdr_seq, l_cdr_seq)
     fasta_path = f'{OUT_DIR}/fasta/{name}.fasta'
     with open(fasta_path, 'w') as f:
         f.write(f'>{name}\n{h_new}:{l_new}\n')

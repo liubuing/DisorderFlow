@@ -77,3 +77,17 @@ def test_e0_protocol_stop_rule_was_the_input():
     assert e0['stop_rule_evaluation']['outcome'] == 'escalate_epitope_starvation_risk', (
         'E0b is only licensed to run after an E0 escalation; E0 must still '
         'record the original escalation for provenance')
+
+
+def test_atlas_lookup_module_defines_track_path():
+    # Incident 2026-11-09: atlas_lookup() referenced ATLAS_TRACKS without
+    # defining it; the surrounding except Exception silently demoted every
+    # verified ATLAS hit to tier 'atlas_error' instead of failing closed.
+    # The module must import cleanly and keep the same track cache as the
+    # E0 epitope-selection script (results/flex_a2_atlas_plddt_audit_v1/tracks).
+    from scripts.esel_e0b_curation_v1 import ATLAS_TRACKS
+    expected = ROOT / 'results/flex_a2_atlas_plddt_audit_v1/tracks'
+    assert ATLAS_TRACKS == expected
+    assert ATLAS_TRACKS.is_dir() and any(ATLAS_TRACKS.glob('*.js')), (
+        'ATLAS track cache missing; atlas_lookup would demote all hits '
+        'to hit_track_not_cached')

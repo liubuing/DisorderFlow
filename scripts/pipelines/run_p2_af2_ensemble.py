@@ -186,7 +186,6 @@ try:
     # Save results
     out = {
         'config': {'n_designs': N_DESIGNS, 'n_confs': N_CONFS},
-        'rmsf': {'mean': float(rmsf.mean()), 'min': float(rmsf.min()), 'max': float(rmsf.max())},
         'ensemble': ensemble,
     }
     os.makedirs('oc_validation_results', exist_ok=True)

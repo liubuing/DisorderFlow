@@ -186,7 +186,11 @@ if v20_data:
     ax.plot(xs, b + m * xs, 'k--', alpha=0.3)
     ax.set_xlabel('Antigen Disorder (max)')
     ax.set_ylabel('CDR Unique AA')
-    ax.set_title(f'F. V20: unique_aa vs disorder\nr={sp.get("V20_per_residue\\n(unfrozen head_seq)", [0])[0]:+.3f}, p={sp.get("V20_per_residue\\n(unfrozen head_seq)", [0,0])[1]:.3f}')
+    # Key contains a literal newline (3.10 f-strings forbid backslashes, so hoist it)
+    v20_key = 'V20_per_residue\n(unfrozen head_seq)'
+    v20_r = sp.get(v20_key, [0])[0]
+    v20_p = sp.get(v20_key, [0, 0])[1]
+    ax.set_title(f'F. V20: unique_aa vs disorder\nr={v20_r:+.3f}, p={v20_p:.3f}')
     ax.legend(fontsize=7)
 
 plt.tight_layout()

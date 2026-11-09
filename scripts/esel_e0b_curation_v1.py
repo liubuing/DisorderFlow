@@ -30,6 +30,7 @@ CACHE = OUT / 'cache'
 MATRIX = ROOT / 'results/esel_e0_v1/epitope_presentation_matrix.json'
 E0_PROTOCOL = ROOT / 'results/esel_e0_v1/protocol.json'
 IDENTITY_REVIEW = ROOT / 'results/flex_a1b_isolation_families_v1/identity_review.json'
+ATLAS_TRACKS = ROOT / 'results/flex_a2_atlas_plddt_audit_v1/tracks'
 
 IEDB_API = 'https://query-api.iedb.org/bcell_search'
 RCSB_ENTRY = 'https://data.rcsb.org/rest/v1/core/entry/{}'
