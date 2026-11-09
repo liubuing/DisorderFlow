@@ -4,9 +4,9 @@
   "release_id": "disorderflow-ecls-v1",
   "stage": "local_preparation_not_published",
   "manuscript": "publication/MANUSCRIPT_DRAFT.md",
-  "publication_line_sha256": "dcd3a59fab6d9c84139128fe53963208caef94c3cc184379effdc1787b97a8ad",
+  "publication_line_sha256": "bc08147311bd48f73d6016a5afca5935ea3f4b3aa93e5a143aad4a6c2568b730",
   "metadata": "release/zenodo_v1/zenodo_metadata.json",
-  "metadata_sha256": "887c0352d259499afb93f5060e8cf30fbdf35cb3b3d86d49af44a811d8a1766b",
+  "metadata_sha256": "cc5fcfc498587bd086eba7299d8d1498dbd79d4253db8d6ef77d1ab037dd472a",
   "upload_directory": "release/zenodo_v1/upload",
   "archive_scope": "current ECLS manuscript and saved-score numerical reanalysis; historical archives excluded",
   "public_results_are_derivatives": true,
@@ -15,14 +15,14 @@
     {
       "path": "disorderflow-ecls-v1-reviewer-package.zip",
       "source": "dist/disorderflow-ecls-v1-reviewer-package.zip",
-      "bytes": 2502455,
-      "sha256": "21e2e422796feba9c27c7e8153b99242ad4294f0d6a18afaa2e8ef3afe463356"
+      "bytes": 2502613,
+      "sha256": "d1f7415197fe165c17f32b78d64e7167d7ae473a60fecca063e0256ef576661c"
     },
     {
       "path": "source_manifest.json",
       "source": "release/ecls_v1/source_manifest.json",
-      "bytes": 45456,
-      "sha256": "01cfd5185a990b5e801012fa77067e052bc88b82a813da53a924a49fd83acaf9"
+      "bytes": 45664,
+      "sha256": "29ce51941bc0e13b7ab4ef4836b4f66b4e8e356a496cbda0f92f691d8eb2f2bd"
     },
     {
       "path": "REPRODUCIBILITY.md",
@@ -52,7 +52,7 @@
       "path": "submission_package_manifest.json",
       "source": "release/ecls_v1/submission_package_manifest.json",
       "bytes": 467,
-      "sha256": "7d6027633f91174559901092d4d155e4e48ff71bcab25851856f41b580d96cfd"
+      "sha256": "1071683030de7bba8acd3bc3ed68fb051578a37a57c96bf903892595b661ced1"
     },
     {
       "path": "primary_results.csv",
@@ -69,26 +69,26 @@
     {
       "path": "publication_line.json",
       "source": "release/ecls_v1/publication_line.json",
-      "bytes": 1844,
-      "sha256": "dcd3a59fab6d9c84139128fe53963208caef94c3cc184379effdc1787b97a8ad"
+      "bytes": 2023,
+      "sha256": "bc08147311bd48f73d6016a5afca5935ea3f4b3aa93e5a143aad4a6c2568b730"
     },
     {
       "path": "README.md",
       "source": "README.md",
-      "bytes": 6361,
-      "sha256": "37810a104b364782b613964574601288dcc8b35925b02f0086803bf0082cc0c2"
+      "bytes": 7226,
+      "sha256": "dfdb537ee722b6f81e78a9bae35881a9bc75dfa200faca02065793caff6fe531"
     },
     {
       "path": "PUBLICATION_PROTOCOL.md",
       "source": "PUBLICATION_PROTOCOL.md",
-      "bytes": 3947,
-      "sha256": "0ef3e61c719ecf7bebcd905a0e859112dd1043bd8d9cf5100de3fab8c9e6638d"
+      "bytes": 3964,
+      "sha256": "c601ddbd8952f649848945775ad011fff0a0b502d1a75e0df984c2a2238dbe46"
     },
     {
       "path": "PUBLICATION_MAP.md",
       "source": "docs/PUBLICATION_MAP.md",
-      "bytes": 3517,
-      "sha256": "1e623a045ddbade9e19988b06d8a92ae9e92cd2e06bddbbb4642cddc086d397d"
+      "bytes": 3695,
+      "sha256": "7df6a2de469ab2b507650dccb0b846cb76bf53a131fd14dd0e1c424dca33383a"
     },
     {
       "path": "ECLS_SCOPE_FREEZE.yml",
@@ -99,26 +99,26 @@
     {
       "path": "MANUSCRIPT_DRAFT.md",
       "source": "publication/MANUSCRIPT_DRAFT.md",
-      "bytes": 17871,
-      "sha256": "36ae3e4a714d6245e83904c2611b9e317764775fbf6dccee46070567cb67387f"
+      "bytes": 17860,
+      "sha256": "f154575118705c0f5ce7f77218410b0457c07aa3239a4b8125f428d10283c37e"
     },
     {
       "path": "ECLS_MANUSCRIPT.pdf",
       "source": "publication/ECLS_MANUSCRIPT.pdf",
-      "bytes": 1098088,
-      "sha256": "931f9f8fb82c809683c69a95370b1b9c6a20ecc3964d3380411568fd89610d4d"
+      "bytes": 1098082,
+      "sha256": "6820a30897b22dabccb832a8f9e209af84fb798322abf0e776595629b976210a"
     },
     {
       "path": "ECLS_SUPPLEMENT.md",
       "source": "publication/ECLS_SUPPLEMENT.md",
-      "bytes": 8658,
-      "sha256": "3121376a5095a7c12ec3a4ced4b7de8a8822532d2e1815917fc886f56204502c"
+      "bytes": 8691,
+      "sha256": "2b15d3cfa127d74d2acd12be41c8e34c0b829723c6b82f97a7bc0c42701cb11c"
     },
     {
       "path": "ECLS_SUPPLEMENT.pdf",
       "source": "publication/ECLS_SUPPLEMENT.pdf",
-      "bytes": 11543,
-      "sha256": "d6b8d8cc106c1c3b413298dde5035465ab41ec0d5a4c2a16661f080f4f3def4d"
+      "bytes": 11707,
+      "sha256": "89d5e5894e027cc01fa78b9439c6b07db5c6c102df45ca9027686279355307e2"
     },
     {
       "path": "final_decision.json",

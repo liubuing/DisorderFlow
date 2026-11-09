@@ -70,8 +70,19 @@ python scripts/validate_release_lineage.py --source-only
 python scripts/validate_publication_alignment.py
 ```
 
-The local publication bundle has not been verified as remotely published. No
-wet-lab binding measurements are claimed. License: [MIT](LICENSE.md).
+The local publication bundle has not been verified as remotely published; the
+reserved Zenodo DOI (10.5281/zenodo.23037055) is a reservation, not a published
+record. No wet-lab binding measurements are claimed.
+
+License picture (code / data / weights are three different questions — see
+`release/ecls_v1/LICENSE_SCOPE.md` for the release-bundle wording):
+
+| Component | License | Redistribution status |
+|---|---|---|
+| Original code in this repository | [MIT](LICENSE.md) | Permitted |
+| Manuscript text and derived score data | Pending all-author confirmation (`release/ecls_v1/submission_metadata.json`) | Not yet licensed for redistribution |
+| Incorporated external data (ATLAS: CC BY-NC; SAbDab/PDB; IEDB; UniProt) | Respective source terms | Follow each source's original terms; ATLAS-derived content carries the non-commercial restriction |
+| Model weights (ProteinMPNN, BFN checkpoints) | `ProteinMPNN/LICENSE`; checkpoint index in `configs/CHECKPOINT_TRUTH.md` | Per the respective weight licenses |
 
 ## Repository layout & maintenance (2026-09-27 engineering-debt pass)
 

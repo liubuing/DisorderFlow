@@ -1,10 +1,10 @@
 # ECLS publication contract and evidence boundary
 
-Updated 2026-09-28. This editorial consolidation preserves the original scientific contract in publication/ECLS_SCOPE_FREEZE.yml and the terminal result decision. Its updated working title is recorded in release/ecls_v1/publication_line.json; the older title in frozen records is historical provenance.
+Updated 2026-09-28; title revised 2026-11-09. This editorial consolidation preserves the original scientific contract in publication/ECLS_SCOPE_FREEZE.yml and the terminal result decision. The frozen release/ecls_v1/publication_line.json retains the pre-revision title as provenance; the current working title below supersedes it.
 
 ## Current manuscript
 
-Peptide-context scoring of antibody loops: native recognition and the limits of candidate ranking.
+Peptide-context scoring of antibody loops: native recognition is not candidate ranking.
 
 Primary source: publication/MANUSCRIPT_DRAFT.md. Supplement: publication/ECLS_SUPPLEMENT.md. Target: Bioinformatics Original Paper. Current status: author-review manuscript and local archive candidate, pending author declarations and remote publication.
 

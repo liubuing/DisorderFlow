@@ -4,7 +4,7 @@ Updated 2026-10-03. Authoritative current routing: release/ecls_v1/publication_l
 
 ## Primary manuscript and archive
 
-- Title: **Peptide-context scoring of antibody loops: native recognition and the limits of candidate ranking**.
+- Title: **Peptide-context scoring of antibody loops: native recognition is not candidate ranking**. (Title revised 2026-11-09: the seven-cluster development test did not establish a ranking advantage, so the former "limits of candidate ranking" overstated what the negative result shows.)
 - Source: publication/MANUSCRIPT_DRAFT.md.
 - Review PDF: publication/ECLS_MANUSCRIPT.pdf.
 - Supplement: publication/ECLS_SUPPLEMENT.md and .pdf.

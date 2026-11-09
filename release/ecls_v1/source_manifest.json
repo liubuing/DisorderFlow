@@ -22,15 +22,15 @@
     },
     {
       "path": "PUBLICATION_PROTOCOL.md",
-      "bytes": 3947,
+      "bytes": 3964,
       "hash_mode": "canonical_lf",
-      "sha256": "0ef3e61c719ecf7bebcd905a0e859112dd1043bd8d9cf5100de3fab8c9e6638d"
+      "sha256": "c601ddbd8952f649848945775ad011fff0a0b502d1a75e0df984c2a2238dbe46"
     },
     {
       "path": "README.md",
-      "bytes": 6361,
+      "bytes": 7226,
       "hash_mode": "canonical_lf",
-      "sha256": "37810a104b364782b613964574601288dcc8b35925b02f0086803bf0082cc0c2"
+      "sha256": "dfdb537ee722b6f81e78a9bae35881a9bc75dfa200faca02065793caff6fe531"
     },
     {
       "path": "configs/benchmarks/successor_v3_confirmatory.yml",
@@ -1105,6 +1105,12 @@
       "bytes": 2644,
       "hash_mode": "canonical_lf",
       "sha256": "968625a28cf4baeb2071c8c104454e455b28e0ca0a9004ab60f4455c361e45c0"
+    },
+    {
+      "path": "scripts/flex_h3_homology_screen_v1.py",
+      "bytes": 10259,
+      "hash_mode": "canonical_lf",
+      "sha256": "85899a2727dc58343194f6ac8971098ba9e9ec96021ce1a80b9e3acbf9a1306a"
     },
     {
       "path": "scripts/generate_h3_peptide_ensemble.py",
