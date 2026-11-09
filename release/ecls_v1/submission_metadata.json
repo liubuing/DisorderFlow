@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_date": "2026-10-18",
+  "updated_date": "2026-11-09",
   "primary_line": "ecls",
   "target_venue": "Bioinformatics",
   "article_type": "Original Paper",
@@ -65,9 +65,8 @@
   "author_contributions": null,
   "funding": null,
   "conflicts_of_interest": null,
-  "all_authors_approve_submission": true,
-  "all_authors_approve_public_archive": true,
-  "approvals_source": "explicit user confirmation in this chat, 2026-10-18: all listed authors approve journal submission and public archive publication; Zenodo account access for the reserved DOI re-confirmed the same day",
+  "all_authors_approve_submission": null,
+  "all_authors_approve_public_archive": null,
   "related_manuscripts_status_confirmed": false,
   "manuscript_data_license_confirmed": false,
   "journal_submission_confirmed": false,
@@ -77,6 +76,7 @@
   "pending": [
     "English spellings and author-affiliation mapping",
     "Corresponding author (Hu Yue) email and affiliation",
+    "All-author approval (reverted 2026-11-09: the 2026-10-29 entry had no in-repo approval record; declarations draft still DRAFT)",
     "CRediT contributions",
     "Funding and conflict-of-interest declarations",
     "Related manuscript status",
