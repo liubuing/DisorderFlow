@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master, feature/*]
+    branches: [master, release, feature/*]
   pull_request:
     branches: [master]
 
@@ -30,7 +30,7 @@ jobs:
       - name: Lint with ruff
         # The legacy research tree still has style debt. These rules cover
         # syntax and undefined-name failures and must block every merge.
-        run: ruff check tests/ disorderflow/ modules/ app.py --select E9,F63,F7,F82
+        run: ruff check tests/ disorderflow/ modules/ scripts/ app.py --select E9,F63,F7,F82
 
       - name: Run CPU-only tests
         env:
