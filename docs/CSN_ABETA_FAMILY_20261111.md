@@ -37,44 +37,51 @@ Two are **not** Aβ-antibody complexes and must be excluded:
 - `4M1C`: antigen is insulin-degrading enzyme; `DAEFRH` is a substrate
   context, not the antibody epitope.
 
-Three Aβ entries are absent from the local archive and must be fetched from
-RCSB before curation: `3IFL`, `4ONG`, `5CSZ`.
+Three Aβ entries are absent from the local archive and were fetched from RCSB
+on 2026-11-11: `3IFL`, `4ONG`, `5CSZ` (`data/rcsb_abeta_extra/`). They are
+full Fab structures (H/L ~214 aa with constant domains), so their VH/VL were
+truncated to the first 125/115 residues for this first-pass comparison. An
+ANARCI/IMGT run is still required.
 
-The 13 archive-covered entries include 12 Aβ-relevant ones (after excluding
-4F37 and 4M1C).
+After excluding 4F37 and 4M1C, **15 Aβ-relevant entries** enter the comparison
+(12 archive-covered + 3 fetched).
 
 ## 3. Lineage clustering (VH, global identity)
 
 Using the longest antibody chain (VH) and global alignment identity:
 
-| Threshold | Clusters among 12 Aβ entries |
+| Threshold | Clusters among 15 Aβ entries |
 |---:|---:|
-| ≥95% | 11 |
-| ≥90% | **9** |
-| ≥85% | 5 |
+| ≥95% | 13 |
+| ≥90% | **10** |
+| ≥85% | 7 |
 
 At 90% the clusters are:
 
 ```
-{3BAE, 3BKJ}                  # same antibody / crystal variants
-{2IPU, 2R0W}                  # close variants
-{4HIX, 4OJF}                  # same Fab
-{3IFN}
+{2IPU, 2R0W}
+{3BAE, 3BKJ}
+{3IFL, 3IFN}
+{4HIX, 4OJF}
+{4ONF, 4ONG}
 {3IFO}
 {3IFP}
-{4ONF}
+{5CSZ}
 {5W3P}
 {6CO3}
 ```
 
-The three `3IF*` entries are from the same 2009 study and may merge under
-manual curation; even then the family remains at ≥7 clusters. This is a
-**sequence-level lower bound**, not an ANARCI/germline call.
+The `3IF*` entries are from the same 2009 study and may merge under manual
+curation; at 85% the family still has 7 clusters. This is a **sequence-level
+lower bound**, not an ANARCI/germline call. Some pairs (for example
+`2IPU`/`2R0W`, `3BAE`/`3BKJ`, `4HIX`/`4OJF`) are the same antibody or crystal
+variants and should be merged.
 
 ## 4. What this establishes
 
 - The Aβ N-terminal family is the first local family with **≥5 independent
-  VH clusters**, satisfying the CSN expansion protocol's confirmatory floor.
+  VH clusters** (10 at 90%, 7 at 85%), satisfying the CSN expansion
+  protocol's confirmatory floor.
 - The tau and α-syn families do not reach that floor locally; a full RCSB
   search is still required for them.
 - The result is **lineage evidence only**. It does not establish that the
@@ -83,7 +90,9 @@ manual curation; even then the family remains at ≥7 clusters. This is a
 
 ## 5. Required before a confirmatory claim
 
-1. Fetch `3IFL`, `4ONG`, `5CSZ` from RCSB; verify chain identity.
+1. Verify the fetched `3IFL`, `4ONG`, `5CSZ` chain identity and peptide
+   chemistry; `4ONG` does not expose `DAEFRH` as a 5–50-mer in the first
+   parse, so its peptide may be modified or clipped.
 2. Run ANARCI/IMGT numbering and cluster by species, germline, VH/VL pairing
    and variable-domain identity; merge same-study variants.
 3. Manually curate construct boundaries, tags, fusion partners and crystal
