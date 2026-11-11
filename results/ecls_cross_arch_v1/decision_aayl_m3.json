@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "ecls_aayl_m3_binding_endpoint",
+  "status": "null_no_affinity_ranking",
+  "cohort": {
+    "n": 508,
+    "families": {
+      "AAYL49": 281,
+      "AAYL51": 227
+    },
+    "endpoint": "9 - median(log10 AlphaSeq-estimated Kd nM)"
+  },
+  "result": {
+    "AAYL49": {
+      "n": 281,
+      "spearman_ecls_endpoint": 0.009412757304027086
+    },
+    "AAYL51": {
+      "n": 227,
+      "spearman_ecls_endpoint": -0.0015763214259425682
+    }
+  },
+  "comparison": {
+    "frozen_proteinmpnn": {
+      "AAYL49": -0.1214,
+      "AAYL51": -0.0715
+    },
+    "bfn_corrected_roles": {
+      "AAYL49": 0.0621,
+      "AAYL51": -0.0489
+    }
+  },
+  "claim_boundary": [
+    "AlphaSeq-estimated Kd, not SPR/BLI/ITC.",
+    "AF3-predicted parent structures.",
+    "One antigen, two lineages, unblinded retrospective.",
+    "No binding/affinity/specificity claim."
+  ],
+  "sources": {
+    "scores": "results/ecls_cross_arch_v1/aayl_m3/scores.json",
+    "report": "results/ecls_cross_arch_v1/aayl_m3/report.json"
+  }
+}

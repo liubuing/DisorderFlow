@@ -46,6 +46,14 @@ positive). Exact PDB overlap with the temporal panel is zero; one exact H3
 substring overlap (7e6p_H vs 8h8q, cluster E121) was found, and excluding E121
 leaves both M0 and M3 positive (M3 mean 0.2060, 13/14 positive).
 
+## AAYL affinity endpoint (M3)
+
+The same M3 model was used to score 508 AAYL H3 variants against the
+AlphaSeq-estimated Kd endpoint. ECLS is uncorrelated with the endpoint:
+AAYL49 Spearman +0.0094 (95% CI [-0.1114, 0.1277]); AAYL51 -0.0016
+(95% CI [-0.1373, 0.1310]). The contrast replicates, but it does not rank
+estimated affinity. This is the "contrast ≠ binding" boundary.
+
 ## Paper framing (if the full M3 is null)
 
 Title candidate: **Cross-architecture replication of an epitope-conditioned

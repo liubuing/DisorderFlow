@@ -1,0 +1,3560 @@
+{
+  "records": [
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28921",
+      "h3_sequence": "AKNHWAGTFDS",
+      "endpoint": 7.984312590845784,
+      "ecls": -0.08761761066588525
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28923",
+      "h3_sequence": "AKDDAPGTFDS",
+      "endpoint": 8.090025988449069,
+      "ecls": 0.026622613045302224
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28924",
+      "h3_sequence": "AKMHAEGTFDS",
+      "endpoint": 8.319119577267301,
+      "ecls": 0.11770812286572019
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28934",
+      "h3_sequence": "AKSAAAGKFDS",
+      "endpoint": 8.465556768948769,
+      "ecls": 0.0017612664536996725
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28945",
+      "h3_sequence": "AKMCAAGTFDK",
+      "endpoint": 7.6577803400807625,
+      "ecls": -0.07862485200166702
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28947",
+      "h3_sequence": "AKDRFVGTFDS",
+      "endpoint": 7.358939147828124,
+      "ecls": -0.07993860339576564
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28953",
+      "h3_sequence": "AKWRTAMTFDS",
+      "endpoint": 6.423375585244164,
+      "ecls": -0.16045662625269452
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28954",
+      "h3_sequence": "AKYRVATTFDS",
+      "endpoint": 7.906883711165136,
+      "ecls": -0.19734379513697187
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28957",
+      "h3_sequence": "AKVRVAGAFDS",
+      "endpoint": 6.6879382120848305,
+      "ecls": -0.19739397750659426
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28964",
+      "h3_sequence": "AKIRQAGTFSS",
+      "endpoint": 7.158577505266716,
+      "ecls": -0.15534285997802577
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28965",
+      "h3_sequence": "AKNRYAGTFCS",
+      "endpoint": 7.262778186029234,
+      "ecls": -0.24235135790976647
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28967",
+      "h3_sequence": "AKCRSAGTFDI",
+      "endpoint": 7.408203510130251,
+      "ecls": -0.295636433769356
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28970",
+      "h3_sequence": "AKVRLAGTFDA",
+      "endpoint": 7.301075425521196,
+      "ecls": -0.19967258721590042
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28972",
+      "h3_sequence": "AKRRAICTFDS",
+      "endpoint": 8.484415684487969,
+      "ecls": -0.0068442076444625854
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28973",
+      "h3_sequence": "AKRRAKTTFDS",
+      "endpoint": 8.547702116050402,
+      "ecls": -0.006959342143752156
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28974",
+      "h3_sequence": "AKSRAWTTFDS",
+      "endpoint": 8.069900201550858,
+      "ecls": -0.2105105695399372
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28978",
+      "h3_sequence": "AKYRAFGAFDS",
+      "endpoint": 7.701878614364928,
+      "ecls": -0.05387927930463432
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28985",
+      "h3_sequence": "AKTRAHGTFCS",
+      "endpoint": 6.505995405146141,
+      "ecls": -0.1730511181733827
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28986",
+      "h3_sequence": "AKARAKGTFDV",
+      "endpoint": 7.307047732817429,
+      "ecls": -0.01900928332047025
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28990",
+      "h3_sequence": "AKIRAANMFDS",
+      "endpoint": 6.282921996625932,
+      "ecls": -0.28353269669142644
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28993",
+      "h3_sequence": "AKYRAAKSFDS",
+      "endpoint": 8.312295916402705,
+      "ecls": -0.07549534196203433
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_28998",
+      "h3_sequence": "AKERAAQTFWS",
+      "endpoint": 7.359474412112599,
+      "ecls": -0.09123461219397466
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29009",
+      "h3_sequence": "AKCRAAGHFMS",
+      "endpoint": 8.138193443110977,
+      "ecls": -0.20486395941539248
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29011",
+      "h3_sequence": "AKMRAAGLFCS",
+      "endpoint": 7.550459500470845,
+      "ecls": -0.25006582452492276
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29016",
+      "h3_sequence": "AKPRAAGTCWS",
+      "endpoint": 6.406793244279214,
+      "ecls": -0.020705286074767848
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29017",
+      "h3_sequence": "AKPRAAGTHRS",
+      "endpoint": 8.286243109651885,
+      "ecls": -0.05611556023359299
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29019",
+      "h3_sequence": "AKWRAAGTKPS",
+      "endpoint": 8.451029132380414,
+      "ecls": -0.17869088663296218
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29026",
+      "h3_sequence": "AKIRAAGTFRC",
+      "endpoint": 7.583679945398963,
+      "ecls": -0.15976717187599743
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29030",
+      "h3_sequence": "AKGYVHGTFDS",
+      "endpoint": 8.66791492867586,
+      "ecls": -0.04371116649020834
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29036",
+      "h3_sequence": "AKGEDAGFFDS",
+      "endpoint": 8.442115192104003,
+      "ecls": -0.04620834101330118
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29037",
+      "h3_sequence": "AKGHSAGWFDS",
+      "endpoint": 7.330618589103874,
+      "ecls": -0.014302906664934945
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29038",
+      "h3_sequence": "AKGINAGDFDS",
+      "endpoint": 7.961125525533657,
+      "ecls": -0.10961831970648328
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29041",
+      "h3_sequence": "AKGVHAGTYDS",
+      "endpoint": 6.4022803224488065,
+      "ecls": -0.07335537265647529
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29043",
+      "h3_sequence": "AKGKSAGTFSS",
+      "endpoint": 8.476648868361048,
+      "ecls": -0.09036088531667552
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29044",
+      "h3_sequence": "AKGVIAGTFIS",
+      "endpoint": 8.711325605302795,
+      "ecls": -0.0029654557054690223
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29045",
+      "h3_sequence": "AKGFGAGTFDG",
+      "endpoint": 6.597976685640878,
+      "ecls": -0.160505774346265
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29047",
+      "h3_sequence": "AKGSQAGTFDW",
+      "endpoint": 8.493749849009998,
+      "ecls": -0.11860019781372744
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29049",
+      "h3_sequence": "AKGDAMHTFDS",
+      "endpoint": 8.101145466247816,
+      "ecls": 0.02245803651484568
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29056",
+      "h3_sequence": "AKGGARGTWDS",
+      "endpoint": 8.06995437947052,
+      "ecls": 0.0681041357192127
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29060",
+      "h3_sequence": "AKGGAHGTFRS",
+      "endpoint": 8.335624185653275,
+      "ecls": -0.14335140856829565
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29063",
+      "h3_sequence": "AKGKAPGTFDV",
+      "endpoint": 7.238953282191934,
+      "ecls": 0.017569268291646845
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29064",
+      "h3_sequence": "AKGQATGTFDG",
+      "endpoint": 8.427248299922734,
+      "ecls": 0.2722289318388156
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29065",
+      "h3_sequence": "AKGSAPGTFDA",
+      "endpoint": 7.701070686015331,
+      "ecls": -0.020750059322877323
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29068",
+      "h3_sequence": "AKGIAAAIFDS",
+      "endpoint": 8.821084866706629,
+      "ecls": -0.3081433739174497
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29071",
+      "h3_sequence": "AKGLAAWTADS",
+      "endpoint": 6.126855675823126,
+      "ecls": 0.052467480979182746
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29073",
+      "h3_sequence": "AKGDAAYTFQS",
+      "endpoint": 7.686827344565119,
+      "ecls": -0.04097990488464198
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29075",
+      "h3_sequence": "AKGWAAWTFES",
+      "endpoint": 7.999725633265433,
+      "ecls": -0.10790246115489444
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29077",
+      "h3_sequence": "AKGHAAPTFDK",
+      "endpoint": 8.286512908461058,
+      "ecls": -0.06372737545858742
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29086",
+      "h3_sequence": "AKGKAAGYFIS",
+      "endpoint": 7.799088388120817,
+      "ecls": 0.11165837266228396
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29087",
+      "h3_sequence": "AKGLAAGGFRS",
+      "endpoint": 7.0450336405089065,
+      "ecls": -0.005558387799696529
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29088",
+      "h3_sequence": "AKGMAAGSFGS",
+      "endpoint": 4.391325790174459,
+      "ecls": -0.10127187317067943
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29089",
+      "h3_sequence": "AKGLAAGMFDM",
+      "endpoint": 7.711063722957558,
+      "ecls": -0.12124495343728503
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29099",
+      "h3_sequence": "AKGTAAGTSDA",
+      "endpoint": 3.8493103971762217,
+      "ecls": -0.06561452827670333
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29103",
+      "h3_sequence": "AKGPAAGTFTC",
+      "endpoint": 7.694620880668417,
+      "ecls": 0.015392265536568583
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29104",
+      "h3_sequence": "AKGPAAGTFWD",
+      "endpoint": 7.075328086857544,
+      "ecls": 0.060531534931876685
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29109",
+      "h3_sequence": "AKGRCRGVFDS",
+      "endpoint": 7.195376834267465,
+      "ecls": -0.0863991135900668
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29111",
+      "h3_sequence": "AKGRNTGYFDS",
+      "endpoint": 7.756606956371012,
+      "ecls": 0.12756186994639296
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29113",
+      "h3_sequence": "AKGRFSGTIDS",
+      "endpoint": 8.372328609536982,
+      "ecls": -0.15388961407271307
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29120",
+      "h3_sequence": "AKGRPWGTFDN",
+      "endpoint": 4.338175556358298,
+      "ecls": -0.30712134458801943
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29122",
+      "h3_sequence": "AKGRVWGTFDP",
+      "endpoint": 8.177316930490658,
+      "ecls": -0.14533780108798666
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29136",
+      "h3_sequence": "AKGREALTFDE",
+      "endpoint": 7.965901531174952,
+      "ecls": -0.22808003086935358
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29139",
+      "h3_sequence": "AKGRVAYTFDG",
+      "endpoint": 8.192953484337275,
+      "ecls": -0.07723097029057424
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29140",
+      "h3_sequence": "AKGRGAGWVDS",
+      "endpoint": 8.29348901918962,
+      "ecls": -0.1588651930743996
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29144",
+      "h3_sequence": "AKGRCAGRFCS",
+      "endpoint": 8.532029195018252,
+      "ecls": -0.12558933279731033
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29145",
+      "h3_sequence": "AKGREAGFFFS",
+      "endpoint": 8.265142674327778,
+      "ecls": -0.21749145876277565
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29150",
+      "h3_sequence": "AKGRHAGQFDT",
+      "endpoint": 7.89325269251289,
+      "ecls": -0.2502732304009525
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29153",
+      "h3_sequence": "AKGRLAGTVNS",
+      "endpoint": 8.95612615176091,
+      "ecls": -0.15288754349405131
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29156",
+      "h3_sequence": "AKGRLAGTQDY",
+      "endpoint": 7.487558761273105,
+      "ecls": -0.05937591567635536
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29157",
+      "h3_sequence": "AKGRNAGTGDV",
+      "endpoint": 7.902041136920591,
+      "ecls": -0.2120459310033107
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29159",
+      "h3_sequence": "AKGRHAGTFIF",
+      "endpoint": 7.177692493871195,
+      "ecls": -0.1704095764593645
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29160",
+      "h3_sequence": "AKGRHAGTFLT",
+      "endpoint": 7.3447597374811995,
+      "ecls": -0.208218514919281
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29163",
+      "h3_sequence": "AKGRAGQGFDS",
+      "endpoint": 7.236319319754438,
+      "ecls": -0.06862943484024564
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29170",
+      "h3_sequence": "AKGRAWVTMDS",
+      "endpoint": 8.070712261290012,
+      "ecls": -0.2143866534937513
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29175",
+      "h3_sequence": "AKGRALQTFDA",
+      "endpoint": 8.297006333945985,
+      "ecls": 0.08647407523610351
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29177",
+      "h3_sequence": "AKGRANGVPDS",
+      "endpoint": 7.228818959642124,
+      "ecls": -0.04886630583893181
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29178",
+      "h3_sequence": "AKGRAPGPTDS",
+      "endpoint": 7.220050105583036,
+      "ecls": 0.06038651547648666
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29180",
+      "h3_sequence": "AKGRATGHADS",
+      "endpoint": 7.297157490000405,
+      "ecls": 0.09315330196510674
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29182",
+      "h3_sequence": "AKGRAPGAFRS",
+      "endpoint": 7.163743138514283,
+      "ecls": -0.030711103569377673
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29184",
+      "h3_sequence": "AKGRAVGNFQS",
+      "endpoint": 5.929730482944423,
+      "ecls": -0.056951073083010506
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29185",
+      "h3_sequence": "AKGRACGVFDC",
+      "endpoint": 8.065574369843738,
+      "ecls": -0.45580494674769323
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29186",
+      "h3_sequence": "AKGRAMGQFDE",
+      "endpoint": 7.364756918277418,
+      "ecls": -0.08192730220881383
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29190",
+      "h3_sequence": "AKGRAYGTVVS",
+      "endpoint": 7.806188333954239,
+      "ecls": -0.1369360184127637
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29193",
+      "h3_sequence": "AKGRAPGTTDV",
+      "endpoint": 8.359684363977816,
+      "ecls": -0.02218421074477117
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29195",
+      "h3_sequence": "AKGRALGTFIF",
+      "endpoint": 5.384921044146145,
+      "ecls": 0.13190362128344457
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29196",
+      "h3_sequence": "AKGRAMGTFWV",
+      "endpoint": 7.859278366157946,
+      "ecls": -0.05250434983860375
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29197",
+      "h3_sequence": "AKGRAPGTFTH",
+      "endpoint": 8.37930831250487,
+      "ecls": -0.05345263806256395
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29199",
+      "h3_sequence": "AKGRAANKIDS",
+      "endpoint": 7.6020716842746445,
+      "ecls": -0.19309385865926743
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29200",
+      "h3_sequence": "AKGRAATSKDS",
+      "endpoint": 7.058473735260796,
+      "ecls": -0.2462962493300438
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29203",
+      "h3_sequence": "AKGRAAPKFRS",
+      "endpoint": 4.254994331600819,
+      "ecls": -0.194597178562121
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29206",
+      "h3_sequence": "AKGRAAKRFDV",
+      "endpoint": 8.435106929485356,
+      "ecls": -0.15195740014314651
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29207",
+      "h3_sequence": "AKGRAAWIFDN",
+      "endpoint": 8.293742977352887,
+      "ecls": -0.18895447999238968
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29209",
+      "h3_sequence": "AKGRAAITSFS",
+      "endpoint": 8.585816683470826,
+      "ecls": -0.16343578222123067
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29210",
+      "h3_sequence": "AKGRAARTSTS",
+      "endpoint": 7.727044041732778,
+      "ecls": -0.17526728253472923
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29212",
+      "h3_sequence": "AKGRAAMTVDG",
+      "endpoint": 5.71849264696476,
+      "ecls": -0.13972507349469465
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29215",
+      "h3_sequence": "AKGRAAYTWDP",
+      "endpoint": 8.34581168779535,
+      "ecls": -0.0739580237052655
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29218",
+      "h3_sequence": "AKGRAAKTFQA",
+      "endpoint": 7.313927992727198,
+      "ecls": -0.1830115094780922
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29220",
+      "h3_sequence": "AKGRAAGHAGS",
+      "endpoint": 6.349449592314851,
+      "ecls": -0.1290359971198165
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29222",
+      "h3_sequence": "AKGRAAGQTRS",
+      "endpoint": 7.462514200211036,
+      "ecls": -0.12893202494491263
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29224",
+      "h3_sequence": "AKGRAAGGADK",
+      "endpoint": 7.036919282239076,
+      "ecls": -0.10722043432972628
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29229",
+      "h3_sequence": "AKGRAAGCFPW",
+      "endpoint": 8.571051035630722,
+      "ecls": -0.1552225730635901
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29233",
+      "h3_sequence": "AKGRAAGTREC",
+      "endpoint": 7.404472924486466,
+      "ecls": -0.14040815152905228
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29235",
+      "h3_sequence": "AKGRAAGTTMG",
+      "endpoint": 7.624976086745546,
+      "ecls": -0.05425746197050296
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29732",
+      "h3_sequence": "AKCRAAGTFDS",
+      "endpoint": 7.537324786379246,
+      "ecls": -0.1980603357607671
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29739",
+      "h3_sequence": "AKLRAAGTFDS",
+      "endpoint": 8.400822126925787,
+      "ecls": -0.22326182980429055
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29744",
+      "h3_sequence": "AKRRAAGTFDS",
+      "endpoint": 7.404892629313894,
+      "ecls": -0.08160200647332472
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29746",
+      "h3_sequence": "AKTRAAGTFDS",
+      "endpoint": 7.960923029291509,
+      "ecls": -0.15283012051473976
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29748",
+      "h3_sequence": "AKWRAAGTFDS",
+      "endpoint": 7.354563189949298,
+      "ecls": -0.17107204618779104
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29749",
+      "h3_sequence": "AKYRAAGTFDS",
+      "endpoint": 7.487678271460199,
+      "ecls": -0.07836319844831108
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29750",
+      "h3_sequence": "AKGAAAGTFDS",
+      "endpoint": 8.316093065374767,
+      "ecls": -0.04518162391402525
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29751",
+      "h3_sequence": "AKGCAAGTFDS",
+      "endpoint": 6.951205595957344,
+      "ecls": -0.05710948868231336
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29753",
+      "h3_sequence": "AKGEAAGTFDS",
+      "endpoint": 8.94804893699164,
+      "ecls": -0.00015579841353652313
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29754",
+      "h3_sequence": "AKGFAAGTFDS",
+      "endpoint": 7.6454835377739965,
+      "ecls": -0.15240392088890076
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29755",
+      "h3_sequence": "AKGGAAGTFDS",
+      "endpoint": 7.225905187215275,
+      "ecls": -0.15234587680209755
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29758",
+      "h3_sequence": "AKGKAAGTFDS",
+      "endpoint": 8.313190349533425,
+      "ecls": -0.03455977277322253
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29760",
+      "h3_sequence": "AKGMAAGTFDS",
+      "endpoint": 7.807890021407895,
+      "ecls": -0.09106298197399498
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29762",
+      "h3_sequence": "AKGPAAGTFDS",
+      "endpoint": 8.089141287195392,
+      "ecls": 0.04677012562751792
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29764",
+      "h3_sequence": "AKGSAAGTFDS",
+      "endpoint": 7.939531860033966,
+      "ecls": -0.1211842217228627
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29767",
+      "h3_sequence": "AKGWAAGTFDS",
+      "endpoint": 8.371771990769055,
+      "ecls": -0.11755028908902965
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29768",
+      "h3_sequence": "AKGYAAGTFDS",
+      "endpoint": 7.336783766751154,
+      "ecls": -0.06454290314154232
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29769",
+      "h3_sequence": "AKGRCAGTFDS",
+      "endpoint": 7.496524168906678,
+      "ecls": -0.1414153386246073
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29770",
+      "h3_sequence": "AKGRDAGTFDS",
+      "endpoint": 7.869966712060544,
+      "ecls": -0.160736997019161
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29771",
+      "h3_sequence": "AKGREAGTFDS",
+      "endpoint": 6.637638589818092,
+      "ecls": -0.22796264832670055
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29772",
+      "h3_sequence": "AKGRFAGTFDS",
+      "endpoint": 7.6119595490162215,
+      "ecls": -0.16986552422696888
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29774",
+      "h3_sequence": "AKGRHAGTFDS",
+      "endpoint": 7.673539218191822,
+      "ecls": -0.19690921360796132
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29775",
+      "h3_sequence": "AKGRIAGTFDS",
+      "endpoint": 8.275392931951574,
+      "ecls": -0.06629920276728529
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29776",
+      "h3_sequence": "AKGRKAGTFDS",
+      "endpoint": 6.788994369045367,
+      "ecls": -0.11794797127897061
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29777",
+      "h3_sequence": "AKGRLAGTFDS",
+      "endpoint": 7.628626613421405,
+      "ecls": -0.12158660726113735
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29778",
+      "h3_sequence": "AKGRMAGTFDS",
+      "endpoint": 8.618799014704901,
+      "ecls": -0.15223312648859855
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29779",
+      "h3_sequence": "AKGRNAGTFDS",
+      "endpoint": 8.441358467590838,
+      "ecls": -0.19252898747270764
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29780",
+      "h3_sequence": "AKGRPAGTFDS",
+      "endpoint": 8.424405505624852,
+      "ecls": -0.2800869101827792
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29784",
+      "h3_sequence": "AKGRTAGTFDS",
+      "endpoint": 7.54886735087462,
+      "ecls": -0.10808864777738392
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29785",
+      "h3_sequence": "AKGRVAGTFDS",
+      "endpoint": 8.586815262044167,
+      "ecls": -0.12667970494790515
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29786",
+      "h3_sequence": "AKGRWAGTFDS",
+      "endpoint": 7.914455495479917,
+      "ecls": -0.1727880158207633
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29787",
+      "h3_sequence": "AKGRYAGTFDS",
+      "endpoint": 6.729819361070549,
+      "ecls": -0.16936057535084803
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29789",
+      "h3_sequence": "AKGRADGTFDS",
+      "endpoint": 6.416382097535444,
+      "ecls": -0.019933594898744023
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29792",
+      "h3_sequence": "AKGRAGGTFDS",
+      "endpoint": 7.55687976136962,
+      "ecls": -0.06844867630438367
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29794",
+      "h3_sequence": "AKGRAIGTFDS",
+      "endpoint": 6.634594813600536,
+      "ecls": 0.05827287923206015
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29797",
+      "h3_sequence": "AKGRAMGTFDS",
+      "endpoint": 8.281325926238495,
+      "ecls": -0.027928918600082397
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29798",
+      "h3_sequence": "AKGRANGTFDS",
+      "endpoint": 8.188036489558431,
+      "ecls": 0.010154851458289649
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29799",
+      "h3_sequence": "AKGRAPGTFDS",
+      "endpoint": 8.120563154888023,
+      "ecls": -0.025676220655441284
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29800",
+      "h3_sequence": "AKGRAQGTFDS",
+      "endpoint": 8.491616642137693,
+      "ecls": -0.0016568384387278812
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29802",
+      "h3_sequence": "AKGRASGTFDS",
+      "endpoint": 7.823402870366918,
+      "ecls": -0.13276000727306725
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29804",
+      "h3_sequence": "AKGRAVGTFDS",
+      "endpoint": 7.618633987151773,
+      "ecls": 0.009732460433786283
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29806",
+      "h3_sequence": "AKGRAYGTFDS",
+      "endpoint": 8.675413569997666,
+      "ecls": -0.11900401386347692
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29814",
+      "h3_sequence": "AKGRAAKTFDS",
+      "endpoint": 7.9067968879245605,
+      "ecls": -0.14324842461130816
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29817",
+      "h3_sequence": "AKGRAANTFDS",
+      "endpoint": 7.843567189640405,
+      "ecls": -0.20040936564857326
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29820",
+      "h3_sequence": "AKGRAARTFDS",
+      "endpoint": 7.52650431147247,
+      "ecls": -0.18296341123906057
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29821",
+      "h3_sequence": "AKGRAASTFDS",
+      "endpoint": 7.81953671460845,
+      "ecls": -0.22793257981538773
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29822",
+      "h3_sequence": "AKGRAATTFDS",
+      "endpoint": 7.526112812408259,
+      "ecls": -0.26237357407808304
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29827",
+      "h3_sequence": "AKGRAAGCFDS",
+      "endpoint": 7.457426839348308,
+      "ecls": -0.15800766782327136
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29832",
+      "h3_sequence": "AKGRAAGHFDS",
+      "endpoint": 7.694796617530578,
+      "ecls": -0.13019986857067467
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29833",
+      "h3_sequence": "AKGRAAGIFDS",
+      "endpoint": 7.4645682383123155,
+      "ecls": -0.205299726941369
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29834",
+      "h3_sequence": "AKGRAAGKFDS",
+      "endpoint": 7.8314891844580945,
+      "ecls": -0.141420410438017
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29835",
+      "h3_sequence": "AKGRAAGLFDS",
+      "endpoint": 8.258672558123196,
+      "ecls": -0.2003143511035228
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29836",
+      "h3_sequence": "AKGRAAGMFDS",
+      "endpoint": 8.307925725973208,
+      "ecls": -0.22571867433461312
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29837",
+      "h3_sequence": "AKGRAAGNFDS",
+      "endpoint": 6.9071310137630135,
+      "ecls": -0.17088274793191394
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29841",
+      "h3_sequence": "AKGRAAGSFDS",
+      "endpoint": 7.803893897206963,
+      "ecls": -0.12395640123974205
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29845",
+      "h3_sequence": "AKGRAAGTADS",
+      "endpoint": 7.043339119638926,
+      "ecls": -0.11258363859219989
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29848",
+      "h3_sequence": "AKGRAAGTEDS",
+      "endpoint": 4.815335856721384,
+      "ecls": -0.10747302797707636
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29849",
+      "h3_sequence": "AKGRAAGTGDS",
+      "endpoint": 8.08515160445375,
+      "ecls": -0.09732220525091373
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29850",
+      "h3_sequence": "AKGRAAGTHDS",
+      "endpoint": 6.84488631529798,
+      "ecls": -0.1090132119980729
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29852",
+      "h3_sequence": "AKGRAAGTKDS",
+      "endpoint": 5.7225015071918275,
+      "ecls": -0.1300389563495461
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29853",
+      "h3_sequence": "AKGRAAGTLDS",
+      "endpoint": 7.154318620162508,
+      "ecls": -0.1652667752721091
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29855",
+      "h3_sequence": "AKGRAAGTNDS",
+      "endpoint": 7.13097573622677,
+      "ecls": -0.07658975910056753
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29858",
+      "h3_sequence": "AKGRAAGTRDS",
+      "endpoint": 6.852847221226639,
+      "ecls": -0.07933105257424433
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29860",
+      "h3_sequence": "AKGRAAGTTDS",
+      "endpoint": 6.20826562114161,
+      "ecls": -0.07431325180964032
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29861",
+      "h3_sequence": "AKGRAAGTVDS",
+      "endpoint": 7.011179628375245,
+      "ecls": -0.15508868613026383
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29862",
+      "h3_sequence": "AKGRAAGTWDS",
+      "endpoint": 7.141709889243055,
+      "ecls": -0.07451673122969549
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29863",
+      "h3_sequence": "AKGRAAGTYDS",
+      "endpoint": 7.980036888952556,
+      "ecls": -0.047788491303270675
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29864",
+      "h3_sequence": "AKGRAAGTFAS",
+      "endpoint": 6.827257770779097,
+      "ecls": -0.14405011588876926
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29868",
+      "h3_sequence": "AKGRAAGTFGS",
+      "endpoint": 8.021760864951306,
+      "ecls": -0.1563251722942698
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29869",
+      "h3_sequence": "AKGRAAGTFHS",
+      "endpoint": 8.497401901572921,
+      "ecls": -0.10630519281734152
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29870",
+      "h3_sequence": "AKGRAAGTFIS",
+      "endpoint": 7.744353738906685,
+      "ecls": -0.10800858519294065
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29871",
+      "h3_sequence": "AKGRAAGTFKS",
+      "endpoint": 8.01653308760238,
+      "ecls": -0.12360462817278783
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29874",
+      "h3_sequence": "AKGRAAGTFNS",
+      "endpoint": 7.0602516963566595,
+      "ecls": -0.1462849324399773
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29875",
+      "h3_sequence": "AKGRAAGTFPS",
+      "endpoint": 7.729537690488183,
+      "ecls": -0.14765256643295288
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29878",
+      "h3_sequence": "AKGRAAGTFSS",
+      "endpoint": 7.238907860676255,
+      "ecls": -0.15008456598628683
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29879",
+      "h3_sequence": "AKGRAAGTFTS",
+      "endpoint": 7.716875404721998,
+      "ecls": -0.13760500062595726
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29880",
+      "h3_sequence": "AKGRAAGTFVS",
+      "endpoint": 7.441174196900592,
+      "ecls": -0.1329160007563508
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29881",
+      "h3_sequence": "AKGRAAGTFWS",
+      "endpoint": 8.13391432422274,
+      "ecls": -0.10238069295883179
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29882",
+      "h3_sequence": "AKGRAAGTFYS",
+      "endpoint": 8.203302282960223,
+      "ecls": -0.06734209169041039
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29883",
+      "h3_sequence": "AKGRAAGTFDA",
+      "endpoint": 7.9798804319272705,
+      "ecls": -0.14396229928190074
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29884",
+      "h3_sequence": "AKGRAAGTFDC",
+      "endpoint": 6.904898248787813,
+      "ecls": -0.16384554180231925
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29888",
+      "h3_sequence": "AKGRAAGTFDG",
+      "endpoint": 6.703170648889996,
+      "ecls": -0.10334045507691147
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29889",
+      "h3_sequence": "AKGRAAGTFDH",
+      "endpoint": 7.441006593858839,
+      "ecls": -0.16024409911849302
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29891",
+      "h3_sequence": "AKGRAAGTFDK",
+      "endpoint": 7.542898019569925,
+      "ecls": -0.13949632915583532
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29894",
+      "h3_sequence": "AKGRAAGTFDN",
+      "endpoint": 7.218793319014923,
+      "ecls": -0.16060682047497132
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29896",
+      "h3_sequence": "AKGRAAGTFDQ",
+      "endpoint": 8.027987311663004,
+      "ecls": -0.1718834557316522
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29897",
+      "h3_sequence": "AKGRAAGTFDR",
+      "endpoint": 7.3364906255516384,
+      "ecls": -0.11852511763572693
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29899",
+      "h3_sequence": "AKGRAAGTFDV",
+      "endpoint": 6.799586734723583,
+      "ecls": -0.19226742061701696
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_29900",
+      "h3_sequence": "AKGRAAGTFDW",
+      "endpoint": 7.033898107319555,
+      "ecls": -0.11963502114469327
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3846",
+      "h3_sequence": "AKYCAAGTFDS",
+      "endpoint": 7.754629534904838,
+      "ecls": -0.00043634596196096
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3849",
+      "h3_sequence": "AKDRSAGTFDS",
+      "endpoint": 7.65402777957847,
+      "ecls": -0.23063110966574074
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3854",
+      "h3_sequence": "AKSRIAGTFDS",
+      "endpoint": 6.824196298295428,
+      "ecls": -0.012972243130207062
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3858",
+      "h3_sequence": "AKERARGTFDS",
+      "endpoint": 8.519305989290325,
+      "ecls": 0.04604409296404244
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3861",
+      "h3_sequence": "AKPRALGTFDS",
+      "endpoint": 7.595486497011185,
+      "ecls": 0.16178226809610008
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3862",
+      "h3_sequence": "AKRRAHGTFDS",
+      "endpoint": 8.076276013663316,
+      "ecls": -0.06912690604274907
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3869",
+      "h3_sequence": "AKVRAAATFDS",
+      "endpoint": 8.464316948534638,
+      "ecls": -0.3172417242418635
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3871",
+      "h3_sequence": "AKLRAAGCFDS",
+      "endpoint": 7.504411114746366,
+      "ecls": -0.24623315645889798
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3876",
+      "h3_sequence": "AKWRAAGPFDS",
+      "endpoint": 7.136575979591237,
+      "ecls": -0.1457323994148858
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3878",
+      "h3_sequence": "AKERAAGTVDS",
+      "endpoint": 7.623816747755551,
+      "ecls": -0.13393865457989973
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3879",
+      "h3_sequence": "AKKRAAGTHDS",
+      "endpoint": 6.484072313152524,
+      "ecls": -0.15195759385824203
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3880",
+      "h3_sequence": "AKKRAAGTYDS",
+      "endpoint": 6.223008065980276,
+      "ecls": -0.09073287316344025
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3883",
+      "h3_sequence": "AKWRAAGTDDS",
+      "endpoint": 7.504644237147927,
+      "ecls": -0.10650755668228351
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3888",
+      "h3_sequence": "AKNRAAGTFKS",
+      "endpoint": 7.570948549922566,
+      "ecls": -0.1638993126424877
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3894",
+      "h3_sequence": "AKMRAAGTFDL",
+      "endpoint": 6.7138615648345805,
+      "ecls": -0.16795158047567682
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3895",
+      "h3_sequence": "AKRRAAGTFDE",
+      "endpoint": 7.49904707009013,
+      "ecls": -0.08446224914355671
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3898",
+      "h3_sequence": "AKGAPAGTFDS",
+      "endpoint": 7.7580732647957635,
+      "ecls": -0.19023219292814053
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3900",
+      "h3_sequence": "AKGCKAGTFDS",
+      "endpoint": 7.3826773417629035,
+      "ecls": -0.040021118792620936
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3901",
+      "h3_sequence": "AKGFDAGTFDS",
+      "endpoint": 7.133408593732643,
+      "ecls": -0.17810457673939828
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3902",
+      "h3_sequence": "AKGGIAGTFDS",
+      "endpoint": 8.222939775900224,
+      "ecls": -0.08360873840071914
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3903",
+      "h3_sequence": "AKGIGAGTFDS",
+      "endpoint": 7.918550920446027,
+      "ecls": -0.16463236646218737
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3904",
+      "h3_sequence": "AKGNNAGTFDS",
+      "endpoint": 7.955459730797672,
+      "ecls": -0.08555789698253946
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3908",
+      "h3_sequence": "AKGMAGGTFDS",
+      "endpoint": 7.599866834493966,
+      "ecls": -0.024475317109714734
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3912",
+      "h3_sequence": "AKGDAAVTFDS",
+      "endpoint": 6.886166207903219,
+      "ecls": -0.09726762432943703
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3913",
+      "h3_sequence": "AKGEAAETFDS",
+      "endpoint": 5.559576266710986,
+      "ecls": -0.036691922355782225
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3915",
+      "h3_sequence": "AKGTAACTFDS",
+      "endpoint": 3.4293406292768633,
+      "ecls": -0.18550477989695313
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3916",
+      "h3_sequence": "AKGVAADTFDS",
+      "endpoint": 7.896888114939969,
+      "ecls": -0.1137757700952613
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3917",
+      "h3_sequence": "AKGVAAQTFDS",
+      "endpoint": 7.448110289488659,
+      "ecls": -0.10873430086807767
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3921",
+      "h3_sequence": "AKGHAAGWFDS",
+      "endpoint": 6.0972209477901185,
+      "ecls": 0.02644998106089469
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3928",
+      "h3_sequence": "AKGQAAGTTDS",
+      "endpoint": 6.891131698449982,
+      "ecls": 0.10035566714676936
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3934",
+      "h3_sequence": "AKGEAAGTFLS",
+      "endpoint": 6.3556547038741105,
+      "ecls": -0.009239223870364022
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3935",
+      "h3_sequence": "AKGQAAGTFAS",
+      "endpoint": 7.259119910257356,
+      "ecls": 0.030618803067640865
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3939",
+      "h3_sequence": "AKGYAAGTFES",
+      "endpoint": 6.751406764139933,
+      "ecls": -0.09681080146269361
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3940",
+      "h3_sequence": "AKGCAAGTFDD",
+      "endpoint": 7.552538866659745,
+      "ecls": -0.07600372758778651
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3942",
+      "h3_sequence": "AKGEAAGTFDW",
+      "endpoint": 8.112749773344708,
+      "ecls": 0.015245521610433688
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3943",
+      "h3_sequence": "AKGGAAGTFDI",
+      "endpoint": 6.477706965729395,
+      "ecls": -0.20916908708485682
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3944",
+      "h3_sequence": "AKGGAAGTFDL",
+      "endpoint": 8.203604228365553,
+      "ecls": -0.16820574077692907
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3945",
+      "h3_sequence": "AKGHAAGTFDA",
+      "endpoint": 7.985617568017686,
+      "ecls": -0.018497209657322156
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3946",
+      "h3_sequence": "AKGHAAGTFDI",
+      "endpoint": 8.326091063384238,
+      "ecls": -0.06639446182684461
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3949",
+      "h3_sequence": "AKGRHKGTFDS",
+      "endpoint": 7.458294662872886,
+      "ecls": 0.005070683631029915
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3950",
+      "h3_sequence": "AKGRHVGTFDS",
+      "endpoint": 7.639140644480095,
+      "ecls": -0.052140412005511116
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3952",
+      "h3_sequence": "AKGRRPGTFDS",
+      "endpoint": 6.540482386660055,
+      "ecls": -0.054783899675716174
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3955",
+      "h3_sequence": "AKGREAPTFDS",
+      "endpoint": 5.135769573646323,
+      "ecls": -0.2776587842540308
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3956",
+      "h3_sequence": "AKGRRAITFDS",
+      "endpoint": 7.384931875397497,
+      "ecls": -0.23363132571632228
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3965",
+      "h3_sequence": "AKGRVAGMFDS",
+      "endpoint": 7.782693592925714,
+      "ecls": -0.2173620381138539
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3966",
+      "h3_sequence": "AKGRGAGTKDS",
+      "endpoint": 8.277474196235554,
+      "ecls": -0.1698366958986628
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3968",
+      "h3_sequence": "AKGRKAGTSDS",
+      "endpoint": 6.830242288582767,
+      "ecls": -0.10768318311734637
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3970",
+      "h3_sequence": "AKGRQAGTVDS",
+      "endpoint": 7.581271144071762,
+      "ecls": -0.16790598224509878
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3972",
+      "h3_sequence": "AKGRWAGTGDS",
+      "endpoint": 8.366730082072621,
+      "ecls": -0.1350738799030129
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3975",
+      "h3_sequence": "AKGRIAGTFSS",
+      "endpoint": 7.910559280178042,
+      "ecls": -0.08134742758490843
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3977",
+      "h3_sequence": "AKGRSAGTFRS",
+      "endpoint": 8.0518959094644,
+      "ecls": -0.17926986109126686
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3978",
+      "h3_sequence": "AKGRTAGTFNS",
+      "endpoint": 8.268965825302038,
+      "ecls": -0.11933723904869753
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3979",
+      "h3_sequence": "AKGRVAGTFES",
+      "endpoint": 8.496437008974347,
+      "ecls": -0.15894760326905688
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3981",
+      "h3_sequence": "AKGRDAGTFDF",
+      "endpoint": 7.516683555307271,
+      "ecls": -0.16126511584628722
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3982",
+      "h3_sequence": "AKGREAGTFDN",
+      "endpoint": 8.867808327122075,
+      "ecls": -0.25353312763300817
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3984",
+      "h3_sequence": "AKGRHAGTFDL",
+      "endpoint": 7.879799385297941,
+      "ecls": -0.21276907758279284
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3985",
+      "h3_sequence": "AKGRQAGTFDV",
+      "endpoint": 8.27487766605203,
+      "ecls": -0.2050847167318519
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3992",
+      "h3_sequence": "AKGRAYITFDS",
+      "endpoint": 7.651919611050014,
+      "ecls": -0.18849131939086083
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3993",
+      "h3_sequence": "AKGRAYQTFDS",
+      "endpoint": 5.982004985345041,
+      "ecls": -0.1290079646489839
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3995",
+      "h3_sequence": "AKGRAEGAFDS",
+      "endpoint": 7.909784514127338,
+      "ecls": 0.007744157856161227
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_3997",
+      "h3_sequence": "AKGRANGPFDS",
+      "endpoint": 5.4578470878568535,
+      "ecls": 0.035494498231193994
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4007",
+      "h3_sequence": "AKGRASGTQDS",
+      "endpoint": 7.580156802997248,
+      "ecls": -0.09333272549239036
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4011",
+      "h3_sequence": "AKGRASGTFRS",
+      "endpoint": 7.204028638723477,
+      "ecls": -0.13624063946984055
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4015",
+      "h3_sequence": "AKGRAFGTFDN",
+      "endpoint": 6.48727810220676,
+      "ecls": -0.1345686506141317
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4018",
+      "h3_sequence": "AKGRAPGTFDI",
+      "endpoint": 7.485638984487204,
+      "ecls": -0.08249943093820056
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4019",
+      "h3_sequence": "AKGRAPGTFDP",
+      "endpoint": 8.052127486227734,
+      "ecls": -0.0428703616965902
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4021",
+      "h3_sequence": "AKGRAADAFDS",
+      "endpoint": 4.853009222676231,
+      "ecls": -0.1516360118985176
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4032",
+      "h3_sequence": "AKGRAAPTEDS",
+      "endpoint": 6.540686480766418,
+      "ecls": -0.15716916390440705
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4033",
+      "h3_sequence": "AKGRAASTCDS",
+      "endpoint": 7.84472625182015,
+      "ecls": -0.202635456892577
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4034",
+      "h3_sequence": "AKGRAATTQDS",
+      "endpoint": 7.1173528619282145,
+      "ecls": -0.2229462922974066
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4036",
+      "h3_sequence": "AKGRAAKTFNS",
+      "endpoint": 4.421394954618515,
+      "ecls": -0.154497015882622
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4043",
+      "h3_sequence": "AKGRAAFTFDQ",
+      "endpoint": 8.455376566139126,
+      "ecls": -0.15160941738973932
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4047",
+      "h3_sequence": "AKGRAASTFDQ",
+      "endpoint": 6.693328273122798,
+      "ecls": -0.264779694378376
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4048",
+      "h3_sequence": "AKGRAATTFDK",
+      "endpoint": 7.597845432639586,
+      "ecls": -0.26683356206525444
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4054",
+      "h3_sequence": "AKGRAAGSYDS",
+      "endpoint": 7.488523607916692,
+      "ecls": -0.03670855137434881
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4055",
+      "h3_sequence": "AKGRAAGYMDS",
+      "endpoint": 6.291550710279889,
+      "ecls": -0.024360311302271676
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4057",
+      "h3_sequence": "AKGRAAGGFRS",
+      "endpoint": 8.574243411252208,
+      "ecls": -0.12869378111579222
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4059",
+      "h3_sequence": "AKGRAAGSFMS",
+      "endpoint": 7.382119580224151,
+      "ecls": -0.1355964974923567
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4065",
+      "h3_sequence": "AKGRAAGGFDY",
+      "endpoint": 7.167630997132354,
+      "ecls": -0.10242973911491293
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4070",
+      "h3_sequence": "AKGRAAGTCPS",
+      "endpoint": 7.652306566012902,
+      "ecls": -0.12235544351014216
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4071",
+      "h3_sequence": "AKGRAAGTEFS",
+      "endpoint": 7.042407942779752,
+      "ecls": -0.07664995166388389
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4075",
+      "h3_sequence": "AKGRAAGTPPS",
+      "endpoint": 8.232731712410171,
+      "ecls": -0.10175954618237215
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4078",
+      "h3_sequence": "AKGRAAGTMDM",
+      "endpoint": 4.908954016082252,
+      "ecls": -0.16221237318082293
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4079",
+      "h3_sequence": "AKGRAAGTNDT",
+      "endpoint": 7.784555343836368,
+      "ecls": -0.07881563495505928
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4080",
+      "h3_sequence": "AKGRAAGTRDR",
+      "endpoint": 7.147429066579138,
+      "ecls": -0.06281982904130734
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4083",
+      "h3_sequence": "AKGRAAGTFED",
+      "endpoint": 8.238696566472862,
+      "ecls": -0.1861984783952888
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4085",
+      "h3_sequence": "AKGRAAGTFHH",
+      "endpoint": 8.197938712162433,
+      "ecls": -0.13151295076717018
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4086",
+      "h3_sequence": "AKGRAAGTFHT",
+      "endpoint": 8.510734900934002,
+      "ecls": -0.10853106867183326
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4087",
+      "h3_sequence": "AKGRAAGTFLQ",
+      "endpoint": 8.438846996085363,
+      "ecls": -0.18096688118847926
+    },
+    {
+      "family": "AAYL49",
+      "poi": "AAYL49_4089",
+      "h3_sequence": "AKGRAAGTFTH",
+      "endpoint": 8.163537029936528,
+      "ecls": -0.16281275857578592
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29484",
+      "h3_sequence": "AKHWQGGGYFDY",
+      "endpoint": 3.068120736540841,
+      "ecls": -0.16113711117456364
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29485",
+      "h3_sequence": "AKAVRWGGYFDY",
+      "endpoint": 3.9718063129896812,
+      "ecls": -0.2996079633012414
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29495",
+      "h3_sequence": "AKIRRGGIYFDY",
+      "endpoint": 4.901893745047872,
+      "ecls": 0.08357881785680843
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29496",
+      "h3_sequence": "AKFVRGGGLFDY",
+      "endpoint": 7.364331716370279,
+      "ecls": -0.16674898782124115
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29500",
+      "h3_sequence": "AKAFRGGGYDDY",
+      "endpoint": 5.665619746618249,
+      "ecls": -0.061787888718147777
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29502",
+      "h3_sequence": "AKATRGGGYHDY",
+      "endpoint": 3.466798265461339,
+      "ecls": -0.18886083892236138
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29504",
+      "h3_sequence": "AKEDRGGGYFIY",
+      "endpoint": 5.763930673040591,
+      "ecls": -0.00610491043577599
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29506",
+      "h3_sequence": "AKHYRGGGYFLY",
+      "endpoint": 4.11948990445865,
+      "ecls": -0.11331428494304419
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29516",
+      "h3_sequence": "AKHGVGHGYFDY",
+      "endpoint": 4.165348544797531,
+      "ecls": -0.0024628164246678352
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29517",
+      "h3_sequence": "AKYGSGFGYFDY",
+      "endpoint": 4.115840377253914,
+      "ecls": 0.06823297124356031
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29526",
+      "h3_sequence": "AKIGIGGGYLDY",
+      "endpoint": 7.683377720489441,
+      "ecls": 0.08678371676554275
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29533",
+      "h3_sequence": "AKHGFGGGYFDE",
+      "endpoint": 3.575785966799157,
+      "ecls": -0.18280021039148164
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29534",
+      "h3_sequence": "AKMGIGGGYFDF",
+      "endpoint": 5.476533014298548,
+      "ecls": -0.01985156225661444
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29537",
+      "h3_sequence": "AKEGRYWGYFDY",
+      "endpoint": 6.81398788467014,
+      "ecls": 0.012760474346578121
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29540",
+      "h3_sequence": "AKAGRFGVYFDY",
+      "endpoint": 7.634204532562974,
+      "ecls": -0.10578091535717249
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29542",
+      "h3_sequence": "AKQGRAGQYFDY",
+      "endpoint": 7.462047062978728,
+      "ecls": 0.08420392281065392
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29546",
+      "h3_sequence": "AKYGRAGGIFDY",
+      "endpoint": 8.432379219926023,
+      "ecls": -0.07675957276175405
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29555",
+      "h3_sequence": "AKCGRHGGYFDI",
+      "endpoint": 3.2412260117202996,
+      "ecls": -0.36089605155090476
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29565",
+      "h3_sequence": "AKPGRGPGYIDY",
+      "endpoint": 7.119682691277596,
+      "ecls": 0.15018662779281522
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29566",
+      "h3_sequence": "AKQGRGIGYCDY",
+      "endpoint": 7.65941263331923,
+      "ecls": 0.050677368727823247
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29571",
+      "h3_sequence": "AKHGRGWGYFDC",
+      "endpoint": 3.4079602888970832,
+      "ecls": -0.11759141770501924
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29580",
+      "h3_sequence": "AKGGRGGKYKDY",
+      "endpoint": 7.228231812402882,
+      "ecls": -0.008997192295889356
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29582",
+      "h3_sequence": "AKEGRGGVYFKY",
+      "endpoint": 3.835171219857222,
+      "ecls": 0.10120704863220453
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29584",
+      "h3_sequence": "AKYGRGGLYFYY",
+      "endpoint": 7.342474593588296,
+      "ecls": 0.02234753066053008
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29592",
+      "h3_sequence": "AKDGRGGGKFPY",
+      "endpoint": 6.133575972357008,
+      "ecls": -0.38095033075660467
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29595",
+      "h3_sequence": "AKPGRGGGIFPY",
+      "endpoint": 8.361256511999095,
+      "ecls": -0.04200146502504731
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29596",
+      "h3_sequence": "AKGGRGGGFFDH",
+      "endpoint": 6.363661170879696,
+      "ecls": -0.15765938845773553
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29599",
+      "h3_sequence": "AKKGRGGGYRFY",
+      "endpoint": 4.016096555130017,
+      "ecls": -0.030111747172971715
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29609",
+      "h3_sequence": "AKVFEDGGYFDY",
+      "endpoint": 4.669317927616557,
+      "ecls": 0.01039841677993536
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29611",
+      "h3_sequence": "AKVQKIGGYFDY",
+      "endpoint": 7.060655409148646,
+      "ecls": -0.1255124916012087
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29615",
+      "h3_sequence": "AKVWVGRGYFDY",
+      "endpoint": 7.351849224172442,
+      "ecls": 0.19820512613902497
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29626",
+      "h3_sequence": "AKVYIGGGYVDY",
+      "endpoint": 6.435040853568562,
+      "ecls": -0.03204445571949077
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29632",
+      "h3_sequence": "AKVWIGGGYFDI",
+      "endpoint": 7.3370156373073705,
+      "ecls": 0.05406954698264599
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29633",
+      "h3_sequence": "AKVFRQDGYFDY",
+      "endpoint": 3.6352520401137802,
+      "ecls": 0.08887512392054031
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29637",
+      "h3_sequence": "AKVDRVGKYFDY",
+      "endpoint": 6.669511906437112,
+      "ecls": -0.016429335810244083
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29644",
+      "h3_sequence": "AKVERSGGYIDY",
+      "endpoint": 7.089567420302105,
+      "ecls": -0.20612894402196025
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29649",
+      "h3_sequence": "AKVFRSGGYFKY",
+      "endpoint": 6.602029147399707,
+      "ecls": -0.08734619400153543
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29650",
+      "h3_sequence": "AKVSRSGGYFRY",
+      "endpoint": 3.653823586528045,
+      "ecls": -0.19324373981605003
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29659",
+      "h3_sequence": "AKVWRGMAYFDY",
+      "endpoint": 3.850649660918293,
+      "ecls": 0.16929621777186799
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29663",
+      "h3_sequence": "AKVERGSGYWDY",
+      "endpoint": 6.863924633642149,
+      "ecls": 0.03857467044144869
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29671",
+      "h3_sequence": "AKVARGRGYFDG",
+      "endpoint": 7.404834040195746,
+      "ecls": 0.040199049438039314
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29673",
+      "h3_sequence": "AKVMRGLGYFDN",
+      "endpoint": 3.9660325198713364,
+      "ecls": -0.03602964865664671
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29678",
+      "h3_sequence": "AKVHRGGAYIDY",
+      "endpoint": 7.568823136060145,
+      "ecls": -0.10379022887597467
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29685",
+      "h3_sequence": "AKVVRGGSYFHY",
+      "endpoint": 6.933868640973767,
+      "ecls": -0.15949987775335717
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29692",
+      "h3_sequence": "AKVVRGGGLLDY",
+      "endpoint": 8.107115042749438,
+      "ecls": -0.20566465985029936
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29694",
+      "h3_sequence": "AKVARGGGEFCY",
+      "endpoint": 7.87167282794087,
+      "ecls": -0.1521480024481816
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29696",
+      "h3_sequence": "AKVWRGGGMFIY",
+      "endpoint": 7.132826531703545,
+      "ecls": 0.02309128238509084
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29702",
+      "h3_sequence": "AKVQRGGGYHTY",
+      "endpoint": 5.399132832580396,
+      "ecls": -0.11051433502386043
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29703",
+      "h3_sequence": "AKVQRGGGYKNY",
+      "endpoint": 6.421627729730879,
+      "ecls": -0.06871169029424573
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29704",
+      "h3_sequence": "AKVERGGGYWDS",
+      "endpoint": 6.72981340597088,
+      "ecls": -0.061376084884007476
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29708",
+      "h3_sequence": "AKVRRGGGYFHK",
+      "endpoint": 4.385301246871113,
+      "ecls": -0.07665924107035016
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29720",
+      "h3_sequence": "AKVGQTGGWFDY",
+      "endpoint": 6.921176471180328,
+      "ecls": -0.19594802055507898
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29725",
+      "h3_sequence": "AKVGLAGGYFVY",
+      "endpoint": 8.44440492812971,
+      "ecls": -0.02425589443494891
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29728",
+      "h3_sequence": "AKVGKQGGYFDQ",
+      "endpoint": 6.6408806783024446,
+      "ecls": -0.21643445951243256
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29735",
+      "h3_sequence": "AKVGMGTGHFDY",
+      "endpoint": 2.7110871486382377,
+      "ecls": 0.018385636620223522
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29744",
+      "h3_sequence": "AKVGDGVGYFDK",
+      "endpoint": 6.075238731780775,
+      "ecls": 0.07064392479757453
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29749",
+      "h3_sequence": "AKVGFGGTCFDY",
+      "endpoint": 7.950611144205414,
+      "ecls": -0.17593812166402745
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29750",
+      "h3_sequence": "AKVGGGGPCFDY",
+      "endpoint": 7.9822135051397005,
+      "ecls": -0.27721763867884874
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29751",
+      "h3_sequence": "AKVGFGGYYIDY",
+      "endpoint": 6.701930403784608,
+      "ecls": -0.004910757454733128
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29759",
+      "h3_sequence": "AKVGSGGKYFDC",
+      "endpoint": 8.020105419614293,
+      "ecls": 0.021957827731966972
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29760",
+      "h3_sequence": "AKVGSGGLYFDR",
+      "endpoint": 6.557026225332718,
+      "ecls": 0.012301001076896911
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29768",
+      "h3_sequence": "AKVGDGGGVFDR",
+      "endpoint": 6.656256516604655,
+      "ecls": -0.13627530820667744
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29769",
+      "h3_sequence": "AKVGFGGGTFDN",
+      "endpoint": 7.320429916284223,
+      "ecls": -0.06966825015842915
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29771",
+      "h3_sequence": "AKVGGGGGYWAY",
+      "endpoint": 7.804343788988023,
+      "ecls": -0.020538605439166302
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29778",
+      "h3_sequence": "AKVGDGGGYFTR",
+      "endpoint": 5.865235615322231,
+      "ecls": -0.11804817492763187
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29783",
+      "h3_sequence": "AKVGRSPVYFDY",
+      "endpoint": 5.880748502962817,
+      "ecls": 0.05471492217232754
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29785",
+      "h3_sequence": "AKVGRCYGGFDY",
+      "endpoint": 7.860132200903074,
+      "ecls": -0.13115290397157287
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29788",
+      "h3_sequence": "AKVGRMCGYWDY",
+      "endpoint": 4.808210004020115,
+      "ecls": -0.04728839204957058
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29800",
+      "h3_sequence": "AKVGRFGWPFDY",
+      "endpoint": 3.34124735640836,
+      "ecls": -0.10247441722701
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29810",
+      "h3_sequence": "AKVGREGMYFDT",
+      "endpoint": 7.777908818813188,
+      "ecls": -0.026071151718497276
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29812",
+      "h3_sequence": "AKVGRYGDYFDN",
+      "endpoint": 6.74075953865956,
+      "ecls": -0.12611484589676047
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29818",
+      "h3_sequence": "AKVGRNGGCFKY",
+      "endpoint": 4.476935201512383,
+      "ecls": -0.2916124689703188
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29820",
+      "h3_sequence": "AKVGRHGGVFDR",
+      "endpoint": 7.585546072479909,
+      "ecls": -0.20964086117843772
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29822",
+      "h3_sequence": "AKVGRRGGGFDR",
+      "endpoint": 7.357618551433859,
+      "ecls": -0.267819762850801
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29827",
+      "h3_sequence": "AKVGRFGGYDDQ",
+      "endpoint": 3.873701872522396,
+      "ecls": -0.18539041156570146
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29829",
+      "h3_sequence": "AKVGRTGGYWDR",
+      "endpoint": 4.593997099016782,
+      "ecls": -0.037481127927700975
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29832",
+      "h3_sequence": "AKVGRWGGYFFN",
+      "endpoint": 4.212739601890938,
+      "ecls": -0.13721947620312358
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29833",
+      "h3_sequence": "AKVGRGCMTFDY",
+      "endpoint": 5.523013135641843,
+      "ecls": -0.005574655719101429
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29838",
+      "h3_sequence": "AKVGRGVVYSDY",
+      "endpoint": 6.7544556398175315,
+      "ecls": 0.15343959101786186
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29839",
+      "h3_sequence": "AKVGRGRCYFHY",
+      "endpoint": 5.671200851026896,
+      "ecls": 0.010490577357510578
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29841",
+      "h3_sequence": "AKVGRGYLYFEY",
+      "endpoint": 7.685442413831252,
+      "ecls": 0.04109497958173369
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29842",
+      "h3_sequence": "AKVGRGALYFDL",
+      "endpoint": 7.720646317899378,
+      "ecls": -0.005851702764630318
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29854",
+      "h3_sequence": "AKVGRGNGWFDW",
+      "endpoint": 3.8391640723329132,
+      "ecls": 0.01283510836462165
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29856",
+      "h3_sequence": "AKVGRGHGYLHY",
+      "endpoint": 8.474995245056926,
+      "ecls": 0.06450087111443281
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29859",
+      "h3_sequence": "AKVGRGKGYQDL",
+      "endpoint": 7.192342295013805,
+      "ecls": 0.025670672456423294
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29861",
+      "h3_sequence": "AKVGRGVGYVDF",
+      "endpoint": 7.378933103085187,
+      "ecls": -0.0009728024403252711
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29866",
+      "h3_sequence": "AKVGRGHGYFHR",
+      "endpoint": 7.883992148515619,
+      "ecls": 0.03504486506183957
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29868",
+      "h3_sequence": "AKVGRGGKSVDY",
+      "endpoint": 8.001449560907698,
+      "ecls": -0.1964917086685698
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29871",
+      "h3_sequence": "AKVGRGGAFFHY",
+      "endpoint": 7.1811370719481715,
+      "ecls": -0.07062675462414836
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29884",
+      "h3_sequence": "AKVGRGGPYYDL",
+      "endpoint": 4.450890298939491,
+      "ecls": -0.0793779045343399
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29888",
+      "h3_sequence": "AKVGRGGGLIFY",
+      "endpoint": 8.15638709495654,
+      "ecls": -0.08327815650651837
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29890",
+      "h3_sequence": "AKVGRGGGWDGY",
+      "endpoint": 7.302626442880335,
+      "ecls": -0.07399481255561113
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29892",
+      "h3_sequence": "AKVGRGGGLGDW",
+      "endpoint": 5.178380106333288,
+      "ecls": -0.10223334530989314
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29897",
+      "h3_sequence": "AKVGRGGGHFQI",
+      "endpoint": 7.799410236868081,
+      "ecls": -0.1735835509995618
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_29901",
+      "h3_sequence": "AKVGRGGGYWIA",
+      "endpoint": 4.0311915066295265,
+      "ecls": -0.013611696039637078
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4546",
+      "h3_sequence": "AKMGRIGGYFDY",
+      "endpoint": 8.101205956677598,
+      "ecls": -0.10706038866192102
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4548",
+      "h3_sequence": "AKRGRAGGYFDY",
+      "endpoint": 5.542743777410298,
+      "ecls": 0.009429379366338253
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4557",
+      "h3_sequence": "AKIGRGGMYFDY",
+      "endpoint": 6.028845566561412,
+      "ecls": 0.09099448503305507
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4564",
+      "h3_sequence": "AKGGRGGGWFDY",
+      "endpoint": 6.145613554107401,
+      "ecls": -0.11524291057139635
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4566",
+      "h3_sequence": "AKRGRGGGGFDY",
+      "endpoint": 7.8239613178643435,
+      "ecls": -0.19471978365133213
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4568",
+      "h3_sequence": "AKRGRGGGWFDY",
+      "endpoint": 5.619261642949995,
+      "ecls": -0.03919374166677381
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4569",
+      "h3_sequence": "AKIGRGGGYVDY",
+      "endpoint": 5.751060470504445,
+      "ecls": -0.06917167734354734
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4570",
+      "h3_sequence": "AKMGRGGGYDDY",
+      "endpoint": 7.611013898107704,
+      "ecls": -0.0813154879336555
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4571",
+      "h3_sequence": "AKNGRGGGYLDY",
+      "endpoint": 6.919978721457433,
+      "ecls": -0.0511638425911467
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4574",
+      "h3_sequence": "AKWGRGGGYEDY",
+      "endpoint": 7.711768997431861,
+      "ecls": 0.017315814582010258
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4577",
+      "h3_sequence": "AKLGRGGGYFHY",
+      "endpoint": 4.360775590898921,
+      "ecls": -0.03234809543937445
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4583",
+      "h3_sequence": "AKDGRGGGYFDD",
+      "endpoint": 4.749613796204532,
+      "ecls": -0.26289977319538593
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4585",
+      "h3_sequence": "AKEGRGGGYFDL",
+      "endpoint": 9.119433058735005,
+      "ecls": -0.016103651995460044
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4586",
+      "h3_sequence": "AKGGRGGGYFDT",
+      "endpoint": 5.353949445592637,
+      "ecls": -0.13613716450830293
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4587",
+      "h3_sequence": "AKLGRGGGYFDV",
+      "endpoint": 5.962684754332718,
+      "ecls": -0.10739085761209344
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4592",
+      "h3_sequence": "AKVNDGGGYFDY",
+      "endpoint": 7.892951959784535,
+      "ecls": -0.02455688236902165
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4596",
+      "h3_sequence": "AKVPRCGGYFDY",
+      "endpoint": 3.8594577346722074,
+      "ecls": 0.1510012041156492
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4597",
+      "h3_sequence": "AKVQRHGGYFDY",
+      "endpoint": 4.43826898862446,
+      "ecls": -0.13479607397069526
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4604",
+      "h3_sequence": "AKVTRGTGYFDY",
+      "endpoint": 3.9365588949668835,
+      "ecls": 0.004728608143826252
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4605",
+      "h3_sequence": "AKVVRGTGYFDY",
+      "endpoint": 3.2717378214892356,
+      "ecls": -0.0465178362404306
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4606",
+      "h3_sequence": "AKVWRGWGYFDY",
+      "endpoint": 8.47306509978135,
+      "ecls": 0.10730830114334822
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4609",
+      "h3_sequence": "AKVKRGGQYFDY",
+      "endpoint": 6.694538952772,
+      "ecls": -0.02683300493905927
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4614",
+      "h3_sequence": "AKVDRGGGGFDY",
+      "endpoint": 4.08960760903728,
+      "ecls": -0.263790694065392
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4616",
+      "h3_sequence": "AKVIRGGGEFDY",
+      "endpoint": 3.775508967178876,
+      "ecls": -0.186243898856143
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4620",
+      "h3_sequence": "AKVYRGGGQFDY",
+      "endpoint": 8.116592145740903,
+      "ecls": -0.03453177927682782
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4635",
+      "h3_sequence": "AKVARGGGYFDA",
+      "endpoint": 6.284379497097429,
+      "ecls": -0.10559039500852441
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4643",
+      "h3_sequence": "AKVGLYGGYFDY",
+      "endpoint": 7.4328056461273775,
+      "ecls": -0.14627841704835487
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4646",
+      "h3_sequence": "AKVGSMGGYFDY",
+      "endpoint": 8.576395844335336,
+      "ecls": -0.03289857103178906
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4648",
+      "h3_sequence": "AKVGCGWGYFDY",
+      "endpoint": 6.0435571953219505,
+      "ecls": 0.08617540976653504
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4651",
+      "h3_sequence": "AKVGQGMGYFDY",
+      "endpoint": 7.6917473557822404,
+      "ecls": -0.005579861191411739
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4653",
+      "h3_sequence": "AKVGSGEGYFDY",
+      "endpoint": 6.658349281632534,
+      "ecls": 0.175159789932271
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4655",
+      "h3_sequence": "AKVGAGGQYFDY",
+      "endpoint": 5.945855174046196,
+      "ecls": 0.10325347166508436
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4659",
+      "h3_sequence": "AKVGKGGHYFDY",
+      "endpoint": 5.053766326593073,
+      "ecls": -0.005117488093674183
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4686",
+      "h3_sequence": "AKVGVGGGYFDN",
+      "endpoint": 7.174407485586325,
+      "ecls": -0.04368012833098578
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4688",
+      "h3_sequence": "AKVGWGGGYFDW",
+      "endpoint": 8.105772374541614,
+      "ecls": -0.06685616262257099
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4689",
+      "h3_sequence": "AKVGRIRGYFDY",
+      "endpoint": 3.9855704759679975,
+      "ecls": 0.06205060488233971
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4695",
+      "h3_sequence": "AKVGREGSYFDY",
+      "endpoint": 4.891754506666942,
+      "ecls": -0.023353453415135395
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4697",
+      "h3_sequence": "AKVGRFGQYFDY",
+      "endpoint": 6.729718666466063,
+      "ecls": -0.04729157282660412
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4699",
+      "h3_sequence": "AKVGRTGSYFDY",
+      "endpoint": 6.063067748810754,
+      "ecls": -0.04915956252564979
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4700",
+      "h3_sequence": "AKVGRVGYYFDY",
+      "endpoint": 7.993556052191677,
+      "ecls": 0.03830824699252844
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4702",
+      "h3_sequence": "AKVGRNGGVFDY",
+      "endpoint": 6.910365867510814,
+      "ecls": -0.18120230827480555
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4705",
+      "h3_sequence": "AKVGRSGGPFDY",
+      "endpoint": 7.923117403523875,
+      "ecls": -0.11769162211567163
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4708",
+      "h3_sequence": "AKVGRHGGYIDY",
+      "endpoint": 3.1287248386434854,
+      "ecls": -0.1349556387091677
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4709",
+      "h3_sequence": "AKVGRHGGYQDY",
+      "endpoint": 7.646451819919449,
+      "ecls": -0.11890704836696386
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4715",
+      "h3_sequence": "AKVGRIGGYFWY",
+      "endpoint": 6.809175711020075,
+      "ecls": -0.06543332617729902
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4717",
+      "h3_sequence": "AKVGRMGGYFSY",
+      "endpoint": 7.395301398472803,
+      "ecls": -0.13062356195102143
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4721",
+      "h3_sequence": "AKVGRAGGYFDL",
+      "endpoint": 7.199916209897722,
+      "ecls": -0.0711680855602026
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4726",
+      "h3_sequence": "AKVGRTGGYFDG",
+      "endpoint": 4.341298822285519,
+      "ecls": -0.09833115401367332
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4727",
+      "h3_sequence": "AKVGRWGGYFDV",
+      "endpoint": 8.566372695103952,
+      "ecls": -0.16719863874216867
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4739",
+      "h3_sequence": "AKVGRGPGKFDY",
+      "endpoint": 7.720362648259995,
+      "ecls": -0.029573055294652706
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4745",
+      "h3_sequence": "AKVGRGMGYHDY",
+      "endpoint": 6.5786132796359365,
+      "ecls": 0.09777940281977227
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4755",
+      "h3_sequence": "AKVGRGCGYFDI",
+      "endpoint": 7.096680217913205,
+      "ecls": -0.12275248455504562
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4762",
+      "h3_sequence": "AKVGRGGAWFDY",
+      "endpoint": 7.676888424989281,
+      "ecls": -0.05855595289419102
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4763",
+      "h3_sequence": "AKVGRGGIPFDY",
+      "endpoint": 7.267987476014449,
+      "ecls": 0.02729977946728468
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4766",
+      "h3_sequence": "AKVGRGGQKFDY",
+      "endpoint": 7.6947437807691905,
+      "ecls": -0.07491283832738782
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4767",
+      "h3_sequence": "AKVGRGGVRFDY",
+      "endpoint": 6.651938342473111,
+      "ecls": -0.031927875864008914
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4776",
+      "h3_sequence": "AKVGRGGNYFFY",
+      "endpoint": 7.2399051876630605,
+      "ecls": 0.05154214395831036
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4780",
+      "h3_sequence": "AKVGRGGWYFSY",
+      "endpoint": 4.011143291608668,
+      "ecls": -0.0738147686546049
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4782",
+      "h3_sequence": "AKVGRGGEYFDW",
+      "endpoint": 6.688889410361434,
+      "ecls": 0.01947508566081524
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4789",
+      "h3_sequence": "AKVGRGGGENDY",
+      "endpoint": 4.056256720314732,
+      "ecls": -0.13761304846654343
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4791",
+      "h3_sequence": "AKVGRGGGFTDY",
+      "endpoint": 7.668350673556574,
+      "ecls": -0.08296401333063841
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4792",
+      "h3_sequence": "AKVGRGGGLWDY",
+      "endpoint": 6.612671227143796,
+      "ecls": 0.017426619616647487
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4793",
+      "h3_sequence": "AKVGRGGGRHDY",
+      "endpoint": 6.197411256674377,
+      "ecls": -0.09307228556523728
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4797",
+      "h3_sequence": "AKVGRGGGVFAY",
+      "endpoint": 4.505502408103926,
+      "ecls": -0.10593932773917913
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4799",
+      "h3_sequence": "AKVGRGGGWFMY",
+      "endpoint": 6.353779866518554,
+      "ecls": -0.0780905674522121
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4800",
+      "h3_sequence": "AKVGRGGGFFDP",
+      "endpoint": 5.57958608301502,
+      "ecls": -0.10410739667713642
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4804",
+      "h3_sequence": "AKVGRGGGSFDE",
+      "endpoint": 7.435228768434481,
+      "ecls": -0.20262813257674384
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4805",
+      "h3_sequence": "AKVGRGGGVFDH",
+      "endpoint": 7.086155790818811,
+      "ecls": -0.12967278249561787
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4806",
+      "h3_sequence": "AKVGRGGGWFDQ",
+      "endpoint": 7.5700678876819065,
+      "ecls": -0.12471311974028731
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4807",
+      "h3_sequence": "AKVGRGGGYALY",
+      "endpoint": 7.0606849785909755,
+      "ecls": -0.07025615094850446
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4808",
+      "h3_sequence": "AKVGRGGGYCQY",
+      "endpoint": 8.07519806934025,
+      "ecls": -0.11376301168153713
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4811",
+      "h3_sequence": "AKVGRGGGYQTY",
+      "endpoint": 5.232462104838888,
+      "ecls": -0.09352711557100202
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4815",
+      "h3_sequence": "AKVGRGGGYCDR",
+      "endpoint": 4.656890301544294,
+      "ecls": -0.14393849670886993
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4821",
+      "h3_sequence": "AKVGRGGGYFCC",
+      "endpoint": 7.5976528004136465,
+      "ecls": -0.10727908586462354
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4822",
+      "h3_sequence": "AKVGRGGGYFFA",
+      "endpoint": 6.6171549002578,
+      "ecls": -0.08454794064164162
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4824",
+      "h3_sequence": "AKVGRGGGYFRP",
+      "endpoint": 7.405420448937424,
+      "ecls": -0.10751015320420265
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_4825",
+      "h3_sequence": "AKVGRGGGYFSN",
+      "endpoint": 7.705650276244519,
+      "ecls": -0.12615841999650002
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_501",
+      "h3_sequence": "AKGGRGGGYFDY",
+      "endpoint": 7.415335384756306,
+      "ecls": -0.09421906092514587
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_503",
+      "h3_sequence": "AKIGRGGGYFDY",
+      "endpoint": 7.470718673841819,
+      "ecls": 0.03048692923039198
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_507",
+      "h3_sequence": "AKNGRGGGYFDY",
+      "endpoint": 4.310811002764937,
+      "ecls": -0.0454640112196405
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_509",
+      "h3_sequence": "AKQGRGGGYFDY",
+      "endpoint": 6.109964998936631,
+      "ecls": -0.0039638600622613485
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_511",
+      "h3_sequence": "AKSGRGGGYFDY",
+      "endpoint": 6.5917087137842465,
+      "ecls": -0.15488611875722813
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_513",
+      "h3_sequence": "AKWGRGGGYFDY",
+      "endpoint": 6.171091551202526,
+      "ecls": 0.08317358077814174
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_519",
+      "h3_sequence": "AKVFRGGGYFDY",
+      "endpoint": 7.3690047442754665,
+      "ecls": 0.001812232347826237
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_520",
+      "h3_sequence": "AKVHRGGGYFDY",
+      "endpoint": 7.488248369895226,
+      "ecls": -0.06980942407002044
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_524",
+      "h3_sequence": "AKVMRGGGYFDY",
+      "endpoint": 7.301826507839786,
+      "ecls": -0.07517388183623552
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_526",
+      "h3_sequence": "AKVPRGGGYFDY",
+      "endpoint": 6.891665562000852,
+      "ecls": 0.12741296769430233
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_528",
+      "h3_sequence": "AKVRRGGGYFDY",
+      "endpoint": 6.861394165277945,
+      "ecls": -0.04424395877867937
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_533",
+      "h3_sequence": "AKVYRGGGYFDY",
+      "endpoint": 7.212253411255663,
+      "ecls": 0.005617531947791576
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_536",
+      "h3_sequence": "AKVGDGGGYFDY",
+      "endpoint": 7.842278064916071,
+      "ecls": -0.033349367169042465
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_538",
+      "h3_sequence": "AKVGFGGGYFDY",
+      "endpoint": 6.304788634213347,
+      "ecls": -0.03353881059835362
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_540",
+      "h3_sequence": "AKVGHGGGYFDY",
+      "endpoint": 6.816032581520796,
+      "ecls": -0.012627852149307728
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_543",
+      "h3_sequence": "AKVGLGGGYFDY",
+      "endpoint": 7.139335398433381,
+      "ecls": -0.045225592640538936
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_544",
+      "h3_sequence": "AKVGMGGGYFDY",
+      "endpoint": 7.293766696102894,
+      "ecls": -0.031621150361994976
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_545",
+      "h3_sequence": "AKVGNGGGYFDY",
+      "endpoint": 6.528285427141153,
+      "ecls": 0.03149156551808119
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_547",
+      "h3_sequence": "AKVGQGGGYFDY",
+      "endpoint": 7.421850134206279,
+      "ecls": -0.13624947487066175
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_548",
+      "h3_sequence": "AKVGSGGGYFDY",
+      "endpoint": 7.435139234995278,
+      "ecls": 0.012072521261870861
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_550",
+      "h3_sequence": "AKVGVGGGYFDY",
+      "endpoint": 6.241168996977059,
+      "ecls": -0.003174177991847049
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_551",
+      "h3_sequence": "AKVGWGGGYFDY",
+      "endpoint": 4.973486260440165,
+      "ecls": -0.0363428912435968
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_557",
+      "h3_sequence": "AKVGRFGGYFDY",
+      "endpoint": 6.321598291043186,
+      "ecls": -0.10786008431265759
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_558",
+      "h3_sequence": "AKVGRHGGYFDY",
+      "endpoint": 6.769670525273808,
+      "ecls": -0.10671492014080286
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_565",
+      "h3_sequence": "AKVGRQGGYFDY",
+      "endpoint": 5.847736033142732,
+      "ecls": -0.11027586056540417
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_567",
+      "h3_sequence": "AKVGRSGGYFDY",
+      "endpoint": 7.918213762798802,
+      "ecls": -0.11123958819856239
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_576",
+      "h3_sequence": "AKVGRGFGYFDY",
+      "endpoint": 7.192342295013805,
+      "ecls": 0.03946046810597181
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_587",
+      "h3_sequence": "AKVGRGTGYFDY",
+      "endpoint": 7.576374546597654,
+      "ecls": 0.10273218931009387
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_588",
+      "h3_sequence": "AKVGRGVGYFDY",
+      "endpoint": 7.886947550345381,
+      "ecls": 0.10485157153258706
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_590",
+      "h3_sequence": "AKVGRGYGYFDY",
+      "endpoint": 4.669831390262826,
+      "ecls": 0.021808751237889057
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_597",
+      "h3_sequence": "AKVGRGGIYFDY",
+      "endpoint": 5.381670433919513,
+      "ecls": 0.033751813384393925
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_602",
+      "h3_sequence": "AKVGRGGPYFDY",
+      "endpoint": 5.8405299810126525,
+      "ecls": -0.05823742567251111
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_606",
+      "h3_sequence": "AKVGRGGTYFDY",
+      "endpoint": 7.6208774264226715,
+      "ecls": -0.005721918928126568
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_611",
+      "h3_sequence": "AKVGRGGGCFDY",
+      "endpoint": 7.827328257703881,
+      "ecls": -0.20026142615824938
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_612",
+      "h3_sequence": "AKVGRGGGDFDY",
+      "endpoint": 8.125076712391273,
+      "ecls": -0.011340491163233768
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_615",
+      "h3_sequence": "AKVGRGGGGFDY",
+      "endpoint": 7.950613522396766,
+      "ecls": -0.20834190864115953
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_617",
+      "h3_sequence": "AKVGRGGGIFDY",
+      "endpoint": 6.168693834122687,
+      "ecls": -0.08926680901398276
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_628",
+      "h3_sequence": "AKVGRGGGWFDY",
+      "endpoint": 7.8780691128955365,
+      "ecls": -0.05281586665660143
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_636",
+      "h3_sequence": "AKVGRGGGYKDY",
+      "endpoint": 6.68012546665609,
+      "ecls": -0.004150122714539295
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_637",
+      "h3_sequence": "AKVGRGGGYLDY",
+      "endpoint": 5.162277899548801,
+      "ecls": -0.03749184838185715
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_642",
+      "h3_sequence": "AKVGRGGGYRDY",
+      "endpoint": 4.225783145177324,
+      "ecls": 0.0013208684201042598
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_644",
+      "h3_sequence": "AKVGRGGGYTDY",
+      "endpoint": 4.814752530100993,
+      "ecls": -0.049634347669780254
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_646",
+      "h3_sequence": "AKVGRGGGYWDY",
+      "endpoint": 6.392171019919788,
+      "ecls": 0.03634940553456545
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_647",
+      "h3_sequence": "AKVGRGGGYYDY",
+      "endpoint": 6.651640365686545,
+      "ecls": 0.01404284406453371
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_649",
+      "h3_sequence": "AKVGRGGGYFCY",
+      "endpoint": 4.90023789708621,
+      "ecls": -0.05958441800127434
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_661",
+      "h3_sequence": "AKVGRGGGYFRY",
+      "endpoint": 3.999075937790309,
+      "ecls": -0.06852443919827556
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_662",
+      "h3_sequence": "AKVGRGGGYFSY",
+      "endpoint": 8.482606713829568,
+      "ecls": -0.08565246965736151
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_672",
+      "h3_sequence": "AKVGRGGGYFDG",
+      "endpoint": 6.245827791443707,
+      "ecls": -0.05965645797550678
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_673",
+      "h3_sequence": "AKVGRGGGYFDH",
+      "endpoint": 7.803455711782883,
+      "ecls": -0.06190267888208223
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_676",
+      "h3_sequence": "AKVGRGGGYFDL",
+      "endpoint": 8.252833213269543,
+      "ecls": -0.0987673569470644
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_677",
+      "h3_sequence": "AKVGRGGGYFDM",
+      "endpoint": 6.356993609518378,
+      "ecls": -0.08087269154687737
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_678",
+      "h3_sequence": "AKVGRGGGYFDN",
+      "endpoint": 6.023308984868708,
+      "ecls": -0.07229796734948968
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_682",
+      "h3_sequence": "AKVGRGGGYFDS",
+      "endpoint": 8.586624299824303,
+      "ecls": -0.06286887017389153
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_683",
+      "h3_sequence": "AKVGRGGGYFDT",
+      "endpoint": 8.202794805995431,
+      "ecls": -0.07371012059350823
+    },
+    {
+      "family": "AAYL51",
+      "poi": "AAYL51_685",
+      "h3_sequence": "AKVGRGGGYFDW",
+      "endpoint": 7.802402019653437,
+      "ecls": -0.06230528838932514
+    }
+  ]
+}
