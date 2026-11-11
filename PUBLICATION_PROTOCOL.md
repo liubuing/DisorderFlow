@@ -1,6 +1,6 @@
 # ECLS publication contract and evidence boundary
 
-Updated 2026-09-28; title revised 2026-11-09. This editorial consolidation preserves the original scientific contract in publication/ECLS_SCOPE_FREEZE.yml and the terminal result decision. The frozen release/ecls_v1/publication_line.json retains the pre-revision title as provenance; the current working title below supersedes it.
+Updated 2026-09-28; title revised 2026-11-09; provenance statement corrected 2026-11-11. This editorial consolidation preserves the original scientific contract in publication/ECLS_SCOPE_FREEZE.yml and the terminal result decision. The pre-revision title is preserved in the frozen publication/ECLS_SCOPE_FREEZE.yml, not in release/ecls_v1/publication_line.json; the current working title below supersedes it.
 
 ## Current manuscript
 

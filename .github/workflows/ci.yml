@@ -32,6 +32,12 @@ jobs:
         # syntax and undefined-name failures and must block every merge.
         run: ruff check tests/ disorderflow/ modules/ scripts/ app.py --select E9,F63,F7,F82
 
+      - name: Audit documentation consistency
+        # Read-only check against docs/EVIDENCE_REGISTRY.yml. Fails only on
+        # unmarked stale values; missing local artifact sources are expected
+        # on a clean checkout and are not part of this gate.
+        run: python scripts/audit_doc_consistency.py --fail-on-stale
+
       - name: Run CPU-only tests
         env:
           BFN_TEST_NO_GPU: "1"

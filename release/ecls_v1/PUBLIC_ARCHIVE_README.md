@@ -1,6 +1,12 @@
 # ECLS v1 current manuscript and saved-score reanalysis
 
-This is a local author-review candidate, not a published record. The manuscript title is Peptide-context scoring of antibody loops: native recognition and the limits of candidate ranking. Scientific content has been rewritten around one question and two separate tests. Author declarations, manuscript/data license, immutable public code revision and remote DOI remain pending.
+This is a local author-review candidate, not a published record. The manuscript title is Peptide-context scoring of antibody loops: native recognition is not candidate ranking. Scientific content has been rewritten around one question and two separate tests. Author declarations, manuscript/data license, immutable public code revision and remote DOI remain pending.
+
+> **Correction 2026-11-11.** This source README carried the pre-revision title
+> ("native recognition and the limits of candidate ranking") until this date.
+> The reviewer ZIP `dist/disorderflow-ecls-v1-reviewer-package.zip` was built
+> before the correction and still embeds the old title. Rebuild the ZIP before
+> any deposit or upload; do not treat the current ZIP as submission-ready.
 
 Planned DOI 10.5281/zenodo.23037055 is recorded in project history. The public checks in PUBLICATION_STATUS.json did not verify a published record on 3 October 2026. Publication and remote file checksums remain unconfirmed; a reserved identifier must not be cited as completed publication. Author details are currently withheld from rendered artifacts while their internal order is retained.
 

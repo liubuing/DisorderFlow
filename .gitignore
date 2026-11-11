@@ -250,3 +250,8 @@ publication/*.blg
 /.vscode/
 /Untitled-1.cpp
 /C/
+
+# Local competition bundle: 4.5 GB, untracked, and contains third-party model
+# weights whose redistribution terms are not cleared. Never stage or commit it.
+/iBEC_2026_材料与权重_完整包/
+/iBEC_2026_材料与权重_完整包.zip

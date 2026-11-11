@@ -1,0 +1,334 @@
+# Single source of truth for numbers that appear in more than one document.
+#
+# Rules
+# - Every value below must be traceable to a frozen artifact or a frozen
+#   decision record. If a value is development-level, say so in `status`.
+# - Documents may quote these values, but must not invent alternatives.
+# - `stale_values` lists numbers that were published once and later voided.
+#   Any document that still contains one of them must also carry one of the
+#   allowed markers, or `scripts/audit_doc_consistency.py` reports it.
+# - Frozen artifacts are never edited to match prose. Prose is corrected to
+#   match frozen artifacts, with a disclosure when the correction changes a
+#   claim.
+
+schema_version: 1
+updated: "2026-11-11"
+maintainer_note: >
+  This registry is intentionally conservative. Where a number exists only in a
+  development report and not in a frozen JSON, the source is marked as a report
+  and the status is development. Do not promote such a value to a confirmatory
+  claim without a new preregistration.
+
+claims:
+
+  ecls_temporal_final:
+    status: active_confirmatory
+    canonical:
+      n_structures: 31
+      n_inference_units: 15
+      mean_advantage: 0.172281
+      median_advantage: 0.118699
+      bootstrap_mean_ci95: [0.059156, 0.291920]
+      positive_clusters: 12
+      positive_fraction: 0.8
+      frozen_gates: "median >= 0.1; positive fraction >= 0.7; CI lower > 0"
+    source: results/publication/h3_ecls_temporal_final_v1/final_decision.json
+    forbidden_claims:
+      - binding or affinity prediction
+      - universal candidate ranking
+      - causal contact mechanism
+    note: >
+      Terminal, attempt 1, rerun_permitted false. The source results.json still
+      carries the legacy status string "development_only"; final_decision.json
+      establishes the final class.
+
+  ecls_adaptation:
+    status: development
+    canonical:
+      n_clusters: 46
+      mean_advantage: 0.217481
+      bootstrap_mean_ci95: [0.146050, 0.289555]
+    source: results/publication/h3_ecls_adaptation_v1/results.json
+
+  ecls_candidate_reranking_dev:
+    status: development_negative_gate
+    canonical:
+      n_clusters: 7
+      mean_nnr_gain: 0.055952
+      bootstrap_mean_ci95: [-0.191667, 0.271825]
+    source: results/publication/h3_candidate_reranking_dev_v1/results.json
+
+  ecls_calibration_dev:
+    status: development_exploratory
+    canonical:
+      pooled_mean_nnr: 0.853175
+      gain_over_random: 0.353175
+      gain_over_random_ci95: [0.166667, 0.496032]
+      gain_over_complex_nll: 0.186508
+      gain_over_complex_nll_ci95: [-0.001984, 0.329365]
+    source: results/publication/h3_candidate_reranking_dev_v1/results.json
+    note: Calibration was selected after development exposure; not confirmatory.
+
+  pae_v20_retrospective:
+    status: development_retrospective
+    canonical:
+      recall_at_20pct: 0.604
+      composition_only_recall: 0.583
+      proteinmpnn_h3_recall: 0.083
+      scaffold_recall: 0.062
+      random_recall: 0.20
+    source: docs/PAE_EVIDENCE_AUDIT_V20.md
+    note: Composition-driven; not a sequence-specific recognition claim.
+
+  pae_v30_analog_transfer:
+    status: development_positive_composition_driven
+    canonical:
+      n_families: 6
+      n_components: 6
+      recall_at_20pct: 0.50
+      random_tie_expected: 0.214
+      paired_difference_pp: 28.6
+      paired_difference_ci95_pp: [17.5, 39.7]
+      composition_only_recall: 0.50
+      proteinmpnn_recall: 0.333
+    source: docs/PAE_ANALOG_TRANSFER_V30.md
+    forbidden_claims:
+      - sequence-specific recognition
+      - binding or affinity
+      - experimental enrichment
+
+  flex_j0a_v2:
+    status: development_gate
+    canonical:
+      n_components: 28
+      n_families: 9
+      mean_advantage: 5.553179
+      positive_components: 28
+      family_equal_mean: 5.6205
+      family_bootstrap_ci95: [5.3133, 5.9172]
+    source: results/flex_j0_v2_antigen_roles/j0a_v2_summary.json
+    secondary_source: .dsh-research/flex-distance/code-fix-report.md
+    note: >
+      The family-equal mean and its bootstrap CI are reported in the code-fix
+      report; the frozen summary stores the component-equal mean.
+
+  flex_j0b_v2:
+    status: development_gate
+    canonical:
+      n_components_valid: 26
+      n_families: 8
+      positive_families: 8
+      mean_advantage: 5.678809
+      bootstrap_ci_family_mean: [5.335906, 6.005561]
+      mean_advantage_alt_order: 5.633433
+      attenuation_vs_j0a_v2: -0.125630
+    source: results/flex_j0b_v2_antigen_roles/j0b_v2_summary.json
+
+  flex_c1_v2:
+    status: development_task_too_easy
+    canonical:
+      n_components: 26
+      n_families: 8
+      judge_mean_percentile: 1.0
+      judge_bootstrap_ci95: [1.0, 1.0]
+      judge_top1_rate: 1.0
+      judge_top5_rate: 1.0
+      judge_median_rank: 1
+      proteinmpnn_mean_percentile: 0.637423
+      proteinmpnn_bootstrap_ci95: [0.587151, 0.668213]
+      proteinmpnn_top1_rate: 0.0
+      composition_mean_percentile: 0.543994
+      composition_bootstrap_ci95: [0.544959, 0.630246]
+      composition_top1_rate: 0.230769
+      composition_top5_rate: 0.423077
+    source: results/flex_c1_v2_antigen_roles/c1_v2_summary.json
+    note: >
+      Native is scored on its own crystal backbone against designs sampled on
+      that same backbone. The task measures sequence-backbone self-consistency,
+      not binding. The composition CI lower bound exceeds its point estimate
+      because the point estimate is component-equal while the bootstrap is
+      family-clustered; report both conventions.
+
+  flex_cross_backbone_v2:
+    status: development_control
+    canonical:
+      n_backbones: 62
+      n_matrix_rows: 1130
+      self_strictly_best: 62
+      self_strictly_best_fraction: 1.0
+      mean_self_minus_best_distinct_foreign: -4.347551
+      median_self_minus_best_distinct_foreign: -4.477018
+    source: results/flex_cross_backbone_v2_expanded/summary.json
+
+  flex_aayl_binding_v2:
+    status: retrospective_negative
+    canonical:
+      AAYL49_n: 281
+      AAYL49_spearman: 0.062093
+      AAYL49_ci95: [-0.058502, 0.184087]
+      AAYL51_n: 227
+      AAYL51_spearman: -0.048891
+      AAYL51_ci95: [-0.174598, 0.076185]
+      frozen_proteinmpnn_ecls_AAYL49: -0.121373
+      frozen_proteinmpnn_ecls_AAYL51: -0.071479
+    source: results/aayl_bfn_v2_antigen_roles/report.json
+    note: One antigen, two parent lineages, AlphaSeq-estimated Kd, AF3 coordinates.
+
+  flex_pairwise_supervision_v1:
+    status: development_negative
+    canonical:
+      n_complexes: 5
+      n_variants: 1284
+      delta_bfn_plus_composition_minus_composition: 0.0098
+      groups_positive: 2
+      groups_total: 5
+      composition_spearman_range: [0.26, 0.62]
+    source: .dsh-research/flex-distance/supervision-report.md
+    note: Aggregated report; per-group values live in results/pairwise_v1/.
+
+  csn_c0:
+    status: descriptive_single_family
+    canonical:
+      n_components_queue: 28
+      n_components_valid: 22
+      n_cross_entry_families: 1
+      n_cross_entry_pairs: 3
+      tau_phf6_pairwise_rmsd_a: [0.098, 0.137, 0.157]
+      ncs_floor_mean_rmsd_a: 0.2113
+      classification: single_or_few_family_descriptive
+    source: results/csn_c0_v2/summary.json
+    forbidden_claims:
+      - cross-lineage convergence
+      - population-level conformer selection
+
+  csn_c2:
+    status: diagnostic
+    canonical:
+      n_components: 26
+      median_spread_corrected_complex_frame_a: 0.4453
+      median_spread_legacy_peptide_superposed_a: 0.5641
+      t1_reference_mean_pairwise_rmsd_a: 0.63
+      verdict: intermediate_requires_deeper_resolution
+    source: results/csn_c2_v1/summary.json
+
+  csn_c1_v7:
+    status: descriptive_underpowered_primary
+    canonical:
+      n_scored_parents: 6
+      primary_stratum_n: 1
+      primary_verdict: primary_stratum_underpowered
+      alpha_syn_dihedral_case: 0.588
+      alpha_syn_dihedral_controls: [0.8515, 0.9996, 0.9997]
+      alpha_syn_dihedral_paired_diff: -0.3623
+    source: results/csn_c1_enrich_v7/summary.json
+    note: >
+      Three label types point in the same direction (precedented windows are
+      more disordered), but the primary stratum is n=1 and the frozen stop rule
+      forbids a CI endpoint. Descriptive only.
+
+  disorder_head_caid3:
+    status: external_evaluation
+    canonical:
+      macro_roc_auc: 0.7551
+      bootstrap_ci95: [0.6945, 0.8119]
+      metapredict_macro_roc_auc: 0.7927
+      paired_difference: -0.0376
+      paired_difference_ci95: [-0.0786, 0.0056]
+      brier: 0.2991
+      ece: 0.3794
+    source: docs/DISORDER_SUPERVISION_PROTOCOL.md
+
+  t21_contact_specificity:
+    status: terminal_negative
+    canonical:
+      supplied_minus_random: -0.0366
+      supplied_minus_random_ci95: [-0.0638, -0.0108]
+      mechanism_supported: false
+    source: publication/t21_mechanism_terminal_decision.json
+
+  multiscaffold_v2:
+    status: terminal_negative
+    canonical:
+      attempts: 2400
+      passed_gates: 0
+    source: publication/idp_platform_capability_v1.json
+
+  ecls_pae_joint:
+    status: development_negative
+    canonical:
+      pae_percent: 77.8
+      ridge_percent: 72.2
+      proteinmpnn_nll_percent: 0.0
+      ecls_percent: 11.1
+      fusion_percent: 40.3
+      fusion_minus_pae_pp: -37.5
+      fusion_minus_pae_ci95_pp: [-59.7, -16.7]
+    source: docs/ECLS_PAE_JOINT_DEVELOPMENT.md
+
+  four_hix_diagnostic:
+    status: development_diagnostic
+    canonical:
+      bfn_disorder_on_native_recovery: 0.080
+      bfn_disorder_off_native_recovery: 0.153
+      proteinmpnn_native_recovery: 0.326
+      endpoint: AF2 ipTM / PRODIGY (not binding)
+    source: INTEGRATIVE_ANALYSIS.md
+    note: Endpoint is AF2, not an experimental binding measurement.
+
+# Values that were published once and later voided. Documents must either omit
+# them or carry an allowed marker near the hit.
+stale_values:
+  - id: flex_j0a_pre_fix
+    values: ["0.12419", "0.124"]
+    context_required: "(?i)(flex|j0a|advantage)"
+    reason: chain-role encoding bug (fragment_type keyed on chain index)
+    replacement: flex_j0a_v2.canonical.mean_advantage
+  - id: flex_j0b_pre_fix
+    values: ["0.14094", "0.141"]
+    context_required: "(?i)(flex|j0b|advantage)"
+    reason: same chain-role encoding bug
+    replacement: flex_j0b_v2.canonical.mean_advantage
+  - id: flex_c1_pre_fix
+    values: ["0.767", "0/26"]
+    context_required: "(?i)(flex|c1|native|percentile)"
+    reason: same chain-role encoding bug; percentile polarity also inverted
+    replacement: flex_c1_v2.canonical.judge_mean_percentile
+  - id: flex_c1_never_top5
+    values: ["never top-5", "never in the top 5", "never top 5"]
+    reason: >
+      The frozen top1_rate/top5_rate fields counted "never last", not "never
+      first". Reconstruction from frozen scores found 9/26 pools in the top 5
+      before the encoding fix; after the fix the native is top-1 in 26/26.
+    replacement: flex_c1_v2.canonical.judge_top5_rate
+  - id: composition_ci_point_mismatch
+    values: ["0.544 ([0.545, 0.630])", "0.54399", "[0.54496, 0.63025]"]
+    reason: >
+      Point estimate is component-equal; bootstrap is family-clustered. Quote
+      both: 0.544 component-equal, 0.584 family-equal.
+    replacement: flex_c1_v2.canonical.composition_mean_percentile
+  - id: ecls_old_title
+    values: ["native recognition and the limits of candidate ranking"]
+    reason: title revised 2026-11-09 to a bounded claim
+    replacement: "Peptide-context scoring of antibody loops: native recognition is not candidate ranking"
+  - id: app_py_line_count
+    values: ["65-line launcher", "65 line launcher"]
+    reason: app.py is 73 lines after the webapp split
+    replacement: "73-line launcher"
+
+allowed_markers:
+  - SUPERSEDED
+  - superseded
+  - VOID
+  - void
+  - 作废
+  - 修复前
+  - bug 修复前
+  - chain-role encoding bug
+  - correction
+  - pre-fix
+  - historical
+  - 过程记录
+  - do not cite
+  - 不得引用
+  - legacy
+  - provenance

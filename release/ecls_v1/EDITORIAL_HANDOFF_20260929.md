@@ -1,5 +1,11 @@
 # ECLS 重写稿交接记录
 
+> **SUPERSEDED (2026-11-09).** The manuscript title and author routing were
+> revised after this handoff. The pre-revision title below is retained as
+> provenance only; the current title is in `PUBLICATION_PROTOCOL.md` and
+> `release/ecls_v1/publication_line.json`. Do not quote this handoff as the
+> current submission state.
+
 截至 2026-09-29，项目进入作者审阅与归档待发布阶段。目标期刊为 Bioinformatics，稿件类型 Original Paper。尚未投稿，也没有已核验的 Zenodo 发布记录或 DOI。
 
 ## 当前稿件

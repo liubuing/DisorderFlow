@@ -89,7 +89,7 @@ License picture (code / data / weights are three different questions — see
 Entry points and post-split structure — full details in the Chinese guide
 below; the publication claims above are unaffected.
 
-- `app.py` is now a 65-line launcher; all web implementation lives in the
+- `app.py` is now a 73-line launcher; all web implementation lives in the
   `webapp/` package (`state/sequtils/design/baselines/af2/pipelines/ui/facade`).
   The venv is installed editable (`pip install -e . --no-deps`), so
   `modules/` scripts no longer need `PYTHONPATH=.`. Note: `C:\biological` is

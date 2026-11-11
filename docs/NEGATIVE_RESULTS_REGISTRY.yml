@@ -1,0 +1,175 @@
+# Negative and terminal results that future work must not re-litigate.
+#
+# Usage
+# - Cite the entry in a manuscript's Limitations instead of re-describing the
+#   failure from memory.
+# - Never rerun a terminal test to look for significance. A new test needs a
+#   new mechanism, a new preregistration and an unexposed benchmark.
+# - `claim_forbidden` is the sentence a downstream document may not write.
+# - `what_would_change_it` is the only condition under which the question may
+#   be reopened. "More analysis of the same data" is not such a condition.
+
+schema_version: 1
+updated: "2026-11-11"
+registry_owner: "research lead"
+related:
+  - docs/EVIDENCE_REGISTRY.yml
+  - docs/DECISION_20261101_MODEL_LINE_CLOSURE.md
+
+entries:
+
+  - id: t21_contact_specificity
+    title: Donor contact constraints do not beat matched random constraints
+    status: terminal_negative
+    claim_forbidden: >
+      Supplied inter-chain contact constraints improve contact-specific
+      recovery over count, role or distance-matched random constraints.
+    evidence: publication/t21_mechanism_terminal_decision.json
+    key_numbers:
+      supplied_minus_random: -0.0366
+      ci95: [-0.0638, -0.0108]
+      inference_units: 13
+    why_it_failed: >
+      The random-constraint arm recovered at least as well as the supplied
+      arm, so recovery in the supplied arm cannot be attributed to the
+      mechanism.
+    what_would_change_it: >
+      A mechanistically different constraint source, a new preregistration,
+      and an unexposed benchmark. Re-running the same final is forbidden.
+    citation_rule: "Cite as a terminal negative control; do not pool with positive results."
+
+  - id: multiscaffold_v2
+    title: Multiscaffold antibody de novo design did not pass any gate
+    status: terminal_negative
+    claim_forbidden: >
+      The platform can generate de novo antibody binders at a usable success
+      rate.
+    evidence: publication/idp_platform_capability_v1.json
+    key_numbers:
+      attempts: 2400
+      passed_gates: 0
+    why_it_failed: >
+      All 2,400 attempts failed the prespecified design gates. The result is
+      recorded as a terminal negative internal benchmark.
+    what_would_change_it: >
+      A different generation method and an independently specified benchmark.
+      More sampling with the same method is not a new test.
+    citation_rule: "Use as a baseline/failure precedent; never as evidence of design capability."
+
+  - id: aayl_affinity_ranking
+    title: ECLS does not rank AlphaSeq-estimated affinity
+    status: exhausted_with_existing_data
+    claim_forbidden: >
+      ECLS or BFN likelihood ranks antibody variants by binding affinity.
+    evidence: results/aayl_bfn_v2_antigen_roles/report.json
+    key_numbers:
+      AAYL49_spearman: 0.062093
+      AAYL49_ci95: [-0.058502, 0.184087]
+      AAYL51_spearman: -0.048891
+      AAYL51_ci95: [-0.174598, 0.076185]
+      frozen_proteinmpnn_AAYL49: -0.121373
+      frozen_proteinmpnn_AAYL51: -0.071479
+    why_it_failed: >
+      One antigen, two parent lineages, estimated rather than measured Kd,
+      AF3-predicted coordinates, and an unblinded retrospective design. The
+      two lineages have opposite signs and both intervals cross zero.
+    what_would_change_it: >
+      New, composition-controlled, experimentally measured variants with a
+      unified Kd protocol. The ESEL E2 enrichment data or a new BLI/SPR panel
+      would qualify; reanalysis of the same 508 variants would not.
+    citation_rule: "Cite as a retrospective negative benchmark; disclose the estimated endpoint."
+
+  - id: ecls_pae_equal_weight_fusion
+    title: Equal-weight ECLS+PAE rank fusion underperforms PAE alone
+    status: development_negative
+    claim_forbidden: >
+      Fusing ECLS with interface PAE improves candidate ranking.
+    evidence: docs/ECLS_PAE_JOINT_DEVELOPMENT.md
+    key_numbers:
+      pae_percent: 77.8
+      ridge_percent: 72.2
+      proteinmpnn_nll_percent: 0.0
+      ecls_percent: 11.1
+      fusion_percent: 40.3
+      fusion_minus_pae_pp: -37.5
+      fusion_minus_pae_ci95_pp: [-59.7, -16.7]
+    why_it_failed: >
+      ECLS's native-versus-shuffle contrast does not transfer to AF2-teacher
+      candidate ranking, and the equal-weight fusion dilutes the stronger
+      PAE signal.
+    what_would_change_it: >
+      A new fusion rule with a preregistered weighting scheme and an
+      independent benchmark. Re-tuning the weight on the same 6 components
+      would not qualify.
+    citation_rule: "Report as a supplementary negative ablation, not as a standalone claim."
+
+  - id: flex_binding_discriminator
+    title: The FLEX/ECLS likelihood judge has no binding signal beyond composition
+    status: closed_line
+    claim_forbidden: >
+      The self-developed BFN/ECLS judge can select binders or rank variants by
+      binding affinity.
+    evidence:
+      - docs/DECISION_20261101_MODEL_LINE_CLOSURE.md
+      - .dsh-research/flex-distance/code-fix-report.md
+      - .dsh-research/flex-distance/supervision-report.md
+    key_numbers:
+      j0a_v2_mean_advantage: 5.553179
+      j0b_v2_mean_advantage: 5.678809
+      c1_v2_native_top1: 26
+      c1_v2_native_pools: 26
+      peptide_swap_delta_nats: 0.076
+      aayl_pooled_spearman: 0.024
+      pairwise_delta_over_composition: 0.0098
+    why_it_failed: >
+      After fixing the chain-role encoding bug, the judge recognizes its own
+      backbone and native sequence almost perfectly, but the signal is
+      sequence-backbone self-consistency: peptide identity contributes about
+      4% of the margin, the AAYL binding endpoint is uncorrelated, and adding
+      the BFN score to a composition baseline adds about 0.01 Spearman.
+    what_would_change_it: >
+      Composition-controlled experimental variants (same scaffold, same
+      epitope, similar composition, large binding spread) and a new
+      preregistration. Public variant libraries cannot supply this structure.
+    citation_rule: "Cite the fixed J0/C1 numbers only with the self-consistency interpretation."
+
+  - id: four_hix_diagnostic
+    title: 4HIX matched-generator diagnostic is development-level and AF2-endpoint only
+    status: diagnostic_not_negative
+    claim_forbidden: >
+      ProteinMPNN recovers 32.6% of binders, or BFN's native recovery proves
+      binding quality.
+    evidence: INTEGRATIVE_ANALYSIS.md
+    key_numbers:
+      bfn_disorder_on_native_recovery: 0.080
+      bfn_disorder_off_native_recovery: 0.153
+      proteinmpnn_native_recovery: 0.326
+      endpoint: "AF2 ipTM / PRODIGY, not experimental binding"
+    why_it_failed: >
+      The endpoint is an AF2-derived score on a single scaffold with 24
+      candidates per arm; AF2 did not separate native from shuffle.
+    what_would_change_it: >
+      A larger, multi-scaffold panel with an experimental binding endpoint.
+    citation_rule: "Always append 'AF2 endpoint, not binding'."
+
+  - id: pae_new_family_data_wall
+    title: The public paired antibody-short-peptide space is exhausted
+    status: data_limit
+    claim_forbidden: >
+      A larger independent family cohort can be assembled from public
+      antibody-peptide structures without new experimental data.
+    evidence:
+      - docs/PAE_NEW_FAMILY_FEASIBILITY_V21.md
+      - docs/FLEX_PHASE_D_BINDER_TASK_PREREG_DRAFT_V1.md
+    key_numbers:
+      new_eligible_families_after_two_rounds: 0
+      exact_composition_match_yield: 0.0163
+      families_passing_assembly_pilot: "1/200"
+    why_it_failed: >
+      Two curation rounds found no new eligible families. Exact composition
+      matching in 12-15-mers is mathematically infeasible at any reachable
+      pool size.
+    what_would_change_it: >
+      New experimental data, a different matching criterion that is
+      preregistered before looking at labels, or a different target class.
+    citation_rule: "Pair the 'large negative pool' count with the '1/200 assembly' result; never quote one alone."
