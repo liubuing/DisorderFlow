@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "panel_h3": [
+    "AALDEGYLDYDS",
+    "AALDYVIDGY",
+    "AKIGSSSFDY",
+    "ALFDGYYPWFAS",
+    "ALGYSSGQGTLDN",
+    "ARDGGHSTSWSNAFDI",
+    "ARGNGNGGMDV",
+    "ARGSGGLVH",
+    "ARIPTDDYYALDH",
+    "ARITEIHDAFEI",
+    "ASRWRSVSEGC",
+    "ASYYHGY",
+    "HRNFYDGSGPFDY",
+    "KTDWDLRS",
+    "KVNIRGQDY",
+    "NAPQFTDRY",
+    "VRGVFDL"
+  ],
+  "n_panel_vh": 19,
+  "vh_cosine_threshold": 0.75,
+  "n_training_pdbs": 4506,
+  "n_excluded": 36,
+  "exclusion_rule": "panel H3 exact/1-mismatch window OR full-VH 3-mer cosine >= 0.75",
+  "excluded": {
+    "7cwu": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7cwu_H",
+      "cosine": 0.7885514497756958
+    },
+    "6d01": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6d01_E",
+      "cosine": 0.8048779964447021
+    },
+    "7ly2": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7ly2_H",
+      "cosine": 0.752246618270874
+    },
+    "4npy": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "4npy_H",
+      "cosine": 0.7652995586395264
+    },
+    "5n2k": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5n2k_P",
+      "cosine": 0.8155869841575623
+    },
+    "6ieb": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6ieb_E",
+      "cosine": 0.8200908899307251
+    },
+    "6o23": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6o23_A",
+      "cosine": 0.7952384948730469
+    },
+    "3l5w": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "3l5w_B",
+      "cosine": 0.7705177068710327
+    },
+    "7ly3": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7ly3_D",
+      "cosine": 0.7544811964035034
+    },
+    "5vnw": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5vnw_D",
+      "cosine": 0.7565503120422363
+    },
+    "7ly0": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7ly0_H",
+      "cosine": 0.752246618270874
+    },
+    "5gks": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5gks_A",
+      "cosine": 0.7542643547058105
+    },
+    "5ggv": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5ggv_H",
+      "cosine": 0.7760337591171265
+    },
+    "3mbx": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "3mbx_H",
+      "cosine": 0.7654386758804321
+    },
+    "6i04": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6i04_C",
+      "cosine": 0.7594936490058899
+    },
+    "7enf": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7enf_P",
+      "cosine": 0.772357702255249
+    },
+    "5wi9": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5wi9_H",
+      "cosine": 0.772357702255249
+    },
+    "7n5h": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7n5h_H",
+      "cosine": 0.7602308392524719
+    },
+    "5xwd": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5xwd_H",
+      "cosine": 0.7564978003501892
+    },
+    "4qhk": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "4qhk_M",
+      "cosine": 0.8050415515899658
+    },
+    "5gkr": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5gkr_A",
+      "cosine": 0.7542643547058105
+    },
+    "7czv": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7czv_J",
+      "cosine": 0.7841004133224487
+    },
+    "5ggu": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5ggu_H",
+      "cosine": 0.7760337591171265
+    },
+    "7m3i": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7m3i_H",
+      "cosine": 0.7573620080947876
+    },
+    "3l7e": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "3l7e_H",
+      "cosine": 0.7705177068710327
+    },
+    "6o25": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6o25_I",
+      "cosine": 0.8033056855201721
+    },
+    "4yk4": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "4yk4_C",
+      "cosine": 0.7506104707717896
+    },
+    "6ii4": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6ii4_E",
+      "cosine": 0.7520962953567505
+    },
+    "7czu": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7czu_J",
+      "cosine": 0.7841004133224487
+    },
+    "7czt": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7czt_H",
+      "cosine": 0.810028076171875
+    },
+    "3rkd": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "3rkd_H",
+      "cosine": 0.7693884372711182
+    },
+    "7l2e": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7l2e_G",
+      "cosine": 0.774294376373291
+    },
+    "7e6p": {
+      "criterion": "h3_exact_or_1mm",
+      "chain": "7e6p_H",
+      "h3": "ALFDGYYPWFAS",
+      "window": "ALFDGYYPWFAS",
+      "start": 96,
+      "exact": true
+    },
+    "6h16": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "6h16_B",
+      "cosine": 0.751596987247467
+    },
+    "7e3o": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "7e3o_H",
+      "cosine": 0.7791730761528015
+    },
+    "5vnv": {
+      "criterion": "vh_3mer_cosine",
+      "chain": "5vnv_A",
+      "cosine": 0.7565503120422363
+    }
+  }
+}

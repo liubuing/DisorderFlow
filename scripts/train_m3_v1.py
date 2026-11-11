@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "ProteinMPNN" / "training"))
 from model_utils import ProteinMPNN, featurize, loss_nll  # noqa: E402
 
 
-def load_dataset(data_dir: Path, max_length: int = 500):
+def load_dataset(data_dir: Path, max_length: int = 500, excluded=None):
     rows = list(csv.DictReader((data_dir / "list.csv").open(encoding="utf-8")))
     by_pdb = {}
     for row in rows:
@@ -30,6 +30,8 @@ def load_dataset(data_dir: Path, max_length: int = 500):
         by_pdb.setdefault(pdb, []).append(row)
     examples = []
     for pdb, chains in by_pdb.items():
+        if excluded and pdb in excluded:
+            continue
         folder = data_dir / "pdb" / pdb[1:3]
         meta = torch.load(folder / f"{pdb}.pt", weights_only=False)
         chain_data = {}
@@ -118,7 +120,11 @@ def main(argv=None) -> int:
     parser.add_argument("--neighbors", type=int, default=48)
     parser.add_argument("--max-examples", type=int, default=None)
     parser.add_argument("--max-length", type=int, default=500)
+    parser.add_argument("--exclude-pdbs", type=Path, default=None)
+    parser.add_argument("--save-every-epoch", action="store_true")
     parser.add_argument("--seed", type=int, default=20261111)
+    parser.add_argument("--init-checkpoint", type=Path, default=None)
+    parser.add_argument("--start-epoch", type=int, default=1)
     args = parser.parse_args(argv)
 
     random.seed(args.seed)
@@ -128,7 +134,14 @@ def main(argv=None) -> int:
     out = args.out if args.out.is_absolute() else ROOT / args.out
     (out / "model_weights").mkdir(parents=True, exist_ok=True)
 
-    examples = load_dataset(data_dir, max_length=args.max_length)
+    excluded = set()
+    if args.exclude_pdbs:
+        exclusion_path = args.exclude_pdbs if args.exclude_pdbs.is_absolute() else ROOT / args.exclude_pdbs
+        exclusion_data = json.loads(exclusion_path.read_text(encoding="utf-8"))
+        excluded = set(exclusion_data.get("excluded", {}))
+        print(f"excluding {len(excluded)} PDBs", flush=True)
+    examples = load_dataset(
+        data_dir, max_length=args.max_length, excluded=excluded)
     random.shuffle(examples)
     if args.max_examples:
         examples = examples[:args.max_examples]
@@ -141,10 +154,15 @@ def main(argv=None) -> int:
         hidden_dim=args.hidden, num_encoder_layers=args.layers,
         num_decoder_layers=args.layers, k_neighbors=args.neighbors,
         dropout=0.1, augment_eps=0.2).to(device)
+    if args.init_checkpoint:
+        init_path = args.init_checkpoint if args.init_checkpoint.is_absolute() else ROOT / args.init_checkpoint
+        checkpoint = torch.load(init_path, map_location="cpu", weights_only=False)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        print(f"initialized from {init_path}", flush=True)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     log = []
     step = 0
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(args.start_epoch, args.epochs + 1):
         random.shuffle(train_examples)
         epoch_loss = 0.0
         epoch_weight = 0.0
@@ -172,14 +190,17 @@ def main(argv=None) -> int:
         log.append({"epoch": epoch, "train_loss": train_loss, "valid_loss": valid_loss,
                     "seconds": round(time.time() - start_time, 1)})
         print(json.dumps(log[-1]), flush=True)
-        torch.save({
+        checkpoint = {
             "model_state_dict": model.state_dict(),
             "epoch": epoch,
             "step": step,
             "noise_level": 0.2,
             "num_edges": args.neighbors,
             "args": {key: str(value) for key, value in vars(args).items()},
-        }, out / "model_weights" / "m3.pt")
+        }
+        torch.save(checkpoint, out / "model_weights" / "m3.pt")
+        if args.save_every_epoch:
+            torch.save(checkpoint, out / "model_weights" / f"epoch_{epoch}.pt")
     (out / "training_log.json").write_text(
         json.dumps(log, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {out / 'model_weights' / 'm3.pt'}")

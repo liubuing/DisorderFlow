@@ -46,6 +46,16 @@ positive). Exact PDB overlap with the temporal panel is zero; one exact H3
 substring overlap (7e6p_H vs 8h8q, cluster E121) was found, and excluding E121
 leaves both M0 and M3 positive (M3 mean 0.2060, 13/14 positive).
 
+## Ablation experiments (2026-11-11)
+
+| Experiment | Result |
+|---|---|
+| Antigen-context / peptide swap | Peptide presence matters (delta_context 0.137–0.179); peptide sequence identity is zero (delta_peptide ≤2e-7; ratio ≤1.2e-6) in M0/M2/M3. The contrast is epitope-backbone-conditioned, not peptide-sequence-conditioned. |
+| Homology-filtered M3 | 36/4,506 PDBs excluded (35 VH cosine ≥0.75 + 7e6p exact H3); retrained 10 epochs; ECLS mean 0.1884, CI [0.0767, 0.2989], 11/15 positive, gate pass. |
+| Task-specific AAYL ranker | Composition-only weak positive (AAYL51 0.187; AAYL49 0.027); ECLS alone negative (−0.047/−0.141); adding ECLS to composition gives +0.011/−0.005. ECLS adds no ranking signal. |
+| AGZArank head-to-head | Blocked: code public, but checkpoint and synthetic training data are proprietary; Zenodo has only 1.34 GB source data. |
+| Scale curve | 1: 0.078 (fail); 3: 0.129 (fail); 5: 0.176 (pass); 10: 0.188 (pass); 20 pending. The contrast emerges with training. |
+
 ## AAYL affinity endpoint (M3)
 
 The same M3 model was used to score 508 AAYL H3 variants against the

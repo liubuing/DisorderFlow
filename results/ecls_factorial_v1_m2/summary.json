@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "development_descriptive_not_confirmatory",
+  "shuffles_per_record": 3,
+  "models": [
+    "M2"
+  ],
+  "summary": {
+    "M2": {
+      "n": 31,
+      "mean_delta_context": 0.156314064516129,
+      "median_delta_context": 0.143494,
+      "fraction_context_positive": 0.7741935483870968,
+      "mean_delta_peptide": 1.852797740464404e-07,
+      "median_delta_peptide": 0.0,
+      "fraction_peptide_positive": 0.45161290322580644,
+      "peptide_to_context_ratio": 1.1853045637318363e-06
+    }
+  },
+  "note": "complex = native peptide; apo = no peptide; antigen-shuf = same coordinates, composition-matched peptide sequence. Native complex/apo NLLs are read from the model summaries.",
+  "per_record_sha256": "dfd4bc9061199fff6a31f7e959a6d0d66c712e2a736aa1ab94786f1243b2c441"
+}
