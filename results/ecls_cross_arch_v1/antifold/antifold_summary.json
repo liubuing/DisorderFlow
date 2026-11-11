@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "status": "cross_architecture_zero_shot_not_confirmatory",
+  "model": "AntiFold",
+  "n_records": 31,
+  "n_inference_units": 15,
+  "selected_ids_sha256": "7cbc63b7afb42dbdc13da9469f99ab7e927fc5b3f14f500713705869da1821cf",
+  "mean_ecls_advantage": 0.306928,
+  "median_ecls_advantage": 0.308123,
+  "ecls_advantage_mean_ci95": [
+    0.124085,
+    0.497105
+  ],
+  "fraction_positive_ecls_advantage": 0.8,
+  "unit_results": [
+    {
+      "unit": "E121",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00008h8q_H_L"
+      ],
+      "mean_ecls_advantage": 0.308123,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.94
+    },
+    {
+      "unit": "E149",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00009egn_B_+"
+      ],
+      "mean_ecls_advantage": 0.466436,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 1.0
+    },
+    {
+      "unit": "E167",
+      "n_records": 2,
+      "record_ids": [
+        "pdb_00008fg0_A_B",
+        "pdb_00008fg0_C_D"
+      ],
+      "mean_ecls_advantage": 0.13640200000000002,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.7424999999999999
+    },
+    {
+      "unit": "E181",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00007sfx_C_D"
+      ],
+      "mean_ecls_advantage": 0.070502,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.98
+    },
+    {
+      "unit": "E19",
+      "n_records": 8,
+      "record_ids": [
+        "pdb_00007rqr_A_B",
+        "pdb_00007rqr_H_L",
+        "pdb_00008eh5_H_L",
+        "pdb_00008eh5_M_N",
+        "pdb_00008eh5_O_P",
+        "pdb_00008fat_A_B",
+        "pdb_00009cr9_A_B",
+        "pdb_00009cr9_H_L"
+      ],
+      "mean_ecls_advantage": 0.00403075,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.504375
+    },
+    {
+      "unit": "E192",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00008dtu_A_+"
+      ],
+      "mean_ecls_advantage": 1.098136,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.98
+    },
+    {
+      "unit": "E213",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00009hkq_F_+"
+      ],
+      "mean_ecls_advantage": 0.143957,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.77
+    },
+    {
+      "unit": "E214",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00009pkv_H_L"
+      ],
+      "mean_ecls_advantage": -0.193132,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.03
+    },
+    {
+      "unit": "E27",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00007st8_H_L"
+      ],
+      "mean_ecls_advantage": -0.162665,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.02
+    },
+    {
+      "unit": "E37",
+      "n_records": 3,
+      "record_ids": [
+        "pdb_00009mmj_B_A",
+        "pdb_00009mz6_B_A",
+        "pdb_00009mz7_B_A"
+      ],
+      "mean_ecls_advantage": 0.4170763333333333,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.9766666666666667
+    },
+    {
+      "unit": "E57",
+      "n_records": 2,
+      "record_ids": [
+        "pdb_00009nw4_A_B",
+        "pdb_00009nw4_H_L"
+      ],
+      "mean_ecls_advantage": 0.5095925,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.9624999999999999
+    },
+    {
+      "unit": "E64",
+      "n_records": 4,
+      "record_ids": [
+        "pdb_00008dtn_A_+",
+        "pdb_00008dtn_C_+",
+        "pdb_00008dtn_E_+",
+        "pdb_00008dtn_G_+"
+      ],
+      "mean_ecls_advantage": 0.6382414999999999,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.99125
+    },
+    {
+      "unit": "E73",
+      "n_records": 2,
+      "record_ids": [
+        "pdb_00008us8_A_B",
+        "pdb_00008us8_H_L"
+      ],
+      "mean_ecls_advantage": 0.869417,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.985
+    },
+    {
+      "unit": "E75",
+      "n_records": 2,
+      "record_ids": [
+        "pdb_00008jjv_A_+",
+        "pdb_00008jly_A_+"
+      ],
+      "mean_ecls_advantage": 0.50098,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.985
+    },
+    {
+      "unit": "E91",
+      "n_records": 1,
+      "record_ids": [
+        "pdb_00009nk9_A_+"
+      ],
+      "mean_ecls_advantage": -0.20317,
+      "mean_native_complex_percentile": 1.0,
+      "mean_native_delta_percentile": 0.045
+    }
+  ],
+  "prereg_sha256": "41a24ebfba171a1ea1d836aaa126e2406a97b552e6a8fa8f46025ab44c1b3580"
+}

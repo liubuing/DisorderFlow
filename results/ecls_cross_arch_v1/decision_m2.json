@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "ecls_cross_arch_m2_antifold",
+  "status": "replication",
+  "panel": {
+    "n_records": 31,
+    "n_inference_units": 15,
+    "selected_ids_sha256": "7cbc63b7afb42dbdc13da9469f99ab7e927fc5b3f14f500713705869da1821cf"
+  },
+  "model": "AntiFold zero-shot",
+  "result": {
+    "mean_ecls_advantage": 0.306928,
+    "median_ecls_advantage": 0.308123,
+    "ecls_advantage_mean_ci95": [
+      0.124085,
+      0.497105
+    ],
+    "fraction_positive_ecls_advantage": 0.8
+  },
+  "criteria": {
+    "mean_gt_zero": true,
+    "ci_lower_gt_zero": true,
+    "positive_clusters_ge_10": true,
+    "magnitude_within_2x": true
+  },
+  "comparison_to_M0": {
+    "mean": 0.172281,
+    "ci95": [
+      0.059156,
+      0.29192
+    ],
+    "positive_clusters": "12/15",
+    "magnitude_ratio": 1.78,
+    "pearson": 0.719655,
+    "spearman": 0.739286,
+    "sign_agreement": 0.733333
+  },
+  "claim_boundary": [
+    "Cross-architecture test, not exposure control.",
+    "No binding/affinity/specificity claim.",
+    "M3 from-scratch model remains pending.",
+    "Frozen ECLS decision unchanged."
+  ],
+  "sources": {
+    "summary": "results/ecls_cross_arch_v1/antifold/antifold_summary.json",
+    "summary_sha256": "e69e1289903b30a98d249d464fcbc87497ead0a6d42522bea9849be7d11f4526",
+    "prereg": "results/ecls_cross_arch_v1/preregistration.json",
+    "prereg_sha256": "4143249447e10de6e382e4f2f9a18ec075fe52fd824b3e8db10e883c930e2857"
+  }
+}

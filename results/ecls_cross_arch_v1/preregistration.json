@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "status": "m2_scored_m3_pending",
+  "analysis": "ecls_cross_architecture_and_controlled_exposure",
+  "question": "Does the ECLS native-vs-shuffle advantage survive AntiFold zero-shot (M2) and a from-scratch pre-2021 model (M3)?",
+  "panel": {
+    "name": "temporal_final",
+    "n_records": 31,
+    "n_inference_units": 15,
+    "selected_ids_sha256": "7cbc63b7afb42dbdc13da9469f99ab7e927fc5b3f14f500713705869da1821cf",
+    "config": "configs/benchmarks/peptide_h3_ecls_temporal_final_v1.yml"
+  },
+  "shuffle_protocol": {
+    "trials": 200,
+    "seed": "2309 + sum(ord(id))"
+  },
+  "arms": {
+    "M0": {
+      "model": "ProteinMPNN v_48_020",
+      "status": "frozen_reference",
+      "mean": 0.172281,
+      "ci95": [
+        0.059156,
+        0.29192
+      ],
+      "positive_clusters": "12/15"
+    },
+    "M2": {
+      "model": "AntiFold zero-shot",
+      "status": "complete",
+      "script": "scripts/ecls_antifold_zero_shot_v1.py",
+      "script_sha256": "54c64f472d4a438ed76b22db3c34f281c00c9623f1382b782723c3d03be3ae2e",
+      "result": {
+        "n_records": 31,
+        "n_inference_units": 15,
+        "mean_ecls_advantage": 0.306928,
+        "median_ecls_advantage": 0.308123,
+        "ecls_advantage_mean_ci95": [
+          0.124085,
+          0.497105
+        ],
+        "fraction_positive_ecls_advantage": 0.8
+      }
+    },
+    "M3": {
+      "model": "ProteinMPNN-style 3+3 from scratch on pre-2021 SAbDab",
+      "status": "to_build"
+    }
+  },
+  "decision_rules": {
+    "replication": "mean advantage > 0, CI lower > 0, >= 10/15 positive, magnitude within 2x of 0.172",
+    "partial": "positive direction but CI includes 0, or magnitude < 0.5x",
+    "null": "CI includes 0 or sign flips",
+    "binding_surprise": "AAYL Spearman > 0.2 with CI lower > 0"
+  },
+  "claim_boundary": [
+    "Likelihood contrast, not binding/affinity/specificity.",
+    "AntiFold and M3 are different models; positive result generalizes the contrast, not binding.",
+    "No wet-lab measurement.",
+    "Frozen ECLS decision unchanged."
+  ],
+  "sources": {
+    "prereg_doc": "docs/ECLS_CROSS_ARCH_PREREG_V1.md",
+    "prereg_doc_sha256": "7113206e912742bb18e9580b4b7324174f59e569fcd55b05c1e382e298a1c8ac"
+  },
+  "revision_note": "Nanobody fallback added before aggregate scoring: single-domain records use --nanobody_chain H."
+}
