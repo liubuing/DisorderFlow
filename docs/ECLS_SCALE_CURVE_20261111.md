@@ -34,8 +34,10 @@ are unchanged.
 
 Single seed, homology-filtered training set, max chain length 300. The curve is
 descriptive; it is not a scaling-law claim. Additional seeds (20261112,
-20261113) are training; their 1/3/5/10 points are pending. The epoch-20 decline
-should be checked with those seeds before any mechanistic interpretation.
+20261113) were started but stopped: a concurrent external GPU job
+(`biocandidate.cli train`, CatPred baseline) occupied ~19/20 GB and slowed
+epochs from ~4 min to ~21 min. Seed 2 reached epoch 6 before the stop. Resume
+when the GPU is free; the epoch-20 decline remains single-seed until then.
 
 ## Data
 
