@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "register_aware_sensitivity",
+  "classification": "post_hoc_not_confirmatory",
+  "source_entries": "results/csn_abeta_v1/abeta_entries.csv",
+  "source_entries_sha256": "166a029ddd0e64fb50885e85c83469a12c188048f6c6e8208a3062e9262bdffe",
+  "groups": {
+    "R0_A2_start": {
+      "AEFRH": {
+        "core": "AEFRH",
+        "n_entries": 8,
+        "n_lineages": 6,
+        "n_chains": 8,
+        "n_cross_pairs": 26,
+        "ncs": {
+          "n": 0,
+          "mean": null,
+          "median": null
+        },
+        "within_lineage": {
+          "n": 2,
+          "mean": 0.2236929404365685
+        },
+        "cross_lineage": {
+          "n": 26,
+          "mean": 0.5551418743221579,
+          "median": 0.36756778350552716,
+          "entry_pair_median": 0.36756778350552716,
+          "entry_pair_mean": 0.5551418743221579
+        },
+        "tiers": {
+          "same_bound_conformer": 18,
+          "related": 1,
+          "different": 7
+        },
+        "missing": [],
+        "verdict": "ncs_unavailable",
+        "classification": "post_hoc_register_aware_sensitivity_not_confirmatory"
+      },
+      "AEFRHD": {
+        "core": "AEFRHD",
+        "n_entries": 8,
+        "n_lineages": 6,
+        "n_chains": 8,
+        "n_cross_pairs": 26,
+        "ncs": {
+          "n": 0,
+          "mean": null,
+          "median": null
+        },
+        "within_lineage": {
+          "n": 2,
+          "mean": 0.27343775906719703
+        },
+        "cross_lineage": {
+          "n": 26,
+          "mean": 0.7760917511329579,
+          "median": 0.5511255535544121,
+          "entry_pair_median": 0.5511255535544121,
+          "entry_pair_mean": 0.7760917511329579
+        },
+        "tiers": {
+          "same_bound_conformer": 9,
+          "related": 10,
+          "different": 7
+        },
+        "missing": [],
+        "verdict": "ncs_unavailable",
+        "classification": "post_hoc_register_aware_sensitivity_not_confirmatory"
+      }
+    },
+    "R1_D1_start": {
+      "AEFRH": {
+        "core": "AEFRH",
+        "n_entries": 6,
+        "n_lineages": 4,
+        "n_chains": 7,
+        "n_cross_pairs": 17,
+        "ncs": {
+          "n": 1,
+          "mean": 0.0636398408874831,
+          "median": 0.0636398408874831
+        },
+        "within_lineage": {
+          "n": 3,
+          "mean": 0.5279707379656798
+        },
+        "cross_lineage": {
+          "n": 17,
+          "mean": 2.406813972073986,
+          "median": 2.9365105955509154,
+          "entry_pair_median": 2.761273264919741,
+          "entry_pair_mean": 2.3738696247276803
+        },
+        "tiers": {
+          "same_bound_conformer": 2,
+          "related": 0,
+          "different": 15
+        },
+        "missing": [],
+        "verdict": "different_conformers",
+        "classification": "post_hoc_register_aware_sensitivity_not_confirmatory"
+      },
+      "DAEFRH": {
+        "core": "DAEFRH",
+        "n_entries": 6,
+        "n_lineages": 4,
+        "n_chains": 7,
+        "n_cross_pairs": 17,
+        "ncs": {
+          "n": 1,
+          "mean": 0.12041618362308573,
+          "median": 0.12041618362308573
+        },
+        "within_lineage": {
+          "n": 3,
+          "mean": 0.5101326571667822
+        },
+        "cross_lineage": {
+          "n": 17,
+          "mean": 2.5918071924281167,
+          "median": 2.9571240061162696,
+          "entry_pair_median": 2.8035761860515764,
+          "entry_pair_mean": 2.530186056931447
+        },
+        "tiers": {
+          "same_bound_conformer": 0,
+          "related": 0,
+          "different": 17
+        },
+        "missing": [],
+        "verdict": "different_conformers",
+        "classification": "post_hoc_register_aware_sensitivity_not_confirmatory"
+      }
+    }
+  },
+  "within_lineage_register_effect": {
+    "entries": [
+      "3IFN",
+      "3IFL"
+    ],
+    "core": "AEFRHD",
+    "rmsd": 0.2742257972978121,
+    "note": "Same lineage, different peptide register; estimates register sensitivity."
+  }
+}

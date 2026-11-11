@@ -72,6 +72,41 @@ the register/construct handling.
   cluster, so the shared conformer is not limited to soluble peptide
   complexes.
 
+## 4.1 Register-aware sensitivity (post hoc)
+
+The primary 5-residue core `AEFRH` is shared by two peptide registers: the
+A2-start form (`AEFRHDS`/`AEFRHD`) and the D1-start form (`DAEFRH…`). To test
+whether the tight cluster is a register artifact, the cohort was split by
+register and compared within each register (`scripts/csn_abeta_register_rmsd_v1.py`).
+
+| Group | Core | Entries / lineages | Cross-lineage median | Tiers same / related / different | NCS |
+|---|---|---:|---:|---:|---:|
+| R0 A2-start | `AEFRH` | 8 / 6 | **0.368 Å** | 18 / 1 / 7 | not estimable |
+| R0 A2-start | `AEFRHD` | 8 / 6 | 0.551 Å | 9 / 10 / 7 | not estimable |
+| R1 D1-start | `AEFRH` | 6 / 4 | **2.937 Å** | 2 / 0 / 15 | 0.064 Å |
+| R1 D1-start | `DAEFRH` | 6 / 4 | 2.957 Å | 0 / 0 / 17 | 0.120 Å |
+
+Key observations:
+
+- **The 5-residue core is the stable unit.** Adding the terminal D1/D7 residue
+  inflates RMSD (R0 0.368 → 0.551 Å; R1 2.937 → 2.957 Å), so the 6-residue
+  differences are partly terminal flexibility, not a different fold.
+- **The tight cluster survives the split.** In R0, L1–L5 are mutually ≤0.5 Å;
+  L9 is the outlier (~1.2 Å). In R1, L3 (3IFL) and L7 (5CSZ) remain close
+  (2 chain pairs ≤0.5 Å), while L6 and L8 are distinct.
+- **Register is not the driver.** The same lineage L3 has entries in both
+  registers (3IFN A2-start, 3IFL D1-start); their shared `AEFRHD` RMSD is
+  **0.274 Å**. The same antibody binds both offset forms in essentially the
+  same backbone conformation.
+- **The global six-lineage cluster is confirmed**: L1, L2, L3, L4, L5, L7
+  share the `AEFRH` conformer; L6 and L8 are genuine outliers, and L9 sits at
+  the boundary.
+
+The R0 NCS floor is not estimable because no A2-start entry has two peptide
+copies in the core; the R1 floor comes from 5CSZ chains D/E (0.064 Å on
+`AEFRH`). This is a limitation, not a failure: the global NCS pair was also
+5CSZ.
+
 ## 5. Caveats
 
 - The primary core is only five residues; a 5-Cα RMSD is sensitive to
