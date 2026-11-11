@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "campaign": "csn_abeta_v1",
+  "created": "2026-11-11",
+  "status": "frozen_before_rmsd",
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "question": "Do independent antibody lineages that bind the Abeta N-terminal core AEFRH share the same bound peptide backbone conformer?",
+  "cohort": {
+    "L1": [
+      "2IPU",
+      "2R0W"
+    ],
+    "L2": [
+      "3BAE",
+      "3BKJ"
+    ],
+    "L3": [
+      "3IFL",
+      "3IFN"
+    ],
+    "L4": [
+      "3IFO"
+    ],
+    "L5": [
+      "3IFP"
+    ],
+    "L6": [
+      "4HIX",
+      "4OJF",
+      "4ONF"
+    ],
+    "L7": [
+      "5CSZ"
+    ],
+    "L8": [
+      "5W3P"
+    ],
+    "L9": [
+      "6CO3"
+    ]
+  },
+  "cohort_secondary": {
+    "L1": [
+      "2IPU",
+      "2R0W"
+    ],
+    "L2": [
+      "3BAE",
+      "3BKJ"
+    ],
+    "L3": [
+      "3IFL",
+      "3IFN"
+    ],
+    "L4": [
+      "3IFO"
+    ],
+    "L5": [
+      "3IFP"
+    ],
+    "L7": [
+      "5CSZ"
+    ],
+    "L8": [
+      "5W3P"
+    ],
+    "L9": [
+      "6CO3"
+    ]
+  },
+  "excluded": {
+    "4F37": "non-Abeta antigen: colicin-E7 immunity protein; DAEFRH is a fusion/tag context",
+    "4M1C": "non-Abeta antigen: insulin-degrading enzyme; coordinates absent from local archive",
+    "4ONG": "peptide DAEFR (5 aa) lacks the shared H6; retained as descriptive note within L6"
+  },
+  "core_primary": "AEFRH",
+  "core_primary_length": 5,
+  "core_secondary": "AEFRHD",
+  "core_secondary_length": 6,
+  "core_offsets_note": "AEFRH starts at peptide index 0 for AEFRHDS/AEFRHD entries and at index 1 for DAEFRH/DAEFRHD entries; the script locates the core by sequence.",
+  "tiers": {
+    "same_bound_conformer_max": 0.5,
+    "related_max": 1.0,
+    "ncs_floor_max": 0.5
+  },
+  "statistics": {
+    "atom": "CA",
+    "superposition": "row-convention Kabsch (csn_c0_conformer_sharing_v1.kabsch_row)",
+    "pair_unit": "chain pair",
+    "entry_pair_aggregation": "mean over chain pairs",
+    "lineage_summary": "median of cross-lineage entry-pair RMSDs",
+    "bootstrap": {
+      "n": 10000,
+      "seed": 20261111,
+      "unit": "lineage resampling",
+      "ci": "percentile 2.5-97.5"
+    }
+  },
+  "decision_rules": {
+    "measurement_floor_invalid": "mean same-entry NCS RMSD > 0.5 A",
+    "shared_bound_conformer": "NCS floor valid and cross-lineage entry-pair median <= 0.5 A",
+    "related_conformers": "cross-lineage entry-pair median in (0.5, 1.0] A",
+    "different_conformers": "cross-lineage entry-pair median > 1.0 A"
+  },
+  "falsification": "Independent lineages binding the same core in conformers >1.0 A apart falsify the shared-conformer hypothesis.",
+  "claim_boundary": [
+    "Tests bound peptide backbone conformer sharing only.",
+    "Does not test binding affinity, specificity, or free-state disorder.",
+    "Does not modify the frozen CSN C0/C1/C2 results.",
+    "A positive result generalizes the method to Abeta N-terminal recognition, not the tau PHF6* claim.",
+    "The 5-residue primary core is short; the 6-residue secondary analysis is a sensitivity check."
+  ],
+  "sources": {
+    "lineage_doc": "docs/CSN_ABETA_LINEAGES_20261111.md",
+    "lineage_doc_sha256": "f3879ca4121133c4707b21a78da3c897d21786fae3fcd65cbebe21e7481f3e95",
+    "entries_csv": "results/csn_abeta_v1/abeta_entries.csv",
+    "entries_csv_sha256": "166a029ddd0e64fb50885e85c83469a12c188048f6c6e8208a3062e9262bdffe",
+    "script": "scripts/csn_abeta_rmsd_v1.py",
+    "script_sha256": "0c9f09c1460a41cccd8cd0b8b8899447fd03b7feccc809828baef08ba485e985"
+  },
+  "revision_note": "Script path fix for tar-archive members (3BKJ) before any RMSD was computed; cohort, core, tiers and decision rules unchanged."
+}

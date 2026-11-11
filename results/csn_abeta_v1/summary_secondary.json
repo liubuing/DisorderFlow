@@ -1,0 +1,44 @@
+{
+  "core": "AEFRHD",
+  "n_entries": 11,
+  "n_lineages": 8,
+  "n_chains": 12,
+  "n_pairs": 66,
+  "ncs": {
+    "n": 1,
+    "mean": 0.07816696417839722,
+    "median": 0.07816696417839722,
+    "max": 0.07816696417839722
+  },
+  "within_lineage": {
+    "n": 3,
+    "mean": 0.27370043847740266,
+    "median": 0.2742257972978139
+  },
+  "cross_lineage": {
+    "n": 62,
+    "mean": 1.1016518441727712,
+    "median": 0.7906209534216746,
+    "entry_pair_median": 0.7376529200773289,
+    "entry_pair_mean": 1.0986982386598156
+  },
+  "cross_lineage_tiers": {
+    "same_bound_conformer": 13,
+    "related": 26,
+    "different": 23
+  },
+  "missing": [],
+  "verdict": "related_conformers",
+  "bootstrap": {
+    "n_bootstrap": 10000,
+    "seed": 20261111,
+    "median_ci95": [
+      0.498688057700053,
+      2.3322955389376396
+    ]
+  },
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "prereg_sha256": "c513ac6c906802944d2e4f078260ab0069bb7e100e12466276d7b7d8354aaf9d",
+  "pairs_csv": "results/csn_abeta_v1/rmsd_pairs_secondary.csv",
+  "pairs_csv_sha256": "6fec402c1c31262f978b59cc1a6cd0eb43e1864b1453466008081cd000ff307f"
+}

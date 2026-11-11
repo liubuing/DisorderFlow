@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11T06:31:12.107860+00:00",
+  "prereg": "results/csn_abeta_v1/preregistration.json",
+  "prereg_sha256": "c513ac6c906802944d2e4f078260ab0069bb7e100e12466276d7b7d8354aaf9d",
+  "entries_sha256": "166a029ddd0e64fb50885e85c83469a12c188048f6c6e8208a3062e9262bdffe",
+  "script_sha256": "0c9f09c1460a41cccd8cd0b8b8899447fd03b7feccc809828baef08ba485e985",
+  "primary_verdict": "different_conformers",
+  "secondary_verdict": "related_conformers",
+  "outputs": {
+    "primary": "results/csn_abeta_v1/rmsd_pairs_primary.csv",
+    "secondary": "results/csn_abeta_v1/rmsd_pairs_secondary.csv"
+  }
+}
