@@ -40,6 +40,24 @@ frozen ProteinMPNN effect.
 - The full M3 arm (4,530 archive-covered pre-2021 PDBs, longer training) is
   the actual controlled-exposure test. Its result is pending.
 
+## Full-data early checkpoint (4,506 PDBs, 3 epochs)
+
+A full-data run was started on 4,506 PDBs / 8,585 chains. Each epoch took
+~15 minutes, so the 20-epoch run was stopped after epoch 3 (step 11,589) and
+the saved checkpoint evaluated as an **early, undertrained** snapshot:
+
+| Statistic | Value |
+|---|---:|
+| Mean ECLS advantage | 0.060258 |
+| Median ECLS advantage | -0.023858 |
+| Cluster-bootstrap 95% CI | [-0.054864, 0.181916] |
+| Positive clusters | 7/15 (0.467) |
+| Gate | fail |
+
+This is still a null/partial signal, but it is **not** a completed M3 arm; the
+model has seen only three epochs. It does not decide the exposure question.
+The full-data pipeline and checkpoint are retained for a longer run.
+
 ## Reproduce
 
 ```bash

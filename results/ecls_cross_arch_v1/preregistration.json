@@ -45,7 +45,7 @@
     },
     "M3": {
       "model": "ProteinMPNN-style 3+3 from scratch on pre-2021 SAbDab",
-      "status": "pilot_null_full_pending",
+      "status": "early_full_null_training_incomplete",
       "pilot": {
         "dataset": "281 PDBs / 557 chains",
         "epochs": 20,
@@ -61,6 +61,17 @@
         "positive_clusters": "8/15",
         "gate": "fail",
         "note": "Pilot only; not an exposure verdict."
+      },
+      "early_full": {
+        "mean_ecls_advantage": 0.060258,
+        "median_ecls_advantage": -0.023858,
+        "ecls_advantage_mean_ci95": [
+          -0.054864,
+          0.181916
+        ],
+        "fraction_positive_ecls_advantage": 0.466667,
+        "development_pass": false,
+        "epoch": 3
       }
     }
   },
