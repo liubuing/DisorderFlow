@@ -1,0 +1,2694 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "full_pdb_metadata_scan",
+  "classification": "heuristic_not_confirmatory",
+  "target": "DAEFRH",
+  "counts": {
+    "pdbs_with_target": 164,
+    "antibody_flagged": 18,
+    "in_sabdab": 17,
+    "new_antibody_candidates": 1
+  },
+  "new_candidates": [
+    {
+      "pdb": "8KH2",
+      "in_sabdab": false,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">8kh2_A mol:protein length:219  Ferritin light chain,Amyloid-beta precursor protein (Fragment)"
+      ],
+      "daefrh_chain_headers": [
+        ">8kh2_A mol:protein length:219  Ferritin light chain,Amyloid-beta precursor protein (Fragment)"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "pdb": "11EN",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">11en_A mol:protein length:40  RT-Ab40(2_1)",
+        ">11en_B mol:protein length:40  RT-Ab40(2_1)",
+        ">11en_C mol:protein length:40  RT-Ab40(2_1)",
+        ">11en_D mol:protein length:40  RT-Ab40(2_1)",
+        ">11en_E mol:protein length:40  RT-Ab40(2_1)",
+        ">11en_F mol:protein length:40  RT-Ab40(2_1)"
+      ]
+    },
+    {
+      "pdb": "11EO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">11eo_A mol:protein length:40  RT-Ab40(C2)",
+        ">11eo_B mol:protein length:40  RT-Ab40(C2)",
+        ">11eo_C mol:protein length:40  RT-Ab40(C2)",
+        ">11eo_D mol:protein length:40  RT-Ab40(C2)",
+        ">11eo_E mol:protein length:40  RT-Ab40(C2)",
+        ">11eo_F mol:protein length:40  RT-Ab40(C2)"
+      ]
+    },
+    {
+      "pdb": "11EP",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">11ep_A mol:protein length:40  RT-Ab40(C1)",
+        ">11ep_B mol:protein length:40  RT-Ab40(C1)",
+        ">11ep_C mol:protein length:40  RT-Ab40(C1)",
+        ">11ep_D mol:protein length:40  RT-Ab40(C1)",
+        ">11ep_E mol:protein length:40  RT-Ab40(C1)",
+        ">11ep_F mol:protein length:40  RT-Ab40(C1)"
+      ]
+    },
+    {
+      "pdb": "12GB",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">12gb_A mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_B mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_C mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_D mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_E mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_F mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_G mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_H mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_I mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_J mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_K mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_L mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_M mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_N mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_O mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_P mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_Q mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_R mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_S mol:protein length:40  Type IIIb beta-amyloid 40 Filament",
+        ">12gb_T mol:protein length:40  Type IIIb beta-amyloid 40 Filament"
+      ]
+    },
+    {
+      "pdb": "1AMB",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1amb_A mol:protein length:28  AMYLOID BETA-PEPTIDE"
+      ]
+    },
+    {
+      "pdb": "1AMC",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1amc_A mol:protein length:28  AMYLOID BETA-PEPTIDE"
+      ]
+    },
+    {
+      "pdb": "1AML",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1aml_A mol:protein length:40  AMYLOID A4"
+      ]
+    },
+    {
+      "pdb": "1BA4",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1ba4_A mol:protein length:40  AMYLOID BETA-PEPTIDE"
+      ]
+    },
+    {
+      "pdb": "1BA6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1ba6_A mol:protein length:40  AMYLOID BETA-PEPTIDE"
+      ]
+    },
+    {
+      "pdb": "1BJB",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1bjb_A mol:protein length:28  AMYLOID BETA-PEPTIDE"
+      ]
+    },
+    {
+      "pdb": "1BJC",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1bjc_A mol:protein length:28  AMYLOID BETA-PEPTIDE"
+      ]
+    },
+    {
+      "pdb": "1IYT",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1iyt_A mol:protein length:42  Alzheimer's disease amyloid"
+      ]
+    },
+    {
+      "pdb": "1Z0Q",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1z0q_A mol:protein length:42  Alzheimer's disease amyloid"
+      ]
+    },
+    {
+      "pdb": "1ZE7",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1ze7_A mol:protein length:18  16-mer from Alzheimer's disease amyloid Protein"
+      ]
+    },
+    {
+      "pdb": "1ZE9",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">1ze9_A mol:protein length:18  16-mer from Alzheimer's disease amyloid Protein"
+      ]
+    },
+    {
+      "pdb": "21FB",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">21fb_C mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_H mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_A mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_B mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_D mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_E mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_F mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_G mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_I mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_J mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_K mol:protein length:42  Amyloid-beta protein 42",
+        ">21fb_L mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "23WM",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">23wm_B mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "23WN",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">23wn_B mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "23WO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">23wo_B mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "2BEG",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2beg_A mol:protein length:42  Amyloid beta A4 protein",
+        ">2beg_B mol:protein length:42  Amyloid beta A4 protein",
+        ">2beg_C mol:protein length:42  Amyloid beta A4 protein",
+        ">2beg_D mol:protein length:42  Amyloid beta A4 protein",
+        ">2beg_E mol:protein length:42  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2BP4",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2bp4_A mol:protein length:16  AMYLOID BETA A4 PROTEIN"
+      ]
+    },
+    {
+      "pdb": "2G47",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2g47_C mol:protein length:40  amyloid protein beta A4",
+        ">2g47_D mol:protein length:40  amyloid protein beta A4"
+      ]
+    },
+    {
+      "pdb": "2IPU",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">2ipu_L mol:protein length:219  IgG2a Fab fragment Heavy Chain",
+        ">2ipu_K mol:protein length:219  IgG2a Fab fragment Heavy Chain",
+        ">2ipu_H mol:protein length:226  IgG2a Fab fragment Light Chain Kappa",
+        ">2ipu_G mol:protein length:226  IgG2a Fab fragment Light Chain Kappa"
+      ],
+      "daefrh_chain_headers": [
+        ">2ipu_P mol:protein length:8  abeta 1-8 peptide",
+        ">2ipu_Q mol:protein length:8  abeta 1-8 peptide"
+      ]
+    },
+    {
+      "pdb": "2LFM",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lfm_A mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "2LMN",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lmn_A mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_B mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_C mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_D mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_E mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_F mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_G mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_H mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_I mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_J mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_K mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmn_L mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "2LMO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lmo_A mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_B mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_C mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_D mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_E mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_F mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_G mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_H mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_I mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_J mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_K mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmo_L mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "2LMP",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lmp_A mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_B mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_C mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_D mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_E mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_F mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_G mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_H mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_I mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_J mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_K mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_L mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_M mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_N mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_O mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_P mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_Q mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmp_R mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "2LMQ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lmq_A mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_B mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_C mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_D mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_E mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_F mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_G mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_H mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_I mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_J mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_K mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_L mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_M mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_N mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_O mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_P mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_Q mol:protein length:40  Beta-amyloid protein 40",
+        ">2lmq_R mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "2LNQ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lnq_A mol:protein length:40  P3(40)",
+        ">2lnq_B mol:protein length:40  P3(40)",
+        ">2lnq_C mol:protein length:40  P3(40)",
+        ">2lnq_D mol:protein length:40  P3(40)",
+        ">2lnq_E mol:protein length:40  P3(40)",
+        ">2lnq_F mol:protein length:40  P3(40)",
+        ">2lnq_G mol:protein length:40  P3(40)",
+        ">2lnq_H mol:protein length:40  P3(40)"
+      ]
+    },
+    {
+      "pdb": "2LP1",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2lp1_A mol:protein length:122  C99"
+      ]
+    },
+    {
+      "pdb": "2M4J",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2m4j_A mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_B mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_C mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_D mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_E mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_F mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_G mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_H mol:protein length:40  Amyloid beta A4 protein",
+        ">2m4j_I mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2M9R",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2m9r_A mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2M9S",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2m9s_A mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2MVX",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2mvx_A mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_B mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_C mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_D mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_E mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_F mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_G mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_H mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_I mol:protein length:39  Amyloid beta A4 protein",
+        ">2mvx_J mol:protein length:39  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2MXU",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2mxu_A mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_B mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_C mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_D mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_E mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_F mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_G mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_H mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_I mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_J mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_K mol:protein length:42  Amyloid beta A4 protein",
+        ">2mxu_L mol:protein length:42  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2NAO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2nao_A mol:protein length:42  Beta-amyloid protein 42",
+        ">2nao_B mol:protein length:42  Beta-amyloid protein 42",
+        ">2nao_C mol:protein length:42  Beta-amyloid protein 42",
+        ">2nao_D mol:protein length:42  Beta-amyloid protein 42",
+        ">2nao_E mol:protein length:42  Beta-amyloid protein 42",
+        ">2nao_F mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "2OTK",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2otk_C mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "2R0W",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">2r0w_L mol:protein length:219  IgG2a Fab fragment light chain",
+        ">2r0w_H mol:protein length:223  IgG2a Fab fragment heavy chain, Fd portion"
+      ],
+      "daefrh_chain_headers": [
+        ">2r0w_Q mol:protein length:8  Amyloid beta peptide fragment"
+      ]
+    },
+    {
+      "pdb": "2WK3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">2wk3_C mol:protein length:42  BETA-AMYLOID PROTEIN 42",
+        ">2wk3_D mol:protein length:42  BETA-AMYLOID PROTEIN 42"
+      ]
+    },
+    {
+      "pdb": "31VO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">31vo_B mol:protein length:227  Amyloid-beta protein 40,HLA class II histocompatibility antigen, DRB1 beta chain",
+        ">31vo_D mol:protein length:227  Amyloid-beta protein 40,HLA class II histocompatibility antigen, DRB1 beta chain"
+      ]
+    },
+    {
+      "pdb": "3BAE",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">3bae_L mol:protein length:218  WO2 IgG2a Fab fragment Light Chain Kappa",
+        ">3bae_H mol:protein length:228  WO2 IgG2a Fab fragment Heavy Chain"
+      ],
+      "daefrh_chain_headers": [
+        ">3bae_A mol:protein length:28  Amyloid Beta Peptide"
+      ]
+    },
+    {
+      "pdb": "3BKJ",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">3bkj_L mol:protein length:252  WO2 IgG2a Fab fragment Light Chain Kappa",
+        ">3bkj_H mol:protein length:224  WO2 IgG2a Fab fragment Heavy Chain"
+      ],
+      "daefrh_chain_headers": [
+        ">3bkj_A mol:protein length:16  Amyloid Beta Peptide"
+      ]
+    },
+    {
+      "pdb": "3IFL",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">3ifl_L mol:protein length:219  12A11 FAB antibody light chain",
+        ">3ifl_H mol:protein length:222  12A11 FAB antibody heavy chain"
+      ],
+      "daefrh_chain_headers": [
+        ">3ifl_P mol:protein length:7  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "3IFN",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">3ifn_H mol:protein length:222  12A11 FAB antibody heavy chain",
+        ">3ifn_L mol:protein length:219  12A11 FAB antibody light chain"
+      ],
+      "daefrh_chain_headers": [
+        ">3ifn_P mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "3IFO",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">3ifo_H mol:protein length:226  10D5 FAB antibody heavy chain",
+        ">3ifo_A mol:protein length:226  10D5 FAB antibody heavy chain",
+        ">3ifo_L mol:protein length:219  10D5 FAB antibody light chain",
+        ">3ifo_B mol:protein length:219  10D5 FAB antibody light chain"
+      ],
+      "daefrh_chain_headers": [
+        ">3ifo_P mol:protein length:7  Amyloid beta A4 protein",
+        ">3ifo_Q mol:protein length:7  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "3IFP",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">3ifp_H mol:protein length:226  12B4 FAB antibody heavy chain",
+        ">3ifp_A mol:protein length:226  12B4 FAB antibody heavy chain",
+        ">3ifp_C mol:protein length:226  12B4 FAB antibody heavy chain",
+        ">3ifp_E mol:protein length:226  12B4 FAB antibody heavy chain",
+        ">3ifp_L mol:protein length:219  12B4 FAB antibody light chain",
+        ">3ifp_B mol:protein length:219  12B4 FAB antibody light chain",
+        ">3ifp_D mol:protein length:219  12B4 FAB antibody light chain",
+        ">3ifp_F mol:protein length:219  12B4 FAB antibody light chain"
+      ],
+      "daefrh_chain_headers": [
+        ">3ifp_P mol:protein length:7  Amyloid beta A4 protein",
+        ">3ifp_Q mol:protein length:7  Amyloid beta A4 protein",
+        ">3ifp_R mol:protein length:7  Amyloid beta A4 protein",
+        ">3ifp_S mol:protein length:7  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "3JQ5",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">3jq5_B mol:protein length:8  Amyloid Beta Peptide"
+      ]
+    },
+    {
+      "pdb": "3QAO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">3qao_A mol:protein length:249  MerR-like transcriptional regulator"
+      ]
+    },
+    {
+      "pdb": "4F37",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">4f37_K mol:protein length:219  Fab WO2 anti-amyloid-beta antibody Fab fragment",
+        ">4f37_L mol:protein length:219  Fab WO2 anti-amyloid-beta antibody Fab fragment"
+      ],
+      "daefrh_chain_headers": [
+        ">4f37_A mol:protein length:124  Colicin-E7 immunity protein",
+        ">4f37_B mol:protein length:124  Colicin-E7 immunity protein"
+      ]
+    },
+    {
+      "pdb": "4HIX",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">4hix_H mol:protein length:227  Humanized 3D6 Fab heavy chain",
+        ">4hix_L mol:protein length:220  Humanized 3D6 Fab light chain"
+      ],
+      "daefrh_chain_headers": [
+        ">4hix_A mol:protein length:28  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "4M1C",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">4m1c_C mol:protein length:263  Fab-bound IDE, heavy chain",
+        ">4m1c_E mol:protein length:263  Fab-bound IDE, heavy chain",
+        ">4m1c_D mol:protein length:239  Fab-bound IDE, light chain",
+        ">4m1c_F mol:protein length:239  Fab-bound IDE, light chain"
+      ],
+      "daefrh_chain_headers": [
+        ">4m1c_G mol:protein length:40  Amyloid beta A4 protein",
+        ">4m1c_H mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "4MVI",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">4mvi_B mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "4MVL",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">4mvl_E mol:protein length:40  Beta-amyloid protein 40",
+        ">4mvl_F mol:protein length:40  Beta-amyloid protein 40",
+        ">4mvl_G mol:protein length:40  Beta-amyloid protein 40",
+        ">4mvl_H mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "4NGE",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">4nge_B mol:protein length:40  Beta-amyloid protein 40",
+        ">4nge_E mol:protein length:40  Beta-amyloid protein 40"
+      ]
+    },
+    {
+      "pdb": "4OJF",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">4ojf_H mol:protein length:227  Humanised 3D6 Fab Heavy Chain",
+        ">4ojf_L mol:protein length:219  Humanised 3D6 Fab Light Chain"
+      ],
+      "daefrh_chain_headers": [
+        ">4ojf_A mol:protein length:8  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "4ONF",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">4onf_H mol:protein length:222  3D6 FAB ANTIBODY HEAVY CHAIN",
+        ">4onf_L mol:protein length:219  3D6 FAB ANTIBODY LIGHT CHAIN"
+      ],
+      "daefrh_chain_headers": [
+        ">4onf_P mol:protein length:7  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "4ONG",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">4ong_H mol:protein length:222  3D6 FAB ANTIBODY HEAVY CHAIN",
+        ">4ong_L mol:protein length:219  3D6 FAB ANTIBODY LIGHT CHAIN"
+      ],
+      "daefrh_chain_headers": [
+        ">4ong_P mol:protein length:40  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "5BUO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">5buo_A mol:protein length:342  Amyloid beta A4 protein",
+        ">5buo_B mol:protein length:342  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "5CSZ",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">5csz_H mol:protein length:228  GANTENERUMAB FAB FRAGMENT HEAVY CHAIN",
+        ">5csz_A mol:protein length:228  GANTENERUMAB FAB FRAGMENT HEAVY CHAIN",
+        ">5csz_L mol:protein length:215  GANTENERUMAB FAB FRAGMENT LIGHT CHAIN",
+        ">5csz_B mol:protein length:215  GANTENERUMAB FAB FRAGMENT LIGHT CHAIN"
+      ],
+      "daefrh_chain_headers": [
+        ">5csz_D mol:protein length:11  Amyloid beta A4 protein",
+        ">5csz_E mol:protein length:11  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "5KK3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">5kk3_A mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_B mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_C mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_D mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_E mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_F mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_G mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_H mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_I mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_J mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_K mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_L mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_M mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_N mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_O mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_P mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_Q mol:protein length:42  Beta-amyloid protein 42",
+        ">5kk3_R mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "5LFY",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">5lfy_A mol:protein length:11  Amyloid beta A4 protein",
+        ">5lfy_B mol:protein length:11  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "5OQV",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">5oqv_A mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_B mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_C mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_D mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_E mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_F mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_G mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_H mol:protein length:42  Amyloid beta A4 protein",
+        ">5oqv_I mol:protein length:42  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "5W3P",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">5w3p_L mol:protein length:212  Antibody C706 Fab LIGHT CHAIN",
+        ">5w3p_H mol:protein length:222  Antibody C706 Fab HEAVY CHAIN"
+      ],
+      "daefrh_chain_headers": [
+        ">5w3p_P mol:protein length:18  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "6CO3",
+      "in_sabdab": true,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">6co3_L mol:protein length:214  Fab light chain",
+        ">6co3_H mol:protein length:227  Fab heavy chain"
+      ],
+      "daefrh_chain_headers": [
+        ">6co3_Q mol:protein length:11  ALA-GLU-PHE-ARG-HIS-ASP"
+      ]
+    },
+    {
+      "pdb": "6OC9",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6oc9_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_B mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_D mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_F mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_H mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_I mol:protein length:40  Amyloid-beta precursor protein",
+        ">6oc9_J mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6RHY",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6rhy_A mol:protein length:42  Amyloid beta A4 protein",
+        ">6rhy_B mol:protein length:42  Amyloid beta A4 protein",
+        ">6rhy_C mol:protein length:42  Amyloid beta A4 protein",
+        ">6rhy_D mol:protein length:42  Amyloid beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "6SHS",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6shs_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_B mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_H mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_D mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_I mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_J mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_F mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_K mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">6shs_L mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6SZF",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6szf_A mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6TI5",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6ti5_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_B mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_D mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_F mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_H mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_I mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_J mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_K mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_L mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_M mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_N mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_O mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti5_P mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6TI6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6ti6_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_I mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_K mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_M mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_O mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti6_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_H mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_J mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_L mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_N mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti6_P mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6TI7",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6ti7_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_J mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_L mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_N mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_P mol:protein length:40  Amyloid-beta precursor protein",
+        ">6ti7_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_H mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_I mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_K mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_M mol:protein length:42  Amyloid-beta precursor protein",
+        ">6ti7_O mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6W0O",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6w0o_1 mol:protein length:40  Amyloid-beta precursor protein",
+        ">6w0o_2 mol:protein length:40  Amyloid-beta precursor protein",
+        ">6w0o_3 mol:protein length:40  Amyloid-beta precursor protein",
+        ">6w0o_4 mol:protein length:40  Amyloid-beta precursor protein",
+        ">6w0o_5 mol:protein length:40  Amyloid-beta precursor protein",
+        ">6w0o_6 mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "6XOV",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">6xov_B mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "7B3J",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7b3j_A mol:protein length:55  Isoform L-APP677 of Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "7B3K",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7b3k_A mol:protein length:55  Isoform L-APP677 of Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "7O1Q",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7o1q_A mol:protein length:293  Alpha-hemolysin hybridized Abeta",
+        ">7o1q_B mol:protein length:293  Alpha-hemolysin hybridized Abeta",
+        ">7o1q_C mol:protein length:293  Alpha-hemolysin hybridized Abeta",
+        ">7o1q_D mol:protein length:293  Alpha-hemolysin hybridized Abeta",
+        ">7o1q_E mol:protein length:293  Alpha-hemolysin hybridized Abeta",
+        ">7o1q_F mol:protein length:293  Alpha-hemolysin hybridized Abeta",
+        ">7o1q_G mol:protein length:293  Alpha-hemolysin hybridized Abeta"
+      ]
+    },
+    {
+      "pdb": "7Q4B",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7q4b_R mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_G mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_H mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4b_I mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "7Q4M",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7q4m_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_G mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_H mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_I mol:protein length:42  Amyloid-beta precursor protein",
+        ">7q4m_J mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "7WVY",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7wvy_L mol:protein length:42  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "7Y8Q",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">7y8q_A mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_B mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_C mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_D mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_E mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_F mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_G mol:protein length:40  Amyloid-beta protein 40",
+        ">7y8q_H mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "8AZS",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8azs_H mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8AZT",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8azt_B mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8B9Q",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8b9q_A mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8B9R",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8b9r_A mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8BFA",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8bfa_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_G mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_H mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_I mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfa_J mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8BFB",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8bfb_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_G mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_H mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_I mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfb_J mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8BFZ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8bfz_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">8bfz_B mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8BG0",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8bg0_D mol:protein length:40  Amyloid-beta precursor protein",
+        ">8bg0_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">8bg0_B mol:protein length:40  Amyloid-beta precursor protein",
+        ">8bg0_C mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8BG9",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8bg9_A mol:protein length:37  Amyloid-beta protein 40",
+        ">8bg9_B mol:protein length:37  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "8EZD",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ezd_A mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_B mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_C mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_D mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_E mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_F mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_G mol:protein length:42  Beta-amyloid protein 42",
+        ">8ezd_H mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "8EZE",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8eze_A mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_B mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_C mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_D mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_E mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_F mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_G mol:protein length:42  Beta-amyloid protein 42",
+        ">8eze_H mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "8FF2",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ff2_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_B mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_D mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_F mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_I mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_J mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff2_K mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8FF3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ff3_b mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff3_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff3_a mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff3_c mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff3_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">8ff3_B mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8J47",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8j47_D mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_C mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_F mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_E mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_B mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_A mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_H mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_G mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_J mol:protein length:40  E22G Amyloid-beta",
+        ">8j47_I mol:protein length:40  E22G Amyloid-beta"
+      ]
+    },
+    {
+      "pdb": "8KEW",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8kew_F mol:protein length:770  P3(40)",
+        ">8kew_G mol:protein length:770  P3(40)",
+        ">8kew_A mol:protein length:770  P3(40)",
+        ">8kew_C mol:protein length:770  P3(40)",
+        ">8kew_B mol:protein length:770  P3(40)",
+        ">8kew_D mol:protein length:770  P3(40)"
+      ]
+    },
+    {
+      "pdb": "8KF1",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8kf1_G mol:protein length:770  P3(40)",
+        ">8kf1_F mol:protein length:770  P3(40)",
+        ">8kf1_H mol:protein length:770  P3(40)",
+        ">8kf1_A mol:protein length:770  P3(40)",
+        ">8kf1_I mol:protein length:770  P3(40)",
+        ">8kf1_B mol:protein length:770  P3(40)",
+        ">8kf1_J mol:protein length:770  P3(40)",
+        ">8kf1_C mol:protein length:770  P3(40)",
+        ">8kf1_K mol:protein length:770  P3(40)",
+        ">8kf1_D mol:protein length:770  P3(40)",
+        ">8kf1_L mol:protein length:770  P3(40)",
+        ">8kf1_E mol:protein length:770  P3(40)"
+      ]
+    },
+    {
+      "pdb": "8KF3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8kf3_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_H mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_B mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_G mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_I mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf3_C mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8KF4",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8kf4_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf4_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf4_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf4_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf4_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf4_B mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8KF5",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8kf5_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf5_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf5_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf5_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf5_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">8kf5_B mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8KF6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8kf6_F mol:protein length:770  P3(40)",
+        ">8kf6_A mol:protein length:770  P3(40)",
+        ">8kf6_G mol:protein length:770  P3(40)",
+        ">8kf6_D mol:protein length:770  P3(40)",
+        ">8kf6_H mol:protein length:770  P3(40)",
+        ">8kf6_E mol:protein length:770  P3(40)",
+        ">8kf6_I mol:protein length:770  P3(40)",
+        ">8kf6_B mol:protein length:770  P3(40)",
+        ">8kf6_C mol:protein length:770  P3(40)"
+      ]
+    },
+    {
+      "pdb": "8KH2",
+      "in_sabdab": false,
+      "antibody_flagged": true,
+      "antibody_chain_headers": [
+        ">8kh2_A mol:protein length:219  Ferritin light chain,Amyloid-beta precursor protein (Fragment)"
+      ],
+      "daefrh_chain_headers": [
+        ">8kh2_A mol:protein length:219  Ferritin light chain,Amyloid-beta precursor protein (Fragment)"
+      ]
+    },
+    {
+      "pdb": "8OL2",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ol2_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_I mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol2_J mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OL3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ol3_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_I mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol3_J mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OL5",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ol5_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_I mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol5_J mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OL6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ol6_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_I mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol6_J mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OL7",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ol7_J mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8ol7_I mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OLG",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8olg_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8olg_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8olg_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8olg_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8olg_E mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OLN",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8oln_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_J mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8oln_I mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OLO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8olo_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_E mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_F mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_G mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_H mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_I mol:protein length:42  Amyloid-beta protein 42",
+        ">8olo_J mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OLQ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8olq_A mol:protein length:42  Amyloid-beta protein 42",
+        ">8olq_B mol:protein length:42  Amyloid-beta protein 42",
+        ">8olq_C mol:protein length:42  Amyloid-beta protein 42",
+        ">8olq_D mol:protein length:42  Amyloid-beta protein 42",
+        ">8olq_E mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "8OT1",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ot1_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_J mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_K mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot1_L mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OT3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ot3_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_J mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_K mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot3_L mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OT4",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ot4_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_J mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_K mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ot4_L mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OTF",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8otf_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">8otf_B mol:protein length:770  Amyloid-beta precursor protein",
+        ">8otf_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">8otf_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">8otf_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">8otf_F mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8OVK",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ovk_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovk_J mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OVM",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8ovm_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovm_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovm_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovm_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8ovm_E mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OWD",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8owd_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owd_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owd_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owd_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owd_E mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OWE",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8owe_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owe_J mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OWJ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8owj_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owj_J mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8OWK",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8owk_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">8owk_J mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8QN6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8qn6_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">8qn6_A mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8QN7",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8qn7_A mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "8SEK",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8sek_A mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_B mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_C mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_D mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_E mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_F mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_G mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_H mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_I mol:protein length:40  Amyloid-beta precursor protein",
+        ">8sek_J mol:protein length:40  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8SEL",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8sel_A mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_B mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_C mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_D mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_E mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_F mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_G mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_H mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_I mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_J mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_K mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_L mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_M mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_N mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_O mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_P mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_Q mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_R mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_S mol:protein length:40  Amyloid-beta protein 40",
+        ">8sel_T mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "8X52",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8x52_E mol:protein length:120  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8X53",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8x53_E mol:protein length:46  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "8X54",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">8x54_E mol:protein length:120  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9CK6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9ck6_R mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_A mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_B mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_C mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_D mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_E mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_F mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_G mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_H mol:protein length:42  Beta-amyloid protein 42",
+        ">9ck6_I mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "9CKI",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9cki_J mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_A mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_B mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_C mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_D mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_E mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_F mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_G mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_H mol:protein length:42  Beta-amyloid protein 42",
+        ">9cki_I mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "9CO4",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9co4_A mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_B mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_C mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_D mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_E mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_F mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_G mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_H mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_I mol:protein length:42  Beta-amyloid protein 42",
+        ">9co4_J mol:protein length:42  Beta-amyloid protein 42"
+      ]
+    },
+    {
+      "pdb": "9FH1",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9fh1_A mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_B mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_C mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_D mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_E mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_F mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_G mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_H mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_I mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh1_J mol:protein length:36  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9FH2",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9fh2_A mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_B mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_C mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_D mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_E mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_F mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_G mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_H mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_I mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh2_J mol:protein length:36  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9FH3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9fh3_C mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_A mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_B mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_D mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_E mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_F mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_G mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_H mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_I mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh3_J mol:protein length:36  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9FH4",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9fh4_A mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_B mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_C mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_D mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_E mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_F mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_G mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_H mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_I mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh4_J mol:protein length:36  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9FH5",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9fh5_A mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_B mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_C mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_D mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_E mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_F mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_G mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_H mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_I mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_J mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_K mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_L mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_M mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_N mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_O mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_P mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_Q mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_R mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_S mol:protein length:36  Amyloid-beta precursor protein",
+        ">9fh5_T mol:protein length:36  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9IIO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9iio_2 mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_A mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_B mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_C mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_D mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_E mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_F mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_G mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_3 mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_H mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_I mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_J mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_K mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_L mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_M mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_N mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_4 mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_O mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_P mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_Q mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_R mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_S mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_T mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_U mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_5 mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_V mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_W mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_X mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_Y mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_Z mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_a mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_b mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_6 mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_c mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_d mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_e mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_f mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_g mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_h mol:protein length:40  Amyloid-beta protein 40",
+        ">9iio_i mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9JAZ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9jaz_F mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_FF mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_EE mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_DD mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_CC mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_BB mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jaz_AA mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9JB0",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9jb0_CC mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_BB mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_DD mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_EE mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_FF mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_AA mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb0_F mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9JB1",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9jb1_FO mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FP mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FN mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FM mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FL mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FQ mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FK mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FJ mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FI mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FH mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FG mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb1_FF mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9JB2",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9jb2_C mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_A mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_B mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_D mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_E mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_CC mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_BE mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_BD mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_BC mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_BB mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_BA mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_CB mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_CA mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_CD mol:protein length:42  Amyloid-beta precursor protein",
+        ">9jb2_CE mol:protein length:42  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9K0D",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9k0d_C mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_D mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_G mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_H mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_M mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_O mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_U mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_W mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_N mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_P mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_V mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0d_X mol:protein length:42  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "9K0E",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9k0e_G mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0e_B mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0e_N mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0e_H mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0e_O mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0e_I mol:protein length:42  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "9K0F",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9k0f_E mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_G mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_I mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_D mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_H mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_L mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_F mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_J mol:protein length:42  Amyloid-beta A4 protein",
+        ">9k0f_M mol:protein length:42  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "9M5P",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9m5p_1 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5p_2 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5p_3 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5p_4 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5p_5 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5p_6 mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9M5Q",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9m5q_AL mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AM mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AN mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AO mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AP mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AQ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AR mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AS mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AT mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AU mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AV mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AW mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AX mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AY mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_AZ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_Aa mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_Ab mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_Ac mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_Ad mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_Ae mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5q_Af mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9M5R",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9m5r_0 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_B mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_C mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_D mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_E mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_F mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_G mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_H mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_I mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_J mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_K mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_L mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_M mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_N mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_O mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_P mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Q mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_R mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_S mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_T mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_U mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_V mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_W mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_X mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Y mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Z mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_a mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_b mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_c mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_d mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_e mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_f mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_g mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_h mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_i mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_j mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_k mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_l mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_m mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_n mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_o mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_p mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_q mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_r mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_s mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_t mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_u mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_v mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_w mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_x mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_y mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_z mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_1 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_2 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_3 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_4 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_5 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_6 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_7 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_8 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_9 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AA mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AB mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AC mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AD mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AE mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AF mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AG mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AH mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AI mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AJ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AK mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AL mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AM mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AN mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AO mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AP mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AQ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AR mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AS mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AT mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AU mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AV mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AW mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AX mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AY mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_AZ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Aa mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ab mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ac mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ad mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ae mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Af mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ag mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ah mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ai mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Aj mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ak mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Al mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Am mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_An mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ao mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ap mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Aq mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ar mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_As mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_At mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Au mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Av mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Aw mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ax mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ay mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Az mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A0 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A1 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A2 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A3 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A4 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A5 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A6 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A7 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A8 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_A9 mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BA mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BB mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BC mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BD mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BE mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BF mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BG mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BH mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BI mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BJ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BK mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BL mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BM mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BN mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BO mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BP mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BQ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BR mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BS mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BT mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BU mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BV mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BW mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BX mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BY mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_BZ mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Ba mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bb mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bc mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bd mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Be mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bf mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bg mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bh mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bi mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bj mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bk mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bl mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bm mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bn mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bo mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bp mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bq mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Br mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bs mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bt mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bu mol:protein length:40  Amyloid-beta protein 40",
+        ">9m5r_Bv mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9RAW",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9raw_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">9raw_J mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "9RAX",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9rax_A mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_B mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_C mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_D mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_E mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_F mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_G mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_H mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_I mol:protein length:40  Amyloid-beta A4 protein",
+        ">9rax_J mol:protein length:40  Amyloid-beta A4 protein"
+      ]
+    },
+    {
+      "pdb": "9RIV",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9riv_A mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_B mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_C mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_D mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_E mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_F mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_G mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_H mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_I mol:protein length:40  Amyloid-beta protein 40",
+        ">9riv_J mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9RIW",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9riw_B mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_A mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_C mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_D mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_E mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_F mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_G mol:protein length:40  Amyloid-beta protein 40",
+        ">9riw_H mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9UMH",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9umh_AL mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AM mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AN mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AO mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AP mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AQ mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AR mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AS mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AT mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AU mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AV mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AW mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AX mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AY mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_AZ mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_Aa mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_Ab mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_Ac mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_Ad mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_Ae mol:protein length:40  Amyloid-beta protein 40",
+        ">9umh_Af mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9W0Z",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9w0z_Y mol:protein length:770  Amyloid-beta precursor protein",
+        ">9w0z_Z mol:protein length:770  Amyloid-beta precursor protein",
+        ">9w0z_a mol:protein length:770  Amyloid-beta precursor protein",
+        ">9w0z_b mol:protein length:770  Amyloid-beta precursor protein",
+        ">9w0z_c mol:protein length:770  Amyloid-beta precursor protein",
+        ">9w0z_d mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9WAO",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9wao_A mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_B mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_C mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_D mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_E mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_F mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_G mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_H mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_I mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_J mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_K mol:protein length:42  Amyloid-beta protein 42",
+        ">9wao_L mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "9WAP",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9wap_A mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_B mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_C mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_D mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_E mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_F mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_G mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_H mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_I mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_J mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_K mol:protein length:42  Amyloid-beta protein 42",
+        ">9wap_L mol:protein length:42  Amyloid-beta protein 42"
+      ]
+    },
+    {
+      "pdb": "9WTW",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9wtw_B mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_J mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_I mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_H mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_G mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_A mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_D mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_C mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_F mol:protein length:40  Amyloid-beta protein 40",
+        ">9wtw_E mol:protein length:40  Amyloid-beta protein 40"
+      ]
+    },
+    {
+      "pdb": "9XGU",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xgu_B mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_G mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_H mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_I mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_J mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_K mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgu_L mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XGZ",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xgz_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_I mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_B mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_H mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xgz_G mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XH3",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xh3_G mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_H mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_I mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_B mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_J mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_K mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_L mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh3_E mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XH6",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xh6_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_G mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_H mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_K mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_L mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_M mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_N mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_O mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_P mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_S mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_T mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_U mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_V mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_W mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh6_X mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XH7",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xh7_B mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh7_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh7_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh7_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh7_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh7_W mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XH9",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xh9_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh9_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh9_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh9_G mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh9_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xh9_H mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XHD",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xhd_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhd_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhd_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhd_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhd_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhd_B mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XHE",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xhe_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhe_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhe_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhe_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhe_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xhe_B mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    },
+    {
+      "pdb": "9XJC",
+      "in_sabdab": false,
+      "antibody_flagged": false,
+      "antibody_chain_headers": [],
+      "daefrh_chain_headers": [
+        ">9xjc_C mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xjc_D mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xjc_E mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xjc_F mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xjc_A mol:protein length:770  Amyloid-beta precursor protein",
+        ">9xjc_B mol:protein length:770  Amyloid-beta precursor protein"
+      ]
+    }
+  ],
+  "caveat": "Antibody detection is keyword-based on pdb_seqres headers. Every new candidate must be inspected structurally."
+}

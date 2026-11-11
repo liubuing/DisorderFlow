@@ -150,6 +150,29 @@ Interpretation:
 This is a descriptive free-state comparison, not a thermodynamic or kinetic
 measurement.
 
+## 4.3 Numbering-scheme sensitivity
+
+All 16 VH and 16 VL sequences were re-numbered with ANARCI Kabat and Chothia
+schemes (`scripts/csn_abeta_scheme_sensitivity_v1.py`). V/J germline and
+closest-species assignments were **identical across IMGT, Kabat and Chothia
+(0 mismatches)**. CDR3 boundaries differ by scheme as expected: VH
+IMGT-vs-Kabat sequence similarity median 0.748; VL 1.0. The lineage calls do
+not depend on the numbering scheme.
+
+## 4.4 Full PDB metadata scan
+
+A two-pass scan of `pdb_seqres.txt.gz` found 164 PDB entries with a
+`DAEFRH`-containing chain. Keyword-based antibody detection flagged 18; 17 are
+already in SAbDab. The single new hit, **8KH2**, is a horse-spleen L-ferritin
+fusion with Aβ(1-42), not an antibody. **No additional antibody lineage was
+found.** A sequence search cannot exclude antibodies with highly divergent
+framework sequences, but the current 9-lineage cohort is complete at the
+metadata level.
+
+Construct-level curation (3IFL/3IFN same 12A11 antibody in two registers;
+3IFO/3IFP distinct antibodies; 4HIX/4OJF/4ONF same 3D6 clonotype; 4ONG
+excluded as a 5-mer) is recorded in `docs/CSN_ABETA_CURATION_20261111.md`.
+
 ## 5. Caveats
 
 - The primary core is only five residues; a 5-Cα RMSD is sensitive to
