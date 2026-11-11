@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "ecls_cross_arch_m3_pilot",
+  "status": "pilot_null_not_confirmatory",
+  "dataset": {
+    "n_pdb": 281,
+    "n_chains": 557,
+    "epochs": 20
+  },
+  "training": {
+    "train_loss_start": 6.02,
+    "train_loss_end": 1.77,
+    "valid_loss_end": 1.48
+  },
+  "result": {
+    "mean_ecls_advantage": 0.015699,
+    "median_ecls_advantage": 0.060156,
+    "ci95": [
+      -0.113458,
+      0.151689
+    ],
+    "positive_clusters": "8/15",
+    "development_pass": false
+  },
+  "claim_boundary": [
+    "Pilot-scale model, not the full M3 controlled-exposure arm.",
+    "Full dataset training pending.",
+    "No binding/affinity claim."
+  ],
+  "sources": {
+    "pilot_summary": "results/ecls_cross_arch_v1/m3_ecls/summary.json"
+  }
+}

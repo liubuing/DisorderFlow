@@ -61,6 +61,14 @@ and a correlated per-cluster effect.
 - M3 (from scratch on pre-2021 SAbDab only) is the controlled-exposure arm.
 - No binding, affinity or specificity claim is made.
 
+## M3 status
+
+A **pilot** from-scratch model (281 PDBs / 557 chains, 20 epochs) did not
+reproduce the effect: mean 0.0157, CI [-0.1135, 0.1517], 8/15 positive. This is
+a pipeline-validation null, not the controlled-exposure verdict; the full
+4,506-PDB training is the actual M3 arm and is running separately. See
+`docs/ECLS_CROSS_ARCH_M3_PILOT_20261111.md`.
+
 ## Data
 
 ```text
