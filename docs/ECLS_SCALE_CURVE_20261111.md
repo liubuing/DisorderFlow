@@ -33,8 +33,9 @@ are unchanged.
 ## Caveat
 
 Single seed, homology-filtered training set, max chain length 300. The curve is
-descriptive; it is not a scaling-law claim. The epoch-20 decline should be
-checked with additional seeds before any mechanistic interpretation.
+descriptive; it is not a scaling-law claim. Additional seeds (20261112,
+20261113) are training; their 1/3/5/10 points are pending. The epoch-20 decline
+should be checked with those seeds before any mechanistic interpretation.
 
 ## Data
 
