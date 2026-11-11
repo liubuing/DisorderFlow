@@ -188,6 +188,9 @@ results/csn_abeta_v1/
 └── completion.json
 ```
 
+Manuscript draft: `publication/csn_abeta_manuscript_draft_v1.md` (local, not
+tracked, not submitted).
+
 Reproduce:
 
 ```bash
