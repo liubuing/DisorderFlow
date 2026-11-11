@@ -12,6 +12,7 @@ a full training run in progress.
 | M2 | AntiFold zero-shot | **0.306928** | **[0.124085, 0.497105]** | **12/15** | **replication** |
 | M3 pilot | from-scratch, 281 PDBs, 20 epochs | 0.015699 | [-0.113458, 0.151689] | 8/15 | pilot null |
 | M3 full (early) | from-scratch, 4,506 PDBs, 3 epochs | 0.060258 | [-0.054864, 0.181916] | 7/15 | early null; undertrained |
+| **M3 full (10 epochs)** | from-scratch, 4,506 PDBs, 10 epochs | **0.205317** | **[0.088715, 0.321356]** | **14/15** | **replication** |
 
 M2 per-cluster comparison to M0: Pearson 0.720 (p=0.0025), Spearman 0.739
 (p=0.0016), sign agreement 11/15.
@@ -38,9 +39,12 @@ M2 per-cluster comparison to M0: Pearson 0.720 (p=0.0025), Spearman 0.739
 | Positive, CI lower > 0, ≥10/15 | ECLS survives a from-scratch pre-2021 model; not explained by the released ProteinMPNN weights |
 | Partial / null | ECLS may require a well-trained structural prior; the exposure question remains unresolved, and the paper should report the scale dependence rather than claim exposure independence |
 
-The full run was stopped after epoch 3 because each epoch took ~15 minutes on
-the full 4,506-PDB set; the saved checkpoint is undertrained. Its null result
-is **not** a controlled-exposure verdict.
+The 3-epoch checkpoint was undertrained and its null result is **not** a
+controlled-exposure verdict. The completed 10-epoch full run is the actual M3
+arm: it passes the frozen ECLS gates (mean 0.2053, CI lower 0.0887, 14/15
+positive). Exact PDB overlap with the temporal panel is zero; one exact H3
+substring overlap (7e6p_H vs 8h8q, cluster E121) was found, and excluding E121
+leaves both M0 and M3 positive (M3 mean 0.2060, 13/14 positive).
 
 ## Paper framing (if the full M3 is null)
 

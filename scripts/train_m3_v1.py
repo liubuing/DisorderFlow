@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "ProteinMPNN" / "training"))
 from model_utils import ProteinMPNN, featurize, loss_nll  # noqa: E402
 
 
-def load_dataset(data_dir: Path):
+def load_dataset(data_dir: Path, max_length: int = 500):
     rows = list(csv.DictReader((data_dir / "list.csv").open(encoding="utf-8")))
     by_pdb = {}
     for row in rows:
@@ -37,6 +37,12 @@ def load_dataset(data_dir: Path):
             chain = row["CHAINID"].split("_", 1)[1]
             chain_data[chain] = torch.load(
                 folder / f"{pdb}_{chain}.pt", weights_only=False)
+        chain_data = {
+            name: arrays for name, arrays in chain_data.items()
+            if len(arrays["seq"]) <= max_length
+        }
+        if not chain_data:
+            continue
         names = sorted(chain_data)
         for masked in names:
             visible = [name for name in names if name != masked]
@@ -111,6 +117,7 @@ def main(argv=None) -> int:
     parser.add_argument("--layers", type=int, default=3)
     parser.add_argument("--neighbors", type=int, default=48)
     parser.add_argument("--max-examples", type=int, default=None)
+    parser.add_argument("--max-length", type=int, default=500)
     parser.add_argument("--seed", type=int, default=20261111)
     args = parser.parse_args(argv)
 
@@ -121,7 +128,7 @@ def main(argv=None) -> int:
     out = args.out if args.out.is_absolute() else ROOT / args.out
     (out / "model_weights").mkdir(parents=True, exist_ok=True)
 
-    examples = load_dataset(data_dir)
+    examples = load_dataset(data_dir, max_length=args.max_length)
     random.shuffle(examples)
     if args.max_examples:
         examples = examples[:args.max_examples]

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "ecls_m3_controlled_exposure",
+  "status": "replication_controlled_exposure",
+  "dataset": {
+    "n_pdb": 4506,
+    "n_chains": 8585,
+    "cutoff": "2021-08-02"
+  },
+  "training": {
+    "epochs": 10,
+    "train_loss_start": 2.9307263938452173,
+    "train_loss_end": 1.409880578272549,
+    "valid_loss_end": 1.345350752227951,
+    "model": "ProteinMPNN-style 3+3, 1.7M params"
+  },
+  "result": {
+    "mean_ecls_advantage": 0.205317,
+    "median_ecls_advantage": 0.196236,
+    "ecls_advantage_mean_ci95": [
+      0.088715,
+      0.321356
+    ],
+    "fraction_positive_ecls_advantage": 0.933333,
+    "development_pass": true
+  },
+  "criteria": {
+    "mean_gt_zero": true,
+    "ci_lower_gt_zero": true,
+    "positive_clusters_ge_10": true,
+    "magnitude_within_2x": true
+  },
+  "overlap": {
+    "pdb_overlap": 0,
+    "exact_h3_overlap": [
+      {
+        "panel": "8h8q_H_L",
+        "unit": "E121",
+        "h3": "ALFDGYYPWFAS",
+        "training_chain": "7e6p_H"
+      }
+    ],
+    "exclusion_sensitivity": {
+      "M0_mean": 0.1603,
+      "M0_positive": "11/14",
+      "M3_mean": 0.206,
+      "M3_positive": "13/14"
+    }
+  },
+  "per_cluster": {
+    "M0_vs_M3": {
+      "pearson": 0.638,
+      "spearman": 0.714,
+      "sign_agreement": "11/15"
+    },
+    "M2_vs_M3": {
+      "pearson": 0.865,
+      "spearman": 0.861,
+      "sign_agreement": "13/15"
+    }
+  },
+  "claim_boundary": [
+    "Likelihood contrast, not binding/affinity/specificity.",
+    "Homology-level exposure not fully excluded.",
+    "Small 1.7M model, 10 epochs; not a superiority claim.",
+    "No wet-lab measurement.",
+    "Frozen ECLS decision unchanged."
+  ],
+  "sources": {
+    "training_log": "results/ecls_cross_arch_v1/m3_full10/training_log.json",
+    "results": "results/ecls_cross_arch_v1/m3_full10_ecls/results.json",
+    "results_sha256": "9aa2dc71421aa1bc49d9ad9e20e9860af1fae3a3247985579c60ec1b420875b6"
+  }
+}

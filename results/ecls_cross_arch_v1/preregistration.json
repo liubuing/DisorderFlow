@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "created": "2026-11-11",
-  "status": "m2_scored_m3_pending",
+  "status": "complete_m2_m3",
   "analysis": "ecls_cross_architecture_and_controlled_exposure",
   "question": "Does the ECLS native-vs-shuffle advantage survive AntiFold zero-shot (M2) and a from-scratch pre-2021 model (M3)?",
   "panel": {
@@ -45,7 +45,7 @@
     },
     "M3": {
       "model": "ProteinMPNN-style 3+3 from scratch on pre-2021 SAbDab",
-      "status": "early_full_null_training_incomplete",
+      "status": "complete_replication",
       "pilot": {
         "dataset": "281 PDBs / 557 chains",
         "epochs": 20,
@@ -72,6 +72,18 @@
         "fraction_positive_ecls_advantage": 0.466667,
         "development_pass": false,
         "epoch": 3
+      },
+      "result": {
+        "mean_ecls_advantage": 0.205317,
+        "median_ecls_advantage": 0.196236,
+        "ecls_advantage_mean_ci95": [
+          0.088715,
+          0.321356
+        ],
+        "fraction_positive_ecls_advantage": 0.933333,
+        "development_pass": true,
+        "positive_clusters": "14/15",
+        "epochs": 10
       }
     }
   },
