@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-11",
+  "analysis": "bound_vs_free_state",
+  "classification": "development_descriptive_not_confirmatory_claim",
+  "core": "AEFRH",
+  "tight_lineages": [
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "L5",
+    "L7"
+  ],
+  "references": {
+    "L1": [
+      "2IPU"
+    ],
+    "L2": [
+      "3BAE"
+    ],
+    "L3": [
+      "3IFN"
+    ],
+    "L4": [
+      "3IFO"
+    ],
+    "L5": [
+      "3IFP"
+    ],
+    "L6": [
+      "4HIX"
+    ],
+    "L7": [
+      "5CSZ",
+      "5CSZ"
+    ],
+    "L8": [
+      "5W3P"
+    ],
+    "L9": [
+      "6CO3"
+    ]
+  },
+  "free_state_entries": {
+    "1AMC": {
+      "condition": "aqueous, Abeta 1-28",
+      "primary": true,
+      "n_models": 5,
+      "n_valid": 5,
+      "best_tight_median": 3.0569956672607193,
+      "best_tight_min": 3.052756454985292,
+      "best_tight_max": 3.0705602535765677,
+      "fraction_within_0.5": 0.0,
+      "fraction_within_1.0": 0.0,
+      "fraction_within_1.5": 0.0,
+      "closest_lineage_counts": {
+        "L3": 5
+      },
+      "free_ensemble_pairwise_median": 0.11760036839173252
+    },
+    "1BJB": {
+      "condition": "aqueous, Abeta[E16] 1-28",
+      "primary": true,
+      "n_models": 14,
+      "n_valid": 14,
+      "best_tight_median": 2.1784809308122166,
+      "best_tight_min": 1.8711087161637405,
+      "best_tight_max": 2.531607557176815,
+      "fraction_within_0.5": 0.0,
+      "fraction_within_1.0": 0.0,
+      "fraction_within_1.5": 0.0,
+      "closest_lineage_counts": {
+        "L3": 11,
+        "L1": 3
+      },
+      "free_ensemble_pairwise_median": 0.9584004583175891
+    },
+    "1BJC": {
+      "condition": "aqueous, Abeta[F16] 1-28",
+      "primary": true,
+      "n_models": 15,
+      "n_valid": 15,
+      "best_tight_median": 2.083932574384851,
+      "best_tight_min": 1.2879685534249266,
+      "best_tight_max": 2.712552628701202,
+      "fraction_within_0.5": 0.0,
+      "fraction_within_1.0": 0.0,
+      "fraction_within_1.5": 0.06666666666666667,
+      "closest_lineage_counts": {
+        "L5": 5,
+        "L3": 5,
+        "L1": 3,
+        "L7": 1,
+        "L4": 1
+      },
+      "free_ensemble_pairwise_median": 1.9066000590295646
+    },
+    "1ZE7": {
+      "condition": "aqueous, Abeta 1-16",
+      "primary": true,
+      "n_models": 20,
+      "n_valid": 20,
+      "best_tight_median": 1.789249864305258,
+      "best_tight_min": 0.2018410873657235,
+      "best_tight_max": 3.131960281806126,
+      "fraction_within_0.5": 0.1,
+      "fraction_within_1.0": 0.1,
+      "fraction_within_1.5": 0.3,
+      "closest_lineage_counts": {
+        "L5": 11,
+        "L3": 6,
+        "L1": 1,
+        "L4": 1,
+        "L7": 1
+      },
+      "free_ensemble_pairwise_median": 1.6972677079425538
+    },
+    "1ZE9": {
+      "condition": "zinc-bound, Abeta 1-16",
+      "primary": false,
+      "n_models": 20,
+      "n_valid": 20,
+      "best_tight_median": 1.812032412923529,
+      "best_tight_min": 1.5294669784841388,
+      "best_tight_max": 2.285910307271673,
+      "fraction_within_0.5": 0.0,
+      "fraction_within_1.0": 0.0,
+      "fraction_within_1.5": 0.0,
+      "closest_lineage_counts": {
+        "L5": 20
+      },
+      "free_ensemble_pairwise_median": 0.6763659760035377
+    },
+    "2BP4": {
+      "condition": "TFE-water 80%, Abeta 1-16",
+      "primary": false,
+      "n_models": 20,
+      "n_valid": 20,
+      "best_tight_median": 3.1142756778708356,
+      "best_tight_min": 2.998444009920973,
+      "best_tight_max": 3.1921760645922186,
+      "fraction_within_0.5": 0.0,
+      "fraction_within_1.0": 0.0,
+      "fraction_within_1.5": 0.0,
+      "closest_lineage_counts": {
+        "L3": 20
+      },
+      "free_ensemble_pairwise_median": 0.11430645237575063
+    }
+  },
+  "primary_aggregate": {
+    "n_models": 54,
+    "best_tight_median": 2.0794352006173717,
+    "fraction_within_0.5": 0.037037037037037035,
+    "fraction_within_1.0": 0.037037037037037035,
+    "fraction_within_1.5": 0.12962962962962962,
+    "closest_lineage_counts": {
+      "L3": 27,
+      "L5": 16,
+      "L1": 7,
+      "L7": 2,
+      "L4": 2
+    }
+  },
+  "caveats": [
+    "NMR ensembles are not Boltzmann-weighted.",
+    "1ZE9 contains zinc; 2BP4 contains 80% TFE; both are sensitivity arms.",
+    "1AMC/1BJB/1BJC are Abeta 1-28; 1ZE7 is Abeta 1-16.",
+    "The bound reference is the AEFRH core on the crystal peptide; terminal residues are excluded.",
+    "This analysis tests whether the bound conformer exists in the free ensemble, not whether binding selects it."
+  ],
+  "entries_csv": "results/csn_abeta_v1/abeta_entries.csv",
+  "entries_csv_sha256": "166a029ddd0e64fb50885e85c83469a12c188048f6c6e8208a3062e9262bdffe",
+  "output_csv": "results/csn_abeta_v1/free_state_models.csv",
+  "output_csv_sha256": "374c4e58ed915bdb4a4e8720c54d756def348809808f0d6164edb19a9de87a8e"
+}

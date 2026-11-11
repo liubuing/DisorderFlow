@@ -107,6 +107,49 @@ copies in the core; the R1 floor comes from 5CSZ chains D/E (0.064 Å on
 `AEFRH`). This is a limitation, not a failure: the global NCS pair was also
 5CSZ.
 
+## 4.2 Free-state ensemble comparison (post hoc)
+
+Question: is the bound `AEFRH` conformer present in public free-state NMR
+ensembles, and how common is it?
+
+Sources: RCSB NMR entries 1AMC (Aβ 1-28, 5 models), 1BJB (Aβ[E16] 1-28, 14
+models), 1BJC (Aβ[F16] 1-28, 15 models), 1ZE7 (Aβ 1-16, 20 models); sensitivity
+arms 1ZE9 (zinc-bound, 20 models) and 2BP4 (80% TFE, 20 models).
+
+Method: extract the `AEFRH` Cα trace from each NMR model, superpose it on each
+bound tight-cluster reference (L1–L5, L7), and record the best RMSD and the
+closest lineage.
+
+| NMR entry | Condition | Models | Median best RMSD | Fraction ≤0.5 Å | Free-ensemble pairwise median |
+|---|---|---:|---:|---:|---:|
+| 1AMC | aqueous, Aβ 1-28 | 5 | 3.057 Å | 0.00 | 0.118 Å |
+| 1BJB | aqueous, Aβ[E16] 1-28 | 14 | 2.178 Å | 0.00 | 0.958 Å |
+| 1BJC | aqueous, Aβ[F16] 1-28 | 15 | 2.084 Å | 0.00 | 1.907 Å |
+| 1ZE7 | aqueous, Aβ 1-16 | 20 | 1.789 Å | **0.10** | 1.697 Å |
+| 1ZE9 | zinc-bound, Aβ 1-16 | 20 | 1.812 Å | 0.00 | 0.676 Å |
+| 2BP4 | 80% TFE, Aβ 1-16 | 20 | 3.114 Å | 0.00 | 0.114 Å |
+
+Primary aqueous aggregate (54 models): median best RMSD **2.079 Å**; only
+**3.7%** within 1.0 Å and **13.0%** within 1.5 Å. The single near-native model
+is in 1ZE7 (best RMSD **0.202 Å**, 1/20 models).
+
+Interpretation:
+
+- The bound tight-cluster conformer is **not a dominant free-state state** in
+  these NMR ensembles. Most models are 2–3 Å away.
+- It is **accessible**: 1ZE7 contains one model at 0.20 Å, and 30% of its
+  models are within 1.5 Å. This is consistent with a minor, accessible state
+  that binding could select.
+- 1AMC and 2BP4 are internally tight but far from the bound conformer; they
+  likely represent helical/TFE-induced states, not the aqueous free ensemble.
+- The data are **consistent with conformer selection but do not prove it**:
+  the near-native model is one of twenty, the ensembles are not
+  Boltzmann-weighted, and the peptide lengths/conditions differ from the
+  bound complexes.
+
+This is a descriptive free-state comparison, not a thermodynamic or kinetic
+measurement.
+
 ## 5. Caveats
 
 - The primary core is only five residues; a 5-Cα RMSD is sensitive to
