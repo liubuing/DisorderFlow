@@ -59,14 +59,48 @@ The archive is therefore a **local lower bound**, not the CSN coordinate
 source. The CSN C0 analysis used separate local coordinates; those entries
 must be fetched from RCSB for any expansion that includes tau/α-syn.
 
+## Extended local scan (additional CIF directories)
+
+The archive is not the only local source. A second scan covered
+`data/sabdab2_abag_project_pool_v2/cif`, `data/multiscaffold_confirmatory_v1/cif`,
+`results/flex_a1_scaffold_audit_v1/cif` and
+`data/peptide_h3_temporal_split_v3/cif`:
+
+| Metric | Value |
+|---|---:|
+| CIF files scanned | 1,417 |
+| Peptide rows | 935 |
+| Parse failures | 0 |
+
+Key lineage checks:
+
+| Entry | Peptide | Antibody comparison | Lineage call |
+|---|---|---|---|
+| 7QCQ | `GSVQIVYKPK` | VHH 95.6–98.2% identical to 8OP0/8OPI/8PII | **Same VHH Z70 lineage**, not independent |
+| 8OP0 / 8OPI / 8PII | `GSVQIVYKPK` | 97.3–98.2% among themselves | Same lineage |
+| 4HIX / 4OJF | `DAEFRH` | H/L 100% | Same antibody |
+| 4ONF | `DAEFRH` | H 86.6%, L 88.5% vs 4HIX | Close lineage, not independent by the <90% rule |
+| 5W3P | `DAEFRHDSGYEVHHQK` | H 47.5%, L 48.7% vs 4HIX | **Independent lineage** |
+| 2X6M | `DYEPEA` | single entry | No second lineage |
+| 8B8I | `KEDAFSKLKEKFMNELH` | single entry (8 copies) | No second lineage |
+
+**Local conclusion:** the tau PHF6* family remains single-lineage after adding
+7QCQ; the Aβ N-terminal family has two independent lineages (4HIX/4OJF/4ONF
+vs 5W3P), which is descriptive only. No local family reaches the ≥5-lineage
+confirmatory threshold. A full RCSB/PDB search is still required for tau and
+α-syn; the local archive cannot answer the question.
+
 ## What to do next
 
-1. Cluster each repeated sequence by antibody lineage (ANARCI/IMGT, species,
-   germline, VH/VL pairing, variable-domain identity).
-2. Manually curate the Aβ family (`DAEFRH`, 4 PDBs) as a test case; if it has
-   ≥2 independent lineages, it is the first confirmatory candidate.
-3. Fetch 8OP0/8OPI/8PII and 2X6M coordinates from RCSB (not present locally)
-   and add them to the expansion inventory.
+1. Run full RCSB/PDB sequence searches for `GSVQIVYKPK`, `DYEPEA` and the
+   Syt1 peptide; the local sources do not contain a second independent
+   lineage for any of them.
+2. Expand the Aβ N-terminal family with a full PDB search. It currently has
+   two independent lineages (4HIX/4OJF/4ONF vs 5W3P), so it is descriptive
+   until more lineages are found.
+3. Run ANARCI/IMGT numbering on the candidate families before calling
+   lineage independence; the current calls use global sequence identity and
+   are a first pass.
 4. Apply the stop rules in `docs/CSN_EXPANSION_SEARCH_PROTOCOL_V1.md`: 0
    families → `coordinate_starvation`; 1–2 → descriptive; ≥5 → confirmatory.
 
