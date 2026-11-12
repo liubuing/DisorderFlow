@@ -71,6 +71,7 @@ if not (Path(ROOT) / "data" / "anti_abeta_refs" / "4HIX.pdb").exists():
         "test_csn_c0_contracts.py",
         "test_ecls_submission.py",
         "test_esel_e0b_contracts.py",
+        "test_flex_j0_contracts.py",
         "test_flex_j0b_contracts.py",
         "test_followup_scientific_contracts.py",
         "test_h3_publication_package.py",
