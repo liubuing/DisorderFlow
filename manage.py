@@ -54,11 +54,18 @@ def cmd_start(args):
     config = load_app_config()
     host = config['server']['host']
     port = config['server']['port']
-    auto_open = config['server'].get('auto_open', True)
+    entry = 'app_web.py'
 
     if args.bg:
         # 后台启动
-        # 以分离进程运行 app.py，stdout/stderr 重定向到 server.log，
+        # 预检：端口若已被占用，新进程必然绑定失败（uvicorn 会立即退出），
+        # 而端口探测只能说明"有人"在监听，不能说明是我们拉起的那个进程
+        if _port_is_open(host, port):
+            print(f"[✗] 端口 {host}:{port} 已被占用，请先 python manage.py stop")
+            print(f"    若不是本服务占用：netstat -ano | findstr :{port} 后自行结束该进程")
+            return
+
+        # 以分离进程运行 app_web.py，stdout/stderr 重定向到 server.log，
         # 轮询端口（最长 90 秒）确认服务真正可用后才算启动成功
         print(f"[*] 后台启动服务器...")
         log_f = open(LOG_FILE, 'w')
@@ -68,7 +75,7 @@ def cmd_start(args):
         if sys.platform == 'win32':
             creationflags = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
         proc = subprocess.Popen(
-            [sys.executable, 'app.py'],
+            [sys.executable, entry],
             stdout=log_f, stderr=subprocess.STDOUT,
             cwd=str(PROJECT_DIR),
             creationflags=creationflags,
@@ -77,10 +84,16 @@ def cmd_start(args):
         log_f.close()
         PID_FILE.write_text(str(proc.pid))
         deadline = time.time() + 90
-        while time.time() < deadline and _is_running(proc.pid):
+        while time.time() < deadline:
+            if not _is_running(proc.pid):
+                break                      # 子进程已退出（多为绑定失败/导入报错）
             if _port_is_open(host, port):
                 break
             time.sleep(1)
+        # 端口通了之后再等 3 秒复核：致命错误（端口冲突等）通常在启动后
+        # 一两秒内出现，立即宣布成功会误报
+        if _is_running(proc.pid) and _port_is_open(host, port):
+            time.sleep(3)
         if _is_running(proc.pid) and _port_is_open(host, port):
             print(f"[✓] 服务器已启动 (PID: {proc.pid})")
             print(f"    地址: http://{host}:{port}")
@@ -89,14 +102,21 @@ def cmd_start(args):
         else:
             if PID_FILE.exists():
                 PID_FILE.unlink()
-            print(f"[✗] 启动失败，查看日志: {LOG_FILE}")
+            print(f"[✗] 启动失败（PID {proc.pid}），日志尾部：")
+            try:
+                lines = LOG_FILE.read_text(
+                    encoding='utf-8', errors='replace').splitlines()[-8:]
+                for line in lines:
+                    print("    " + line)
+            except OSError:
+                print(f"    （无法读取 {LOG_FILE}）")
     else:
         # 前台启动
         print(f"[*] 启动服务器: http://{host}:{port}")
         print(f"    按 Ctrl+C 停止")
         os.chdir(str(PROJECT_DIR))
-        # 前台模式用 os.execv 原地替换为 app.py 进程（不产生额外父进程）
-        os.execv(sys.executable, [sys.executable, 'app.py'])
+        # 前台模式用 os.execv 原地替换为 app_web.py 进程（不产生额外父进程）
+        os.execv(sys.executable, [sys.executable, entry])
 
 
 def cmd_stop(args):
@@ -186,8 +206,27 @@ def cmd_status(args):
 
 def _is_running(pid):
     """检查进程是否运行"""
-    # os.kill(pid, 0) 不发送任何信号，仅探测进程是否存在（POSIX 语义；
-    # Windows 上 CPython 也按存在性处理），抛异常即视为进程不在
+    # 注意：os.kill(pid, 0) 在 Windows 上不是存在性探测——0 恰是 CTRL_C_EVENT，
+    # 走 GenerateConsoleCtrlEvent；对 DETACHED_PROCESS（无控制台）必然失败，
+    # 导致明明活着的进程被误判为"不存在"（stop 因此从不停不掉服务）。
+    # Windows 用 OpenProcess + GetExitCodeProcess 探测，POSIX 才能用 os.kill(pid, 0)。
+    if sys.platform == 'win32':
+        import ctypes
+
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+        STILL_ACTIVE = 259
+        kernel32 = ctypes.windll.kernel32
+        handle = kernel32.OpenProcess(
+            PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
+        if not handle:
+            return False
+        try:
+            code = ctypes.c_ulong()
+            if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
+                return False
+            return code.value == STILL_ACTIVE
+        finally:
+            kernel32.CloseHandle(handle)
     try:
         os.kill(pid, 0)
         return True
@@ -210,10 +249,14 @@ def _find_by_port(port=7860):
     """通过端口查找进程 (Windows)"""
     # 依赖 Windows 的 netstat -ano 输出：找到 LISTENING 行后取最后一列（PID）
     try:
+        # 不能用 text=True：中文 Windows 的 netstat 表头是 GBK，而 text=True
+        # 的解码发生在子进程读取线程里，UnicodeDecodeError 不归本函数的
+        # try 管，会直接以线程异常的形式刷屏。改为按字节取回、replace 解码，
+        # 我们只关心 ASCII 的端口/PID 列
         result = subprocess.run(
-            ['netstat', '-ano'], capture_output=True, text=True
+            ['netstat', '-ano'], capture_output=True
         )
-        for line in result.stdout.split('\n'):
+        for line in result.stdout.decode('utf-8', errors='replace').split('\n'):
             if f':{port}' in line and 'LISTENING' in line:
                 parts = line.split()
                 return int(parts[-1])
@@ -470,7 +513,8 @@ def _batch_mpnn(pdb_path, args):
         '--save_score', '1',
         '--path_to_model_weights', 'ProteinMPNN/vanilla_model_weights',
     ]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    r = subprocess.run(cmd, capture_output=True, text=True,
+                       encoding='utf-8', errors='replace', timeout=300)
     if r.returncode != 0:
         raise RuntimeError(r.stderr[:500])
 
@@ -636,12 +680,12 @@ def cmd_test(args):
     except Exception as e:
         errors.append(f"Biopython: {e}")
 
-    # Gradio
+    # FastAPI
     try:
-        import gradio
-        print(f"  Gradio: {gradio.__version__}")
+        import fastapi
+        print(f"  FastAPI: {fastapi.__version__}")
     except Exception as e:
-        errors.append(f"Gradio: {e}")
+        errors.append(f"FastAPI: {e}")
 
     # ESM
     try:
@@ -693,6 +737,7 @@ def cmd_test(args):
                 ["wsl.exe", "-d", distro, "--", python_wsl, "-c",
                  "import jax; print(jax.__version__); print(jax.devices())"],
                 capture_output=True, text=True, timeout=30,
+                encoding='utf-8', errors='replace',
             )
             if result.returncode == 0 and "CudaDevice" in result.stdout:
                 print(f"  WSL JAX: GPU OK ({result.stdout.strip().replace(chr(10), ' | ')})")
@@ -759,6 +804,7 @@ def main():
     # start
     p_start = sub.add_parser('start', help='启动 Web 服务')
     p_start.add_argument('--bg', action='store_true', help='后台运行')
+
 
     # stop
     sub.add_parser('stop', help='停止 Web 服务')

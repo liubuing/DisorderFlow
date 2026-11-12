@@ -89,8 +89,11 @@ License picture (code / data / weights are three different questions — see
 Entry points and post-split structure — full details in the Chinese guide
 below; the publication claims above are unaffected.
 
-- `app.py` is now a 73-line launcher; all web implementation lives in the
-  `webapp/` package (`state/sequtils/design/baselines/af2/pipelines/ui/facade`).
+- `app_web.py` is the web entry point (FastAPI + a static HTML/CSS/JS
+  front-end under `webapp/web/`). Backend logic lives in the `webapp/`
+  package (`state/sequtils/design/baselines/af2/pipelines/ops/runs`);
+  `webapp/web/server.py` exposes it as JSON + SSE. The legacy Gradio
+  interface (`app.py`, `webapp/ui.py`) was removed on 2026-11-11.
   The venv is installed editable (`pip install -e . --no-deps`), so
   `modules/` scripts no longer need `PYTHONPATH=.`. Note: `C:\biological` is
   a directory **junction** to `D:\biological` (same files, same inode — not a
@@ -108,13 +111,14 @@ below; the publication claims above are unaffected.
 
 | 入口 | 说明 |
 |---|---|
-| `app.py` | Web 入口薄壳（65 行），实现全在 `webapp/` 包；**新功能不再写进 app.py** |
+| `app_web.py` | Web 入口（FastAPI + 原生 HTML/JS，静态页在 `webapp/web/`）；旧 Gradio `app.py` 已于 2026-11-11 移除 |
 | `manage.py` | 服务管理 start/stop/restart/status/batch/config/test |
 | `train*.py` | BFN 主训练与无序头训练谱系（`train.py` 为主入口） |
 | `build_design_variant_dataset.py` | 置信度真标签数据集构建（"假标签"根因修复后的版本） |
 | `webapp/state.py` | 配置加载、checkpoint 解析、模型单例（含 `_app_config` 等全局） |
-| `webapp/ui.py` | `create_ui()`：全部 Gradio 组件与事件绑定 |
-| `webapp/facade.py` | 旧式 `from app import X` 的兼容再导出层 |
+| `webapp/web/server.py` | FastAPI 路由与 SSE（`/api/*`） |
+| `webapp/ops.py` | 8 个操作（设计/打分/PAE/模板/表位等）的操作层 |
+| `webapp/runs.py` | 运行 manifest、产物存储与下载白名单 |
 | `configs/CHECKPOINT_TRUTH.md` | checkpoint 真相表（唯一权威索引） |
 | `scripts/oneoff/` | 一次性战役档案（v5 建库脚本、本次拆分器），勿重跑 |
 

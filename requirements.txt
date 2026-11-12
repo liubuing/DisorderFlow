@@ -10,8 +10,10 @@ scipy
 pandas
 lmdb
 
-# Web UI
-gradio>=4.0
+# Web UI（FastAPI + 原生前端；不再依赖 Gradio）
+fastapi>=0.110
+uvicorn>=0.27
+httpx  # fastapi.testclient 依赖
 
 # ESM-IF (optional, for sequence scoring)
 fair-esm

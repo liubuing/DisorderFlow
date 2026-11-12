@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>DisorderFlow — 蛋白质设计与验证</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233d7bec' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M7 3v6a5 5 0 0 0 10 0V3'/%3E%3Cpath d='M12 14v7'/%3E%3Cpath d='M8 21h8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7 3v6a5 5 0 0 0 10 0V3"/><path d="M12 14v7"/><path d="M8 21h8"/>
+    </svg>
+    <span class="brand-name">DisorderFlow</span>
+    <span class="brand-sub">蛋白质设计与验证</span>
+  </div>
+
+  <nav class="ws-nav" role="tablist" aria-label="工作区">
+    <button role="tab" data-ws="design" class="on">设计</button>
+    <button role="tab" data-ws="validate">验证</button>
+    <button role="tab" data-ws="targets">靶点</button>
+    <button role="tab" data-ws="runs">记录</button>
+  </nav>
+
+  <div class="top-right">
+    <span class="chip" id="chip-device"><i class="dot"></i><span>连接中</span></span>
+    <button class="icon-btn" id="settings-btn" title="设置" aria-label="设置">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="body">
+  <aside class="rail" id="rail">
+    <div class="rail-group" id="rail-modes">
+      <div class="rail-label">模式</div>
+    </div>
+    <div class="rail-group">
+      <div class="rail-label">最近运行</div>
+      <div class="rail-runs" id="rail-runs"><div class="rail-empty">暂无记录</div></div>
+    </div>
+    <div class="rail-foot">
+      <kbd>⌘</kbd><kbd>↵</kbd> 运行 · <kbd>1</kbd>–<kbd>4</kbd> 切模式
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+
+    <!-- ═══════════════ 设计 ═══════════════ -->
+    <section class="ws" data-ws="design">
+      <div class="ws-head">
+        <h1>设计</h1>
+        <p>从结构或序列出发生成候选序列，按自洽性、置信度与多样性排序。</p>
+      </div>
+
+      <div class="work">
+        <div class="inputs" id="design-inputs">
+
+          <!-- 单结构 -->
+          <div class="panel" data-panel="single">
+            <div class="band">输入</div>
+            <div class="row">
+              <label class="lab">结构文件</label>
+              <div class="ctl">
+                <div class="drop" data-drop="pdb" data-accept=".pdb">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" hidden>
+                </div>
+                <div class="meta" data-meta="pdb"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">从序列生成</label>
+              <div class="ctl inline">
+                <textarea class="text mono" data-field="template" rows="2" spellcheck="false"
+                          placeholder=">name&#10;MSDRPTARRWGK…"></textarea>
+                <button class="btn xs" data-action="template">生成模板</button>
+              </div>
+            </div>
+
+            <div class="band">参数</div>
+            <div class="row">
+              <label class="lab">设计区域</label>
+              <div class="ctl">
+                <input class="text mono" data-field="region" value="A:10-25">
+                <div class="hint">A:10-25 · 多段 A:10-25,40-50 · 多链 A:1-10 B:5-15</div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">工具</label>
+              <div class="ctl">
+                <div class="seg" data-seg="tool">
+                  <button class="on" data-value="BFN (通用蛋白设计)">BFN 通用</button>
+                  <button data-value="BFN (抗体CDR设计)">BFN 抗体</button>
+                  <button data-value="ProteinMPNN">ProteinMPNN</button>
+                  <button data-value="ESM-IF">ESM-IF</button>
+                </div>
+              </div>
+            </div>
+            <div class="row" data-for="BFN (通用蛋白设计)|BFN (抗体CDR设计)">
+              <label class="lab">序列数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="samples" min="1" max="20" step="1" value="3">
+                <output>3</output></div></div>
+            </div>
+            <div class="row" data-for="BFN (通用蛋白设计)|BFN (抗体CDR设计)">
+              <label class="lab">解码</label>
+              <div class="ctl inline gap">
+                <label class="chk"><button class="switch" data-switch="stochastic" aria-pressed="false"><span></span></button>随机采样</label>
+                <label class="chk"><button class="switch on" data-switch="eval_mode" aria-pressed="true"><span></span></button>评估模式</label>
+              </div>
+            </div>
+            <div class="row" data-for="BFN (抗体CDR设计)">
+              <label class="lab">链</label>
+              <div class="ctl inline">
+                <input class="text mono w60" data-field="heavy" value="H" aria-label="重链">
+                <span class="sep">/</span>
+                <input class="text mono w60" data-field="light" value="L" aria-label="轻链">
+                <span class="hint inline">重链 / 轻链 ID</span>
+              </div>
+            </div>
+            <div class="row" data-for="ProteinMPNN">
+              <label class="lab">设计链</label>
+              <div class="ctl inline">
+                <input class="text mono w120" data-field="chains" value="A">
+                <span class="hint inline">多链用空格分隔</span>
+              </div>
+            </div>
+            <div class="row" data-for="ProteinMPNN|ESM-IF">
+              <label class="lab">温度</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="temperature" min="0.05" max="1" step="0.05" value="0.1">
+                <output>0.10</output></div></div>
+            </div>
+            <div class="row" data-for="ProteinMPNN">
+              <label class="lab">随机种子</label>
+              <div class="ctl inline">
+                <input class="text mono w80" data-field="seed" value="42">
+                <input class="text mono w120" data-field="omit" placeholder="排除 AA，如 CX">
+              </div>
+            </div>
+            <div class="row" data-for="ESM-IF">
+              <label class="lab">目标链</label>
+              <div class="ctl"><input class="text mono w120" data-field="chain" value="A"></div>
+            </div>
+          </div>
+
+          <!-- 批量 -->
+          <div class="panel" data-panel="batch" hidden>
+            <div class="band">输入</div>
+            <div class="row">
+              <label class="lab">结构文件</label>
+              <div class="ctl">
+                <div class="drop" data-drop="files" data-accept=".pdb" data-multiple="1">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入多个 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" multiple hidden>
+                </div>
+                <div class="meta" data-meta="files"></div>
+              </div>
+            </div>
+            <div class="band">参数</div>
+            <div class="row">
+              <label class="lab">工具</label>
+              <div class="ctl"><div class="seg" data-seg="tool">
+                <button class="on" data-value="BFN (通用蛋白设计)">BFN 通用</button>
+                <button data-value="ProteinMPNN">ProteinMPNN</button>
+                <button data-value="ESM-IF">ESM-IF</button>
+              </div></div>
+            </div>
+            <div class="row" data-for="BFN (通用蛋白设计)">
+              <label class="lab">设计区域</label>
+              <div class="ctl"><input class="text mono" data-field="region" value="A:10-25"></div>
+            </div>
+            <div class="row" data-for="ProteinMPNN|ESM-IF">
+              <label class="lab">目标链</label>
+              <div class="ctl"><input class="text mono w120" data-field="chains" value="A"></div>
+            </div>
+            <div class="row">
+              <label class="lab">序列数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="samples" min="1" max="10" step="1" value="3">
+                <output>3</output></div></div>
+            </div>
+          </div>
+
+          <!-- 靶点约束 -->
+          <div class="panel" data-panel="target" hidden>
+            <div class="band">靶点</div>
+            <div class="row">
+              <label class="lab">靶点结构</label>
+              <div class="ctl">
+                <div class="drop" data-drop="target" data-accept=".pdb">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" hidden>
+                </div>
+                <div class="meta" data-meta="target"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">抗原链</label>
+              <div class="ctl inline">
+                <select class="text mono w80" data-field="chain"><option>A</option></select>
+                <span class="hint inline">上传后自动列出</span>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">表位</label>
+              <div class="ctl inline">
+                <div class="range w140">
+                  <input type="range" data-field="top_n" min="5" max="50" step="5" value="20">
+                  <output>20</output>
+                </div>
+                <button class="btn xs" data-action="epitope-target">分析</button>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">区域</label>
+              <div class="ctl"><input class="text mono" data-field="epitope" placeholder="分析后自动填入"></div>
+            </div>
+            <div class="band">抗体</div>
+            <div class="row">
+              <label class="lab">复合物 PDB</label>
+              <div class="ctl">
+                <div class="drop" data-drop="antibody" data-accept=".pdb">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" hidden>
+                </div>
+                <div class="meta" data-meta="antibody"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">链</label>
+              <div class="ctl inline">
+                <input class="text mono w60" data-field="heavy" value="H" aria-label="重链">
+                <span class="sep">/</span>
+                <input class="text mono w60" data-field="light" value="L" aria-label="轻链">
+              </div>
+            </div>
+            <div class="band">参数</div>
+            <div class="row">
+              <label class="lab">工具</label>
+              <div class="ctl"><div class="seg" data-seg="tool">
+                <button class="on" data-value="BFN (抗体CDR设计)">BFN 抗体</button>
+                <button data-value="ProteinMPNN">ProteinMPNN</button>
+                <button data-value="ESM-IF">ESM-IF</button>
+              </div></div>
+            </div>
+            <div class="row">
+              <label class="lab">约束</label>
+              <div class="ctl inline gap">
+                <label class="chk"><button class="switch on" data-switch="use_constraint" aria-pressed="true"><span></span></button>表位距离约束</label>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">阈值</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="cutoff" min="5" max="20" step="1" value="10">
+                <output>10</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">序列数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="samples" min="1" max="20" step="1" value="3">
+                <output>3</output></div></div>
+            </div>
+          </div>
+
+          <!-- 疾病靶点 -->
+          <div class="panel" data-panel="disease" hidden>
+            <div class="band">靶点</div>
+            <div class="row">
+              <label class="lab">疾病</label>
+              <div class="ctl"><select class="text" data-field="disease" data-source="diseases"></select></div>
+            </div>
+            <div class="row">
+              <label class="lab">构象</label>
+              <div class="ctl inline">
+                <select class="text mono" data-field="conformation" data-source="conformations"></select>
+                <button class="btn xs" data-action="load-disease">加载</button>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">状态</label>
+              <div class="ctl"><div class="note" id="disease-state">尚未加载靶点</div></div>
+            </div>
+            <div class="row">
+              <label class="lab">表位</label>
+              <div class="ctl inline">
+                <div class="range w140">
+                  <input type="range" data-field="top_n" min="5" max="30" step="1" value="20">
+                  <output>20</output>
+                </div>
+                <button class="btn xs" data-action="epitope-disease">分析</button>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">区域</label>
+              <div class="ctl"><input class="text mono" data-field="region" placeholder="A:26-33,51-58,97-110"></div>
+            </div>
+            <div class="band">抗体模板</div>
+            <div class="row">
+              <label class="lab">支架</label>
+              <div class="ctl"><select class="text" data-field="scaffold" data-source="scaffolds"></select></div>
+            </div>
+            <div class="row">
+              <label class="lab">序列</label>
+              <div class="ctl"><textarea class="text mono" data-field="sequence" rows="4" spellcheck="false"></textarea></div>
+            </div>
+            <div class="band">设计</div>
+            <div class="row">
+              <label class="lab">工具</label>
+              <div class="ctl"><div class="seg" data-seg="tool">
+                <button class="on" data-value="BFN (通用蛋白设计)">BFN 通用</button>
+                <button data-value="ProteinMPNN">ProteinMPNN</button>
+                <button data-value="ESM-IF">ESM-IF</button>
+              </div></div>
+            </div>
+            <div class="row">
+              <label class="lab">序列数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="samples" min="3" max="20" step="1" value="8">
+                <output>8</output></div></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 结果 -->
+        <div class="results" id="design-results">
+          <div class="res-head">
+            <span class="res-title">结果</span>
+            <span class="res-sum" data-role="summary">尚未运行</span>
+            <span class="spacer"></span>
+            <button class="btn xs ghost" data-role="copy" hidden>复制 TSV</button>
+            <span data-role="artifacts" class="arts"></span>
+          </div>
+          <div class="stats" data-role="stats" hidden></div>
+          <div class="profile" data-role="profile" hidden></div>
+          <div class="table-wrap" data-role="table-wrap" hidden>
+            <table class="grid" data-role="table"></table>
+          </div>
+          <div class="empty" data-role="empty">
+            <div class="ready" data-role="ready"></div>
+          </div>
+          <details class="log" data-role="log" hidden>
+            <summary>运行日志</summary>
+            <pre data-role="log-body"></pre>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ 验证 ═══════════════ -->
+    <section class="ws" data-ws="validate" hidden>
+      <div class="ws-head">
+        <h1>验证</h1>
+        <p>结构可信度与设计质量的独立评估：AF2 预测、置信度、迭代与闭环。</p>
+      </div>
+
+      <div class="work">
+        <div class="inputs" id="validate-inputs">
+          <div class="panel" data-panel="af2">
+            <div class="band">序列</div>
+            <div class="row">
+              <label class="lab">FASTA</label>
+              <div class="ctl">
+                <textarea class="text mono" data-field="fasta" rows="7" spellcheck="false"
+                          placeholder=">protein_name&#10;MSDRPTARRWGKCGPLCTRENIMV…"></textarea>
+              </div>
+            </div>
+            <div class="band">参数</div>
+            <div class="row">
+              <label class="lab">模型数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="models" min="1" max="5" step="1" value="1">
+                <output>1</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">回收次数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="recycles" min="0" max="12" step="1" value="1">
+                <output>1</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">采样</label>
+              <div class="ctl inline gap">
+                <label class="chk"><button class="switch" data-switch="dropout" aria-pressed="false"><span></span></button>随机采样</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="confidence" hidden>
+            <div class="band">结构</div>
+            <div class="row">
+              <label class="lab">PDB</label>
+              <div class="ctl">
+                <div class="drop" data-drop="pdb" data-accept=".pdb">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" hidden>
+                </div>
+                <div class="meta" data-meta="pdb"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">评估区域</label>
+              <div class="ctl"><input class="text mono" data-field="region" value="A:10-25"></div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="iterative" hidden>
+            <div class="band">模板</div>
+            <div class="row">
+              <label class="lab">PDB</label>
+              <div class="ctl">
+                <div class="drop" data-drop="pdb" data-accept=".pdb">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" hidden>
+                </div>
+                <div class="meta" data-meta="pdb"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">区域</label>
+              <div class="ctl"><input class="text mono" data-field="region" value="A:10-30"></div>
+            </div>
+            <div class="band">循环</div>
+            <div class="row">
+              <label class="lab">每轮样本</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="samples" min="3" max="20" step="1" value="5">
+                <output>5</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">保留 Top-K</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="top_k" min="1" max="5" step="1" value="2">
+                <output>2</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">最大轮次</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="rounds" min="1" max="5" step="1" value="2">
+                <output>2</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">AF2 回收</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="recycles" min="0" max="3" step="1" value="1">
+                <output>1</output></div></div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="loop" hidden>
+            <div class="band">输入</div>
+            <div class="row">
+              <label class="lab">靶点 PDB</label>
+              <div class="ctl">
+                <div class="drop" data-drop="pdb" data-accept=".pdb">
+                  <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                  <input type="file" accept=".pdb" hidden>
+                </div>
+                <div class="meta" data-meta="pdb"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">设计区域</label>
+              <div class="ctl"><input class="text mono" data-field="region" value="A:25-35"></div>
+            </div>
+            <div class="row">
+              <label class="lab">工具</label>
+              <div class="ctl"><div class="seg" data-seg="tool">
+                <button class="on" data-value="BFN (通用蛋白设计)">BFN 通用</button>
+                <button data-value="ProteinMPNN">ProteinMPNN</button>
+                <button data-value="ESM-IF">ESM-IF</button>
+              </div></div>
+            </div>
+            <div class="band">循环</div>
+            <div class="row">
+              <label class="lab">每轮序列</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="samples" min="5" max="30" step="5" value="15">
+                <output>15</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">保留 Top-K</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="top_k" min="2" max="10" step="1" value="5">
+                <output>5</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">最大轮数</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="cycles" min="2" max="8" step="1" value="3">
+                <output>3</output></div></div>
+            </div>
+            <div class="row">
+              <label class="lab">收敛阈值</label>
+              <div class="ctl"><div class="range">
+                <input type="range" data-field="convergence" min="0.005" max="0.1" step="0.005" value="0.02">
+                <output>0.020</output></div></div>
+            </div>
+            <div class="band">物理打分</div>
+            <div class="row">
+              <label class="lab">链</label>
+              <div class="ctl inline">
+                <input class="text mono w60" data-field="ag_chain" value="A" aria-label="抗原链">
+                <span class="sep">/</span>
+                <input class="text mono w60" data-field="ab_chain" value="B" aria-label="抗体链">
+              </div>
+            </div>
+            <div class="row">
+              <label class="lab">弛豫</label>
+              <div class="ctl inline gap">
+                <label class="chk"><button class="switch" data-switch="relax" aria-pressed="false"><span></span></button>FastRelax</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results" id="validate-results">
+          <div class="res-head">
+            <span class="res-title">结果</span>
+            <span class="res-sum" data-role="summary">尚未运行</span>
+            <span class="spacer"></span>
+            <button class="btn xs ghost" data-role="copy" hidden>复制 TSV</button>
+            <span data-role="artifacts" class="arts"></span>
+          </div>
+          <div class="stats" data-role="stats" hidden></div>
+          <div class="profile" data-role="profile" hidden></div>
+          <div class="table-wrap" data-role="table-wrap" hidden>
+            <table class="grid" data-role="table"></table>
+          </div>
+          <div class="empty" data-role="empty">
+            <div class="ready" data-role="ready"></div>
+          </div>
+          <details class="log" data-role="log" hidden>
+            <summary>运行日志</summary>
+            <pre data-role="log-body"></pre>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ 靶点 ═══════════════ -->
+    <section class="ws" data-ws="targets" hidden>
+      <div class="ws-head">
+        <h1>靶点</h1>
+        <p>错误折叠疾病靶点库、致病构象、表位打分与纳米抗体支架。</p>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <div class="band">疾病靶点库</div>
+          <div class="table-wrap slim">
+            <table class="grid selectable" id="disease-table">
+              <thead><tr><th>疾病</th><th>English</th><th class="n">构象</th><th>类型</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="band">构象</div>
+          <div class="table-wrap slim">
+            <table class="grid" id="conf-table">
+              <thead><tr><th>构象</th><th>PDB</th><th>类型</th><th>分辨率</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="band">摘要</div>
+          <pre class="summary" id="target-summary">选择一个疾病靶点</pre>
+
+          <div class="band">表位试算</div>
+          <div class="row">
+            <label class="lab">PDB</label>
+            <div class="ctl">
+              <div class="drop" data-drop="epitope" data-accept=".pdb">
+                <svg class="di" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                <span class="dt">拖入 PDB，或 <u>浏览</u></span>
+                <input type="file" accept=".pdb" hidden>
+              </div>
+              <div class="meta" data-meta="epitope"></div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="lab">链 / Top-N</label>
+            <div class="ctl inline">
+              <input class="text mono w60" data-field="epi_chain" value="A">
+              <div class="range w140">
+                <input type="range" data-field="epi_topn" min="5" max="50" step="5" value="20">
+                <output>20</output>
+              </div>
+              <button class="btn xs" id="epi-run">分析</button>
+            </div>
+          </div>
+          <div class="table-wrap slim" id="epi-result" hidden>
+            <table class="grid"><thead></thead><tbody></tbody></table>
+          </div>
+          <div class="row">
+            <label class="lab">建议区域</label>
+            <div class="ctl"><input class="text mono" id="epi-region" readonly></div>
+          </div>
+
+          <div class="band">支架</div>
+          <div class="row">
+            <label class="lab">VHH</label>
+            <div class="ctl"><select class="text" id="scaffold-select"></select></div>
+          </div>
+          <pre class="summary mono" id="scaffold-detail">—</pre>
+
+          <div class="full-action">
+            <button class="btn" id="use-target">在设计中使用此靶点 →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ 记录 ═══════════════ -->
+    <section class="ws" data-ws="runs" hidden>
+      <div class="ws-head">
+        <h1>记录</h1>
+        <p>每次运行都有可复现的 manifest：输入哈希、检查点、配置与耗时。</p>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <div class="band">运行历史 <button class="btn xs ghost" id="runs-refresh">刷新</button></div>
+          <div class="table-wrap">
+            <table class="grid selectable" id="runs-table">
+              <thead><tr><th>开始</th><th>工作区</th><th>模式</th><th>状态</th><th class="n">耗时</th><th class="n">产物</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col">
+          <div class="band">manifest</div>
+          <pre class="summary mono" id="manifest-body">选择一条运行记录</pre>
+          <div class="band">产物</div>
+          <div class="arts-list" id="artifact-list"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- 底部操作条 -->
+<footer class="actionbar" id="actionbar">
+  <div class="ab-left">
+    <span class="ab-op" id="ab-op">设计 · 单结构</span>
+    <span class="ab-sum" id="ab-summary"></span>
+  </div>
+  <div class="ab-mid">
+    <div class="bar"><div class="fill" id="ab-fill"></div></div>
+    <span class="ab-stage" id="ab-stage"></span>
+  </div>
+  <div class="ab-right">
+    <span class="ab-clock" id="ab-clock"></span>
+    <button class="btn ghost" id="ab-cancel" hidden>取消</button>
+    <button class="btn primary" id="ab-run" title="Ctrl / ⌘ + Enter">运行</button>
+  </div>
+</footer>
+
+<!-- 设置 -->
+<dialog id="settings">
+  <div class="dlg-head">
+    <h2>设置</h2>
+    <button class="icon-btn" id="settings-close" aria-label="关闭">✕</button>
+  </div>
+  <div class="dlg-body">
+    <div class="band">运行环境</div>
+    <div class="kv" id="env-grid"></div>
+
+    <div class="band">模型</div>
+    <div class="inline gap">
+      <button class="btn xs" data-load-model="bfn">加载 BFN</button>
+      <button class="btn xs" data-load-model="esmif">加载 ESM-IF</button>
+      <span class="hint inline" id="model-msg"></span>
+    </div>
+
+    <div class="band">配置 <span class="hint inline" id="config-path"></span></div>
+    <textarea class="text mono" id="config-text" rows="18" spellcheck="false"></textarea>
+    <div class="inline gap">
+      <button class="btn primary xs" id="config-save">保存</button>
+      <span class="hint inline" id="config-msg"></span>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="/static/bio.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

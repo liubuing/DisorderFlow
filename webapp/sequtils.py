@@ -1,17 +1,9 @@
-"""app.py split: sequtils (auto-generated 2026-09-27, bodies verbatim)."""
-#!/usr/bin/env python
-"""
-蛋白质序列设计平台 — Gradio Web 界面（管理增强版）
-
-访问: http://127.0.0.1:7860  （仅本机访问，外部无法连接）
-管理: python manage.py start|stop|restart|status|batch|config|test
-"""
+"""sequtils — FASTA/链解析与序列→PDB 工具（FastAPI 后端共用；2026-11-11 去 Gradio 化）。"""
 import os, json, subprocess, tempfile, re, sys, yaml, time
 from pathlib import Path
 import torch
 import numpy as np
 import pandas as pd
-import gradio as gr
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'modules'))
 import target_design_helpers as tdh
 import cascade_filter as cf

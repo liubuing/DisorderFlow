@@ -6,9 +6,15 @@
 # 3) 错误折叠级联过滤（iPTM/pLDDT/ppl/熵/PAE 复合打分）；
 # 4) IDP 风险提示（Aβ 为内在无序靶标，置信分解释需谨慎）；
 # 5) 把最优 CDR 序列嫁接回骨架，写出抗体+Aβ 多聚体 FASTA 供 AF2 验证。
-# 注意：脚本顶部硬编码了历史工作目录 chdir，属于一次性演示入口。
+# 注意：脚本历史上会 chdir 到 AntibodyDesignBFN 检出目录，属于一次性演示入口。
+# 现在优先读环境变量 ANTIBODYBFN_HOME；未设置或目录不存在时留在原 cwd 继续。
 import os, sys, json, time
-os.chdir(r'C:\biological\AntibodyDesignBFN-main\AntibodyDesignBFN-main')
+_bfn_home = os.environ.get('ANTIBODYBFN_HOME', r'C:\biological\AntibodyDesignBFN-main\AntibodyDesignBFN-main')
+if os.path.isdir(_bfn_home):
+    os.chdir(_bfn_home)
+else:
+    print(f"[warn] AntibodyDesignBFN checkout not found: {_bfn_home}; "
+          f"set ANTIBODYBFN_HOME or check the path. Continuing in {os.getcwd()}")
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..', 'modules'))
 
@@ -17,7 +23,8 @@ import misfolding_knowledge_base as mkb
 import misfolding_pipeline as mfp
 import cascade_filter as cf
 import target_design_helpers as tdh
-from app import load_bfn, run_bfn_protein
+from webapp.design import run_bfn_protein
+from webapp.state import load_bfn
 
 print("=" * 80)
 print("  Alzheimer's Disease Antibody Design — BFN on 5IMK Nanobody Scaffold")

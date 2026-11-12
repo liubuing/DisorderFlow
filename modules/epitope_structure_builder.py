@@ -28,7 +28,7 @@ def build_epitope_helix(sequence, chain_id='A', start_res=1, output_dir=None):
     Returns:
         pdb_path: path to the generated PDB file
     """
-    from app import generate_pdb_from_sequence
+    from webapp.sequtils import generate_pdb_from_sequence
 
     # 复用 app 中的序列->α螺旋模板生成器（~3.6 残基/圈、1.5Å 上升），
     # 生成的是理想几何，仅作 BFN/MPNN/ESM-IF 的结构上下文

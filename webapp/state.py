@@ -1,17 +1,9 @@
-"""app.py split: state (auto-generated 2026-09-27, bodies verbatim)."""
-#!/usr/bin/env python
-"""
-蛋白质序列设计平台 — Gradio Web 界面（管理增强版）
-
-访问: http://127.0.0.1:7860  （仅本机访问，外部无法连接）
-管理: python manage.py start|stop|restart|status|batch|config|test
-"""
-import os, json, subprocess, tempfile, re, sys, yaml, time
+"""state — 配置加载、checkpoint 解析、模型单例（FastAPI 后端共用；2026-11-11 去 Gradio 化）。"""
+import os, json, subprocess, tempfile, re, sys, yaml, time, threading
 from pathlib import Path
 import torch
 import numpy as np
 import pandas as pd
-import gradio as gr
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'modules'))
 import target_design_helpers as tdh
 import cascade_filter as cf
@@ -58,16 +50,48 @@ def get_bfn_ckpt():
     cfg = load_app_config()
     path = Path(cfg['models']['bfn']['checkpoint']).expanduser()
     return str(path if path.is_absolute() else PROJECT_DIR / path)
-def load_bfn():
-    # 加载 BFN 模型（带进程内缓存）：超参与损失权重以检查点内保存的训练配置为准
-    global _bfn_model, _bfn_config
-    if _bfn_model is not None:
-        return _bfn_model, _bfn_config
+# 检查点允许目录：torch.load(weights_only=False) 只能作用于这些根目录下的文件，
+# 避免"配置被改写 -> 指向上传的临时文件 -> 反序列化执行"这条链（审计 S0-2）
+_CKPT_ROOTS = (PROJECT_DIR / 'logs',)
+_load_lock = threading.Lock()
+
+
+def load_checkpoint(ckpt_path, map_location='cpu'):
+    """带路径白名单的检查点加载。
+
+    优先用 weights_only=True（只反序列化张量）。现有检查点内嵌了
+    easydict.EasyDict 配置对象，PyTorch 的受限 unpickler 不允许对 dict 子类做
+    SETITEMS，因此会回退到 weights_only=False —— 但**仅当文件位于白名单目录**。
+    上传目录（Gradio temp）不在白名单内，攻击者无法把恶意 pickle 送进来。
+
+    TODO: 提供一个一次性迁移脚本，把 config 拆成旁挂 JSON，之后即可彻底只用
+    weights_only=True。
+    """
+    p = Path(ckpt_path).expanduser()
+    if not p.is_absolute():
+        p = PROJECT_DIR / p
+    p = p.resolve()
+
+    override = os.environ.get('DISORDERFLOW_CHECKPOINT')
+    trusted = bool(override) and Path(override).expanduser().resolve() == p
+    if not trusted and not any(p.is_relative_to(root.resolve()) for root in _CKPT_ROOTS):
+        raise PermissionError(
+            f'检查点不在允许目录内: {p}（允许: '
+            + ', '.join(str(r) for r in _CKPT_ROOTS) + '）'
+        )
+
+    try:
+        return torch.load(p, map_location=map_location, weights_only=True)
+    except Exception:
+        return torch.load(p, map_location=map_location, weights_only=False)
+
+
+def _build_bfn():
     from disorderflow.models import get_model
     from disorderflow.utils.misc import load_config as _lc
     ckpt_path = get_bfn_ckpt()
     config, _ = _lc(DEFAULT_MODEL_CONFIG)
-    ckpt = torch.load(ckpt_path, map_location=DEVICE, weights_only=False)
+    ckpt = load_checkpoint(ckpt_path, map_location=DEVICE)
     mc = ckpt['config'].model
     if hasattr(ckpt['config'], 'train') and hasattr(ckpt['config'].train, 'loss_weights'):
         mc['loss_weight'] = dict(ckpt['config'].train.loss_weights)
@@ -87,93 +111,42 @@ def load_bfn():
             for k in old_iptm_keys:
                 ckpt_state.pop(k)
     model.load_state_dict(ckpt_state, strict=False)
-    model.eval()
-    _bfn_model = model
-    _bfn_config = config
-    return model, config
+    return model.eval(), config
+
+
+def load_bfn():
+    # 加载 BFN 模型（带进程内缓存）：超参与损失权重以检查点内保存的训练配置为准。
+    # 双重检查 + 锁：两个并发请求不会同时构建两份模型把显存翻倍（审计 S1-4）
+    global _bfn_model, _bfn_config
+    if _bfn_model is not None:
+        return _bfn_model, _bfn_config
+    with _load_lock:
+        if _bfn_model is None:
+            _bfn_model, _bfn_config = _build_bfn()
+    return _bfn_model, _bfn_config
+
+
 def load_esmif():
     # ESM-IF 按需加载；先安装 torch_scatter/biotite 兼容层，
     # 否则 fair-esm 在缺轮子的 Windows 环境上会导入失败
     global _esmif_model
     if _esmif_model is not None:
         return _esmif_model
-    from esmif_compat import install_biotite_compat, install_torch_scatter_fallback
-    install_torch_scatter_fallback()
-    install_biotite_compat()
-    from esm.pretrained import esm_if1_gvp4_t16_142M_UR50
-    model, _ = esm_if1_gvp4_t16_142M_UR50()
-    model = model.to(DEVICE).eval()
-    _esmif_model = model
-    return model
+    with _load_lock:
+        if _esmif_model is None:
+            from esmif_compat import install_biotite_compat, install_torch_scatter_fallback
+            install_torch_scatter_fallback()
+            install_biotite_compat()
+            from esm.pretrained import esm_if1_gvp4_t16_142M_UR50
+            model, _ = esm_if1_gvp4_t16_142M_UR50()
+            # fair-esm 的 GVPTransformerModel.sample() 内部用 torch.full 无条件在
+            # CPU 上建 token 张量，模型放到 cuda 会与 CPU 索引冲突而报错。
+            # 与冻结基准 scripts/benchmark_h3_candidate_reranking.py 一致：ESM-IF 采样跑 CPU。
+            _esmif_model = model.cpu().eval()
+    return _esmif_model
 # 置信度分档阈值（用于把 pLDDT/ipTM/PAE 数值翻译成 高/中/低 标签）
 CONFIDENCE_DEFAULTS = {
     'plddt_high': 0.80, 'plddt_medium': 0.60,
     'iptm_high': 0.70, 'iptm_medium': 0.40,
     'pae_low': 4.0, 'pae_medium': 8.0,
 }
-def get_config_display():
-    try:
-        cfg = load_app_config()
-        return yaml.dump(cfg, allow_unicode=True, default_flow_style=False)
-    except Exception as e:
-        return f"配置读取错误: {e}"
-def save_config_from_text(config_text):
-    # 保存配置后把 _app_config 置 None 强制下次重新加载，
-    # 已加载的模型不受影响（检查点路径在加载时一次性解析）
-    try:
-        new_cfg = yaml.safe_load(config_text)
-        with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
-            yaml.dump(new_cfg, f, allow_unicode=True, default_flow_style=False)
-        # Force reload
-        global _app_config
-        _app_config = None
-        return "✅ 配置已保存，下次设计任务生效"
-    except Exception as e:
-        return f"❌ 配置格式错误: {e}"
-def get_system_status():
-    # 汇总服务/模型/依赖的就绪状态，输出为状态面板文本（供 UI 的"系统状态"页）
-    import socket, threading
-    cfg = load_app_config()
-    host = cfg['server']['host']
-    port = cfg['server']['port']
-
-    # Check port
-    port_open = False
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(1)
-        port_open = s.connect_ex((host, port)) == 0
-        s.close()
-    except:
-        pass
-
-    bfn_ok = Path(get_bfn_ckpt()).exists()
-    mpnn_dir = Path(cfg['models']['proteinmpnn']['weights_dir'])
-    mpnn_ok = (mpnn_dir if mpnn_dir.is_absolute() else PROJECT_DIR / mpnn_dir).exists()
-    esmif_loaded = _esmif_model is not None
-    bfn_loaded = _bfn_model is not None
-    af_cfg = cfg.get('alphafold', {})
-    af2_cfg = af_cfg.get('af2', {}) if isinstance(af_cfg, dict) else {}
-    af2_backend = str(af2_cfg.get('backend', 'native'))
-    try:
-        af2_ok = resolve_colabfold_executable(af2_cfg, PROJECT_DIR) is not None
-    except Exception:
-        af2_ok = False
-
-    status = f"""服务状态面板
-{'='*50}
-监听地址:     {host}:{port}
-端口状态:     {'✓ 运行中' if port_open else '✗ 未启动'}
-外部访问:     {'禁止 (仅本机)' if host == '127.0.0.1' else '允许'}
-{'='*50}
-BFN 模型:      {'✓ 加载就绪' if bfn_loaded else ('✓ 文件存在' if bfn_ok else '✗ 未找到')}
-ProteinMPNN:   {'✓ 就绪' if mpnn_ok else '✗ 未找到'}
-ESM-IF:        {'✓ 已加载' if esmif_loaded else '○ 按需加载'}
-AlphaFold2:    {'✓ 就绪 (' + af2_backend + ')' if af2_ok else '✗ 未找到'}
-{'='*50}
-配置文件:      {CONFIG_FILE}
-Python:        {sys.version.split()[0]}
-PyTorch:       {torch.__version__}
-CUDA:          {torch.cuda.is_available()}
-"""
-    return status

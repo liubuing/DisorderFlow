@@ -37,7 +37,7 @@ AA_LETTERS = 'ACDEFGHIKLMNPQRSTVWY'
 # 复用 Gradio app 中的"序列 -> PDB 模板"生成器（α 螺旋主链骨架），
 # 使仅给 FASTA 时也能获得可用的结构模板
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app import generate_pdb_from_sequence
+from webapp.sequtils import generate_pdb_from_sequence
 
 
 def parse_design_regions(design_str):

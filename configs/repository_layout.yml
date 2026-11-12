@@ -3,7 +3,7 @@ status: repository_boundaries_v1
 
 zones:
   core_package: [disorderflow/]
-  stable_runtime: [app.py, manage.py, app_config.yaml, run_disorderflow.ps1]
+  stable_runtime: [app_web.py, manage.py, app_config.yaml, run_disorderflow.ps1]
   active_workflows: [scripts/, modules/]
   tests: [tests/]
   frozen_evidence: [publication/, release/, results/publication/]

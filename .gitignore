@@ -255,3 +255,6 @@ publication/*.blg
 # weights whose redistribution terms are not cleared. Never stage or commit it.
 /iBEC_2026_材料与权重_完整包/
 /iBEC_2026_材料与权重_完整包.zip
+
+# 运行记录（运行产物，含输入文件副本）
+runs/

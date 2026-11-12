@@ -1,17 +1,9 @@
-"""app.py split: pipelines (auto-generated 2026-09-27, bodies verbatim)."""
-#!/usr/bin/env python
-"""
-蛋白质序列设计平台 — Gradio Web 界面（管理增强版）
-
-访问: http://127.0.0.1:7860  （仅本机访问，外部无法连接）
-管理: python manage.py start|stop|restart|status|batch|config|test
-"""
+"""pipelines — 批量与统一管线编排（FastAPI 后端调用；2026-11-11 去 Gradio 化）。"""
 import os, json, subprocess, tempfile, re, sys, yaml, time
 from pathlib import Path
 import torch
 import numpy as np
 import pandas as pd
-import gradio as gr
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'modules'))
 import target_design_helpers as tdh
 import cascade_filter as cf
@@ -27,11 +19,38 @@ from webapp.sequtils import _save_fasta, detect_chains
 from webapp.state import CONFIDENCE_DEFAULTS, DEVICE, load_app_config
 
 
-def run_batch(pdb_files, tool, region_spec, chains_spec, temperature, num_samples, progress=gr.Progress()):
+def _user_error(prefix, exc):
+    """把完整堆栈写入日志文件，界面只返回简洁摘要 + 日志路径。
+
+    避免把原始 traceback（含本地路径）直接甩到 UI：对非作者不可读，
+    且可能泄露环境细节。完整堆栈仍可在日志中查阅。
+    """
+    import traceback
+    from datetime import datetime
+    log_dir = Path(__file__).resolve().parent.parent / 'logs'
+    try:
+        log_dir.mkdir(exist_ok=True)
+        log_path = log_dir / 'ui_errors.log'
+        with open(log_path, 'a', encoding='utf-8') as f:
+            f.write(f"\n[{datetime.now().isoformat(timespec='seconds')}] {prefix}\n")
+            f.write(traceback.format_exc())
+        detail = f"完整堆栈已写入: {log_path}"
+    except Exception:
+        detail = "（日志写入失败，请查看控制台）"
+    return f"{prefix}: {type(exc).__name__}: {exc}\n{detail}"
+
+
+def _noop_progress(*_args, **_kwargs):
+    """没有 UI 上下文时的进度回调占位。"""
+    return None
+
+
+def run_batch(pdb_files, tool, region_spec, chains_spec, temperature, num_samples, progress=None):
     # 批量模式：对目录中的每个 PDB 依次跑所选设计工具，
     # 汇总为文本报告 + JSON 摘要 + DataFrame；单文件失败不中断整批
     if not pdb_files:
         return "请上传 PDB 文件", None, None
+    progress = progress or _noop_progress
 
     results = []
     all_results_lists = []
@@ -241,8 +260,7 @@ def run_target_design(target_pdb, target_chain, epitope_region,
             validation_text = f"验证跳过: {val_err}"
 
     except Exception as e:
-        import traceback
-        return f"靶点设计错误:\n{traceback.format_exc()}", "", "", None
+        return _user_error("靶点设计错误", e), "", "", None
 
     results_df = build_results_dataframe(results_list)
     return '\n'.join(design_lines), fasta_str, validation_text, results_df
@@ -252,7 +270,7 @@ def run_design(pdb_path, tool,
                mpnn_chains, mpnn_temp, mpnn_samples, mpnn_seed, mpnn_omit,
                esmif_chain, esmif_temp, esmif_samples):
     if not pdb_path or not os.path.exists(str(pdb_path)):
-        return "请先上传 PDB 文件", None, None, gr.update(visible=False)
+        return "请先上传 PDB 文件", None, None
     try:
         results_list = []
         if tool == "BFN (抗体CDR设计)":
@@ -266,10 +284,9 @@ def run_design(pdb_path, tool,
         elif tool == "ESM-IF":
             text, fasta_str, results_list = run_esmif(pdb_path, esmif_chain, float(esmif_temp), int(esmif_samples))
         else:
-            return f"未知工具: {tool}", None, None, gr.update(visible=False)
+            return f"未知工具: {tool}", None, None
     except Exception as e:
-        import traceback
-        return f"运行错误:\n{traceback.format_exc()}", None, None, gr.update(visible=False)
+        return _user_error("运行错误", e), None, None
 
     # Write FASTA to temp file for download
     fasta_file = None
@@ -281,12 +298,13 @@ def run_design(pdb_path, tool,
         fasta_file = tmp.name
 
     df = build_results_dataframe(results_list)
-    return text, fasta_file, df, gr.update(visible=bool(fasta_str))
-def run_unified_pipeline(pdb_path, region_spec, num_samples, stochastic, enable_af2, af2_num_recycle, progress=gr.Progress()):
+    return text, fasta_file, df
+def run_unified_pipeline(pdb_path, region_spec, num_samples, stochastic, enable_af2, af2_num_recycle, progress=None):
     # 四阶段统一管线：0 置信度预评估 -> 1 BFN 设计 -> 2 级联过滤 -> 3 (可选)AF2 验证重排；
     # 任何一阶段无幸存者都提前返回并附带已完成阶段的报告
     if not pdb_path or not os.path.exists(str(pdb_path)):
         return "Please upload a PDB file first", pd.DataFrame(), "Pipeline aborted"
+    progress = progress or _noop_progress
 
     # Stage 0: Pre-design confidence evaluation
     progress(0.0, desc="Stage 0/4: BFN Pre-Design Confidence...")
@@ -344,8 +362,3 @@ def run_unified_pipeline(pdb_path, region_spec, num_samples, stochastic, enable_
     df = build_results_dataframe(filtered)
     report = f"{'='*50}\nStage 0: Pre-Design Confidence\n{'='*50}\n{conf_text}\n\n{text_design}\n\n{'='*50}\nStage 2: Cascade Filter (PPL+entropy+pLDDT+ipTM)\n{'='*50}\n{filter_report}"
     return report, df, fasta_str or ""
-def run_unified_pipeline_for_ui(*args, **kwargs):
-    """Adapt FASTA text from the pipeline to a Gradio File path."""
-    report, dataframe, fasta_text = run_unified_pipeline(*args, **kwargs)
-    fasta_path = _save_fasta(fasta_text) if fasta_text and '>' in fasta_text else None
-    return report, dataframe, fasta_path

@@ -7,7 +7,7 @@ must not be treated as one undifferentiated Python package.
 | Zone | Location | Rule |
 |---|---|---|
 | Core package | `disorderflow/` | Reusable model, dataset, loss, and utility code |
-| Stable runtime | `app.py`, `manage.py`, `run_disorderflow.ps1` | User-facing local service |
+| Stable runtime | `app_web.py`, `manage.py`, `run_disorderflow.ps1` | User-facing local service |
 | Active workflows | `scripts/`, `modules/` | Versioned research orchestration |
 | Tests | `tests/` | Behavioral and scientific contracts |
 | Frozen evidence | `publication/`, `release/`, publication results | Write-once; preserve hashes |
