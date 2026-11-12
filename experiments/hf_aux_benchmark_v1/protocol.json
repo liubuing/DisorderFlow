@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "campaign": "hf_aux_benchmark_v1",
+  "created": "2026-11-11",
+  "status": "frozen_before_any_ab_bind_score",
+  "objective": "Test whether an ECLS-style interface likelihood shift or ProteinMPNN mutation likelihood ranks experimentally measured antibody-antigen ddG within complexes, beyond a 20-dimensional composition baseline.",
+  "data": {
+    "source": "HuggingFace tigerszhangunc/AB-bind",
+    "rows_total": 1101,
+    "antibody_filter": "PDB must be present in local SAbDab summary with non-null Hchain and protein antigen_chain",
+    "expected_complexes": 20,
+    "expected_rows": 722,
+    "excluded_non_antibody": [
+      "1AK4", "1FFW", "1JTG", "1KTZ", "1T83", "3K2M", "3WJJ"
+    ],
+    "excluded_reason": "Fc receptor-Fc, enzyme-inhibitor, monobody-SH2, chemotaxis or cytokine receptor complexes; not antibody-antigen."
+  },
+  "scoring": {
+    "model": "ProteinMPNN v_48_020",
+    "mode": "conditional_probs_only=1, conditional_probs_only_backbone=0 (leave-one-out sequence context)",
+    "seed": 2309,
+    "states": ["complex", "partner_stripped"],
+    "scores": {
+      "dlogp_complex": "sum_i logP(mut_i | complex backbone + rest of WT sequence) - logP(wt_i | same)",
+      "dlogp_stripped": "same, with the direct partner chain removed",
+      "dils": "dlogp_complex - dlogp_stripped (interface likelihood shift)",
+      "composition_ridge": "leave-one-complex-out Ridge on 20-dim mutant-minus-WT composition",
+      "blosum62": "sum of BLOSUM62(wt, mut)"
+    },
+    "multi_mutant": "first-order sum over mutated positions"
+  },
+  "analysis": {
+    "unit": "complex",
+    "primary_endpoint": "within-complex Spearman(score, ddG); negative rho is the good direction (positive ddG = destabilizing)",
+    "minimum_rows_per_complex": 5,
+    "bootstrap": {"trials": 10000, "seed": 20261111, "cluster": "complex"},
+    "stratification": ["single_mutation", "multi_mutation"]
+  },
+  "gates": {
+    "positive": "dils has negative within-complex rho in >=70% of evaluable complexes AND paired dils-minus-composition rho difference has 95% CI upper < 0",
+    "negative": "otherwise; no model training, no claim upgrade",
+    "claim_boundary": "development benchmark on public antibody-protein ddG; not IDP/peptide binding, not affinity prediction, not a change to frozen ECLS/PAE results"
+  },
+  "outputs": {
+    "dir": "results/hf_aux_benchmark_v1/abbind",
+    "scores_csv": "scores.csv",
+    "per_complex_csv": "per_complex.csv",
+    "summary_json": "summary.json",
+    "report_md": "report.md"
+  }
+}
