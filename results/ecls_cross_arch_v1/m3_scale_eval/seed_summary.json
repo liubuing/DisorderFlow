@@ -95,6 +95,16 @@
         ],
         "fraction_positive": 0.866667,
         "gate_pass": true
+      },
+      "20": {
+        "mean_ecls_advantage": 0.24565,
+        "median_ecls_advantage": 0.209885,
+        "ci95": [
+          0.101032,
+          0.393997
+        ],
+        "fraction_positive": 0.8,
+        "gate_pass": true
       }
     },
     "20261113": {
@@ -151,6 +161,17 @@
     "pass": 2,
     "n": 3
   },
+  "epoch20": {
+    "means": [
+      0.125565,
+      0.24565
+    ],
+    "mean": 0.1856075,
+    "sd": 0.08491291781878656,
+    "pass": 1,
+    "n": 2,
+    "note": "seed 3 epoch 20 not run"
+  },
   "verdict": "partial_seed_dependent_replication",
-  "note": "2/3 seeds pass at epoch 10; one seed is null. The from-scratch arm is not robust to the training seed at this scale."
+  "note": "2/3 seeds pass at epoch 10; at epoch 20 seed 1 fails and seed 2 passes, so the apparent decline is also seed-dependent. No robust training-scale trend."
 }

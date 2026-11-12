@@ -22,28 +22,34 @@ epochs 1, 3, 5, 10, 20, and repeated with two additional seeds at epochs
 | 3 | 0.1287 | 0.0782 | **-0.0424** |
 | 5 | 0.1760 | 0.1094 | **-0.0220** |
 | 10 | **0.1884 (pass)** | **0.2001 (pass)** | **0.0132 (fail)** |
+| 20 | **0.1256 (fail)** | **0.2457 (pass)** | — |
 
 At epoch 10 the three seeds give 0.188, 0.200 and 0.013: mean **0.134**, SD
 **0.105**, **2/3 pass**, **1/3 null**. Seed 20261113 is null or negative at
 every measured epoch and reaches only 7/15 positive clusters at epoch 10.
 
+At epoch 20 the two trained seeds diverge in opposite directions: seed
+20261111 falls to 0.126 (fail), seed 20261112 rises to 0.246 (pass). The
+average is 0.186 (SD 0.085).
+
 ## Interpretation
 
-- The apparent "training curve" in seed 1 is **not robust**: seed 3 is null at
-  every epoch, and seed 2 is weaker than seed 1 at epochs 1–5.
+- The apparent "training curve" is **not robust**: seed 3 is null at every
+  measured epoch; seed 2 is weaker than seed 1 at epochs 1–5; at epoch 20
+  seed 1 falls while seed 2 rises.
 - The robust statement is narrower: **a from-scratch model can reproduce the
   effect, but only in 2 of 3 seeds at 10 epochs.** The M3 arm is therefore a
   **partial, seed-dependent replication**, not a clean controlled-exposure
   result.
-- The epoch-20 decline in seed 1 cannot be interpreted without additional
-  seeds; it remains a single-seed observation.
+- There is no robust epoch-20 decline: the two seeds move in opposite
+  directions. The earlier "decline" was a single-seed observation.
 - M2 AntiFold is a fixed pretrained model and has no training-seed variance;
   its cross-architecture replication remains the robust positive result.
 
 ## Caveat
 
 Homology-filtered training set, max chain length 300, three seeds for epochs
-1/3/5/10, one seed for epoch 20. This is a descriptive sensitivity analysis,
+1/3/5/10, two seeds for epoch 20. This is a descriptive sensitivity analysis,
 not a scaling law.
 
 ## Data

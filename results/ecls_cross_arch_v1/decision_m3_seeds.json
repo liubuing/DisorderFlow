@@ -6,18 +6,24 @@
   "seeds": {
     "20261111": {
       "epoch10_mean": 0.188379,
-      "positive": 0.733333,
-      "gate": true
+      "epoch10_positive": 0.733333,
+      "epoch10_gate": true,
+      "epoch20_mean": 0.125565,
+      "epoch20_gate": false
     },
     "20261112": {
       "epoch10_mean": 0.200147,
-      "positive": 0.866667,
-      "gate": true
+      "epoch10_positive": 0.866667,
+      "epoch10_gate": true,
+      "epoch20_mean": 0.24565,
+      "epoch20_gate": true
     },
     "20261113": {
       "epoch10_mean": 0.013169,
-      "positive": 0.466667,
-      "gate": false
+      "epoch10_positive": 0.466667,
+      "epoch10_gate": false,
+      "epoch20_mean": null,
+      "epoch20_gate": null
     }
   },
   "epoch10_summary": {
@@ -31,7 +37,18 @@
     "pass": 2,
     "n": 3
   },
-  "verdict": "2/3 seeds pass at epoch 10; one seed is null. The from-scratch arm is not robust to the training seed at this scale.",
+  "epoch20_summary": {
+    "means": [
+      0.125565,
+      0.24565
+    ],
+    "mean": 0.1856075,
+    "sd": 0.08491291781878656,
+    "pass": 1,
+    "n": 2,
+    "note": "seed 3 epoch 20 not run"
+  },
+  "verdict": "2/3 seeds pass at epoch 10; at epoch 20 seed 1 fails and seed 2 passes. The from-scratch arm is seed-dependent at both epochs; no robust training-scale trend.",
   "claim_boundary": [
     "M2 cross-architecture replication remains robust.",
     "M3 controlled-exposure result is partial.",

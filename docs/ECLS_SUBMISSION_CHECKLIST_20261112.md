@@ -17,7 +17,7 @@ Figures: `publication/figures/ecls_fig1..4_*.png/.pdf`.
 | AAYL affinity endpoint | complete; +0.0094 / −0.0016, CIs span zero |
 | Task-specific ranker | complete; composition weak, ECLS adds no signal |
 | AGZArank head-to-head | blocked: checkpoint and synthetic data proprietary |
-| Epoch-20 seeds 2/3 | not completed; blocked by external GPU contention; optional robustness point |
+| Epoch-20 seeds 2/3 | seed 2 done (0.246, pass); seed 3 not run; epoch 20 is seed-dependent |
 
 ## Figures
 

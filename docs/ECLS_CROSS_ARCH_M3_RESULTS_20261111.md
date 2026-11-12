@@ -47,8 +47,10 @@ same data and contract:
 
 Epoch-10 mean across seeds: **0.134**, SD **0.105**. Seed 20261113 is null or
 negative at every measured epoch (-0.048, -0.042, -0.022, +0.013 for epochs
-1/3/5/10). The M3 arm is therefore a **partial, seed-dependent replication**,
-not a clean controlled-exposure result.
+1/3/5/10). At epoch 20 the two trained seeds diverge: seed 20261111 = 0.126
+(fail), seed 20261112 = 0.246 (pass). The M3 arm is therefore a **partial,
+seed-dependent replication**, not a clean controlled-exposure result and not
+a robust training-scale trend.
 
 ## Exposure and overlap check
 

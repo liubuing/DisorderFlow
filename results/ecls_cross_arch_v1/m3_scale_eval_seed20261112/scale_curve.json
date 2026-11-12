@@ -38,5 +38,15 @@
     ],
     "fraction_positive": 0.866667,
     "gate_pass": true
+  },
+  "20": {
+    "mean_ecls_advantage": 0.24565,
+    "median_ecls_advantage": 0.209885,
+    "ci95": [
+      0.101032,
+      0.393997
+    ],
+    "fraction_positive": 0.8,
+    "gate_pass": true
   }
 }
