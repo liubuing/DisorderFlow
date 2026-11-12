@@ -258,3 +258,4 @@ publication/*.blg
 
 # 运行记录（运行产物，含输入文件副本）
 runs/
+/*.bak-*

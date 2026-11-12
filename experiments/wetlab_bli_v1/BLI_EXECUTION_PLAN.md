@@ -146,3 +146,17 @@ pass_primary, pass_specificity, notes
 | `data_import_template.csv` | 数据回填模板 |
 | `acceptance_criteria.json` | 机器可读验收判据 |
 | `../../results/design_v1_20261101/order_list_v1.fasta` | 合成序列 |
+
+---
+
+## 10. 第二生成器臂（AntiFold，2026-11-12）
+
+同一 4HIX/DAEFRH 体系新增 10 条 AntiFold H3 候选 + native + scramble，作为
+ProteinMPNN 之外的**第二生成器对照**。样本、板布局、验收判据见
+[`ANTIFOLD_ARM.md`](ANTIFOLD_ARM.md)；文件为 `antifold_arm_order_list.*`、
+`antifold_arm_manifest.csv`、`antifold_plate_layout_96well.csv`。
+
+- AntiFold 200 条采样 → 125 个唯一 H3 → 10 条入选；
+- 可开发性 100% 通过；平均 5.25 个 H3 突变（MPNN 7.06）；
+- 选择依据：AntiFold score + 可开发性 + 多样性；**无 ECLS/BFN 分数**；
+- 与主臂分开建板，不混样。

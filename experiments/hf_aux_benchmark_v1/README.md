@@ -16,10 +16,13 @@ External-data dry-lab campaign run on 2026-11-11. Full results and caveats:
 | `anarci_h3_public_wsl.py` | ANARCI for the public peptide-Kd cohort | `results/hf_aux_benchmark_v1/public_peptide_kd/anarci_h3.json` |
 | `public_peptide_kd_h3ecls_v1.py` | H3-ECLS vs wet-lab Kd on 111 public antibody-peptide complexes | `results/hf_aux_benchmark_v1/public_peptide_kd/h3ecls_kd*` |
 | `abcdr_d44_v1.py` | D44 2,048 single mutations vs Binder (1MLC parent) | `results/hf_aux_benchmark_v1/abcdr_binding/d44/` |
+| `abcdr_trast_h3_v1.py` | Trastuzumab 152 11-aa H3 variants on 1N8Z vs Binder | `results/hf_aux_benchmark_v1/abcdr_binding/trast_h3/` |
+| `antifold_4hix_analyze_v1.py` | Analyze AntiFold 4HIX H3 designs vs ProteinMPNN | `results/hf_aux_benchmark_v1/antifold_4hix/` |
 | `abbind_single_antibody_v1.py` | Single-mutation, antibody-only AB-bind replication and hash-half split | `results/hf_aux_benchmark_v1/abbind/single_antibody_*` |
 
-Wet-lab handoff: `experiments/wetlab_bli_v1/BLI_EXECUTION_PLAN.md` (dry-lab package only;
-no BLI/SPR was executed).
+Wet-lab handoff: `experiments/wetlab_bli_v1/BLI_EXECUTION_PLAN.md` (ProteinMPNN arm)
+and `experiments/wetlab_bli_v1/ANTIFOLD_ARM.md` (AntiFold arm). Dry-lab packages only;
+no BLI/SPR was executed.
 
 ## Status
 
@@ -29,6 +32,8 @@ no BLI/SPR was executed).
 - SAbDab2-Epi H3-ECLS: 408 rows / 254 PDB / 157 CDRH3 clusters with ANARCI/IMGT H3; 400/408 positive (98.0%), mean 0.672; cluster-level 98.1%, CI [0.606, 0.703]; val 98.3%, test 97.5%. 12 rows skipped for size/timeout.
 - Public wet-lab antibody-peptide Kd: 111 complexes; advantage vs logKd rho **−0.312**, p=0.00085, CI [−0.476, −0.128]; H3≥14 −0.456; antigen-level −0.304, p=0.002. SPR-only n=21 rho −0.371, p=0.097. Exploratory association, not a binding predictor.
 - AbCDR-Binding D44: 2,048 single mutations; `dils` overall rho −0.012 (ns), interface (707) +0.119 (p=0.0015), non-interface −0.100; BLOSUM +0.374. `dils` is not a general mutation-effect ranker; it has only a small interface-local signal.
+- AbCDR-Binding trast H3: 152 11-aa variants on 1N8Z; ECLS advantage vs Binder rho −0.117 (p=0.150), BLOSUM −0.020. ECLS does not rank designed H3 variants.
+- AntiFold 4HIX: 200 designs / 125 unique H3, developability 100%, mean 5.25 mutations (MPNN 7.06); 10 selected for a second BLI arm. No ECLS/BFN score used for selection.
 - Cross-complex learned ranker: **FAIL** (direction reverses); not used.
 - No frozen ECLS/PAE result changed. No binding/affinity/IDP claim.
 

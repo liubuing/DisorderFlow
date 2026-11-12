@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecls-scorer"
+version = "0.1.0"
+description = "Standalone epitope-conditioned likelihood shift (ECLS) scorer for antibody CDR-H3 sequences"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.22",
+    "biopython>=1.79",
+]
+
+[project.optional-dependencies]
+mpnn = ["torch>=2.0"]
+
+[project.scripts]
+ecls-score = "ecls_scorer.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["ecls_scorer*"]

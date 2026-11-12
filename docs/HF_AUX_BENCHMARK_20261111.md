@@ -27,8 +27,10 @@
 | **SAbDab2-Epi H3-ECLS（ANARCI/IMGT）** | 408 行 / 254 PDB / 157 CDRH3 簇；**400/408 为正（98.0%）**，均值 0.672；簇级 98.1%，CI [0.606, 0.703]；val 98.3%、test 97.5% | **最强结构侧信号** |
 | **公开湿实验 Kd 队列** | 111 抗体–肽复合物；advantage vs logKd **rho −0.312, p=0.00085**, CI [−0.476, −0.128]；H3≥14 −0.456；抗原级 −0.304, p=0.002 | **最强 binding-linked 关联（exploratory）** |
 | **AbCDR-Binding D44** | 2,048 单点突变；dils 整体 **−0.012 (ns)**；界面 +0.119 (p=0.0015)；BLOSUM +0.374；非界面 −0.100 | **部分负面：dils 非通用排序器** |
+| **Trast H3 变体库** | 152 个 11-aa H3 变体（1N8Z）；advantage vs Binder **rho −0.117, p=0.150**；BLOSUM −0.020 | **负面：ECLS 不排序设计变体** |
+| **AntiFold 4HIX 臂** | 200 设计 / 125 唯一 H3；可开发性 100%；平均 5.25 突变；10 条入 BLI 臂 | **第二生成器对照** |
 
-一句话：**结构侧的 AB-bind 信号、肽侧 PCLS、H3-ECLS（196 行 ANARCI/IMGT，97.4% 为正）和序列侧 ESM2（MMseqs2 0.703）都为正；但跨复合物的全局 ranker 失败，多突变弱，所有结果都还是 protein-antigen / 结构基准，不是 IDP 结合验证。**
+一句话：**结构侧 H3-ECLS（408 行/254 PDB/157 簇，98% 为正）、公开 Kd association（111 复合物，−0.312）、AlphaSeq ESM2（0.703）为正；但 AbCDR D44（dils −0.012）和 trast H3（−0.117）两个 within-library 测试失败，`dils`/ECLS 不是通用排序器；已转 AntiFold 生成器臂，湿实验仍是唯一 binding 验证。**
 
 ---
 
@@ -360,6 +362,24 @@ HMMER 3.4 通过 WSL + Ubuntu `hmmer` deb 解包运行；ANARCI 对 192 条唯�
 
 **边界**：D44 是 anti-lysozyme 单点突变库，Binder 是实验结合分数；不是 IDP/肽；G6 数据集因亲本结构未确认而暂未跑。
 
+### 5.2f Trastuzumab H3 变体库（v1.5）
+
+数据：AbCDR-Binding `trast_set` 的 422 个 CDR-H3 变体；取 **152 个 11-aa H3**（与 1N8Z trastuzumab H3 同长），框架/H1/H2 完全一致。1N8Z 作为固定骨架，把每个变体 H3 graft 到 H 链，complex = H+L+HER2，stripped = H+L；ECLS advantage vs 200 个组成匹配 shuffle；端点为 `Binder`（越高越强）。
+
+| 指标 | rho | p |
+|---|---:|---:|
+| **ECLS advantage vs Binder** | **−0.117** | **0.150** |
+| BLOSUM(variant, 1N8Z H3) vs Binder | −0.020 | 0.808 |
+
+- 152 个变体覆盖 Binder −0.027 到 2.80；
+- ECLS advantage 与 Binder **无显著相关**，方向甚至为负；
+- BLOSUM 也无信号；
+- 低 Binder 和高 Binder 变体的 advantage 分布大量重叠（例如高 Binder `ARGYGVGASFV` adv +0.179，低 Binder `TRYFFNGWYYF` adv −0.160）。
+
+**结论**：在一个真正的“H3 变体库 vs HER2 结合分数”任务上，ECLS advantage **不能排序设计变体**。这与项目此前的“native recognition ≠ candidate ranking”一致，也说明 111 Kd 队列的 −0.312 是**跨复合物 association**，不能外推为“同一骨架内变体排序”。
+
+**边界**：1N8Z 骨架、152/422 个 11-aa 变体、Binder 非统一 Kd；不是 IDP/肽；不是 binding predictor。
+
 ### 5.3 边界
 
 - 29 个复合物，无 cluster bootstrap；
@@ -370,7 +390,29 @@ HMMER 3.4 通过 WSL + Ubuntu `hmmer` deb 解包运行；ANARCI 对 192 条唯�
 
 ---
 
-## 6. 负面与未完成
+## 6. 生成器对照：AntiFold vs ProteinMPNN（v1.6）
+
+既然 ECLS/`dils` 不能当设计变体排序器，2026-11-12 按“换生成器”路线做了第二个生成器对照：
+
+- **AntiFold**（ESM-IF1 抗体微调）在 4HIX Fab–DAEFRH 上重设计 CDR-H3；
+- 200 条采样（T=0.2 / 0.5），**125 个唯一 H3**；
+- 可开发性过滤 **100% 通过**；
+- 平均 **5.25** 个 H3 突变（ProteinMPNN shortlist 平均 **7.06**）；
+- AntiFold 只采样 6 个 H3 位置（IMGT 107/109/110/112/114/115），比 MPNN 保守；
+- 选 10 条（AntiFold score + 可开发性 + 多样性，**无 ECLS/BFN 分数**），做成第二 BLI 臂。
+
+| 生成器 | 设计数 | 唯一 H3 | 可开发性通过 | 平均突变数 | 采样 H3 位置 |
+|---|---:|---:|---:|---:|---|
+| ProteinMPNN（现有 shortlist） | 51 | 51 | 100% | 7.06 | 全 12 位 |
+| **AntiFold（新）** | 200 | 125 | 100% | **5.25** | 6 位 |
+
+**意义**：AntiFold 给出更多、但更保守的 H3 变体；它不能证明结合更好，只是提供第二个生成器臂和可合成候选。BLI 包见 `experiments/wetlab_bli_v1/ANTIFOLD_ARM.md`。
+
+**边界**：AntiFold score 是序列-结构似然，不是亲和力；只采样 6 个 H3 位置，多样性低于 MPNN；没有湿实验。
+
+---
+
+## 7. 负面与未完成
 
 1. **跨复合物 ranker 失败**：留一复合物 Ridge 方向反转（mean +0.243），不训练全局 ranker。
 2. **多突变弱**：AB-bind 多突变 mean −0.104，42.9% 为负；一阶相加不足。
@@ -382,7 +424,7 @@ HMMER 3.4 通过 WSL + Ubuntu `hmmer` deb 解包运行；ANARCI 对 192 条唯�
 
 ---
 
-## 7. 对项目主张的影响
+## 8. 对项目主张的影响
 
 ### 7.1 不改变
 
@@ -408,7 +450,7 @@ HMMER 3.4 通过 WSL + Ubuntu `hmmer` deb 解包运行；ANARCI 对 192 条唯�
 
 ---
 
-## 8. 下一步（按优先级）
+## 9. 下一步（按优先级）
 
 | 优先级 | 事项 | 目的 |
 |---|---|---|
@@ -420,7 +462,7 @@ HMMER 3.4 通过 WSL + Ubuntu `hmmer` deb 解包运行；ANARCI 对 192 条唯�
 
 ---
 
-## 9. 复现
+## 10. 复现
 
 ```bash
 # AB-bind
@@ -444,7 +486,7 @@ python experiments/hf_aux_benchmark_v1/sabdab2_epi_pcls_v1.py --limit 30 --shuff
 
 ---
 
-## 10. 后续五步执行结果（v1.1，2026-11-11）
+## 11. 后续五步执行结果（v1.1，2026-11-11）
 
 | # | 步骤 | 状态 | 结果 |
 |---:|---|---|---|
@@ -452,6 +494,7 @@ python experiments/hf_aux_benchmark_v1/sabdab2_epi_pcls_v1.py --limit 30 --shuff
 | 2 | SAbDab2-Epi H3-ECLS | **完成 408 行 ANARCI/IMGT** | 254 PDB / 157 簇；**400/408 为正（98.0%）**，均值 0.672；簇级 98.1%；val/test 都为正 |
 | 2b | 公开湿实验抗体–肽 Kd 队列 | **完成 111 复合物** | advantage vs logKd **rho −0.312, p=0.00085**；H3≥14 −0.456；抗原级 −0.304, p=0.002 |
 | 2c | AbCDR-Binding D44 单点突变 | **完成 2,048 突变** | dils 整体 −0.012 (ns)；界面 +0.119；BLOSUM +0.374；dils 非通用排序器 |
+| 2d | AbCDR-Binding trast H3 库 | **完成 152 变体** | advantage vs Binder −0.117 (p=0.150)；BLOSUM −0.020；ECLS 不排序设计变体 |
 | 3 | AB-bind 单突变 + 抗体突变复现 | **完成** | 12 复合物/280 行：dils −0.217，83.3% 为负，CI [−0.375, −0.064]，p=0.001；两个 hash 半区都为负 |
 | 4 | 50 条 4HIX 候选 BLI/SPR | **包已备好，未执行** | `experiments/wetlab_bli_v1/`：样本清单、96 孔布局、验收判据、数据模板 |
 | 5 | 不训练全局 ranker | **遵守** | 留一复合物 Ridge 方向反转（+0.243），未训练 |
@@ -467,6 +510,6 @@ python experiments/hf_aux_benchmark_v1/sabdab2_epi_pcls_v1.py --limit 30 --shuff
 
 ---
 
-## 11. 一句话
+## 12. 一句话
 
-**这轮 HF 数据把“打分器有没有超出组成的信息”从 5 个复合物/1,284 条变体，扩展到了 18 个复合物/591 条突变、8 个 AlphaSeq 数据集/19 靶点、29 个结构复合物；v1.1 把 AlphaSeq 做到 MMseqs2 90% identity（ESM2 0.703），v1.2 把 H3-ECLS 做到 408 行 ANARCI/IMGT（254 PDB / 157 簇，98.0% 为正，簇级 98.1%），v1.3 找到 111 个公开湿实验抗体–肽 Kd 复合物（ECLS advantage vs logKd rho −0.312，p=0.00085；H3≥14 −0.456；抗原级 −0.304），v1.4 在 AbCDR-Binding D44 的 2,048 个单点突变上发现 `dils` 整体无信号（−0.012），只在界面 +0.119，BLOSUM 始终更强（+0.374）。AB-bind 单抗体子集 12 复合物（dils −0.217，p=0.001）。结论是：H3-ECLS 结构效应、公开 Kd 关联、ESM2 序列信号都为正，但 `dils` 不是通用突变排序器，跨复合物 ranker 失败、多突变弱、没有 IDP、没有项目自己的统一湿实验；第 4 步只交付了可执行的 BLI 包。它提升了评估能力，没有修好生成质量，也没有改变冻结结论。**
+**这轮 HF 数据把“打分器有没有超出组成的信息”从 5 个复合物/1,284 条变体，扩展到了 18 个复合物/591 条突变、8 个 AlphaSeq 数据集/19 靶点、29 个结构复合物；v1.1 把 AlphaSeq 做到 MMseqs2 90% identity（ESM2 0.703），v1.2 把 H3-ECLS 做到 408 行 ANARCI/IMGT（254 PDB / 157 簇，98.0% 为正，簇级 98.1%），v1.3 找到 111 个公开湿实验抗体–肽 Kd 复合物（ECLS advantage vs logKd rho −0.312，p=0.00085；H3≥14 −0.456；抗原级 −0.304），v1.4 在 AbCDR-Binding D44 的 2,048 个单点突变上发现 `dils` 整体无信号（−0.012），只在界面 +0.119，BLOSUM 始终更强（+0.374）；v1.5 在 trast H3 的 152 个变体库上发现 ECLS advantage 与 Binder 无关（−0.117, p=0.150）。AB-bind 单抗体子集 12 复合物（dils −0.217，p=0.001）。结论是：H3-ECLS 结构效应、公开 Kd 关联、ESM2 序列信号都为正，但 `dils`/ECLS 不是通用突变或设计变体排序器，跨复合物 ranker 失败、多突变弱、没有 IDP、没有项目自己的统一湿实验；第 4 步只交付了可执行的 BLI 包。它提升了评估能力，没有修好生成质量，也没有改变冻结结论。**

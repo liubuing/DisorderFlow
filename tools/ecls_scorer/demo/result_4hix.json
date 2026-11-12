@@ -1,0 +1,1534 @@
+{
+  "schema_version": 1,
+  "tool": {
+    "name": "ecls-scorer",
+    "version": "0.1.0"
+  },
+  "definition": "ECLS(s) = H3 NLL(complex backbone) - H3 NLL(peptide-stripped Fab backbone)",
+  "boundary": "This tool implements the ECLS definition on user-supplied structures. It does not reproduce the frozen DisorderFlow ECLS publication dataset end-to-end (that dataset used LMDB-preprocessed complexes), and the published temporal-final evaluation is terminal: rerun_permitted=false. Scores are structural likelihood quantities, not binding energies; composition-matched shuffles are computational counterfactuals, not experimental non-binders.",
+  "input": {
+    "pdb": "D:\\biological\\DisorderFlow\\data\\anti_abeta_refs\\4HIX.pdb",
+    "pdb_sha256": "2BB5404A3B66741F02E89B899F36982FB33F16F042149E3614435F4748004201",
+    "heavy_chain": "H",
+    "light_chain": "L",
+    "peptide_chain": "A",
+    "model_index": 0
+  },
+  "h3": {
+    "sequence": "VRYDHYSGSSDY",
+    "indices_0based": [
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106
+    ],
+    "standardized_resseq": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107
+    ]
+  },
+  "sequences": [
+    {
+      "name": "native",
+      "sequence": "VRYDHYSGSSDY",
+      "complex_h3_nll": 2.469253,
+      "apo_h3_nll": 2.418662,
+      "ecls": 0.050591
+    },
+    {
+      "name": "shuffle_001",
+      "sequence": "VYSDSRGYYHSD",
+      "complex_h3_nll": 3.3529,
+      "apo_h3_nll": 3.400855,
+      "ecls": -0.047955
+    },
+    {
+      "name": "shuffle_002",
+      "sequence": "DGYVYRHSYDSS",
+      "complex_h3_nll": 3.619703,
+      "apo_h3_nll": 3.661735,
+      "ecls": -0.042033
+    },
+    {
+      "name": "shuffle_003",
+      "sequence": "YDSDRHSGSYVY",
+      "complex_h3_nll": 3.202007,
+      "apo_h3_nll": 3.116048,
+      "ecls": 0.085959
+    },
+    {
+      "name": "shuffle_004",
+      "sequence": "YVYYDGSDRSSH",
+      "complex_h3_nll": 3.403206,
+      "apo_h3_nll": 3.315928,
+      "ecls": 0.087277
+    },
+    {
+      "name": "shuffle_005",
+      "sequence": "DVSYYRSGSDYH",
+      "complex_h3_nll": 3.728907,
+      "apo_h3_nll": 3.683407,
+      "ecls": 0.0455
+    },
+    {
+      "name": "shuffle_006",
+      "sequence": "HSDGDYYSVSRY",
+      "complex_h3_nll": 4.317474,
+      "apo_h3_nll": 4.239554,
+      "ecls": 0.07792
+    },
+    {
+      "name": "shuffle_007",
+      "sequence": "RSSYGSVYDHDY",
+      "complex_h3_nll": 3.595476,
+      "apo_h3_nll": 3.571941,
+      "ecls": 0.023535
+    },
+    {
+      "name": "shuffle_008",
+      "sequence": "RHDDSYYSSYGV",
+      "complex_h3_nll": 3.121097,
+      "apo_h3_nll": 2.980807,
+      "ecls": 0.14029
+    },
+    {
+      "name": "shuffle_009",
+      "sequence": "DSSRYVDYSHGY",
+      "complex_h3_nll": 3.895436,
+      "apo_h3_nll": 3.944345,
+      "ecls": -0.048909
+    },
+    {
+      "name": "shuffle_010",
+      "sequence": "VGYSRDDYSSHY",
+      "complex_h3_nll": 2.951725,
+      "apo_h3_nll": 2.991699,
+      "ecls": -0.039974
+    },
+    {
+      "name": "shuffle_011",
+      "sequence": "YSVSGHSRDYYD",
+      "complex_h3_nll": 4.085086,
+      "apo_h3_nll": 4.08045,
+      "ecls": 0.004636
+    },
+    {
+      "name": "shuffle_012",
+      "sequence": "YYSDRHSGVYDS",
+      "complex_h3_nll": 3.623321,
+      "apo_h3_nll": 3.577138,
+      "ecls": 0.046183
+    },
+    {
+      "name": "shuffle_013",
+      "sequence": "YHSRYGDVSYSD",
+      "complex_h3_nll": 3.827643,
+      "apo_h3_nll": 3.798168,
+      "ecls": 0.029475
+    },
+    {
+      "name": "shuffle_014",
+      "sequence": "HYVRDYDGSSYS",
+      "complex_h3_nll": 4.094072,
+      "apo_h3_nll": 4.039919,
+      "ecls": 0.054153
+    },
+    {
+      "name": "shuffle_015",
+      "sequence": "SYDSGYRSDVHY",
+      "complex_h3_nll": 4.010749,
+      "apo_h3_nll": 4.028548,
+      "ecls": -0.017799
+    },
+    {
+      "name": "shuffle_016",
+      "sequence": "SDGSSYDHVYYR",
+      "complex_h3_nll": 4.136626,
+      "apo_h3_nll": 4.067302,
+      "ecls": 0.069323
+    },
+    {
+      "name": "shuffle_017",
+      "sequence": "SYYDVYDSRSHG",
+      "complex_h3_nll": 3.888404,
+      "apo_h3_nll": 3.902972,
+      "ecls": -0.014569
+    },
+    {
+      "name": "shuffle_018",
+      "sequence": "HVDSYDYSSYGR",
+      "complex_h3_nll": 3.451186,
+      "apo_h3_nll": 3.423268,
+      "ecls": 0.027918
+    },
+    {
+      "name": "shuffle_019",
+      "sequence": "SSYVDHGDSRYY",
+      "complex_h3_nll": 3.612144,
+      "apo_h3_nll": 3.460078,
+      "ecls": 0.152065
+    },
+    {
+      "name": "shuffle_020",
+      "sequence": "HVYGSDDSYRSY",
+      "complex_h3_nll": 3.185547,
+      "apo_h3_nll": 3.19149,
+      "ecls": -0.005943
+    },
+    {
+      "name": "shuffle_021",
+      "sequence": "SYDVYDGYSHRS",
+      "complex_h3_nll": 4.164545,
+      "apo_h3_nll": 4.235599,
+      "ecls": -0.071054
+    },
+    {
+      "name": "shuffle_022",
+      "sequence": "VSHSGDYSDRYY",
+      "complex_h3_nll": 3.367729,
+      "apo_h3_nll": 3.404513,
+      "ecls": -0.036784
+    },
+    {
+      "name": "shuffle_023",
+      "sequence": "DYGSRDSVHSYY",
+      "complex_h3_nll": 4.133733,
+      "apo_h3_nll": 4.20298,
+      "ecls": -0.069247
+    },
+    {
+      "name": "shuffle_024",
+      "sequence": "SDGYYVHRSDYS",
+      "complex_h3_nll": 4.007911,
+      "apo_h3_nll": 4.027728,
+      "ecls": -0.019817
+    },
+    {
+      "name": "shuffle_025",
+      "sequence": "DYGSSYYVDSRH",
+      "complex_h3_nll": 4.323644,
+      "apo_h3_nll": 4.293373,
+      "ecls": 0.030271
+    },
+    {
+      "name": "shuffle_026",
+      "sequence": "YSGDDYSYHSRV",
+      "complex_h3_nll": 4.083496,
+      "apo_h3_nll": 4.062738,
+      "ecls": 0.020758
+    },
+    {
+      "name": "shuffle_027",
+      "sequence": "GYVHSDRSDYSY",
+      "complex_h3_nll": 3.293713,
+      "apo_h3_nll": 3.271559,
+      "ecls": 0.022154
+    },
+    {
+      "name": "shuffle_028",
+      "sequence": "DSVRYGHYSDYS",
+      "complex_h3_nll": 3.994606,
+      "apo_h3_nll": 4.04918,
+      "ecls": -0.054574
+    },
+    {
+      "name": "shuffle_029",
+      "sequence": "SYDYSSVDHGRY",
+      "complex_h3_nll": 3.796831,
+      "apo_h3_nll": 3.748294,
+      "ecls": 0.048537
+    },
+    {
+      "name": "shuffle_030",
+      "sequence": "YDSHVSYDSRGY",
+      "complex_h3_nll": 3.546451,
+      "apo_h3_nll": 3.489419,
+      "ecls": 0.057031
+    },
+    {
+      "name": "shuffle_031",
+      "sequence": "DHSSDRYGSYYV",
+      "complex_h3_nll": 3.599409,
+      "apo_h3_nll": 3.432767,
+      "ecls": 0.166642
+    },
+    {
+      "name": "shuffle_032",
+      "sequence": "DVSYRHYGYSDS",
+      "complex_h3_nll": 3.964001,
+      "apo_h3_nll": 4.033075,
+      "ecls": -0.069075
+    },
+    {
+      "name": "shuffle_033",
+      "sequence": "YGSSYSVDYHDR",
+      "complex_h3_nll": 3.846119,
+      "apo_h3_nll": 3.89743,
+      "ecls": -0.051311
+    },
+    {
+      "name": "shuffle_034",
+      "sequence": "YHSYDYGDSRVS",
+      "complex_h3_nll": 4.253912,
+      "apo_h3_nll": 4.086088,
+      "ecls": 0.167824
+    },
+    {
+      "name": "shuffle_035",
+      "sequence": "GVRDYDHSYYSS",
+      "complex_h3_nll": 3.125096,
+      "apo_h3_nll": 3.208086,
+      "ecls": -0.08299
+    },
+    {
+      "name": "shuffle_036",
+      "sequence": "GHDSSVYRDSYY",
+      "complex_h3_nll": 4.006318,
+      "apo_h3_nll": 4.029312,
+      "ecls": -0.022993
+    },
+    {
+      "name": "shuffle_037",
+      "sequence": "SYHYGSYRVDDS",
+      "complex_h3_nll": 3.849775,
+      "apo_h3_nll": 3.942359,
+      "ecls": -0.092584
+    },
+    {
+      "name": "shuffle_038",
+      "sequence": "YYHRDYGSSVSD",
+      "complex_h3_nll": 3.84314,
+      "apo_h3_nll": 3.871018,
+      "ecls": -0.027878
+    },
+    {
+      "name": "shuffle_039",
+      "sequence": "GYYHSRDSYSDV",
+      "complex_h3_nll": 3.674133,
+      "apo_h3_nll": 3.709137,
+      "ecls": -0.035003
+    },
+    {
+      "name": "shuffle_040",
+      "sequence": "DSYYSYRDVHGS",
+      "complex_h3_nll": 3.676991,
+      "apo_h3_nll": 3.5987,
+      "ecls": 0.07829
+    },
+    {
+      "name": "shuffle_041",
+      "sequence": "HYSDYRSDVYGS",
+      "complex_h3_nll": 3.645388,
+      "apo_h3_nll": 3.577425,
+      "ecls": 0.067963
+    },
+    {
+      "name": "shuffle_042",
+      "sequence": "SRSYHDDYVGYS",
+      "complex_h3_nll": 4.148503,
+      "apo_h3_nll": 4.165887,
+      "ecls": -0.017384
+    },
+    {
+      "name": "shuffle_043",
+      "sequence": "DYSSRVYSDYHG",
+      "complex_h3_nll": 4.14312,
+      "apo_h3_nll": 4.076936,
+      "ecls": 0.066184
+    },
+    {
+      "name": "shuffle_044",
+      "sequence": "DDRYSSGYYVSH",
+      "complex_h3_nll": 3.799587,
+      "apo_h3_nll": 3.926865,
+      "ecls": -0.127278
+    },
+    {
+      "name": "shuffle_045",
+      "sequence": "YYDHVRGDYSSS",
+      "complex_h3_nll": 4.185541,
+      "apo_h3_nll": 4.255508,
+      "ecls": -0.069967
+    },
+    {
+      "name": "shuffle_046",
+      "sequence": "SRSYYHDDYGVS",
+      "complex_h3_nll": 4.187913,
+      "apo_h3_nll": 4.234429,
+      "ecls": -0.046517
+    },
+    {
+      "name": "shuffle_047",
+      "sequence": "YYVDRYHSSSGD",
+      "complex_h3_nll": 3.498847,
+      "apo_h3_nll": 3.532563,
+      "ecls": -0.033717
+    },
+    {
+      "name": "shuffle_048",
+      "sequence": "RDYSYGSSVYDH",
+      "complex_h3_nll": 3.374789,
+      "apo_h3_nll": 3.316969,
+      "ecls": 0.05782
+    },
+    {
+      "name": "shuffle_049",
+      "sequence": "SYHDYSYGRSVD",
+      "complex_h3_nll": 3.506541,
+      "apo_h3_nll": 3.626357,
+      "ecls": -0.119816
+    },
+    {
+      "name": "shuffle_050",
+      "sequence": "VRGYSDHSYYDS",
+      "complex_h3_nll": 3.177586,
+      "apo_h3_nll": 3.166146,
+      "ecls": 0.01144
+    },
+    {
+      "name": "shuffle_051",
+      "sequence": "HGSYSYRYVSDD",
+      "complex_h3_nll": 4.297323,
+      "apo_h3_nll": 4.277192,
+      "ecls": 0.020131
+    },
+    {
+      "name": "shuffle_052",
+      "sequence": "YRSHSDDGSYYV",
+      "complex_h3_nll": 3.285756,
+      "apo_h3_nll": 3.176883,
+      "ecls": 0.108874
+    },
+    {
+      "name": "shuffle_053",
+      "sequence": "YVRYHGDDSYSS",
+      "complex_h3_nll": 3.400823,
+      "apo_h3_nll": 3.31692,
+      "ecls": 0.083903
+    },
+    {
+      "name": "shuffle_054",
+      "sequence": "SSVRYHDGDYSY",
+      "complex_h3_nll": 3.591365,
+      "apo_h3_nll": 3.629169,
+      "ecls": -0.037804
+    },
+    {
+      "name": "shuffle_055",
+      "sequence": "HDDSYRYGYVSS",
+      "complex_h3_nll": 3.86532,
+      "apo_h3_nll": 3.98342,
+      "ecls": -0.1181
+    },
+    {
+      "name": "shuffle_056",
+      "sequence": "HVYSSSDGRYDY",
+      "complex_h3_nll": 2.981719,
+      "apo_h3_nll": 2.911163,
+      "ecls": 0.070556
+    },
+    {
+      "name": "shuffle_057",
+      "sequence": "DYYSRSVHYGSD",
+      "complex_h3_nll": 3.292754,
+      "apo_h3_nll": 3.368144,
+      "ecls": -0.07539
+    },
+    {
+      "name": "shuffle_058",
+      "sequence": "YHSVDYYRGSSD",
+      "complex_h3_nll": 4.078123,
+      "apo_h3_nll": 4.01343,
+      "ecls": 0.064693
+    },
+    {
+      "name": "shuffle_059",
+      "sequence": "YGSSHRYDDYSV",
+      "complex_h3_nll": 3.605742,
+      "apo_h3_nll": 3.490362,
+      "ecls": 0.11538
+    },
+    {
+      "name": "shuffle_060",
+      "sequence": "DYSSHRYDVYSG",
+      "complex_h3_nll": 3.866193,
+      "apo_h3_nll": 3.744749,
+      "ecls": 0.121444
+    },
+    {
+      "name": "shuffle_061",
+      "sequence": "YYDDYHVRSSGS",
+      "complex_h3_nll": 3.495991,
+      "apo_h3_nll": 3.544529,
+      "ecls": -0.048538
+    },
+    {
+      "name": "shuffle_062",
+      "sequence": "RYYYGVHSDSDS",
+      "complex_h3_nll": 3.683688,
+      "apo_h3_nll": 3.626517,
+      "ecls": 0.057172
+    },
+    {
+      "name": "shuffle_063",
+      "sequence": "YSDRYYHGVSSD",
+      "complex_h3_nll": 4.080437,
+      "apo_h3_nll": 4.106757,
+      "ecls": -0.02632
+    },
+    {
+      "name": "shuffle_064",
+      "sequence": "RDDYSVYHYSSG",
+      "complex_h3_nll": 3.989923,
+      "apo_h3_nll": 4.002255,
+      "ecls": -0.012332
+    },
+    {
+      "name": "shuffle_065",
+      "sequence": "DSYVYDRSSHGY",
+      "complex_h3_nll": 3.157147,
+      "apo_h3_nll": 3.166559,
+      "ecls": -0.009413
+    },
+    {
+      "name": "shuffle_066",
+      "sequence": "RDVSSDYGSYYH",
+      "complex_h3_nll": 3.177896,
+      "apo_h3_nll": 3.072466,
+      "ecls": 0.10543
+    },
+    {
+      "name": "shuffle_067",
+      "sequence": "YSYHYDGRSDSV",
+      "complex_h3_nll": 3.274959,
+      "apo_h3_nll": 3.305643,
+      "ecls": -0.030684
+    },
+    {
+      "name": "shuffle_068",
+      "sequence": "DSVYYGRSHDSY",
+      "complex_h3_nll": 3.766,
+      "apo_h3_nll": 3.827536,
+      "ecls": -0.061536
+    },
+    {
+      "name": "shuffle_069",
+      "sequence": "GDYDSYSRVHSY",
+      "complex_h3_nll": 3.129157,
+      "apo_h3_nll": 3.116984,
+      "ecls": 0.012173
+    },
+    {
+      "name": "shuffle_070",
+      "sequence": "YSHSRGYSVYDD",
+      "complex_h3_nll": 3.745804,
+      "apo_h3_nll": 3.796355,
+      "ecls": -0.050551
+    },
+    {
+      "name": "shuffle_071",
+      "sequence": "DYSHSYGYRDSV",
+      "complex_h3_nll": 4.207059,
+      "apo_h3_nll": 4.178223,
+      "ecls": 0.028836
+    },
+    {
+      "name": "shuffle_072",
+      "sequence": "SVYSYGHDSRYD",
+      "complex_h3_nll": 3.303421,
+      "apo_h3_nll": 3.258344,
+      "ecls": 0.045077
+    },
+    {
+      "name": "shuffle_073",
+      "sequence": "SYYDSYGRVDHS",
+      "complex_h3_nll": 3.666567,
+      "apo_h3_nll": 3.624314,
+      "ecls": 0.042253
+    },
+    {
+      "name": "shuffle_074",
+      "sequence": "RYYHVDSYSGSD",
+      "complex_h3_nll": 3.328325,
+      "apo_h3_nll": 3.333351,
+      "ecls": -0.005026
+    },
+    {
+      "name": "shuffle_075",
+      "sequence": "SYSVDRGYSHDY",
+      "complex_h3_nll": 3.941401,
+      "apo_h3_nll": 3.895534,
+      "ecls": 0.045867
+    },
+    {
+      "name": "shuffle_076",
+      "sequence": "VDSHYRSGSDYY",
+      "complex_h3_nll": 3.40063,
+      "apo_h3_nll": 3.359607,
+      "ecls": 0.041023
+    },
+    {
+      "name": "shuffle_077",
+      "sequence": "VSHGYDYRYDSS",
+      "complex_h3_nll": 3.318989,
+      "apo_h3_nll": 3.527951,
+      "ecls": -0.208962
+    },
+    {
+      "name": "shuffle_078",
+      "sequence": "DVYSYDSSGRHY",
+      "complex_h3_nll": 3.435895,
+      "apo_h3_nll": 3.397897,
+      "ecls": 0.037998
+    },
+    {
+      "name": "shuffle_079",
+      "sequence": "DGYYHSSSRDYV",
+      "complex_h3_nll": 3.74957,
+      "apo_h3_nll": 3.694015,
+      "ecls": 0.055555
+    },
+    {
+      "name": "shuffle_080",
+      "sequence": "SVDHGYSYYDSR",
+      "complex_h3_nll": 4.051054,
+      "apo_h3_nll": 4.120602,
+      "ecls": -0.069548
+    },
+    {
+      "name": "shuffle_081",
+      "sequence": "YSDSSGYDHRYV",
+      "complex_h3_nll": 4.040026,
+      "apo_h3_nll": 3.967271,
+      "ecls": 0.072755
+    },
+    {
+      "name": "shuffle_082",
+      "sequence": "HDYDGYRSSVSY",
+      "complex_h3_nll": 2.82029,
+      "apo_h3_nll": 2.776095,
+      "ecls": 0.044195
+    },
+    {
+      "name": "shuffle_083",
+      "sequence": "YSSVDYGHSDYR",
+      "complex_h3_nll": 4.312348,
+      "apo_h3_nll": 4.194555,
+      "ecls": 0.117792
+    },
+    {
+      "name": "shuffle_084",
+      "sequence": "SDYDHVRYSSGY",
+      "complex_h3_nll": 2.950741,
+      "apo_h3_nll": 2.953488,
+      "ecls": -0.002747
+    },
+    {
+      "name": "shuffle_085",
+      "sequence": "YYDGRHSYVSDS",
+      "complex_h3_nll": 4.403505,
+      "apo_h3_nll": 4.47329,
+      "ecls": -0.069785
+    },
+    {
+      "name": "shuffle_086",
+      "sequence": "SSDVDYGRHYSY",
+      "complex_h3_nll": 3.866636,
+      "apo_h3_nll": 3.830915,
+      "ecls": 0.035721
+    },
+    {
+      "name": "shuffle_087",
+      "sequence": "DHYSSYVRGSYD",
+      "complex_h3_nll": 3.683977,
+      "apo_h3_nll": 3.638265,
+      "ecls": 0.045712
+    },
+    {
+      "name": "shuffle_088",
+      "sequence": "RYSDYVDYGSHS",
+      "complex_h3_nll": 3.894932,
+      "apo_h3_nll": 3.890041,
+      "ecls": 0.004891
+    },
+    {
+      "name": "shuffle_089",
+      "sequence": "SSDYYYGSVDHR",
+      "complex_h3_nll": 4.627748,
+      "apo_h3_nll": 4.616698,
+      "ecls": 0.01105
+    },
+    {
+      "name": "shuffle_090",
+      "sequence": "HSYDVSDGYSYR",
+      "complex_h3_nll": 3.354319,
+      "apo_h3_nll": 3.433661,
+      "ecls": -0.079342
+    },
+    {
+      "name": "shuffle_091",
+      "sequence": "SSGDSYDYRHVY",
+      "complex_h3_nll": 3.817396,
+      "apo_h3_nll": 3.827516,
+      "ecls": -0.01012
+    },
+    {
+      "name": "shuffle_092",
+      "sequence": "GSSRDYVDSHYY",
+      "complex_h3_nll": 3.766507,
+      "apo_h3_nll": 3.627908,
+      "ecls": 0.138599
+    },
+    {
+      "name": "shuffle_093",
+      "sequence": "HSSVYDYGRSYD",
+      "complex_h3_nll": 4.20999,
+      "apo_h3_nll": 4.223456,
+      "ecls": -0.013467
+    },
+    {
+      "name": "shuffle_094",
+      "sequence": "SSVSYRYGDHDY",
+      "complex_h3_nll": 3.7752,
+      "apo_h3_nll": 3.853744,
+      "ecls": -0.078544
+    },
+    {
+      "name": "shuffle_095",
+      "sequence": "YDGSVYSRYHDS",
+      "complex_h3_nll": 4.329114,
+      "apo_h3_nll": 4.456606,
+      "ecls": -0.127492
+    },
+    {
+      "name": "shuffle_096",
+      "sequence": "YYDSVGSRSYHD",
+      "complex_h3_nll": 3.888688,
+      "apo_h3_nll": 3.879628,
+      "ecls": 0.00906
+    },
+    {
+      "name": "shuffle_097",
+      "sequence": "SRDYYHYVSDGS",
+      "complex_h3_nll": 3.949811,
+      "apo_h3_nll": 3.964676,
+      "ecls": -0.014865
+    },
+    {
+      "name": "shuffle_098",
+      "sequence": "VSHYSGDYSRDY",
+      "complex_h3_nll": 3.218649,
+      "apo_h3_nll": 3.27254,
+      "ecls": -0.053891
+    },
+    {
+      "name": "shuffle_099",
+      "sequence": "RVYDSYDHSYSG",
+      "complex_h3_nll": 2.642404,
+      "apo_h3_nll": 2.513801,
+      "ecls": 0.128603
+    },
+    {
+      "name": "shuffle_100",
+      "sequence": "GVDDHYYSSRYS",
+      "complex_h3_nll": 3.620518,
+      "apo_h3_nll": 3.539015,
+      "ecls": 0.081503
+    },
+    {
+      "name": "shuffle_101",
+      "sequence": "GHDVSRYDYYSS",
+      "complex_h3_nll": 3.73654,
+      "apo_h3_nll": 3.683323,
+      "ecls": 0.053217
+    },
+    {
+      "name": "shuffle_102",
+      "sequence": "DYSYGSYHSRVD",
+      "complex_h3_nll": 3.888209,
+      "apo_h3_nll": 3.804316,
+      "ecls": 0.083893
+    },
+    {
+      "name": "shuffle_103",
+      "sequence": "SRSGSYDYYDHV",
+      "complex_h3_nll": 4.115859,
+      "apo_h3_nll": 4.144766,
+      "ecls": -0.028907
+    },
+    {
+      "name": "shuffle_104",
+      "sequence": "GVSYDSDRSHYY",
+      "complex_h3_nll": 3.49302,
+      "apo_h3_nll": 3.460097,
+      "ecls": 0.032923
+    },
+    {
+      "name": "shuffle_105",
+      "sequence": "SDGHDYRVYSYS",
+      "complex_h3_nll": 4.417567,
+      "apo_h3_nll": 4.431209,
+      "ecls": -0.013642
+    },
+    {
+      "name": "shuffle_106",
+      "sequence": "SYVRSGHDYDYS",
+      "complex_h3_nll": 4.002642,
+      "apo_h3_nll": 4.033513,
+      "ecls": -0.030871
+    },
+    {
+      "name": "shuffle_107",
+      "sequence": "YSYVDRDYSSGH",
+      "complex_h3_nll": 3.495639,
+      "apo_h3_nll": 3.447459,
+      "ecls": 0.04818
+    },
+    {
+      "name": "shuffle_108",
+      "sequence": "YSSHGDYRDYSV",
+      "complex_h3_nll": 3.535956,
+      "apo_h3_nll": 3.502353,
+      "ecls": 0.033603
+    },
+    {
+      "name": "shuffle_109",
+      "sequence": "YSSHGSYDVYRD",
+      "complex_h3_nll": 3.919279,
+      "apo_h3_nll": 3.79248,
+      "ecls": 0.126799
+    },
+    {
+      "name": "shuffle_110",
+      "sequence": "SVRHYYDSSDGY",
+      "complex_h3_nll": 3.671647,
+      "apo_h3_nll": 3.709205,
+      "ecls": -0.037558
+    },
+    {
+      "name": "shuffle_111",
+      "sequence": "YDGSDYRVSHSY",
+      "complex_h3_nll": 3.725629,
+      "apo_h3_nll": 3.643867,
+      "ecls": 0.081762
+    },
+    {
+      "name": "shuffle_112",
+      "sequence": "YDVHSYSDRSGY",
+      "complex_h3_nll": 4.033779,
+      "apo_h3_nll": 4.014853,
+      "ecls": 0.018925
+    },
+    {
+      "name": "shuffle_113",
+      "sequence": "VYRGYDHSSDSY",
+      "complex_h3_nll": 3.063985,
+      "apo_h3_nll": 3.091592,
+      "ecls": -0.027606
+    },
+    {
+      "name": "shuffle_114",
+      "sequence": "DSYVYDSGYRHS",
+      "complex_h3_nll": 3.808714,
+      "apo_h3_nll": 3.845409,
+      "ecls": -0.036695
+    },
+    {
+      "name": "shuffle_115",
+      "sequence": "VSSGYDRHYDYS",
+      "complex_h3_nll": 3.691506,
+      "apo_h3_nll": 3.784565,
+      "ecls": -0.093059
+    },
+    {
+      "name": "shuffle_116",
+      "sequence": "YDDRSVGHYSSY",
+      "complex_h3_nll": 4.02338,
+      "apo_h3_nll": 4.073824,
+      "ecls": -0.050445
+    },
+    {
+      "name": "shuffle_117",
+      "sequence": "DHVGDYSSRYSY",
+      "complex_h3_nll": 3.87231,
+      "apo_h3_nll": 3.792434,
+      "ecls": 0.079875
+    },
+    {
+      "name": "shuffle_118",
+      "sequence": "SDYHVGYDRSSY",
+      "complex_h3_nll": 3.448326,
+      "apo_h3_nll": 3.456555,
+      "ecls": -0.008229
+    },
+    {
+      "name": "shuffle_119",
+      "sequence": "YRSDSYHYSGDV",
+      "complex_h3_nll": 3.380813,
+      "apo_h3_nll": 3.325218,
+      "ecls": 0.055594
+    },
+    {
+      "name": "shuffle_120",
+      "sequence": "VSDSGRYYSDYH",
+      "complex_h3_nll": 3.512824,
+      "apo_h3_nll": 3.472311,
+      "ecls": 0.040513
+    },
+    {
+      "name": "shuffle_121",
+      "sequence": "YSGSRSDHYDVY",
+      "complex_h3_nll": 3.795495,
+      "apo_h3_nll": 3.890218,
+      "ecls": -0.094723
+    },
+    {
+      "name": "shuffle_122",
+      "sequence": "DYSHDYVSRSGY",
+      "complex_h3_nll": 4.019669,
+      "apo_h3_nll": 3.948005,
+      "ecls": 0.071665
+    },
+    {
+      "name": "shuffle_123",
+      "sequence": "SHDYYDSYSGVR",
+      "complex_h3_nll": 4.11155,
+      "apo_h3_nll": 4.161991,
+      "ecls": -0.050441
+    },
+    {
+      "name": "shuffle_124",
+      "sequence": "SRSYGYVDSYDH",
+      "complex_h3_nll": 3.372113,
+      "apo_h3_nll": 3.227482,
+      "ecls": 0.144631
+    },
+    {
+      "name": "shuffle_125",
+      "sequence": "VHDSRYSDYSYG",
+      "complex_h3_nll": 3.996904,
+      "apo_h3_nll": 4.062415,
+      "ecls": -0.065511
+    },
+    {
+      "name": "shuffle_126",
+      "sequence": "YYSSSDRHGYDV",
+      "complex_h3_nll": 3.517749,
+      "apo_h3_nll": 3.442843,
+      "ecls": 0.074906
+    },
+    {
+      "name": "shuffle_127",
+      "sequence": "DYGDHSYYRVSS",
+      "complex_h3_nll": 3.527013,
+      "apo_h3_nll": 3.584894,
+      "ecls": -0.057881
+    },
+    {
+      "name": "shuffle_128",
+      "sequence": "DGDYYRSYSHSV",
+      "complex_h3_nll": 3.831031,
+      "apo_h3_nll": 3.865926,
+      "ecls": -0.034894
+    },
+    {
+      "name": "shuffle_129",
+      "sequence": "RGYVSSDSHYYD",
+      "complex_h3_nll": 3.390164,
+      "apo_h3_nll": 3.281656,
+      "ecls": 0.108508
+    },
+    {
+      "name": "shuffle_130",
+      "sequence": "YRGSSYDYSDVH",
+      "complex_h3_nll": 3.769763,
+      "apo_h3_nll": 3.71987,
+      "ecls": 0.049893
+    },
+    {
+      "name": "shuffle_131",
+      "sequence": "RVYYSGDSYHSD",
+      "complex_h3_nll": 3.256307,
+      "apo_h3_nll": 3.254706,
+      "ecls": 0.001601
+    },
+    {
+      "name": "shuffle_132",
+      "sequence": "SDSHRDGYYSVY",
+      "complex_h3_nll": 4.033032,
+      "apo_h3_nll": 4.169243,
+      "ecls": -0.136211
+    },
+    {
+      "name": "shuffle_133",
+      "sequence": "YYRVDGYSSSHD",
+      "complex_h3_nll": 4.099436,
+      "apo_h3_nll": 4.009003,
+      "ecls": 0.090434
+    },
+    {
+      "name": "shuffle_134",
+      "sequence": "YDGSSYSRYDHV",
+      "complex_h3_nll": 4.214865,
+      "apo_h3_nll": 4.230306,
+      "ecls": -0.015442
+    },
+    {
+      "name": "shuffle_135",
+      "sequence": "DRYSHDVYSGSY",
+      "complex_h3_nll": 2.852185,
+      "apo_h3_nll": 2.825385,
+      "ecls": 0.0268
+    },
+    {
+      "name": "shuffle_136",
+      "sequence": "YSYSDSGRVDYH",
+      "complex_h3_nll": 3.656667,
+      "apo_h3_nll": 3.607576,
+      "ecls": 0.049091
+    },
+    {
+      "name": "shuffle_137",
+      "sequence": "YHSRSSYYGDVD",
+      "complex_h3_nll": 4.013681,
+      "apo_h3_nll": 3.953173,
+      "ecls": 0.060507
+    },
+    {
+      "name": "shuffle_138",
+      "sequence": "DSHDYGYSRSYV",
+      "complex_h3_nll": 3.716016,
+      "apo_h3_nll": 3.815497,
+      "ecls": -0.099482
+    },
+    {
+      "name": "shuffle_139",
+      "sequence": "DYYSGSSRDYHV",
+      "complex_h3_nll": 3.401581,
+      "apo_h3_nll": 3.349718,
+      "ecls": 0.051862
+    },
+    {
+      "name": "shuffle_140",
+      "sequence": "DSDVGYYSSRHY",
+      "complex_h3_nll": 4.055518,
+      "apo_h3_nll": 3.938355,
+      "ecls": 0.117163
+    },
+    {
+      "name": "shuffle_141",
+      "sequence": "DSSVHYGSYYDR",
+      "complex_h3_nll": 4.296119,
+      "apo_h3_nll": 4.266579,
+      "ecls": 0.02954
+    },
+    {
+      "name": "shuffle_142",
+      "sequence": "YDDVSHYSRYGS",
+      "complex_h3_nll": 4.065545,
+      "apo_h3_nll": 3.973279,
+      "ecls": 0.092266
+    },
+    {
+      "name": "shuffle_143",
+      "sequence": "GYDHDRVYSSYS",
+      "complex_h3_nll": 3.968894,
+      "apo_h3_nll": 3.916825,
+      "ecls": 0.05207
+    },
+    {
+      "name": "shuffle_144",
+      "sequence": "DYYSHSRDYSVG",
+      "complex_h3_nll": 3.606395,
+      "apo_h3_nll": 3.620244,
+      "ecls": -0.013848
+    },
+    {
+      "name": "shuffle_145",
+      "sequence": "SYSDYHRGSVDY",
+      "complex_h3_nll": 3.206392,
+      "apo_h3_nll": 3.256171,
+      "ecls": -0.049779
+    },
+    {
+      "name": "shuffle_146",
+      "sequence": "SRYDYSDSHVYG",
+      "complex_h3_nll": 3.240336,
+      "apo_h3_nll": 3.331222,
+      "ecls": -0.090886
+    },
+    {
+      "name": "shuffle_147",
+      "sequence": "RYDGYHYSDSVS",
+      "complex_h3_nll": 4.215652,
+      "apo_h3_nll": 4.213259,
+      "ecls": 0.002394
+    },
+    {
+      "name": "shuffle_148",
+      "sequence": "RGYYDDSVHSSY",
+      "complex_h3_nll": 3.436152,
+      "apo_h3_nll": 3.387869,
+      "ecls": 0.048283
+    },
+    {
+      "name": "shuffle_149",
+      "sequence": "YDYSGSVDSHYR",
+      "complex_h3_nll": 3.283815,
+      "apo_h3_nll": 3.173266,
+      "ecls": 0.110549
+    },
+    {
+      "name": "shuffle_150",
+      "sequence": "RHGYYSSVSDYD",
+      "complex_h3_nll": 3.973327,
+      "apo_h3_nll": 3.937531,
+      "ecls": 0.035796
+    },
+    {
+      "name": "shuffle_151",
+      "sequence": "DYSSHYGRYDSV",
+      "complex_h3_nll": 4.08721,
+      "apo_h3_nll": 4.144638,
+      "ecls": -0.057428
+    },
+    {
+      "name": "shuffle_152",
+      "sequence": "SSGVRYSYHDDY",
+      "complex_h3_nll": 4.168011,
+      "apo_h3_nll": 4.233784,
+      "ecls": -0.065773
+    },
+    {
+      "name": "shuffle_153",
+      "sequence": "YDYGYSSDSVRH",
+      "complex_h3_nll": 3.354881,
+      "apo_h3_nll": 3.357446,
+      "ecls": -0.002564
+    },
+    {
+      "name": "shuffle_154",
+      "sequence": "VYHGRSYYSSDD",
+      "complex_h3_nll": 3.234687,
+      "apo_h3_nll": 3.365707,
+      "ecls": -0.13102
+    },
+    {
+      "name": "shuffle_155",
+      "sequence": "DSYGYVRHYDSS",
+      "complex_h3_nll": 3.635238,
+      "apo_h3_nll": 3.711473,
+      "ecls": -0.076236
+    },
+    {
+      "name": "shuffle_156",
+      "sequence": "DDSRSSGHYYYV",
+      "complex_h3_nll": 3.891934,
+      "apo_h3_nll": 3.869133,
+      "ecls": 0.022801
+    },
+    {
+      "name": "shuffle_157",
+      "sequence": "SSRVGYDHSYYD",
+      "complex_h3_nll": 3.988851,
+      "apo_h3_nll": 3.93389,
+      "ecls": 0.054961
+    },
+    {
+      "name": "shuffle_158",
+      "sequence": "YDSVGSDSYYRH",
+      "complex_h3_nll": 3.900262,
+      "apo_h3_nll": 3.870348,
+      "ecls": 0.029913
+    },
+    {
+      "name": "shuffle_159",
+      "sequence": "RHYDSYSYDSGV",
+      "complex_h3_nll": 3.24694,
+      "apo_h3_nll": 3.221715,
+      "ecls": 0.025225
+    },
+    {
+      "name": "shuffle_160",
+      "sequence": "DYYDHSSRYVSG",
+      "complex_h3_nll": 3.114731,
+      "apo_h3_nll": 3.23694,
+      "ecls": -0.122209
+    },
+    {
+      "name": "shuffle_161",
+      "sequence": "YHDGSRYSVSDY",
+      "complex_h3_nll": 4.052549,
+      "apo_h3_nll": 4.012417,
+      "ecls": 0.040132
+    },
+    {
+      "name": "shuffle_162",
+      "sequence": "HRDYSGYYSVSD",
+      "complex_h3_nll": 3.526416,
+      "apo_h3_nll": 3.539917,
+      "ecls": -0.013501
+    },
+    {
+      "name": "shuffle_163",
+      "sequence": "YGDSSSYVYRDH",
+      "complex_h3_nll": 3.963187,
+      "apo_h3_nll": 3.989748,
+      "ecls": -0.02656
+    },
+    {
+      "name": "shuffle_164",
+      "sequence": "RSDGSSVYYHYD",
+      "complex_h3_nll": 3.811879,
+      "apo_h3_nll": 3.842525,
+      "ecls": -0.030646
+    },
+    {
+      "name": "shuffle_165",
+      "sequence": "SSSGDYHYYRVD",
+      "complex_h3_nll": 4.33156,
+      "apo_h3_nll": 4.333199,
+      "ecls": -0.001639
+    },
+    {
+      "name": "shuffle_166",
+      "sequence": "DYSRYSHGSYDV",
+      "complex_h3_nll": 3.368502,
+      "apo_h3_nll": 3.322368,
+      "ecls": 0.046134
+    },
+    {
+      "name": "shuffle_167",
+      "sequence": "HSSDVYYGRDYS",
+      "complex_h3_nll": 4.02137,
+      "apo_h3_nll": 3.992449,
+      "ecls": 0.028921
+    },
+    {
+      "name": "shuffle_168",
+      "sequence": "YGHDRVYSYDSS",
+      "complex_h3_nll": 3.476265,
+      "apo_h3_nll": 3.602919,
+      "ecls": -0.126654
+    },
+    {
+      "name": "shuffle_169",
+      "sequence": "DYSSYDHGVYRS",
+      "complex_h3_nll": 3.856988,
+      "apo_h3_nll": 3.834503,
+      "ecls": 0.022485
+    },
+    {
+      "name": "shuffle_170",
+      "sequence": "SGDSSRVHYYDY",
+      "complex_h3_nll": 3.547518,
+      "apo_h3_nll": 3.554646,
+      "ecls": -0.007127
+    },
+    {
+      "name": "shuffle_171",
+      "sequence": "SVGRDSHSYYDY",
+      "complex_h3_nll": 3.389889,
+      "apo_h3_nll": 3.364526,
+      "ecls": 0.025363
+    },
+    {
+      "name": "shuffle_172",
+      "sequence": "SDGYRYSSDVYH",
+      "complex_h3_nll": 4.144235,
+      "apo_h3_nll": 4.197613,
+      "ecls": -0.053378
+    },
+    {
+      "name": "shuffle_173",
+      "sequence": "YHSYRDVDSSGY",
+      "complex_h3_nll": 3.409568,
+      "apo_h3_nll": 3.384366,
+      "ecls": 0.025201
+    },
+    {
+      "name": "shuffle_174",
+      "sequence": "HGDYSVYRSDYS",
+      "complex_h3_nll": 4.021947,
+      "apo_h3_nll": 3.965513,
+      "ecls": 0.056434
+    },
+    {
+      "name": "shuffle_175",
+      "sequence": "DHDSGYRSYVYS",
+      "complex_h3_nll": 4.241275,
+      "apo_h3_nll": 4.313224,
+      "ecls": -0.071949
+    },
+    {
+      "name": "shuffle_176",
+      "sequence": "DVGRDSYHSYSY",
+      "complex_h3_nll": 3.061225,
+      "apo_h3_nll": 2.942066,
+      "ecls": 0.119159
+    },
+    {
+      "name": "shuffle_177",
+      "sequence": "RHDYSVYGYSDS",
+      "complex_h3_nll": 3.982568,
+      "apo_h3_nll": 3.9873,
+      "ecls": -0.004732
+    },
+    {
+      "name": "shuffle_178",
+      "sequence": "YHDSRGYSVDSY",
+      "complex_h3_nll": 3.765313,
+      "apo_h3_nll": 3.771833,
+      "ecls": -0.006519
+    },
+    {
+      "name": "shuffle_179",
+      "sequence": "DSSVSYYHYGRD",
+      "complex_h3_nll": 4.424685,
+      "apo_h3_nll": 4.420144,
+      "ecls": 0.004541
+    },
+    {
+      "name": "shuffle_180",
+      "sequence": "DYYSVSGSRDHY",
+      "complex_h3_nll": 3.781211,
+      "apo_h3_nll": 3.770407,
+      "ecls": 0.010805
+    },
+    {
+      "name": "shuffle_181",
+      "sequence": "YSGVRSDYYHDS",
+      "complex_h3_nll": 4.054799,
+      "apo_h3_nll": 4.189471,
+      "ecls": -0.134671
+    },
+    {
+      "name": "shuffle_182",
+      "sequence": "VDSSRGSHYYYD",
+      "complex_h3_nll": 3.587402,
+      "apo_h3_nll": 3.63132,
+      "ecls": -0.043918
+    },
+    {
+      "name": "shuffle_183",
+      "sequence": "DYRSSYVDGSYH",
+      "complex_h3_nll": 3.920504,
+      "apo_h3_nll": 3.841107,
+      "ecls": 0.079397
+    },
+    {
+      "name": "shuffle_184",
+      "sequence": "SDYDSYYHRSGV",
+      "complex_h3_nll": 3.344362,
+      "apo_h3_nll": 3.326777,
+      "ecls": 0.017585
+    },
+    {
+      "name": "shuffle_185",
+      "sequence": "SYYGRYSDDSVH",
+      "complex_h3_nll": 3.732825,
+      "apo_h3_nll": 3.728762,
+      "ecls": 0.004063
+    },
+    {
+      "name": "shuffle_186",
+      "sequence": "VYSYHYDRGSSD",
+      "complex_h3_nll": 3.692993,
+      "apo_h3_nll": 3.696134,
+      "ecls": -0.003141
+    },
+    {
+      "name": "shuffle_187",
+      "sequence": "DSSVYHRYYSDG",
+      "complex_h3_nll": 4.396813,
+      "apo_h3_nll": 4.51372,
+      "ecls": -0.116907
+    },
+    {
+      "name": "shuffle_188",
+      "sequence": "GSSHYVDYYDRS",
+      "complex_h3_nll": 4.450657,
+      "apo_h3_nll": 4.562379,
+      "ecls": -0.111722
+    },
+    {
+      "name": "shuffle_189",
+      "sequence": "SSDVYHDGYYSR",
+      "complex_h3_nll": 3.870824,
+      "apo_h3_nll": 3.92928,
+      "ecls": -0.058456
+    },
+    {
+      "name": "shuffle_190",
+      "sequence": "GSSYYVDHYSDR",
+      "complex_h3_nll": 4.363356,
+      "apo_h3_nll": 4.48372,
+      "ecls": -0.120364
+    },
+    {
+      "name": "shuffle_191",
+      "sequence": "YRYGSSDHDVSY",
+      "complex_h3_nll": 2.973363,
+      "apo_h3_nll": 3.008173,
+      "ecls": -0.034809
+    },
+    {
+      "name": "shuffle_192",
+      "sequence": "VYYRDYGSHSSD",
+      "complex_h3_nll": 3.555229,
+      "apo_h3_nll": 3.501174,
+      "ecls": 0.054055
+    },
+    {
+      "name": "shuffle_193",
+      "sequence": "SSRYSDYYVGDH",
+      "complex_h3_nll": 4.009168,
+      "apo_h3_nll": 4.039761,
+      "ecls": -0.030594
+    },
+    {
+      "name": "shuffle_194",
+      "sequence": "HSDSGYRDVYSY",
+      "complex_h3_nll": 3.634982,
+      "apo_h3_nll": 3.527965,
+      "ecls": 0.107017
+    },
+    {
+      "name": "shuffle_195",
+      "sequence": "YHSSDYSYRVGD",
+      "complex_h3_nll": 4.336351,
+      "apo_h3_nll": 4.35714,
+      "ecls": -0.020788
+    },
+    {
+      "name": "shuffle_196",
+      "sequence": "GSHSYDYRVYSD",
+      "complex_h3_nll": 3.515618,
+      "apo_h3_nll": 3.633695,
+      "ecls": -0.118077
+    },
+    {
+      "name": "shuffle_197",
+      "sequence": "SDYDGSYRVYSH",
+      "complex_h3_nll": 2.718479,
+      "apo_h3_nll": 2.672762,
+      "ecls": 0.045716
+    },
+    {
+      "name": "shuffle_198",
+      "sequence": "HYVYYDDSSSGR",
+      "complex_h3_nll": 3.898205,
+      "apo_h3_nll": 3.962855,
+      "ecls": -0.064649
+    },
+    {
+      "name": "shuffle_199",
+      "sequence": "DSYYVDSRYHGS",
+      "complex_h3_nll": 3.68955,
+      "apo_h3_nll": 3.834131,
+      "ecls": -0.144581
+    },
+    {
+      "name": "shuffle_200",
+      "sequence": "SVDGSYSRDYYH",
+      "complex_h3_nll": 3.793237,
+      "apo_h3_nll": 3.765377,
+      "ecls": 0.027861
+    }
+  ],
+  "advantage_summary": {
+    "native": {
+      "name": "native",
+      "sequence": "VRYDHYSGSSDY",
+      "complex_h3_nll": 2.469253,
+      "apo_h3_nll": 2.418662,
+      "ecls": 0.050591
+    },
+    "shuffle_count": 200,
+    "shuffle_mean_ecls": 0.004,
+    "ecls_advantage": -0.046591,
+    "native_ecls_percentile": 0.255
+  },
+  "provenance": {
+    "mpnn_script": "D:\\biological\\DisorderFlow\\ProteinMPNN\\protein_mpnn_run.py",
+    "weights_dir": "D:\\biological\\DisorderFlow\\ProteinMPNN\\vanilla_model_weights",
+    "model_weights_sha256": "C9CB4A671D79604111231F8DBFC7C590E06F1197453B7A6854AC6661A642F5BD",
+    "model_name": "v_48_020",
+    "seed": 2309,
+    "complex_command": [
+      "D:\\biological\\DisorderFlow\\venv\\Scripts\\python.exe",
+      "D:\\biological\\DisorderFlow\\ProteinMPNN\\protein_mpnn_run.py",
+      "--pdb_path",
+      "D:/biological/DisorderFlow/tools/ecls_scorer/demo/work/complex/complex.pdb",
+      "--pdb_path_chains",
+      "H",
+      "--fixed_positions_jsonl",
+      "D:/biological/DisorderFlow/tools/ecls_scorer/demo/work/complex/fixed_positions.jsonl",
+      "--path_to_model_weights",
+      "D:\\biological\\DisorderFlow\\ProteinMPNN\\vanilla_model_weights",
+      "--model_name",
+      "v_48_020",
+      "--conditional_probs_only",
+      "1",
+      "--conditional_probs_only_backbone",
+      "1",
+      "--num_seq_per_target",
+      "1",
+      "--batch_size",
+      "1",
+      "--seed",
+      "2309",
+      "--suppress_print",
+      "1",
+      "--out_folder",
+      "D:/biological/DisorderFlow/tools/ecls_scorer/demo/work/complex/mpnn"
+    ],
+    "apo_command": [
+      "D:\\biological\\DisorderFlow\\venv\\Scripts\\python.exe",
+      "D:\\biological\\DisorderFlow\\ProteinMPNN\\protein_mpnn_run.py",
+      "--pdb_path",
+      "D:/biological/DisorderFlow/tools/ecls_scorer/demo/work/apo/apo.pdb",
+      "--pdb_path_chains",
+      "H",
+      "--fixed_positions_jsonl",
+      "D:/biological/DisorderFlow/tools/ecls_scorer/demo/work/apo/fixed_positions.jsonl",
+      "--path_to_model_weights",
+      "D:\\biological\\DisorderFlow\\ProteinMPNN\\vanilla_model_weights",
+      "--model_name",
+      "v_48_020",
+      "--conditional_probs_only",
+      "1",
+      "--conditional_probs_only_backbone",
+      "1",
+      "--num_seq_per_target",
+      "1",
+      "--batch_size",
+      "1",
+      "--seed",
+      "2309",
+      "--suppress_print",
+      "1",
+      "--out_folder",
+      "D:/biological/DisorderFlow/tools/ecls_scorer/demo/work/apo/mpnn"
+    ],
+    "heavy_chain_length": 219
+  }
+}
