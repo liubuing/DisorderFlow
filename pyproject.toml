@@ -42,6 +42,8 @@ dev = [
     "uvicorn>=0.27",
     "httpx",
     "biotite",
+    # Tests import research scripts that use scikit-learn at module scope.
+    "scikit-learn>=1.3",
 ]
 publication = [
     "scikit-learn>=1.3",
