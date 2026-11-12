@@ -50,5 +50,10 @@ def test_old_pae_file_archived_without_loss(tmp_path,monkeypatch):
 
 
 # 仓库现状：对当前仓库执行完整对齐校验必须零错误，防止发布线声明与实际产物脱节。
+# 干净的 CI checkout 不含 dist/ 与 upload/ 本地暂存区（均被 .gitignore 排除），
+# 此时跳过；tracked 源文件的完整性由 test_release_lineage.py 覆盖。
 def test_current_publication_alignment():
-    assert validate(Path(__file__).resolve().parents[1])['errors']==[]
+    root = Path(__file__).resolve().parents[1]
+    if not (root/'release/zenodo_v1/upload').is_dir() or not (root/'dist').exists():
+        pytest.skip('local publication staging absent (clean checkout)')
+    assert validate(root)['errors']==[]
