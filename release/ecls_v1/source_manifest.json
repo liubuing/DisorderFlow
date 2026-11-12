@@ -28,9 +28,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 7226,
+      "bytes": 7649,
       "hash_mode": "canonical_lf",
-      "sha256": "16783417b131edb319564318c2a0d6a9f95de7ac779838d01bdee9b2b140e487"
+      "sha256": "df8b12339091dd432b9ad2e5e6250c1eb318d48350b704e93239dc84c39a01bd"
     },
     {
       "path": "configs/benchmarks/successor_v3_confirmatory.yml",
@@ -778,9 +778,9 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 2413,
+      "bytes": 2696,
       "hash_mode": "canonical_lf",
-      "sha256": "e31ce8682f1d39768949cb3279c563fc41062121c407aedb6b943ea5f48738d6"
+      "sha256": "c27d1cb57611eb1ff939456fdd79072fdd8484f9de9c7d46f4a4347769c1657f"
     },
     {
       "path": "release/ecls_v1/REPRODUCIBILITY.md",

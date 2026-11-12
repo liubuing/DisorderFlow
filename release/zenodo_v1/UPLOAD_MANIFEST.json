@@ -22,7 +22,7 @@
       "path": "source_manifest.json",
       "source": "release/ecls_v1/source_manifest.json",
       "bytes": 45664,
-      "sha256": "3684683f0bb5cc2871cfee2e192a336d4eb098e83e4d3ed9bdb5cef8b7d74457"
+      "sha256": "2240b2501f62b0d066c4c8d0433d9a2059747a68cb8c384d640a25e86cc26c82"
     },
     {
       "path": "REPRODUCIBILITY.md",
@@ -75,8 +75,8 @@
     {
       "path": "README.md",
       "source": "README.md",
-      "bytes": 7226,
-      "sha256": "16783417b131edb319564318c2a0d6a9f95de7ac779838d01bdee9b2b140e487"
+      "bytes": 7649,
+      "sha256": "02a0d0f49daca3d03b03a6df2a71bc5901ad4c92a580e12cf346cb6d660480db"
     },
     {
       "path": "PUBLICATION_PROTOCOL.md",
