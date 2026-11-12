@@ -9,12 +9,25 @@ For each candidate:
 - Output FASTA + annotation TSV
 """
 
-import json, os, sys, time
+import json, os, shutil, sys, time
 from collections import OrderedDict
 
 # ── Config ──
 # 合成构建格式: 信号肽(仅参考) + VH-(G4S)3 linker-VL-6xHis; 产物 FASTA 不含信号肽
-OUTDIR = 'idp_design_results/s5_wetlab_synthesis_20260705'
+def _find_repo_root():
+    """从脚本位置向上找仓库根(以 idp_design_results/s5_wetlab_candidates.json 为标记)。
+
+    兼容两种运行方式: scripts/ 下直接运行, 以及 bundle 内的拷贝副本运行。
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    for candidate in (here, os.path.dirname(here), os.path.dirname(os.path.dirname(here))):
+        if os.path.exists(os.path.join(candidate, 'idp_design_results', 's5_wetlab_candidates.json')):
+            return candidate
+    return os.getcwd()
+
+
+ROOT = _find_repo_root()
+OUTDIR = os.path.join(ROOT, 'idp_design_results', 's5_wetlab_synthesis_20260705')
 LINKER = 'GGGGSGGGGSGGGGS'       # (G4S)3
 HIS_TAG = 'HHHHHH'
 SIGNAL_PEPTIDE = 'MGWSCIILFLVATATGVHS'  # murine Ig kappa leader (secreted expression)
@@ -55,7 +68,7 @@ def extract_chain_sequence(pdb_path, chain_id):
 
 def get_framework_from_pdb(pdb_id, vh_chain, vl_chain):
     """Get VH and VL sequences from a PDB file with H/L chain IDs."""
-    pdb_path = f'data/anti_abeta_refs/{pdb_id}.pdb'
+    pdb_path = os.path.join(ROOT, 'data', 'anti_abeta_refs', f'{pdb_id}.pdb')
     if not os.path.exists(pdb_path):
         return None, None
     vh = extract_chain_sequence(pdb_path, vh_chain)
@@ -194,7 +207,7 @@ def main():
     os.makedirs(OUTDIR, exist_ok=True)
 
     # Load candidates
-    data = json.load(open('idp_design_results/s5_wetlab_candidates.json', encoding='utf-8'))
+    data = json.load(open(os.path.join(ROOT, 'idp_design_results', 's5_wetlab_candidates.json'), encoding='utf-8'))
     candidates = data['top_candidates']
     print(f"Loaded {len(candidates)} candidates")
 
@@ -208,27 +221,27 @@ def main():
     fw_5CSZ_vh, fw_5CSZ_vl = get_framework_from_pdb('5CSZ', 'H', 'L')
 
     # 3UOT: scFv structure (chains A/B), D/E are antigen
-    fw_3UOT_a = extract_chain_sequence('data/anti_abeta_refs/3UOT.pdb', 'A')
-    fw_3UOT_b = extract_chain_sequence('data/anti_abeta_refs/3UOT.pdb', 'B')
+    fw_3UOT_a = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/3UOT.pdb'), 'A')
+    fw_3UOT_b = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/3UOT.pdb'), 'B')
 
     # 6CGZ: chains A/B/C — large, need domain extraction
-    fw_6CGZ_a = extract_chain_sequence('data/anti_abeta_refs/6CGZ.pdb', 'A')
-    fw_6CGZ_b = extract_chain_sequence('data/anti_abeta_refs/6CGZ.pdb', 'B')
+    fw_6CGZ_a = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/6CGZ.pdb'), 'A')
+    fw_6CGZ_b = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/6CGZ.pdb'), 'B')
 
     # 6H3R: chains A(127), B(128) ≈ scFv, C(19), D(18) ≈ antigen
-    fw_6H3R_a = extract_chain_sequence('data/anti_abeta_refs/6H3R.pdb', 'A')
-    fw_6H3R_b = extract_chain_sequence('data/anti_abeta_refs/6H3R.pdb', 'B')
+    fw_6H3R_a = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/6H3R.pdb'), 'A')
+    fw_6H3R_b = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/6H3R.pdb'), 'B')
 
     # 6H1F: chains A(183), B(158) — anti-αSyn Fab/scFv
-    fw_6H1F_a = extract_chain_sequence('data/anti_abeta_refs/6H1F.pdb', 'A')
-    fw_6H1F_b = extract_chain_sequence('data/anti_abeta_refs/6H1F.pdb', 'B')
+    fw_6H1F_a = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/6H1F.pdb'), 'A')
+    fw_6H1F_b = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/6H1F.pdb'), 'B')
 
     # 6CBV: chains H(386), L(348), B(134) — anti-tau Fab
     fw_6CBV_h, fw_6CBV_l = get_framework_from_pdb('6CBV', 'H', 'L')
 
     # 4BKL: chains A(216), B(216), E/F/G(25-26) — anti-αSyn
-    fw_4BKL_a = extract_chain_sequence('data/anti_abeta_refs/4BKL.pdb', 'A')
-    fw_4BKL_b = extract_chain_sequence('data/anti_abeta_refs/4BKL.pdb', 'B')
+    fw_4BKL_a = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/4BKL.pdb'), 'A')
+    fw_4BKL_b = extract_chain_sequence(os.path.join(ROOT, 'data/anti_abeta_refs/4BKL.pdb'), 'B')
 
     print(f"  4HIX: VH={len(fw_4HIX_vh) if fw_4HIX_vh else 0}aa, VL={len(fw_4HIX_vl) if fw_4HIX_vl else 0}aa")
     print(f"  5CSZ: VH={len(fw_5CSZ_vh) if fw_5CSZ_vh else 0}aa, VL={len(fw_5CSZ_vl) if fw_5CSZ_vl else 0}aa")
@@ -458,6 +471,8 @@ def main():
         # Store
         rec['vh_seq'] = vh_scfv
         rec['vl_seq'] = vl_scfv
+        rec['vh_length'] = len(vh_scfv)
+        rec['vl_length'] = len(vl_scfv)
         rec['scfv_seq'] = scfv
         rec['scfv_seq_with_sp'] = scfv_with_sp
         rec['dna_seq'] = dna_seq
@@ -533,14 +548,13 @@ def main():
             f.write('\t'.join(vals) + '\n')
     print(f"  {ann_tsv}")
 
-    # 3e: Unpaired candidates
-    if unpaired:
-        unp_tsv = os.path.join(OUTDIR, 'unpaired_candidates.tsv')
-        with open(unp_tsv, 'w', encoding='utf-8') as f:
-            f.write('rank\tsource\tsource_type\treason\n')
-            for r in unpaired:
-                f.write(f"{r['rank']}\t{r['source']}\t{r['source_type']}\t{r.get('reason','')}\n")
-        print(f"  {unp_tsv} ({len(unpaired)} candidates)")
+    # 3e: Unpaired candidates — 无条件写出(空 run 只含表头), 避免陈旧残留文件误导 QA
+    unp_tsv = os.path.join(OUTDIR, 'unpaired_candidates.tsv')
+    with open(unp_tsv, 'w', encoding='utf-8') as f:
+        f.write('rank\tsource\tsource_type\treason\n')
+        for r in unpaired:
+            f.write(f"{r['rank']}\t{r['source']}\t{r['source_type']}\t{r.get('reason','')}\n")
+    print(f"  {unp_tsv} ({len(unpaired)} candidates)")
 
     # 3f: Summary JSON
     summary_json = os.path.join(OUTDIR, 'synthesis_summary.json')
@@ -557,6 +571,14 @@ def main():
         'note': 'For literature antibodies, framework VH/VL from closest PDB used. CDR-H3 sequences are from candidate data (literature/patent origin). Manual verification of CDR-H3 grafting recommended before synthesis.',
     }, open(summary_json, 'w', encoding='utf-8'), indent=2, ensure_ascii=False)
     print(f"  {summary_json}")
+
+    # 3g: 复现脚本副本入 bundle (V15 S0.5 规范)
+    script_copy = os.path.join(OUTDIR, 'prepare_synthesis_seqs.py')
+    src = os.path.abspath(__file__)
+    dst = os.path.abspath(script_copy)
+    if src != dst:  # 从 bundle 内副本运行时 src == dst，跳过避免 SameFileError
+        shutil.copy2(src, script_copy)
+    print(f"  {script_copy}")
 
     # ── Step 4: Summary ──
     print(f"\n{'='*60}")
