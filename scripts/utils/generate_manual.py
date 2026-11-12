@@ -181,7 +181,7 @@ doc.add_heading('2. 快速启动', level=1)
 
 doc.add_heading('2.1 启动服务', level=2)
 doc.add_paragraph('在项目根目录下执行：')
-add_code_block(doc, 'python app.py')
+add_code_block(doc, 'python app_web.py')
 doc.add_paragraph('启动后浏览器自动打开 http://127.0.0.1:7860。仅本机访问，外网无法连接。')
 
 doc.add_heading('2.2 管理命令', level=2)
