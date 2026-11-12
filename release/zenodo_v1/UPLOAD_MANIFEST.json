@@ -22,7 +22,7 @@
       "path": "source_manifest.json",
       "source": "release/ecls_v1/source_manifest.json",
       "bytes": 46963,
-      "sha256": "12a5712f46269fc2122fd9898cc6d25005659d2a7a3c3ab0ee0e1e44c201b2b6"
+      "sha256": "bbc34a951d9bd7e940e73f8d9364ed9dced163ca88e987e9a9c6a6d6bf70f17c"
     },
     {
       "path": "REPRODUCIBILITY.md",

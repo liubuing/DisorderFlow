@@ -23,9 +23,7 @@ def read(path):
 
 def sha256(path):
     with path.open('rb') as handle:
-        if hasattr(hashlib, 'file_digest'):
-            return hashlib.file_digest(handle,'sha256').hexdigest()
-        return hashlib.sha256(handle.read()).hexdigest()
+        return hashlib.file_digest(handle,'sha256').hexdigest()
 
 
 def archive_errors(root, line):

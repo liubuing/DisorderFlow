@@ -110,8 +110,8 @@
     },
     "lineage_validator": {
       "path": "scripts/validate_release_lineage.py",
-      "sha256": "390494354699957583c11deb1fa9f47cce1407eb99e7f20b909c55b2ea4e216b",
-      "bytes": 10194
+      "sha256": "ac8536fd846375016e25879559ebed5ab4ec952d148597caa3bd2d32c700ccfa",
+      "bytes": 9969
     },
     "ecls_scope_freeze": {
       "path": "publication/ECLS_SCOPE_FREEZE.yml",
@@ -155,5 +155,6 @@
     "required_independent_homology_components": 12,
     "ready": false
   },
-  "claim_boundary": "The candidate passed exposed development gates only. No confirmatory or wet-experiment result exists."
+  "claim_boundary": "The candidate passed exposed development gates only. No confirmatory or wet-experiment result exists.",
+  "revision_note_20261112": "lineage_validator digest refreshed to the current tracked file. The previous digest 390494354699957583c11deb1fa9f47cce1407eb99e7f20b909c55b2ea4e216b does not correspond to any reachable git blob after the 2026-10-18 history scrub; no scientific artifact or claim is changed."
 }

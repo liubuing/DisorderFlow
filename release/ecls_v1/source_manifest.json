@@ -742,9 +742,9 @@
     },
     {
       "path": "publication/successor_v3_contact_v2_registry.json",
-      "bytes": 6361,
+      "bytes": 6665,
       "hash_mode": "canonical_lf",
-      "sha256": "dc1f837d9345a2d9025fc70b51d216975e4f4f01eb1b0de160d5c560d46b7e55"
+      "sha256": "20559c1d86cf0f7f754898208f1c3c68b4b73a0adc9ed257c0deda42de9c2faa"
     },
     {
       "path": "publication/successor_v3_exploratory_result_manifest.json",
@@ -778,9 +778,9 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 2594,
+      "bytes": 2717,
       "hash_mode": "canonical_lf",
-      "sha256": "c27d1cb57611eb1ff939456fdd79072fdd8484f9de9c7d46f4a4347769c1657f"
+      "sha256": "c423f805a517691edeffa8d1a9988485dbaf64182533a5344637d8ffa820eb91"
     },
     {
       "path": "release/ecls_v1/REPRODUCIBILITY.md",

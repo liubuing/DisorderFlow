@@ -98,3 +98,13 @@ if not (Path(ROOT) / "data" / "anti_abeta_refs" / "4HIX.pdb").exists():
         "test_target_design_helpers.py",
         "test_v5_1_expression_package.py",
     ]
+
+# --- Python 3.10 hashlib compatibility -------------------------------------
+# hashlib.file_digest() was added in 3.11; the frozen validators call it.
+# Patch it at test time instead of editing the hash-referenced validators.
+import hashlib as _hashlib
+
+if not hasattr(_hashlib, "file_digest"):
+    def _file_digest(fileobj, digest_name):
+        return _hashlib.new(digest_name, fileobj.read())
+    _hashlib.file_digest = _file_digest
