@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-12",
+  "analysis": "m3_seed_sensitivity",
+  "status": "partial_seed_dependent_replication",
+  "seeds": {
+    "20261111": {
+      "epoch10_mean": 0.188379,
+      "positive": 0.733333,
+      "gate": true
+    },
+    "20261112": {
+      "epoch10_mean": 0.200147,
+      "positive": 0.866667,
+      "gate": true
+    },
+    "20261113": {
+      "epoch10_mean": 0.013169,
+      "positive": 0.466667,
+      "gate": false
+    }
+  },
+  "epoch10_summary": {
+    "means": [
+      0.188379,
+      0.200147,
+      0.013169
+    ],
+    "mean": 0.1338983333333333,
+    "sd": 0.10472010504833029,
+    "pass": 2,
+    "n": 3
+  },
+  "verdict": "2/3 seeds pass at epoch 10; one seed is null. The from-scratch arm is not robust to the training seed at this scale.",
+  "claim_boundary": [
+    "M2 cross-architecture replication remains robust.",
+    "M3 controlled-exposure result is partial.",
+    "No binding/affinity claim."
+  ]
+}

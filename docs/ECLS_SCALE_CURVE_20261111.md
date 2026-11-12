@@ -1,48 +1,57 @@
-# ECLS training-scale curve (M3)
+# M3 training-scale and seed-sensitivity
 
-Date: 2026-11-11. The same homology-filtered M3 training run was evaluated at
-epochs 1, 3, 5, 10 (and 20 in progress). Panel, shuffles and ECLS definition
-are unchanged.
+Date: 2026-11-11/12. The homology-filtered M3 training run was evaluated at
+epochs 1, 3, 5, 10, 20, and repeated with two additional seeds at epochs
+1/3/5/10.
 
-## Results
+## Seed 1 full curve (20261111)
 
-| Epoch | Mean ECLS advantage | Median | 95% CI | Positive clusters | Gate |
+| Epoch | Mean | Median | 95% CI | Positive | Gate |
 |---:|---:|---:|---|---:|---|
-| 1 | 0.077774 | 0.016891 | [-0.047806, 0.215125] | 8/15 | fail |
-| 3 | 0.128717 | 0.128681 | [0.010067, 0.260136] | 8/15 | fail |
-| 5 | 0.175995 | 0.100197 | [0.073902, 0.285267] | 11/15 | **pass** |
-| 10 | 0.188379 | 0.204988 | [0.076693, 0.298913] | 11/15 | **pass** |
-| 20 | 0.125565 | 0.112037 | [0.022847, 0.234966] | 10/15 | fail |
+| 1 | 0.0778 | 0.0169 | [-0.0478, 0.2151] | 8/15 | fail |
+| 3 | 0.1287 | 0.1287 | [0.0101, 0.2601] | 8/15 | fail |
+| 5 | 0.1760 | 0.1002 | [0.0739, 0.2853] | 11/15 | pass |
+| 10 | 0.1884 | 0.2050 | [0.0767, 0.2989] | 11/15 | pass |
+| 20 | 0.1256 | 0.1120 | [0.0228, 0.2350] | 10/15 | fail |
+
+## Seed replication at epochs 1/3/5/10
+
+| Epoch | Seed 20261111 | Seed 20261112 | Seed 20261113 |
+|---:|---:|---:|---:|
+| 1 | 0.0778 | 0.0148 | **-0.0478** |
+| 3 | 0.1287 | 0.0782 | **-0.0424** |
+| 5 | 0.1760 | 0.1094 | **-0.0220** |
+| 10 | **0.1884 (pass)** | **0.2001 (pass)** | **0.0132 (fail)** |
+
+At epoch 10 the three seeds give 0.188, 0.200 and 0.013: mean **0.134**, SD
+**0.105**, **2/3 pass**, **1/3 null**. Seed 20261113 is null or negative at
+every measured epoch and reaches only 7/15 positive clusters at epoch 10.
 
 ## Interpretation
 
-- The ECLS advantage rises from epoch 1 to epoch 10: 0.078 → 0.129 → 0.176 →
-  0.188.
-- It then **declines at epoch 20**: 0.126, 10/15, gate fail. The curve is not
-  monotonic; the peak is around epoch 5–10.
-- The positive-cluster fraction crosses the 70% gate between epoch 3 and
-  epoch 5, and falls below it again at epoch 20.
-- The earlier 3-epoch full-data checkpoint (mean 0.060, 7/15) was a
-  **training-scale null**, not evidence against the contrast.
-- The result supports a "training-sensitive structural prior" interpretation:
-  a small model must be trained enough for the preference to emerge, but more
-  training is not automatically better. The epoch-20 decline is consistent
-  with overfitting or training instability on the small corpus; it is not a
-  scaling law.
+- The apparent "training curve" in seed 1 is **not robust**: seed 3 is null at
+  every epoch, and seed 2 is weaker than seed 1 at epochs 1–5.
+- The robust statement is narrower: **a from-scratch model can reproduce the
+  effect, but only in 2 of 3 seeds at 10 epochs.** The M3 arm is therefore a
+  **partial, seed-dependent replication**, not a clean controlled-exposure
+  result.
+- The epoch-20 decline in seed 1 cannot be interpreted without additional
+  seeds; it remains a single-seed observation.
+- M2 AntiFold is a fixed pretrained model and has no training-seed variance;
+  its cross-architecture replication remains the robust positive result.
 
 ## Caveat
 
-Single seed, homology-filtered training set, max chain length 300. The curve is
-descriptive; it is not a scaling-law claim. Additional seeds (20261112,
-20261113) were started but stopped: a concurrent external GPU job
-(`biocandidate.cli train`, CatPred baseline) occupied ~19/20 GB and slowed
-epochs from ~4 min to ~21 min. Seed 2 reached epoch 6 before the stop. Resume
-when the GPU is free; the epoch-20 decline remains single-seed until then.
+Homology-filtered training set, max chain length 300, three seeds for epochs
+1/3/5/10, one seed for epoch 20. This is a descriptive sensitivity analysis,
+not a scaling law.
 
 ## Data
 
 ```text
+results/ecls_cross_arch_v1/m3_scale_eval/seed_summary.json
 results/ecls_cross_arch_v1/m3_scale_eval/scale_curve.json
-results/ecls_cross_arch_v1/m3_scale_eval/ecls_epoch_{1,3,5,10}/results.json
+results/ecls_cross_arch_v1/m3_scale_eval_seed20261112/scale_curve.json
+results/ecls_cross_arch_v1/m3_scale_eval_seed20261113/scale_curve.json
 scripts/eval_m3_scale_v1.py
 ```

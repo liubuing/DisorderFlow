@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-12",
+  "analysis": "m3_scale_seed_sensitivity",
+  "seeds": {
+    "20261111": {
+      "1": {
+        "mean_ecls_advantage": 0.077774,
+        "median_ecls_advantage": 0.016891,
+        "ci95": [
+          -0.047806,
+          0.215125
+        ],
+        "fraction_positive": 0.533333,
+        "gate_pass": false
+      },
+      "3": {
+        "mean_ecls_advantage": 0.128717,
+        "median_ecls_advantage": 0.128681,
+        "ci95": [
+          0.010067,
+          0.260136
+        ],
+        "fraction_positive": 0.533333,
+        "gate_pass": false
+      },
+      "5": {
+        "mean_ecls_advantage": 0.175995,
+        "median_ecls_advantage": 0.100197,
+        "ci95": [
+          0.073902,
+          0.285267
+        ],
+        "fraction_positive": 0.733333,
+        "gate_pass": true
+      },
+      "10": {
+        "mean_ecls_advantage": 0.188379,
+        "median_ecls_advantage": 0.204988,
+        "ci95": [
+          0.076693,
+          0.298913
+        ],
+        "fraction_positive": 0.733333,
+        "gate_pass": true
+      },
+      "20": {
+        "mean_ecls_advantage": 0.125565,
+        "median_ecls_advantage": 0.112037,
+        "ci95": [
+          0.022847,
+          0.234966
+        ],
+        "fraction_positive": 0.666667,
+        "gate_pass": false
+      }
+    },
+    "20261112": {
+      "1": {
+        "mean_ecls_advantage": 0.014823,
+        "median_ecls_advantage": 0.019161,
+        "ci95": [
+          -0.058679,
+          0.082921
+        ],
+        "fraction_positive": 0.533333,
+        "gate_pass": false
+      },
+      "3": {
+        "mean_ecls_advantage": 0.07823,
+        "median_ecls_advantage": 0.078972,
+        "ci95": [
+          0.006071,
+          0.150226
+        ],
+        "fraction_positive": 0.733333,
+        "gate_pass": false
+      },
+      "5": {
+        "mean_ecls_advantage": 0.109404,
+        "median_ecls_advantage": 0.063413,
+        "ci95": [
+          0.037536,
+          0.181424
+        ],
+        "fraction_positive": 0.733333,
+        "gate_pass": false
+      },
+      "10": {
+        "mean_ecls_advantage": 0.200147,
+        "median_ecls_advantage": 0.136112,
+        "ci95": [
+          0.097242,
+          0.313428
+        ],
+        "fraction_positive": 0.866667,
+        "gate_pass": true
+      }
+    },
+    "20261113": {
+      "1": {
+        "mean_ecls_advantage": -0.047832,
+        "median_ecls_advantage": -0.028329,
+        "ci95": [
+          -0.138876,
+          0.038219
+        ],
+        "fraction_positive": 0.4,
+        "gate_pass": false
+      },
+      "3": {
+        "mean_ecls_advantage": -0.042419,
+        "median_ecls_advantage": -0.055367,
+        "ci95": [
+          -0.110053,
+          0.027247
+        ],
+        "fraction_positive": 0.4,
+        "gate_pass": false
+      },
+      "5": {
+        "mean_ecls_advantage": -0.022002,
+        "median_ecls_advantage": -0.060606,
+        "ci95": [
+          -0.076408,
+          0.035151
+        ],
+        "fraction_positive": 0.4,
+        "gate_pass": false
+      },
+      "10": {
+        "mean_ecls_advantage": 0.013169,
+        "median_ecls_advantage": -0.009324,
+        "ci95": [
+          -0.087817,
+          0.115031
+        ],
+        "fraction_positive": 0.466667,
+        "gate_pass": false
+      }
+    }
+  },
+  "epoch10": {
+    "means": [
+      0.188379,
+      0.200147,
+      0.013169
+    ],
+    "mean": 0.1338983333333333,
+    "sd": 0.10472010504833029,
+    "pass": 2,
+    "n": 3
+  },
+  "verdict": "partial_seed_dependent_replication",
+  "note": "2/3 seeds pass at epoch 10; one seed is null. The from-scratch arm is not robust to the training seed at this scale."
+}

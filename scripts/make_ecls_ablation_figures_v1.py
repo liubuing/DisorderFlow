@@ -70,28 +70,44 @@ def figure_context():
 
 
 def figure_scale():
-    curve = json.loads(SCALE.read_text(encoding="utf-8"))
-    epochs = sorted(int(key) for key in curve)
-    means = [curve[str(epoch)]["mean_ecls_advantage"] for epoch in epochs]
-    lower = [curve[str(epoch)]["mean_ecls_advantage"]
-             - curve[str(epoch)]["ci95"][0] for epoch in epochs]
-    upper = [curve[str(epoch)]["ci95"][1]
-             - curve[str(epoch)]["mean_ecls_advantage"] for epoch in epochs]
-    passes = [curve[str(epoch)]["gate_pass"] for epoch in epochs]
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    colors = ["#55a868" if passed else "#bdbdbd" for passed in passes]
-    ax.errorbar(epochs, means, yerr=[lower, upper], fmt="none",
-                ecolor="#555555", capsize=3, linewidth=1)
-    ax.scatter(epochs, means, s=70, color=colors, edgecolor="#333333", zorder=3)
-    for epoch, mean, passed in zip(epochs, means, passes):
-        ax.annotate(f"{mean:.3f}\n{'pass' if passed else 'fail'}",
-                    (epoch, mean), textcoords="offset points", xytext=(6, 6),
-                    fontsize=7)
+    curves = {
+        "20261111": json.loads(SCALE.read_text(encoding="utf-8")),
+        "20261112": json.loads((ROOT / "results" / "ecls_cross_arch_v1"
+                                / "m3_scale_eval_seed20261112"
+                                / "scale_curve.json").read_text(encoding="utf-8")),
+        "20261113": json.loads((ROOT / "results" / "ecls_cross_arch_v1"
+                                / "m3_scale_eval_seed20261113"
+                                / "scale_curve.json").read_text(encoding="utf-8")),
+    }
+    colors = {"20261111": "#4c72b0", "20261112": "#dd8452", "20261113": "#55a868"}
+    fig, ax = plt.subplots(figsize=(6.8, 4.4))
+    for seed, curve in curves.items():
+        epochs = sorted(int(key) for key in curve)
+        means = [curve[str(epoch)]["mean_ecls_advantage"] for epoch in epochs]
+        if seed == "20261111":
+            lower = [mean - curve[str(epoch)]["ci95"][0]
+                     for epoch, mean in zip(epochs, means)]
+            upper = [curve[str(epoch)]["ci95"][1] - mean
+                     for epoch, mean in zip(epochs, means)]
+            ax.errorbar(epochs, means, yerr=[lower, upper], fmt="none",
+                        ecolor=colors[seed], capsize=3, linewidth=1, alpha=0.7)
+            ax.scatter(epochs, means, s=70, color=colors[seed],
+                       edgecolor="#333333", zorder=3, label=f"seed {seed}")
+        else:
+            ax.plot(epochs, means, marker="o", markersize=5, linewidth=1,
+                    linestyle="--", color=colors[seed], label=f"seed {seed}")
+        epoch10 = curve.get("10")
+        if epoch10:
+            ax.annotate(f"{epoch10['mean_ecls_advantage']:.3f}",
+                        (10, epoch10["mean_ecls_advantage"]),
+                        textcoords="offset points", xytext=(6, 4), fontsize=7,
+                        color=colors[seed])
     ax.axhline(0, color="#333333", linewidth=0.8)
     ax.set_xlabel("training epoch", fontsize=9)
     ax.set_ylabel("mean ECLS advantage", fontsize=9)
-    ax.set_title("ECLS is training-sensitive, not monotonic", fontsize=11)
-    ax.set_xticks(epochs)
+    ax.set_title("M3 ECLS is seed-sensitive, not monotonic", fontsize=11)
+    ax.set_xticks([1, 3, 5, 10, 20])
+    ax.legend(frameon=False, fontsize=8)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     fig.tight_layout()

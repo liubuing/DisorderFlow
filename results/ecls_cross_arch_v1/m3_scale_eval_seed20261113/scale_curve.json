@@ -1,0 +1,42 @@
+{
+  "1": {
+    "mean_ecls_advantage": -0.047832,
+    "median_ecls_advantage": -0.028329,
+    "ci95": [
+      -0.138876,
+      0.038219
+    ],
+    "fraction_positive": 0.4,
+    "gate_pass": false
+  },
+  "3": {
+    "mean_ecls_advantage": -0.042419,
+    "median_ecls_advantage": -0.055367,
+    "ci95": [
+      -0.110053,
+      0.027247
+    ],
+    "fraction_positive": 0.4,
+    "gate_pass": false
+  },
+  "5": {
+    "mean_ecls_advantage": -0.022002,
+    "median_ecls_advantage": -0.060606,
+    "ci95": [
+      -0.076408,
+      0.035151
+    ],
+    "fraction_positive": 0.4,
+    "gate_pass": false
+  },
+  "10": {
+    "mean_ecls_advantage": 0.013169,
+    "median_ecls_advantage": -0.009324,
+    "ci95": [
+      -0.087817,
+      0.115031
+    ],
+    "fraction_positive": 0.466667,
+    "gate_pass": false
+  }
+}

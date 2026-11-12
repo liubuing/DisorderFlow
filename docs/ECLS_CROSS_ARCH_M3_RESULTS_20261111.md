@@ -1,7 +1,7 @@
 # ECLS controlled-exposure result (M3, from scratch on pre-2021 SAbDab)
 
-Status: **M3 complete; replication criterion met.** The frozen ECLS decision
-is unchanged. No binding claim.
+Status: **M3 complete; replication is seed-dependent (2 of 3 seeds).** The
+frozen ECLS decision is unchanged. No binding claim.
 
 ## Training contract
 
@@ -34,6 +34,22 @@ Per-cluster comparison:
 M3-negative cluster: only E27 (-0.3524). M0-negative clusters E149, E181 and
 E214 flip positive in M3; E27 flips negative.
 
+## Seed sensitivity (added 2026-11-12)
+
+The table above is seed 20261111. Two additional seeds were trained with the
+same data and contract:
+
+| Seed | Epoch 10 mean | Positive clusters | Gate |
+|---|---:|---:|---|
+| 20261111 | **0.1884** | 11/15 | pass |
+| 20261112 | **0.2001** | 13/15 | pass |
+| 20261113 | **0.0132** | 7/15 | **fail** |
+
+Epoch-10 mean across seeds: **0.134**, SD **0.105**. Seed 20261113 is null or
+negative at every measured epoch (-0.048, -0.042, -0.022, +0.013 for epochs
+1/3/5/10). The M3 arm is therefore a **partial, seed-dependent replication**,
+not a clean controlled-exposure result.
+
 ## Exposure and overlap check
 
 - PDB overlap between the 4,506 training PDBs and the 21 temporal-panel PDBs:
@@ -59,15 +75,18 @@ clusters, magnitude within 2× of 0.172.
 | Positive clusters ≥10/15 | 14/15 | yes |
 | Magnitude within 2× | 1.19× | yes |
 
-**Verdict: `replication`.** A model trained from scratch on pre-2021
-antibody structures reproduces the ECLS advantage on the post-2021 temporal
-panel. The effect is not explained by the released ProteinMPNN weights or by
-the exact panel structures.
+**Verdict (seed 20261111): `replication`. Arm-level verdict:
+`partial_seed_dependent_replication`.** A model trained from scratch on
+pre-2021 antibody structures can reproduce the ECLS advantage on the
+post-2021 temporal panel, but only in 2 of 3 seeds; one seed is null. The
+effect is not explained by the released ProteinMPNN weights or by the exact
+panel structures, but it is not robust to the training run at this scale.
 
 ## What this shows and does not show
 
-- Shows: ECLS is architecture-general (M2) and survives a controlled
-  pre-2021 training regime (M3).
+- Shows: ECLS is architecture-general (M2); a controlled pre-2021 model
+  reproduces it in 2/3 seeds (M3), but the from-scratch result is
+  seed-dependent. M2 is the robust positive arm.
 - Does not show: binding, affinity, specificity, or that homology-level
   exposure is absent.
 - M3 is a small 1.7M model trained for 10 epochs; the magnitude (0.205) is

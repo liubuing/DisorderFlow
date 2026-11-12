@@ -19,7 +19,10 @@ BASE_CONFIG = ROOT / "configs" / "benchmarks" / "peptide_h3_ecls_temporal_final_
 BENCH = ROOT / "scripts" / "benchmark_h3_epitope_delta.py"
 
 
-def checkpoint_for(epoch: int) -> Path | None:
+def checkpoint_for(epoch: int, weights_dir: Path | None = None) -> Path | None:
+    if weights_dir is not None:
+        candidate = weights_dir / f"epoch_{epoch}.pt"
+        return candidate if candidate.exists() else None
     candidates = [
         FILTERED / f"epoch_{epoch}.pt",
         SCALE / f"epoch_{epoch}.pt",
@@ -34,12 +37,17 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--epochs", default="1,3,5,10,20")
     parser.add_argument("--out", type=Path, default=OUT)
+    parser.add_argument("--weights-dir", type=Path, default=None)
+    parser.add_argument("--tag", default="")
     args = parser.parse_args(argv)
     out = args.out if args.out.is_absolute() else ROOT / args.out
     base = yaml.safe_load(BASE_CONFIG.read_text(encoding="utf-8"))
     curve = {}
     for epoch in [int(value) for value in args.epochs.split(",") if value.strip()]:
-        checkpoint = checkpoint_for(epoch)
+        weights_source = None
+        if args.weights_dir is not None:
+            weights_source = args.weights_dir if args.weights_dir.is_absolute() else ROOT / args.weights_dir
+        checkpoint = checkpoint_for(epoch, weights_source)
         if checkpoint is None:
             print(f"epoch {epoch}: checkpoint missing", flush=True)
             continue
@@ -51,7 +59,8 @@ def main(argv=None) -> int:
         config["proteinmpnn"]["weights"] = str(
             weights_dir.relative_to(ROOT)).replace("\\", "/")
         config["proteinmpnn"]["model_name"] = "m3"
-        config_path = ROOT / "configs" / "benchmarks" / f"peptide_h3_ecls_m3_scale_epoch{epoch}_v1.yml"
+        suffix = f"_{args.tag}" if args.tag else ""
+        config_path = ROOT / "configs" / "benchmarks" / f"peptide_h3_ecls_m3_scale{suffix}_epoch{epoch}_v1.yml"
         config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
         out_dir = out / f"ecls_epoch_{epoch}"
         completed = subprocess.run(

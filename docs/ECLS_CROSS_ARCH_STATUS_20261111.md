@@ -12,7 +12,7 @@ a full training run in progress.
 | M2 | AntiFold zero-shot | **0.306928** | **[0.124085, 0.497105]** | **12/15** | **replication** |
 | M3 pilot | from-scratch, 281 PDBs, 20 epochs | 0.015699 | [-0.113458, 0.151689] | 8/15 | pilot null |
 | M3 full (early) | from-scratch, 4,506 PDBs, 3 epochs | 0.060258 | [-0.054864, 0.181916] | 7/15 | early null; undertrained |
-| **M3 full (10 epochs)** | from-scratch, 4,506 PDBs, 10 epochs | **0.205317** | **[0.088715, 0.321356]** | **14/15** | **replication** |
+| **M3 full (10 epochs)** | from-scratch, 4,506 PDBs, 10 epochs, 3 seeds | 0.188 / 0.200 / 0.013 | seed 1 [0.089, 0.321] | 11/15, 13/15, 7/15 | **partial (2/3 seeds)** |
 
 M2 per-cluster comparison to M0: Pearson 0.720 (p=0.0025), Spearman 0.739
 (p=0.0016), sign agreement 11/15.
@@ -54,7 +54,7 @@ leaves both M0 and M3 positive (M3 mean 0.2060, 13/14 positive).
 | Homology-filtered M3 | 36/4,506 PDBs excluded (35 VH cosine ≥0.75 + 7e6p exact H3); retrained 10 epochs; ECLS mean 0.1884, CI [0.0767, 0.2989], 11/15 positive, gate pass. |
 | Task-specific AAYL ranker | Composition-only weak positive (AAYL51 0.187; AAYL49 0.027); ECLS alone negative (−0.047/−0.141); adding ECLS to composition gives +0.011/−0.005. ECLS adds no ranking signal. |
 | AGZArank head-to-head | Blocked: code public, but checkpoint and synthetic training data are proprietary; Zenodo has only 1.34 GB source data. |
-| Scale curve | 1: 0.078 (fail); 3: 0.129 (fail); 5: 0.176 (pass); 10: 0.188 (pass); 20: 0.126 (fail). Training-sensitive, peak around epoch 5–10, not monotonic. Seed 1 only; extra seeds blocked by an external GPU job. |
+| Scale curve | Seed 1: 0.078/0.129/0.176/0.188/0.126 (epochs 1/3/5/10/20); seed 2: 0.015/0.078/0.109/0.200; seed 3: −0.048/−0.042/−0.022/0.013. Seed variance dominates; M3 is a partial replication. |
 
 ## AAYL affinity endpoint (M3)
 
