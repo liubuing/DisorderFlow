@@ -13,6 +13,7 @@ Reuses heavily from:
 
 import sys
 import os
+import re
 import json
 import time
 import tempfile
@@ -212,6 +213,12 @@ class MisfoldingDesignPipeline:
 
     # ── Step 5: AF2 multimer validation ──
 
+    @staticmethod
+    def _safe_label(value, fallback='target', limit=64):
+        """把任意输入收敛成可用作文件名/命令行参数的标签。"""
+        label = re.sub(r'[^A-Za-z0-9_-]', '_', str(value or '')).strip('_')
+        return label[:limit] or fallback
+
     def validate_with_af2(self, ab_seq, ag_seq, output_dir, num_recycle=3,
                           ab_name='design', ag_name='target',
                           colabfold_exe='colabfold_batch',
@@ -233,26 +240,31 @@ class MisfoldingDesignPipeline:
         """
         os.makedirs(output_dir, exist_ok=True)
 
+        # 名字会进入文件名和命令行：只允许安全字符（审计 S0-3）。
+        # 这里的值可能来自界面/HTTP 输入，绝不能直接拼进 shell。
+        ab_name = self._safe_label(ab_name, 'design')
+        ag_name = self._safe_label(ag_name, 'target')
+
         # Build multimer FASTA
         fasta_content = tdh.build_multimer_fasta(ab_seq, ag_seq, ab_name, ag_name)
         fasta_path = os.path.join(output_dir, f'{ab_name}_{ag_name}.fasta')
         with open(fasta_path, 'w') as f:
             f.write(fasta_content)
 
-        # Build colabfold command
-        # 用 shell 字符串拼命令并加引号，兼容含空格的可执行文件路径
-        cmd = (
-            f'"{colabfold_exe}" '
-            f'--num-models 1 '
-            f'--num-recycle {num_recycle} '
-            f'--model-type {model_type} '
-            f'--rank iptm '
-            f'"{fasta_path}" "{output_dir}"'
-        )
+        # 参数用列表传递，shell=False：任何名字里的元字符都只是字面量
+        cmd = [
+            str(colabfold_exe),
+            '--num-models', '1',
+            '--num-recycle', str(int(num_recycle)),
+            '--model-type', str(model_type),
+            '--rank', 'iptm',
+            fasta_path,
+            str(output_dir),
+        ]
 
         try:
             import subprocess
-            result = subprocess.run(cmd, shell=True, capture_output=True,
+            result = subprocess.run(cmd, shell=False, capture_output=True,
                                     text=True, timeout=3600, cwd=output_dir)
         except subprocess.TimeoutExpired:
             return {'success': False, 'error': 'AF2 multimer timed out (1 hour).'}
@@ -565,7 +577,7 @@ def quick_design(project_dir, disease_key, tool='bfn', n_samples=10,
     sys.path.insert(0, str(project_dir))
 
     # Lazy-import design modules to avoid circular deps
-    # The design_fn is provided by the caller (app.py)
+    # The design_fn is provided by the caller (webapp.ops)
     # This function is a convenience wrapper
 
     pipeline = MisfoldingDesignPipeline()
