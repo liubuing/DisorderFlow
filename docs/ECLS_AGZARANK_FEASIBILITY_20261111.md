@@ -1,8 +1,11 @@
 # AGZArank head-to-head feasibility
 
-Date: 2026-11-11. The closest preprint to the ECLS cross-architecture paper
-is AGZArank (Sadykov et al., bioRxiv 2026,
-DOI 10.64898/2026.06.08.730711).
+Date: 2026-11-11. Update 2026-11-12: checkpoint access was requested through
+a public GitHub issue,
+`https://github.com/jenisbek-git/AGZArank/issues/1`; no response yet.
+
+The closest preprint to the ECLS cross-architecture paper is AGZArank
+(Sadykov et al., bioRxiv 2026, DOI 10.64898/2026.06.08.730711).
 
 ## What is public
 
@@ -36,7 +39,7 @@ The paper should therefore:
    experimentally validated interfaces; our ECLS is a zero-shot paired
    likelihood contrast on a different panel.
 3. State that a direct head-to-head requires author-provided weights.
-4. Optionally request the checkpoint from Arlan Biotech before submission.
+4. Request the checkpoint before submission (filed 2026-11-12, issue #1).
 
 ## What was checked
 

@@ -1,8 +1,13 @@
-# AGZArank checkpoint request (draft)
+# AGZArank checkpoint request (GitHub issue)
 
-Date: 2026-11-12. Status: **draft, not sent.** The public repository gives the
-corresponding commit author as `zhenisbek@arlanbiotech.com`; the Zenodo
-creator is Dauken Seitkali (Arlan Biotech Inc).
+Date: 2026-11-12. Status: **sent** as a public GitHub issue:
+https://github.com/jenisbek-git/AGZArank/issues/1
+
+The issue text is kept in
+`docs/AGZARANK_CHECKPOINT_ISSUE_20261112.md`. It contains no personal contact
+details; the public issue is the contact channel. The earlier email draft
+(`publication/AGZARANK_CHECKPOINT_REQUEST_20261112.eml`) is superseded and is
+not part of the submission.
 
 ## Why request
 
@@ -31,54 +36,11 @@ head-to-head is therefore blocked on checkpoint access.
   comparison results with the authors before submission.
 - Willing to sign a data-use/MTA agreement if required.
 
-## Email draft
+## Fallback
 
-**To:** zhenisbek@arlanbiotech.com
-**Subject:** Request for AGZArank checkpoint access for an independent academic benchmark
-
-Dear Dr. Sadykov and colleagues,
-
-I am [Name], [position] at [institution]. I work on computational antibody
-design and on the evaluation of inverse-folding scores for antibody–peptide
-complexes (project: DisorderFlow).
-
-Your preprint "AGZArank: Investigating epitope-conditioned antibody binder
-ranking with structure-derived synthetic supervision" is the closest work to
-our current study. We are preparing an independent, non-commercial benchmark
-of a paired complex-minus-stripped likelihood contrast (ECLS) across
-inverse-folding models, and we would like to include AGZArank as a learned
-ranker baseline rather than compare only to published numbers.
-
-I saw that the code is available at github.com/jenisbek-git/AGZArank and that
-the checkpoint and synthetic training data are not public. Would it be
-possible to obtain the inference checkpoint (`agzarank_base.pt`) and the
-inference configuration for research use? We would:
-
-- use it only for non-commercial academic evaluation;
-- not redistribute the checkpoint;
-- cite your paper and describe the model as your work;
-- share the comparison results with you before any submission;
-- sign a data-use or MTA agreement if required.
-
-If the full checkpoint cannot be shared, even a short description of the
-expected inference input format and the published evaluation split would help
-us avoid a misleading comparison.
-
-Thank you for considering this request.
-
-Best regards,
-[Name]
-[Position, institution]
-[Email]
-[Project URL]
-
-## Alternative channel
-
-If email is not appropriate, open a GitHub issue on
-`jenisbek-git/AGZArank` titled "Request for inference checkpoint for academic
-benchmark" with the same text, or use the Zenodo record contact. Do not post
-the request publicly without the author's consent if it contains personal
-contact details.
+If the checkpoint cannot be shared, ask for the expected inference input
+format and the published evaluation split so that any comparison against
+published numbers is described correctly.
 
 ## What to do with the checkpoint if received
 

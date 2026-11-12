@@ -53,7 +53,7 @@ leaves both M0 and M3 positive (M3 mean 0.2060, 13/14 positive).
 | Antigen-context / peptide swap | Peptide presence matters (delta_context 0.137–0.179); peptide sequence identity is zero (delta_peptide ≤2e-7; ratio ≤1.2e-6) in M0/M2/M3. The contrast is epitope-backbone-conditioned, not peptide-sequence-conditioned. |
 | Homology-filtered M3 | 36/4,506 PDBs excluded (35 VH cosine ≥0.75 + 7e6p exact H3); retrained 10 epochs; ECLS mean 0.1884, CI [0.0767, 0.2989], 11/15 positive, gate pass. |
 | Task-specific AAYL ranker | Composition-only weak positive (AAYL51 0.187; AAYL49 0.027); ECLS alone negative (−0.047/−0.141); adding ECLS to composition gives +0.011/−0.005. ECLS adds no ranking signal. |
-| AGZArank head-to-head | Blocked: code public, but checkpoint and synthetic training data are proprietary; Zenodo has only 1.34 GB source data. |
+| AGZArank head-to-head | Pending: code public, checkpoint and synthetic training data proprietary; access requested via [issue #1](https://github.com/jenisbek-git/AGZArank/issues/1) on 2026-11-12. No checkpoint available for this manuscript. |
 | Scale curve | Seed 1: 0.078/0.129/0.176/0.188/0.126 (epochs 1/3/5/10/20); seed 2: 0.015/0.078/0.109/0.200/0.246; seed 3: −0.048/−0.042/−0.022/0.013. Seed variance dominates; at epoch 20 seeds 1/2 move in opposite directions. M3 is a partial replication. |
 
 ## AAYL affinity endpoint (M3)

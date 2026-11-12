@@ -16,7 +16,7 @@ Figures: `publication/figures/ecls_fig1..4_*.png/.pdf`.
 | Homology-filtered M3 | complete; 0.1884 [0.0767, 0.2989], 11/15 |
 | AAYL affinity endpoint | complete; +0.0094 / −0.0016, CIs span zero |
 | Task-specific ranker | complete; composition weak, ECLS adds no signal |
-| AGZArank head-to-head | blocked: checkpoint and synthetic data proprietary |
+| AGZArank head-to-head | pending: access requested via [issue #1](https://github.com/jenisbek-git/AGZArank/issues/1), 2026-11-12; no checkpoint for this manuscript |
 | Epoch-20 seeds 2/3 | seed 2 done (0.246, pass); seed 3 not run; epoch 20 is seed-dependent |
 
 ## Figures
@@ -50,7 +50,8 @@ All four are generated at 300 dpi with PDF counterparts.
    Computational Biology* (alternative).
 5. Supplementary tables: per-record scores, seed summary, homology exclusion
    list, AAYL per-family scores.
-6. Optional: epoch-20 seeds 2/3; AGZArank checkpoint request.
+6. Optional: epoch-20 seed 3. AGZArank checkpoint request is filed (issue #1);
+   add a head-to-head only if access is granted before submission.
 7. Companion-manuscript disclosure wording checked against journal policy.
 
 ## Claim boundary (must remain)
