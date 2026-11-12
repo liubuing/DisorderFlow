@@ -9,6 +9,7 @@ the way the scripts do (sys.path.insert(0,'.'); sys.path.insert(0,'modules')).
 """
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -51,4 +52,49 @@ if _importlib_util.find_spec("anarcii") is None:
         "test_idp_ensemble_development_extension_audit.py",
         "test_idp_ensemble_expanded_scorer_inputs_v2.py",
         "test_idp_ensemble_expanded_structural_v2.py",
+    ]
+
+# --- local-data collection guards ------------------------------------------
+# The scientific-contract tests read frozen local artifacts (data/, results/,
+# outputs/) that are intentionally not tracked in Git. A clean CI checkout has
+# none of them, so skip those modules instead of failing with FileNotFoundError.
+if not (Path(ROOT) / "data" / "anti_abeta_refs" / "4HIX.pdb").exists():
+    collect_ignore += [
+        "test_aayl_failure_v3.py",
+        "test_aayl_learnability.py",
+        "test_aayl_low_order.py",
+        "test_aayl_remeasurement.py",
+        "test_abeta_4hix_af2_gate.py",
+        "test_bfn_loader_antigen_roles.py",
+        "test_candidate_interface_dataset_builder.py",
+        "test_candidate_interface_multiscaffold_builder.py",
+        "test_csn_c0_contracts.py",
+        "test_ecls_submission.py",
+        "test_esel_e0b_contracts.py",
+        "test_flex_j0b_contracts.py",
+        "test_followup_scientific_contracts.py",
+        "test_h3_publication_package.py",
+        "test_ibec_tau_candidates.py",
+        "test_ibec_tau_sanity.py",
+        "test_idp_ensemble_bfn_state_compatibility.py",
+        "test_idp_ensemble_correction_v3.py",
+        "test_idp_ensemble_expanded_rcsb_v2.py",
+        "test_idp_ensemble_final_confirmation_v1.py",
+        "test_idp_ensemble_matched_generation.py",
+        "test_idp_ensemble_matched_scoring.py",
+        "test_idp_level2_computational_validation.py",
+        "test_idp_level2_stability_abstention.py",
+        "test_multiscaffold_v2_generation.py",
+        "test_pae_dense_v6.py",
+        "test_pae_sequence_order_v5.py",
+        "test_publication_alignment.py",
+        "test_release_lineage.py",
+        "test_runtime_environment.py",
+        "test_statecontrast_v2_fold_loaders.py",
+        "test_successor_v3.py",
+        "test_successor_v3_confirmatory_contract.py",
+        "test_successor_v3_exploratory.py",
+        "test_successor_v3_future_snapshot_runner.py",
+        "test_target_design_helpers.py",
+        "test_v5_1_expression_package.py",
     ]

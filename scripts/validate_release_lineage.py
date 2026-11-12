@@ -34,7 +34,9 @@ SOURCE_ONLY_DOCUMENTS = (
 def sha256(path: Path, hash_mode="raw") -> str:
     if hash_mode == "raw":
         with path.open("rb") as handle:
-            return hashlib.file_digest(handle, "sha256").hexdigest()
+            if hasattr(hashlib, "file_digest"):
+                return hashlib.file_digest(handle, "sha256").hexdigest()
+            return hashlib.sha256(handle.read()).hexdigest()
     if hash_mode == "canonical_lf":
         content = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
         return hashlib.sha256(content).hexdigest()
