@@ -32,3 +32,23 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_gpu)
         if "slow" in item.keywords:
             item.add_marker(skip_slow)
+
+
+# --- optional-dependency collection guards ---------------------------------
+# CI installs only .[dev]. These modules exercise local OpenMM/ANARCII
+# workflows and import those packages at module scope; skip collection when
+# the heavy optional dependency is absent instead of failing the whole suite.
+import importlib.util as _importlib_util
+
+collect_ignore = []
+if _importlib_util.find_spec("openmm") is None:
+    collect_ignore += [
+        "test_h3_t1_ensemble.py",
+        "test_h3_t2_recovery.py",
+    ]
+if _importlib_util.find_spec("anarcii") is None:
+    collect_ignore += [
+        "test_idp_ensemble_development_extension_audit.py",
+        "test_idp_ensemble_expanded_scorer_inputs_v2.py",
+        "test_idp_ensemble_expanded_structural_v2.py",
+    ]
