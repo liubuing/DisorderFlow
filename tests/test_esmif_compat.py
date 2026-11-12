@@ -23,3 +23,40 @@ def test_scatter_mean_matches_grouped_mean():
     source = torch.tensor([1.0, 3.0, 5.0])
     index = torch.tensor([0, 1, 0])
     assert torch.equal(scatter(source, index, dim=0, reduce="mean"), torch.tensor([3.0, 3.0]))
+
+
+# ── 安装函数的幂等性 ────────────────────────────────────────────────────────
+# 该垫片在 run_esmif 与 load_esmif 里各调用一次；第二次曾因 sys.modules 中
+# 假模块的 __spec__ 为 None 抛 ValueError: torch_scatter.__spec__ is None。
+
+import sys
+import types
+
+import pytest
+
+from modules.esmif_compat import install_torch_scatter_fallback
+
+
+@pytest.fixture()
+def isolated_modules(monkeypatch):
+    monkeypatch.delitem(sys.modules, "torch_scatter", raising=False)
+    monkeypatch.setitem(sys.modules, "torch_geometric", types.ModuleType("torch_geometric"))
+    yield
+
+
+def test_install_is_idempotent(isolated_modules, monkeypatch):
+    monkeypatch.setattr("modules.esmif_compat.importlib.util.find_spec", lambda name: None)
+
+    assert install_torch_scatter_fallback() is True
+    assert hasattr(sys.modules["torch_scatter"], "scatter_add")
+    assert install_torch_scatter_fallback() is False
+
+
+def test_install_replaces_foreign_stub(isolated_modules):
+    """别处塞进来的残缺 stub（没有 __spec__ 与 scatter_add）要被覆盖，而不是报错。"""
+    sys.modules["torch_scatter"] = types.ModuleType("torch_scatter")
+
+    assert install_torch_scatter_fallback() is True
+    module = sys.modules["torch_scatter"]
+    assert hasattr(module, "scatter_add")
+    assert module.__spec__ is not None

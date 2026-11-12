@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.machinery
 import importlib.util
 import sys
 import types
@@ -20,10 +21,25 @@ def install_biotite_compat():
 
 
 def install_torch_scatter_fallback():
-    """Install the two scatter operations used by fair-esm via native PyTorch."""
-    # 已装了真正的 torch_scatter 就什么都不做（返回 False 表示未安装兼容层）
-    if importlib.util.find_spec("torch_scatter") is not None:
+    """Install the two scatter operations used by fair-esm via native PyTorch.
+
+    幂等：三种状态都要能安全重复调用——
+    1. 真的装了 torch_scatter：直接返回 False；
+    2. 本函数之前注入过兼容模块：返回 False；
+    3. sys.modules 里有个别处塞进来的残缺 stub（__spec__ 为 None 且没有
+       scatter_add）：覆盖成我们的实现，而不是让 find_spec 抛 ValueError。
+    """
+    existing = sys.modules.get("torch_scatter")
+    if existing is not None and hasattr(existing, "scatter_add"):
         return False
+
+    try:
+        if importlib.util.find_spec("torch_scatter") is not None:
+            return False
+    except (ImportError, ValueError):
+        # ValueError: 模块在 sys.modules 里但 __spec__ 为 None（残缺 stub），
+        # 继续往下覆盖即可
+        pass
 
     # Import first so torch-geometric records torch-scatter as unavailable and
     # continues to use its own native-PyTorch fallback paths.
@@ -34,6 +50,10 @@ def install_torch_scatter_fallback():
     module = types.ModuleType("torch_scatter")
     module.scatter_add = scatter_add
     module.scatter = scatter
+    # 给假模块补一个合法 __spec__，否则重复调用时 find_spec("torch_scatter")
+    # 会因 __spec__ 为 None 抛 ValueError（run_esmif 与 load_esmif 各调用一次）。
+    # 补上后第二次 find_spec 返回非空 -> 幂等地提前 return False。
+    module.__spec__ = importlib.machinery.ModuleSpec("torch_scatter", loader=None)
     sys.modules["torch_scatter"] = module
     return True
 
