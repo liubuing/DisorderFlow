@@ -1,0 +1,51 @@
+{
+  "assay": "BLI primary screen; biotin-Abeta42 (or DAEFRH) on SA tips; scFv/Fab analyte",
+  "primary_screen": {
+    "concentration_nm": 100.0,
+    "replicates": 3,
+    "target_signal_min_fold_over_BSA": 3.0,
+    "scramble_signal_max_fraction_of_native": 0.2,
+    "bsa_signal_max_fraction_of_native": 0.2,
+    "replicate_cv_max": 0.2
+  },
+  "quantification": {
+    "concentration_series_nm": [
+      0.0,
+      3.125,
+      6.25,
+      12.5,
+      25.0,
+      50.0,
+      100.0,
+      200.0
+    ],
+    "fit_model": "1:1 Langmuir",
+    "chi2_max": 3.0,
+    "rmax_within_fraction_of_predicted": 0.2,
+    "report": [
+      "kon",
+      "koff",
+      "KD"
+    ],
+    "kd_upper_bound_nm_for_hit": 100.0
+  },
+  "specificity_panel": [
+    "BSA",
+    "alpha-synuclein",
+    "tau",
+    "scrambled H3"
+  ],
+  "denominator_tracking": [
+    "synthesized",
+    "expressed",
+    "soluble_monomer",
+    "measured",
+    "hit"
+  ],
+  "go_no_go": {
+    "assay_valid": "native response >= 3x BSA and native fits 1:1",
+    "design_hit": "primary screen pass + specificity pass",
+    "stop": "if native fails, do not interpret design results"
+  },
+  "claim_boundary": "BLI/SPR Kd is the only binding endpoint; computational scores are not evidence of binding."
+}

@@ -1,0 +1,79 @@
+sample_id,role,h3,format,concentration_nm,replicate,source
+4HIX-native,positive_control,VRYDHYSGSSDY,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-native,positive_control,VRYDHYSGSSDY,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-native,positive_control,VRYDHYSGSSDY,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-native,positive_control,VRYDHYSGSSDY,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-native,positive_control,VRYDHYSGSSDY,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-native,positive_control,VRYDHYSGSSDY,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D001,design,VLYDSSKGSESY,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D001,design,VLYDSSKGSESY,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D001,design,VLYDSSKGSESY,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D001,design,VLYDSSKGSESY,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D001,design,VLYDSSKGSESY,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D001,design,VLYDSSKGSESY,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D002,design,VLYDSSKLSPSH,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D002,design,VLYDSSKLSPSH,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D002,design,VLYDSSKLSPSH,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D002,design,VLYDSSKLSPSH,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D002,design,VLYDSSKLSPSH,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D002,design,VLYDSSKLSPSH,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D003,design,QLYDSSKDAPSY,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D003,design,QLYDSSKDAPSY,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D003,design,QLYDSSKDAPSY,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D003,design,QLYDSSKDAPSY,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D003,design,QLYDSSKDAPSY,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D003,design,QLYDSSKDAPSY,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D004,design,VLYDASKDSPSY,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D004,design,VLYDASKDSPSY,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D004,design,VLYDASKDSPSY,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D004,design,VLYDASKDSPSY,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D004,design,VLYDASKDSPSY,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D004,design,VLYDASKDSPSY,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D005,design,VLYDESKGSPSQ,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D005,design,VLYDESKGSPSQ,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D005,design,VLYDESKGSPSQ,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D005,design,VLYDESKGSPSQ,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D005,design,VLYDESKGSPSQ,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D005,design,VLYDESKGSPSQ,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D006,design,ALYDSSKSSLSH,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D006,design,ALYDSSKSSLSH,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D006,design,ALYDSSKSSLSH,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D006,design,ALYDSSKSSLSH,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D006,design,ALYDSSKSSLSH,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D006,design,ALYDSSKSSLSH,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D007,design,VLYDSSKDSMSE,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D007,design,VLYDSSKDSMSE,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D007,design,VLYDSSKDSMSE,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D007,design,VLYDSSKDSMSE,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D007,design,VLYDSSKDSMSE,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D007,design,VLYDSSKDSMSE,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D008,design,ALYDSSKGSMSA,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D008,design,ALYDSSKGSMSA,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D008,design,ALYDSSKGSMSA,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D008,design,ALYDSSKGSMSA,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D008,design,ALYDSSKGSMSA,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-D008,design,ALYDSSKGSMSA,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-H3scramble,counterfactual_control,YDVRSGHYSSDY,scFv-His6 (preferred) or Fab VH+VL,100.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-H3scramble,counterfactual_control,YDVRSGHYSSDY,scFv-His6 (preferred) or Fab VH+VL,100.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-H3scramble,counterfactual_control,YDVRSGHYSSDY,scFv-His6 (preferred) or Fab VH+VL,100.0,3,results/design_v1_20261101/order_list_v1.fasta
+4HIX-H3scramble,counterfactual_control,YDVRSGHYSSDY,scFv-His6 (preferred) or Fab VH+VL,10.0,1,results/design_v1_20261101/order_list_v1.fasta
+4HIX-H3scramble,counterfactual_control,YDVRSGHYSSDY,scFv-His6 (preferred) or Fab VH+VL,10.0,2,results/design_v1_20261101/order_list_v1.fasta
+4HIX-H3scramble,counterfactual_control,YDVRSGHYSSDY,scFv-His6 (preferred) or Fab VH+VL,10.0,3,results/design_v1_20261101/order_list_v1.fasta
+BSA,negative_control,,commercial protein,100.0,1,vendor
+BSA,negative_control,,commercial protein,100.0,2,vendor
+BSA,negative_control,,commercial protein,100.0,3,vendor
+BSA,negative_control,,commercial protein,10.0,1,vendor
+BSA,negative_control,,commercial protein,10.0,2,vendor
+BSA,negative_control,,commercial protein,10.0,3,vendor
+alpha-synuclein,negative_control,,commercial protein,100.0,1,vendor
+alpha-synuclein,negative_control,,commercial protein,100.0,2,vendor
+alpha-synuclein,negative_control,,commercial protein,100.0,3,vendor
+alpha-synuclein,negative_control,,commercial protein,10.0,1,vendor
+alpha-synuclein,negative_control,,commercial protein,10.0,2,vendor
+alpha-synuclein,negative_control,,commercial protein,10.0,3,vendor
+tau,negative_control,,commercial protein,100.0,1,vendor
+tau,negative_control,,commercial protein,100.0,2,vendor
+tau,negative_control,,commercial protein,100.0,3,vendor
+tau,negative_control,,commercial protein,10.0,1,vendor
+tau,negative_control,,commercial protein,10.0,2,vendor
+tau,negative_control,,commercial protein,10.0,3,vendor
